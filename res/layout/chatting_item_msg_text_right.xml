@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="6dp" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/tv_sendtime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/time_back"
+            android:padding="2dp"
+            android:visibility="gone"
+            android:textColor="#ffffff"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp" >
+
+        <ImageView
+            android:id="@+id/iv_userhead"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/top_background_default_thumb_green"
+            android:focusable="false" />
+
+        <TextView
+            android:id="@+id/tv_chatcontent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@id/iv_userhead"
+            android:background="@drawable/chatto_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="left|center"
+            android:lineSpacingExtra="2dp"
+            android:minHeight="50dp"
+            android:textColor="#ff000000"
+            android:textSize="15sp" />
+
+
+        <ImageView
+            android:id="@+id/voiceImg"
+            android:visibility="visible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:layout_alignTop="@+id/tv_chatcontent"
+            android:layout_marginTop="8dp"
+            android:layout_toLeftOf="@id/iv_userhead"
+            android:src="@drawable/chatto_voice_playing"/>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_username"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginRight="5dp"
+        android:gravity="right"
+        style="@style/chat_text_name_style" />
+
+</LinearLayout>

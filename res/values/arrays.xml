@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="filter_sex_desc">
+        <item>男生</item>
+        <item>女生</item>
+    </string-array>
+
+    <string-array name="filter_department_desc">
+        <item>理学院</item>
+        <item>工学院</item>
+        <item>园林学院</item>
+        <item>外语学院</item>
+        <item>信息学院</item>
+        <item>经济管理学院</item>
+        <item>环境科学与工程学院</item>
+        <item>材料科学与技术学院</item>
+        <item>人文社会科学学院</item>
+    </string-array>
+</resources>

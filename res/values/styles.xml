@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="btn_green">
+        <item name="android:background">@drawable/btn_green</item>
+        <item name="android:textColor">#fff</item>
+    </style>
+
+    <style name="btn_small" parent="btn_green">
+        <item name="android:padding">2dp</item>
+    </style>
+
+    <style name="btn_blue_pad" parent="btn_green">
+        <item name="android:padding">10dp</item>
+    </style>
+
+    <style name="btn_blue_no_corner">
+        <item name="android:background">@drawable/btn_green_no_corner</item>
+        <item name="android:textColor">#fff</item>
+    </style>
+
+    <style name="transparentDialog" parent="@android:style/Theme.Holo.Light.Dialog.NoActionBar">
+        <item name="android:windowBackground">@color/tranparent</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:background">@null</item>
+    </style>
+
+
+    <style name="chat_text_date_style">
+        <item name="android:padding">2dp</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:background">@drawable/time_back</item>
+    </style>
+
+    <style name="chat_content_date_style">
+        <item name="android:minHeight">50dp</item>
+        <item name="android:gravity">left|center</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:lineSpacingExtra">2dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:background">#bfbfbf</item>
+    </style>
+
+    <style name="chat_text_name_style">
+        <item name="android:textColor">#818181</item>
+        <item name="android:textSize">@dimen/usernameSize</item>
+        <item name="android:gravity">center</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:layout_width">150dp</item>
+    </style>
+
+    <style name="like_toast_dialog_style">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowBackground">@drawable/round_background</item>
+    </style>
+
+</resources>

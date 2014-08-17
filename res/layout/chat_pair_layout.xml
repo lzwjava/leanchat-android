@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/pairHeight"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/pairToLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/pairHeight"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@color/beauty_blue">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/hand" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/clickToPair"
+                android:layout_marginLeft="10dp"
+                android:textColor="#fff"
+                android:textSize="@dimen/pairLayoutText" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/pairingLayout"
+            android:layout_width="360dp"
+            android:layout_height="@dimen/pairHeight"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@color/beauty_blue">
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="40dp"
+                android:layout_marginLeft="10dp"
+                android:layout_height="40dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/isPairing"
+                android:layout_marginLeft="10dp"
+                android:textColor="#fff"
+                android:textSize="@dimen/pairLayoutText" />
+
+            <Button
+                android:id="@+id/cancelPairBtn"
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="130dp"
+                android:background="@drawable/btn_light_blue"
+                android:layout_height="30dp"
+                android:textSize="@dimen/pairLayoutText"
+                android:text="@string/cancel"
+                android:textColor="@color/white" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pairInfo"
+            android:textSize="20sp" />
+    </LinearLayout>
+</LinearLayout>
+

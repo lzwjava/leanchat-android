@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="3dp">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:id="@+id/tv_sendtime"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="time"
+            style="@style/chat_text_date_style" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/chatItemMarginTop"
+        android:layout_marginLeft="5dp"
+        android:background="@drawable/card_background_white">
+
+        <ImageView
+            android:id="@+id/iv_userhead"
+            android:layout_width="@dimen/userHead"
+            android:layout_height="@dimen/userHead"
+            android:clickable="true"
+            android:visibility="gone"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/top_background_default_thumb_blue" />
+
+        <ImageView
+            android:id="@+id/voiceImg"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/iv_userhead"
+            android:layout_marginLeft="20dp"
+            android:layout_alignTop="@+id/tv_chatcontent"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/chat_right" />
+
+
+        <TextView
+            android:id="@+id/tv_username"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:gravity="center"
+            android:minWidth="@dimen/usernameMinWidth"
+            android:background="@android:color/holo_blue_dark"
+            android:textColor="#fff"
+            android:text="username"
+            style="@style/chat_text_name_style" />
+
+        <TextView
+            android:id="@+id/tv_chatcontent"
+            android:layout_marginLeft="@dimen/marginToUsername"
+            android:layout_width="wrap_content"
+            android:maxWidth="@dimen/chatContentMaxWidth"
+            android:padding="@dimen/chatContentPadding"
+            android:layout_height="wrap_content"
+            android:text="chat_content"
+            android:background="@null"
+            android:layout_toRightOf="@+id/tv_username"
+            style="@style/chat_content_date_style" />
+
+
+    </LinearLayout>
+
+</LinearLayout>

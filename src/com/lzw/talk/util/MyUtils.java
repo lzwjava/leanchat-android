@@ -1,0 +1,89 @@
+package com.lzw.talk.util;
+
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.widget.Toast;
+import com.lzw.commons.Utils;
+import com.lzw.talk.R;
+import com.lzw.talk.base.App;
+
+
+/**
+ * Created by lzw on 14-5-29.
+ */
+public class MyUtils {
+
+  public static void intentShare(Context context, String title, String shareContent) {
+    Intent intent = new Intent(Intent.ACTION_SEND);
+    intent.setType("text/plain");
+    intent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.share));
+    intent.putExtra(Intent.EXTRA_TEXT, shareContent);
+    intent.putExtra(Intent.EXTRA_TITLE, title);
+    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    context.startActivity(Intent.createChooser(intent, context.getString(R.string.please_choose)));
+  }
+
+  public static void toast(Context cxt, int id) {
+    Toast.makeText(cxt, id, Toast.LENGTH_SHORT).show();
+  }
+
+  public static void toastLong(Context cxt, int id) {
+    Toast.makeText(cxt, id, Toast.LENGTH_LONG).show();
+  }
+
+  public static ProgressDialog showSpinnerDialog(Activity activity) {
+    activity = Utils.modifyDialogContext(activity);
+    ProgressDialog dialog = new ProgressDialog(activity);
+    dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+    dialog.setCancelable(true);
+    dialog.setMessage(App.cxt.getString(R.string.hardLoading));
+    dialog.show();
+    return dialog;
+  }
+
+
+  public static void playRingtone(Context cxt) {
+    MediaPlayer player = new MediaPlayer();
+    Uri uri = Utils.getDefaultRingtoneUri(cxt, RingtoneManager.TYPE_ALARM);
+    try {
+      player.setDataSource(cxt, uri);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    final AudioManager audioManager = (AudioManager) cxt.getSystemService(Context.AUDIO_SERVICE);
+    if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
+      player.setAudioStreamType(AudioManager.STREAM_ALARM);
+      player.setLooping(true);
+      try {
+        player.prepare();
+      } catch (Exception e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      player.start();
+    }
+  }
+
+  public static void playRingTone(Context ctx, int type) {
+    MediaPlayer mMediaPlayer = MediaPlayer.create(ctx,
+        Utils.getDefaultRingtoneUri(ctx, type));
+    //mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+    mMediaPlayer.setLooping(true);
+    mMediaPlayer.start();
+  }
+
+  public static ProgressDialog showHorizontalDialog(Activity activity) {
+    activity = Utils.modifyDialogContext(activity);
+    ProgressDialog dialog = new ProgressDialog(activity);
+    dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+    dialog.setCancelable(true);
+    dialog.show();
+    return dialog;
+  }
+}

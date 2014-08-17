@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="light_green">#000</color>
+    <color name="blue">#72c0f2</color>
+    <color name="tranparent">#0000</color>
+    <color name="grey">#c0c0c0</color>
+    <color name="white">#fff</color>
+    <color name="black">#000</color>
+    <color name="tree_green">#5CB98D</color>
+    <color name="dark_tree_green">#428666</color>
+    <color name="my_pink">#F88084</color>
+    <color name="light_tree_green">#63C798</color>
+
+    <color name="beauty_blue">#51d7b6</color>
+</resources>
