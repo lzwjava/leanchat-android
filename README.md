@@ -13,26 +13,26 @@
 
 ## Open session with empty peers
 
-``` java
-    final String selfId = getPeerId(curUser);
-    List<String> peerIds = new LinkedList<String>();
-    Session session = SessionManager.getInstance(selfId);
-    session.open(selfId, peerIds);
+```java
+final String selfId = getPeerId(curUser);
+List<String> peerIds = new LinkedList<String>();
+Session session = SessionManager.getInstance(selfId);
+session.open(selfId, peerIds);
 ```
 
 ## Watch peers when need
 
-``` java
-    String selfId = getPeerId(User.curUser());
-    Session session = SessionManager.getInstance(selfId);
-    session.watchPeers(peerIds);
+```java
+String selfId = getPeerId(User.curUser());
+Session session = SessionManager.getInstance(selfId);
+session.watchPeers(peerIds);
 ```
 ## Send message to peer
 
-``` java
-   List<String> ids = new ArrayList<String>();
-   ids.add(getPeerId(chatUser));
-   String selfId = getPeerId(curUser)
-   Session session = SessionManager.getInstance(selfId);
-   session.sendMessage(json, ids);
+```java
+List<String> ids = new ArrayList<String>();
+ids.add(getPeerId(chatUser));
+String selfId = getPeerId(curUser)
+Session session = SessionManager.getInstance(selfId);
+session.sendMessage(json, ids);
 ```
