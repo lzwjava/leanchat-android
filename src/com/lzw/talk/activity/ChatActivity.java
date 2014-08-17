@@ -2,7 +2,6 @@ package com.lzw.talk.activity;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,12 +18,12 @@ import com.avos.avoscloud.SessionManager;
 import com.lzw.commons.Logger;
 import com.lzw.commons.TimeUtils;
 import com.lzw.talk.R;
+import com.lzw.talk.adapter.ChatMsgViewAdapter;
 import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
 import com.lzw.talk.db.DBHelper;
 import com.lzw.talk.db.DBMsg;
 import com.lzw.talk.entity.ChatMsgEntity;
-import com.lzw.talk.adapter.ChatMsgViewAdapter;
 import com.lzw.talk.entity.Msg;
 import com.lzw.talk.receiver.MsgReceiver;
 import com.lzw.talk.service.ChatService;
@@ -42,7 +41,6 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
   private List<ChatMsgEntity> mDataArrays;
   public static ChatActivity instance;
   Activity cxt;
-  MediaPlayer player;
   ProgressBar progressBar;
   AVUser me;
   DBHelper dbHelper;
@@ -54,14 +52,9 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
     instance = this;
     getWindow().setSoftInputMode(
         WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-    setContentView(R.layout.chat_xiaohei);
+    setContentView(R.layout.chat_room);
     findView();
-    initPlayer();
     initData();
-  }
-
-  private void initPlayer() {
-    player = new MediaPlayer();
   }
 
   private void findView() {
@@ -248,13 +241,5 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
 
   private void scroolToLast() {
     mListView.setSelection(mListView.getCount() - 1);
-  }
-
-  @Override
-  protected void onDestroy() {
-    super.onDestroy();
-    if (player != null) {
-      player.release();
-    }
   }
 }

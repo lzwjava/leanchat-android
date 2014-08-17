@@ -78,6 +78,6 @@
     <string name="no">不了</string>
     <string name="closeItInSettings">在设置中可关闭</string>
     <string name="chatTips">绿色表明在线</string>
-    <string name="pleaseInputNameToStart">请输入用户就开始</string>
+    <string name="pleaseInputNameToStart">请输入用户名就开始</string>
     <string name="usernameIsTokenOrBadNet">用户名已使用或网络差</string>
 </resources>

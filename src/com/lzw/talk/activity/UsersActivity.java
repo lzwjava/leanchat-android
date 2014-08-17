@@ -37,7 +37,7 @@ public class UsersActivity extends Activity implements AdapterView.OnItemClickLi
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.chat_topic_layout);
+    setContentView(R.layout.chat_users_layout);
     cxt = this;
     findView();
     setList();
