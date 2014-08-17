@@ -6,9 +6,9 @@
 
 总的来说，四步加聊天功能：
 
-1. open session
-2. watch peerIds
-3. send message
+1. open session （打开一个会话）
+2. watch peerIds（关注一些人，会收到相应的上线下线通知）
+3. send message 
 4. handle received message
 
 ## Open session with empty peers
