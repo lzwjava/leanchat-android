@@ -89,3 +89,5 @@ public class Re extends AVMessageReceiver {
   }
 }
 ```
+
+###[Document](https://cn.avoscloud.com/docs/realtime.html#实时通信服务开发指南)
