@@ -13,7 +13,7 @@
 
 ## Open session with empty peers
 
-```java
+``` java
     final String selfId = getPeerId(curUser);
     List<String> peerIds = new LinkedList<String>();
     Session session = SessionManager.getInstance(selfId);
@@ -22,14 +22,14 @@
 
 ## Watch peers when need
 
-```java
+``` java
     String selfId = getPeerId(User.curUser());
     Session session = SessionManager.getInstance(selfId);
     session.watchPeers(peerIds);
 ```
 ## Send message to peer
 
-```java
+``` java
    List<String> ids = new ArrayList<String>();
    ids.add(getPeerId(chatUser));
    String selfId = getPeerId(curUser)
