@@ -11,7 +11,6 @@ public class ChatMsgEntity {
   Msg msg;
 
   private boolean isComMeg = true;
-  private int length;
 
   public String getName() {
     return name;
@@ -47,14 +46,6 @@ public class ChatMsgEntity {
 
   public boolean isText(){
     return text!=null;
-  }
-
-  public int getLength() {
-    return length;
-  }
-
-  public void setLength(int length) {
-    this.length = length;
   }
 
   public Msg getMsg() {

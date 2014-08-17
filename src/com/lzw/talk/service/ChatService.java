@@ -22,12 +22,6 @@ public class ChatService {
     return users;
   }
 
-  public static void openSession() {
-    AVUser me = AVUser.getCurrentUser();
-    App.session = SessionManager.getInstance(ChatService.getPeerId(me));
-    App.session.open(me.getUsername(), new ArrayList<String>());
-  }
-
   public static void insertDBMsg(String json) {
     Msg msg = new Msg(json);
     List<Msg> msgs = new ArrayList<Msg>();

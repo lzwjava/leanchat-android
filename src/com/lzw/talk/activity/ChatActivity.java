@@ -24,15 +24,13 @@ import com.lzw.talk.base.App;
 import com.lzw.talk.db.DBHelper;
 import com.lzw.talk.db.DBMsg;
 import com.lzw.talk.entity.ChatMsgEntity;
-import com.lzw.talk.entity.ChatMsgViewAdapter;
+import com.lzw.talk.adapter.ChatMsgViewAdapter;
 import com.lzw.talk.entity.Msg;
 import com.lzw.talk.receiver.MsgReceiver;
 import com.lzw.talk.service.ChatService;
 import com.lzw.talk.service.MessageListener;
 import com.lzw.talk.util.MyUtils;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -45,8 +43,6 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
   public static ChatActivity instance;
   Activity cxt;
   MediaPlayer player;
-  ChatMsgViewAdapter.ViewHolder curHolder;
-  MyOnCompletionListener completionListener;
   ProgressBar progressBar;
   AVUser me;
   DBHelper dbHelper;
@@ -62,7 +58,6 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
     findView();
     initPlayer();
     initData();
-    completionListener = new MyOnCompletionListener();
   }
 
   private void initPlayer() {
@@ -104,7 +99,6 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
     dbHelper = new DBHelper(cxt, App.DB_NAME, App.DB_VER);
     mDataArrays = new ArrayList<ChatMsgEntity>();
     mAdapter = new ChatMsgViewAdapter(this);
-    mAdapter.setOnClickListener(new ClickListener());
     mListView.setAdapter(mAdapter);
   }
 
@@ -162,20 +156,6 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
     scroolToLast();
   }
 
-  private void prepareByFD(String path) throws Exception {
-    if (path == null) {
-      return;
-    }
-    File f = new File(path);
-    if (!f.exists()) {
-      throw new Exception("no such file exists");
-    } else {
-      FileInputStream in = new FileInputStream(f);
-      player.setDataSource(in.getFD());
-      player.prepare();
-    }
-  }
-
   private ChatMsgEntity getChatMsgEntity(Msg msg) {
     ChatMsgEntity entity = new ChatMsgEntity();
     int created = msg.getCreated();
@@ -188,11 +168,7 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
       entity.setMsgType(false);
     } else {
       String name;
-      if (fromId.equals(App.chatUser.getUsername())) {
-        name = App.chatUser.getUsername();
-      } else {
-        name = fromId;
-      }
+      name = App.chatUser.getUsername();
       entity.setName(name);
       entity.setMsgType(true);
     }
@@ -222,7 +198,6 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
   class SendTask extends AsyncTask<Void, Void, Void> {
     String text;
     Msg msg;
-    int len;
     boolean res;
 
     public SendTask(String text) {
@@ -273,53 +248,6 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
 
   private void scroolToLast() {
     mListView.setSelection(mListView.getCount() - 1);
-  }
-
-  class ClickListener implements OnClickListener {
-    @Override
-    public void onClick(View v) {
-      ChatMsgViewAdapter.ViewHolder holder =
-          (ChatMsgViewAdapter.ViewHolder) v.getTag();
-      try {
-        playAudio(holder);
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-    }
-  }
-
-  private void playAudio(ChatMsgViewAdapter.ViewHolder holder) throws Exception {
-    String voicePath = null;
-    if (player.isPlaying()) {
-      showVoiceImg();
-      //player.pause();
-      //player.reset();
-    }
-    Logger.d("play voice");
-    player.reset();
-    prepareByFD(voicePath);
-    player.setOnCompletionListener(completionListener);
-    player.start();
-    curHolder = holder;
-    hideVoiceImg();
-  }
-
-  private void showVoiceImg() {
-    curHolder.voiceImgView.setVisibility(View.VISIBLE);
-  }
-
-  private void hideVoiceImg() {
-    curHolder.voiceImgView.setVisibility(View.GONE);
-  }
-
-
-  private class MyOnCompletionListener implements MediaPlayer.OnCompletionListener {
-    @Override
-    public void onCompletion(MediaPlayer mp) {
-      if (curHolder != null) {
-        showVoiceImg();
-      }
-    }
   }
 
   @Override

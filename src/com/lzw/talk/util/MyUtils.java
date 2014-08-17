@@ -47,37 +47,6 @@ public class MyUtils {
     return dialog;
   }
 
-
-  public static void playRingtone(Context cxt) {
-    MediaPlayer player = new MediaPlayer();
-    Uri uri = Utils.getDefaultRingtoneUri(cxt, RingtoneManager.TYPE_ALARM);
-    try {
-      player.setDataSource(cxt, uri);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    final AudioManager audioManager = (AudioManager) cxt.getSystemService(Context.AUDIO_SERVICE);
-    if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
-      player.setAudioStreamType(AudioManager.STREAM_ALARM);
-      player.setLooping(true);
-      try {
-        player.prepare();
-      } catch (Exception e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-      player.start();
-    }
-  }
-
-  public static void playRingTone(Context ctx, int type) {
-    MediaPlayer mMediaPlayer = MediaPlayer.create(ctx,
-        Utils.getDefaultRingtoneUri(ctx, type));
-    //mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
-    mMediaPlayer.setLooping(true);
-    mMediaPlayer.start();
-  }
-
   public static ProgressDialog showHorizontalDialog(Activity activity) {
     activity = Utils.modifyDialogContext(activity);
     ProgressDialog dialog = new ProgressDialog(activity);

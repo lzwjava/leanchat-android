@@ -1,4 +1,4 @@
-package com.lzw.talk.entity;
+package com.lzw.talk.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -6,8 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import com.lzw.commons.Logger;
 import com.lzw.talk.R;
+import com.lzw.talk.entity.ChatMsgEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,6 @@ public class ChatMsgViewAdapter extends BaseAdapter {
 		int IMVT_TO_MSG = 1;
 	}
 
-  View.OnClickListener onClickListener;
 	private List<ChatMsgEntity> datas=new ArrayList<ChatMsgEntity>();
 
 	private Context ctx;
@@ -34,9 +33,6 @@ public class ChatMsgViewAdapter extends BaseAdapter {
     this.datas = datas;
   }
 
-  public void setOnClickListener(View.OnClickListener onClickListener) {
-    this.onClickListener = onClickListener;
-  }
 
   public int getCount() {
 		return datas.size();
@@ -102,28 +98,9 @@ public class ChatMsgViewAdapter extends BaseAdapter {
 		viewHolder.tvUserName.setText(entity.getName());
     textView.setTag(viewHolder);
     viewHolder.msg =entity;
-    if(entity.isText()){
-      textView.setOnClickListener(null);
-      viewHolder.voiceImgView.setVisibility(View.GONE);
-      textView.setText(entity.getText());
-      setTextViewWidth(textView,ViewGroup.LayoutParams.WRAP_CONTENT);
-    }else{
-      int s;
-      s=entity.getLength();
-      int fullS=10;
-      if(s<3){
-        s=2;
-      }else if(s>10){
-        s=10;
-      }
-      int full=ctx.getResources().getDimensionPixelSize(R.dimen.fullContent);
-      int w=full*s/fullS;
-      Logger.d("w=" + w);
-      setTextViewWidth(textView, w);
-      textView.setText("");
-      textView.setOnClickListener(onClickListener);
-      viewHolder.voiceImgView.setVisibility(View.VISIBLE);
-    }
+    viewHolder.voiceImgView.setVisibility(View.GONE);
+    textView.setText(entity.getText());
+    setTextViewWidth(textView,ViewGroup.LayoutParams.WRAP_CONTENT);
 		return convertView;
 	}
 
