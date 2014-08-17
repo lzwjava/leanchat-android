@@ -41,7 +41,7 @@ session.sendMessage(json, ids);
 接受消息继承一个类就可以了，这里能做到非常细粒度的控制又很方便，
 
 ```java
-public class Re extends AVMessageReceiver {
+public class Receiver extends AVMessageReceiver {
 
   //session打开后调用
   @Override  
