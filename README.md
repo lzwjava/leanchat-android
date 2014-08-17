@@ -11,7 +11,7 @@
 3. send message 
 4. handle received message
 
-## Open session with empty peers
+## Open session
 
 ```java
 final String selfId = getPeerId(curUser);
