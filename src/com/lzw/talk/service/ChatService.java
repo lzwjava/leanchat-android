@@ -6,6 +6,7 @@ import com.lzw.talk.base.App;
 import com.lzw.talk.db.DBHelper;
 import com.lzw.talk.db.DBMsg;
 import com.lzw.talk.entity.Msg;
+import com.lzw.talk.util.MyUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,7 @@ public class ChatService {
 
   public static void insertDBMsg(String json) {
     Msg msg = new Msg(json);
+    msg.setCreated(MyUtils.currentSecs());
     List<Msg> msgs = new ArrayList<Msg>();
     msgs.add(msg);
     DBHelper dbHelper = new DBHelper(App.cxt, App.DB_NAME, App.DB_VER);

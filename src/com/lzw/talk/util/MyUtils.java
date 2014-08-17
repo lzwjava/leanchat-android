@@ -13,6 +13,8 @@ import com.lzw.commons.Utils;
 import com.lzw.talk.R;
 import com.lzw.talk.base.App;
 
+import java.util.Date;
+
 
 /**
  * Created by lzw on 14-5-29.
@@ -54,5 +56,11 @@ public class MyUtils {
     dialog.setCancelable(true);
     dialog.show();
     return dialog;
+  }
+
+  public static int currentSecs() {
+    int l;
+    l = (int) (new Date().getTime() / 1000);
+    return l;
   }
 }

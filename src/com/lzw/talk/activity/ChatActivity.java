@@ -160,8 +160,7 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
       entity.setName(me.getUsername());
       entity.setMsgType(false);
     } else {
-      String name;
-      name = App.chatUser.getUsername();
+      String name = App.chatUser.getUsername();
       entity.setName(name);
       entity.setMsgType(true);
     }
@@ -209,7 +208,8 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
         msg = new Msg();
         msg.setTxt(text);
         msg.setFrom(ChatService.getPeerId(me));
-        int l = (int) (new Date().getTime() / 1000);
+        int l;
+        l = MyUtils.currentSecs();
         msg.setCreated(l);
         msg.setTo(ChatService.getPeerId(App.chatUser));
         Logger.d(msg.getFromName());

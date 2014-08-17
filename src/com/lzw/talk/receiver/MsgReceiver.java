@@ -92,6 +92,7 @@ public class MsgReceiver extends AVMessageReceiver {
   @Override
   public void onMessageFailure(Context context, Session session, String s, List<String> strings) {
     Logger.d("onMsgFail "+s+" "+strings);
+    failedMessage.add(s);
   }
 
   @Override
