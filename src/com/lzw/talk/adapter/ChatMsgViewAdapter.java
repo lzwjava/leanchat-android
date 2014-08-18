@@ -68,7 +68,7 @@ public class ChatMsgViewAdapter extends BaseAdapter {
 		ChatMsgEntity entity = datas.get(position);
 		boolean isComMsg = entity.getMsgType();
 
-		ViewHolder viewHolder = null;
+		ViewHolder viewHolder;
     if (convertView == null) {
 			if (isComMsg) {
 				convertView = mInflater.inflate(R.layout.chat_item_msg_text_left_line,
@@ -98,15 +98,8 @@ public class ChatMsgViewAdapter extends BaseAdapter {
     textView.setTag(viewHolder);
     viewHolder.msg =entity;
     textView.setText(entity.getText());
-    setTextViewWidth(textView,ViewGroup.LayoutParams.WRAP_CONTENT);
 		return convertView;
 	}
-
-  public void setTextViewWidth(TextView textView, int width) {
-    ViewGroup.LayoutParams lp = textView.getLayoutParams();
-    lp.width=width;
-    textView.setLayoutParams(lp);
-  }
 
   public static class ViewHolder {
 		public TextView tvSendTime;
