@@ -56,7 +56,7 @@ public class UsersActivity extends Activity implements AdapterView.OnItemClickLi
   public boolean onMenuItemSelected(int featureId, MenuItem item) {
     int id = item.getItemId();
     if (id == MENU_SET_NICKNAME) {
-      Utils.alertDialog(cxt, R.string.chatTips);
+      Utils.alertDialog(cxt, R.string.green_indicates_online);
     } else if (id == MENU_LOGOUT) {
       AVUser.logOut();
       finish();

@@ -133,7 +133,7 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
       if (res) {
         addMsgsAndRefresh(msgs);
       } else {
-        MyUtils.toast(cxt, R.string.getDataFailed);
+        MyUtils.toast(cxt, R.string.failedToGetData);
       }
     }
   }
@@ -235,7 +235,7 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
       if (res) {
         refresh();
       } else {
-        MyUtils.toast(cxt, R.string.no_network);
+        MyUtils.toast(cxt, R.string.badNetwork);
       }
     }
   }

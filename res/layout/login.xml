@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            android:text="@string/pleaseInputNameToStart"
+            android:text="@string/please_input_name_to_start"
             android:gravity="center"/>
 
         <EditText

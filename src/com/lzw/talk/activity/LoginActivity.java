@@ -69,7 +69,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             if (res) {
               loginSucceed();
             } else {
-              Utils.toast(cxt, R.string.usernameIsTokenOrBadNet);
+              Utils.toast(cxt, R.string.username_is_token_or_bad_net);
             }
           }
         }.execute();
