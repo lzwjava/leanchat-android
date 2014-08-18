@@ -81,7 +81,6 @@ public class ChatMsgViewAdapter extends BaseAdapter {
 			viewHolder = new ViewHolder();
 			viewHolder.tvSendTime = (TextView) convertView
 					.findViewById(R.id.tv_sendtime);
-      viewHolder.voiceImgView=convertView.findViewById(R.id.voiceImg);
 			viewHolder.tvUserName = (TextView) convertView
 					.findViewById(R.id.tv_username);
       viewHolder.tvContent=(TextView) convertView
@@ -98,7 +97,6 @@ public class ChatMsgViewAdapter extends BaseAdapter {
 		viewHolder.tvUserName.setText(entity.getName());
     textView.setTag(viewHolder);
     viewHolder.msg =entity;
-    viewHolder.voiceImgView.setVisibility(View.GONE);
     textView.setText(entity.getText());
     setTextViewWidth(textView,ViewGroup.LayoutParams.WRAP_CONTENT);
 		return convertView;
@@ -115,7 +113,6 @@ public class ChatMsgViewAdapter extends BaseAdapter {
 		public TextView tvUserName;
 		public TextView tvContent;
 		public boolean isComMsg = true;
-    public View voiceImgView;
     public ChatMsgEntity msg;
   }
 }

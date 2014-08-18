@@ -30,10 +30,10 @@ public class LoginActivity extends Activity implements View.OnClickListener {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    ctx =this;
+    ctx = this;
     setContentView(R.layout.login);
     findView();
-    if(User.curUser()!=null){
+    if (User.curUser() != null) {
       loginSucceed();
     }
   }
@@ -48,28 +48,28 @@ public class LoginActivity extends Activity implements View.OnClickListener {
   public void onClick(View v) {
     int id = v.getId();
     if (id == R.id.ok) {
-      final String username=usernameEdit.getText().toString();
-      if(username.isEmpty()==false){
+      final String username = usernameEdit.getText().toString();
+      if (username.isEmpty() == false) {
         new NetAsyncTask(ctx) {
           @Override
           protected void doInBack() throws Exception {
             AVUser avUser = User.getAVUser(username);
-            if(avUser==null){
-              AVUser user=new AVUser();
-              user.put(User.USERNAME,username);
-              user.put(User.PASSWORD,username);
+            if (avUser == null) {
+              AVUser user = new AVUser();
+              user.put(User.USERNAME, username);
+              user.put(User.PASSWORD, username);
               user.signUp();
-            }else{
-              AVUser.logIn(username,username);
+            } else {
+              AVUser.logIn(username, username);
             }
           }
 
           @Override
           protected void onPost(boolean res) {
-            if(res){
+            if (res) {
               loginSucceed();
-            }else{
-              Utils.toast(cxt,R.string.usernameIsTokenOrBadNet);
+            } else {
+              Utils.toast(cxt, R.string.usernameIsTokenOrBadNet);
             }
           }
         }.execute();
@@ -77,10 +77,11 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     }
   }
 
-  public void loginSucceed(){
+  public void loginSucceed() {
     openSession();
-    Intent intent=new Intent(ctx,UsersActivity.class);
+    Intent intent = new Intent(ctx, UsersActivity.class);
     startActivity(intent);
+    finish();
   }
 
 
@@ -89,8 +90,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     final String selfId = ChatService.getPeerId(User.curUser());
     List<String> peerIds = new LinkedList<String>();
     Session session = SessionManager.getInstance(selfId);
-    App.session = session;
     session.open(selfId, peerIds);
-    finish();
+    App.session = session;
   }
 }

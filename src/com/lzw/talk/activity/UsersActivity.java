@@ -48,7 +48,7 @@ public class UsersActivity extends Activity implements AdapterView.OnItemClickLi
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     menu.add(0, MENU_SET_NICKNAME, 0, R.string.tips);
-    menu.add(0,MENU_LOGOUT,0,R.string.logout);
+    menu.add(0, MENU_LOGOUT, 0, R.string.logout);
     return super.onCreateOptionsMenu(menu);
   }
 
@@ -56,8 +56,8 @@ public class UsersActivity extends Activity implements AdapterView.OnItemClickLi
   public boolean onMenuItemSelected(int featureId, MenuItem item) {
     int id = item.getItemId();
     if (id == MENU_SET_NICKNAME) {
-      Utils.alertDialog(cxt,R.string.chatTips);
-    }else if(id==MENU_LOGOUT){
+      Utils.alertDialog(cxt, R.string.chatTips);
+    } else if (id == MENU_LOGOUT) {
       AVUser.logOut();
       finish();
     }
@@ -78,7 +78,7 @@ public class UsersActivity extends Activity implements AdapterView.OnItemClickLi
   public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
     Intent intent = new Intent(cxt, ChatActivity.class);
     AVUser user = (AVUser) parent.getItemAtPosition(position);
-    App.chatUser=user;
+    App.chatUser = user;
     startActivity(intent);
   }
 

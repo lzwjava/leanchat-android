@@ -27,8 +27,6 @@ public class App extends Application {
     Utils.fixAsyncTaskBug();
     AVOSCloud.initialize(this, "x3o016bxnkpyee7e9pa5pre6efx2dadyerdlcez0wbzhw25g",
         "057x24cfdzhffnl3dzk14jh9xo2rq6w1hy1fdzt5tv46ym78");
-    AVAnalytics.start(this);
-    AVAnalytics.enableCrashReport(this, !debug);
     AVInstallation.getCurrentInstallation().saveInBackground();
     PushService.setDefaultPushCallback(cxt, LoginActivity.class);
     if (App.debug) {

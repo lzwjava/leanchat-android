@@ -18,8 +18,6 @@
     <orderEntry type="module" module-name="lzw_commons" />
     <orderEntry type="module" module-name="avoscloud" />
     <orderEntry type="module" module-name="avospush" />
-    <orderEntry type="library" name="avosfeedback-v2.6.1.1" level="project" />
-    <orderEntry type="library" name="avosstatistics-v2.6.1.1" level="project" />
     <orderEntry type="library" name="fastjson" level="project" />
     <orderEntry type="library" name="httpmime-4.1.3" level="project" />
   </component>

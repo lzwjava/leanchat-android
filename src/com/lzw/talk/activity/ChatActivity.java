@@ -62,7 +62,7 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
     mListView = (ListView) findViewById(R.id.listview);
 
     mEditTextContent = (EditText) findViewById(R.id.et_sendmessage);
-    btnSend=findViewById(R.id.btn_send);
+    btnSend = findViewById(R.id.btn_send);
     btnSend.setOnClickListener(this);
   }
 
@@ -81,8 +81,8 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
 
   public void initData() {
     ActionBar actionBar = getActionBar();
-    View view= LayoutInflater.from(cxt).inflate(R.layout.chat_bar,null);
-    TextView title= (TextView) view.findViewById(R.id.title);
+    View view = LayoutInflater.from(cxt).inflate(R.layout.chat_bar, null);
+    TextView title = (TextView) view.findViewById(R.id.title);
     actionBar.setDisplayShowCustomEnabled(true);
     actionBar.setDisplayShowTitleEnabled(false);
     actionBar.setDisplayShowHomeEnabled(false);
@@ -116,6 +116,7 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
     @Override
     protected Void doInBackground(Void... params) {
       try {
+        me= (AVUser) me.fetch();  //to refresh object
         msgs = DBMsg.getMsgs(dbHelper, ChatService.getPeerId(me), ChatService.getPeerId(App.chatUser));
         res = true;
       } catch (Exception e) {
@@ -160,8 +161,7 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
       entity.setName(me.getUsername());
       entity.setMsgType(false);
     } else {
-      String name = App.chatUser.getUsername();
-      entity.setName(name);
+      entity.setName(App.chatUser.getUsername());
       entity.setMsgType(true);
     }
     entity.setText(msg.getTxt());
@@ -211,8 +211,9 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
         int l;
         l = MyUtils.currentSecs();
         msg.setCreated(l);
+        Logger.d("my username ="+me.getUsername());
+        msg.setFromName(me.getUsername());
         msg.setTo(ChatService.getPeerId(App.chatUser));
-        Logger.d(msg.getFromName());
         String json = msg.toJson();
         DBMsg.insertMsg(dbHelper, msg);
         List<String> ids = new ArrayList<String>();
