@@ -9,6 +9,7 @@ import android.content.res.Resources;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
+import com.avos.avoscloud.AVMessage;
 import com.avos.avoscloud.AVMessageReceiver;
 import com.avos.avoscloud.Session;
 import com.lzw.commons.Logger;
@@ -52,16 +53,30 @@ public class MsgReceiver extends AVMessageReceiver {
   }
 
   @Override
-  public void onMessage(Context context, Session session, String msg, String fromId) {
+  public void onMessage(Context context, Session session, AVMessage avMsg) {
+    String  msg=avMsg.getMessage();
     Logger.d("msg="+msg);
     ChatService.insertDBMsg(msg);
-    MessageListener listener = sessionMessageDispatchers.get(fromId);
+    MessageListener listener = sessionMessageDispatchers.get(avMsg.getFromPeerId());
     if (listener==null) {
       notifyMsg(context, msg);
     } else {
       Logger.d("refresh datas");
       listener.onMessage(msg);
     }
+  }
+
+  @Override
+  public void onMessageSent(Context context, Session session, AVMessage msg) {
+    String s=msg.getMessage();
+    Logger.d("onMsgSent="+s);
+    Logger.d("From installationId"+ session.getSelfPeerId());
+  }
+
+  @Override
+  public void onMessageFailure(Context context, Session session, AVMessage msg) {
+    String msgStr=msg.getMessage();
+    failedMessage.add(msgStr);
   }
 
   public static void notifyMsg(Context context, String jsonMsg) throws JSONException {
@@ -81,18 +96,6 @@ public class MsgReceiver extends AVMessageReceiver {
         .setAutoCancel(true);
     NotificationManager man = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     man.notify(REPLY_NOTIFY_ID, builder.getNotification());
-  }
-
-  @Override
-  public void onMessageSent(Context context, Session session, String s, List<String> strings) {
-    Logger.d("onMsgSent="+s+strings);
-    Logger.d("From installationId"+ session.getSelfPeerId());
-  }
-
-  @Override
-  public void onMessageFailure(Context context, Session session, String s, List<String> strings) {
-    Logger.d("onMsgFail "+s+" "+strings);
-    failedMessage.add(s);
   }
 
   @Override
