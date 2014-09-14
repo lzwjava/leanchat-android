@@ -2,8 +2,6 @@
 
 一个展示AVOS Cloud聊天功能的Demo
 
-![img](https://github.com/lzwjava/Adventure/blob/master/readme/shot1.png)
-
 ## Install
 
 用到的依赖包：
