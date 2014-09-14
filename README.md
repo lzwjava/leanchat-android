@@ -2,11 +2,12 @@
 
 一个展示AVOS Cloud聊天功能的Demo
 
+![img](https://raw.githubusercontent.com/lzwjava/plan/master/im360.png)
+
 ## Install
 
 用到的依赖包：
 
-* [lzw-commons](https://github.com/lzwjava/lzw-commons) , 一个简单的我的常用函数库。
 * [AVOS Cloud SDK](https://cn.avoscloud.com/docs/sdk_down.html), 基础模块和实时通信模块即可。
 
 ## Summary
