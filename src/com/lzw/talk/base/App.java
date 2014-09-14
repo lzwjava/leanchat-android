@@ -3,9 +3,9 @@ package com.lzw.talk.base;
 import android.app.Application;
 import android.content.Context;
 import com.avos.avoscloud.*;
-import com.lzw.commons.Logger;
-import com.lzw.commons.Utils;
 import com.lzw.talk.activity.LoginActivity;
+import com.lzw.talk.util.Logger;
+import com.lzw.talk.util.Utils;
 
 import java.lang.reflect.Method;
 

@@ -10,8 +10,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import com.avos.avoscloud.AVUser;
-import com.lzw.commons.NetAsyncTask;
-import com.lzw.commons.Utils;
 import com.lzw.talk.R;
 import com.lzw.talk.adapter.UserAdapter;
 import com.lzw.talk.base.App;
@@ -19,6 +17,8 @@ import com.lzw.talk.base.C;
 import com.lzw.talk.receiver.MsgReceiver;
 import com.lzw.talk.service.ChatService;
 import com.lzw.talk.service.StatusListner;
+import com.lzw.talk.util.NetAsyncTask;
+import com.lzw.talk.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;

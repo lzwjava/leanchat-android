@@ -15,8 +15,6 @@ import android.widget.TextView;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.Session;
 import com.avos.avoscloud.SessionManager;
-import com.lzw.commons.Logger;
-import com.lzw.commons.TimeUtils;
 import com.lzw.talk.R;
 import com.lzw.talk.adapter.ChatMsgViewAdapter;
 import com.lzw.talk.avobject.User;
@@ -28,7 +26,9 @@ import com.lzw.talk.entity.Msg;
 import com.lzw.talk.receiver.MsgReceiver;
 import com.lzw.talk.service.ChatService;
 import com.lzw.talk.service.MessageListener;
+import com.lzw.talk.util.Logger;
 import com.lzw.talk.util.MyUtils;
+import com.lzw.talk.util.TimeUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -211,7 +211,7 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
         int l;
         l = MyUtils.currentSecs();
         msg.setCreated(l);
-        Logger.d("my username ="+me.getUsername());
+        Logger.d("my username =" + me.getUsername());
         msg.setFromName(me.getUsername());
         msg.setTo(ChatService.getPeerId(App.chatUser));
         String json = msg.toJson();

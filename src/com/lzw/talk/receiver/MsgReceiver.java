@@ -12,13 +12,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.avos.avoscloud.AVMessage;
 import com.avos.avoscloud.AVMessageReceiver;
 import com.avos.avoscloud.Session;
-import com.lzw.commons.Logger;
 import com.lzw.talk.activity.ChatActivity;
 import com.lzw.talk.base.C;
 import com.lzw.talk.service.PrefDao;
 import com.lzw.talk.service.ChatService;
 import com.lzw.talk.service.MessageListener;
 import com.lzw.talk.service.StatusListner;
+import com.lzw.talk.util.Logger;
 
 import java.util.*;
 

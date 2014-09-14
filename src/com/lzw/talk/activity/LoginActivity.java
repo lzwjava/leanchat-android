@@ -8,13 +8,13 @@ import android.widget.EditText;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.Session;
 import com.avos.avoscloud.SessionManager;
-import com.lzw.commons.Logger;
-import com.lzw.commons.NetAsyncTask;
-import com.lzw.commons.Utils;
 import com.lzw.talk.R;
 import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
 import com.lzw.talk.service.ChatService;
+import com.lzw.talk.util.Logger;
+import com.lzw.talk.util.NetAsyncTask;
+import com.lzw.talk.util.Utils;
 
 import java.util.LinkedList;
 import java.util.List;

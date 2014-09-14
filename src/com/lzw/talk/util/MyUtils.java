@@ -4,12 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.widget.Toast;
-import com.lzw.commons.Utils;
 import com.lzw.talk.R;
 import com.lzw.talk.base.App;
 

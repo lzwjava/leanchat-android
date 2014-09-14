@@ -15,7 +15,6 @@
     </content>
     <orderEntry type="jdk" jdkName="Android SDK" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="lzw_commons" />
     <orderEntry type="library" name="android-async-http-1.4.4-fix" level="application" />
     <orderEntry type="library" name="android-support-v4" level="application" />
     <orderEntry type="library" name="fastjson" level="application" />
