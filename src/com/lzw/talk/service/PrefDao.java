@@ -1,4 +1,4 @@
-package com.lzw.talk.dao;
+package com.lzw.talk.service;
 
 import android.content.Context;
 import android.content.SharedPreferences;
