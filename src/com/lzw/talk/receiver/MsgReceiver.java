@@ -69,8 +69,7 @@ public class MsgReceiver extends AVMessageReceiver {
   @Override
   public void onMessageSent(Context context, Session session, AVMessage msg) {
     String s = msg.getMessage();
-    Logger.d("onMsgSent=" + s);
-    Logger.d("From installationId" + session.getSelfPeerId());
+    Logger.d("onMsgSent=" + s+" fromId"+msg.getFromPeerId());
   }
 
   @Override

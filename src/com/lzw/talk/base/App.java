@@ -17,7 +17,7 @@ import java.util.Map;
 public class App extends Application {
   public static final String DB_NAME = "chat.db3";
   public static final int DB_VER = 1;
-  public static boolean debug = false;
+  public static boolean debug = true;
   public static Context cxt;
   public static AVUser chatUser;
   public static Session session;
@@ -33,9 +33,11 @@ public class App extends Application {
     User.registerSubclass(User.class);
     AVInstallation.getCurrentInstallation().saveInBackground();
     PushService.setDefaultPushCallback(cxt, LoginActivity.class);
+    AVOSUtils.showInternalDebugLog();
     if (App.debug) {
-      AVOSUtils.showInternalDebugLog();
       Logger.open = true;
+    }else{
+      Logger.open=false;
     }
   }
 

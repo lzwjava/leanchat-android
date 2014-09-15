@@ -22,7 +22,7 @@ public class Msg {
   int status;
 
   public Msg() {
-    internalMessage=new AVMessage();
+    internalMessage = new AVMessage();
   }
 
   public AVMessage getInternalMessage() {
@@ -61,6 +61,14 @@ public class Msg {
     return content;
   }
 
+  public int getStatus() {
+    return status;
+  }
+
+  public void setStatus(int status) {
+    this.status = status;
+  }
+
   public void setContent(String content) {
     this.content = content;
   }
@@ -78,17 +86,26 @@ public class Msg {
     msg.setInternalMessage(avMsg);
     if (!AVUtils.isBlankString(avMsg.getMessage())) {
       HashMap<String, Object> params = JSON.parseObject(avMsg.getMessage(), HashMap.class);
-      msg.setObjectId((String)params.get("objectId"));
+      msg.setObjectId((String) params.get("objectId"));
       msg.setContent((String) params.get("content"));
+      msg.setStatus((Integer) params.get("status"));
     }
     return msg;
   }
 
   public AVMessage toAVMessage() {
     HashMap<String, Object> params = new HashMap<String, Object>();
-    params.put("objectId",objectId);
+    params.put("objectId", objectId);
     params.put("content", content);
+    params.put("status", status);
     internalMessage.setMessage(JSON.toJSONString(params));
     return internalMessage;
+  }
+
+  @Override
+  public String toString() {
+    return "{content:" + getContent() + " objectId:" + getObjectId() + " status:" + getStatus() + " fromPeerId:" +
+        getFromPeerId() +
+        " toPeerIds:" + getToPeerIds() + " timestamp:" + getTimestamp()+"}";
   }
 }

@@ -60,4 +60,8 @@ public class ChatService {
     users.add(user);
     withUsersToWatch(users, watch);
   }
+
+  public static Session getSession(){
+    return SessionManager.getInstance(getPeerId(User.curUser()));
+  }
 }

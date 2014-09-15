@@ -15,10 +15,8 @@ import android.widget.TextView;
 import com.avos.avoscloud.AVMessage;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.Session;
-import com.avos.avoscloud.SessionManager;
 import com.lzw.talk.R;
 import com.lzw.talk.adapter.ChatMsgViewAdapter;
-import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
 import com.lzw.talk.db.DBHelper;
 import com.lzw.talk.db.DBMsg;
@@ -27,6 +25,7 @@ import com.lzw.talk.entity.Msg;
 import com.lzw.talk.receiver.MsgReceiver;
 import com.lzw.talk.service.ChatService;
 import com.lzw.talk.service.MessageListener;
+import com.lzw.talk.util.Logger;
 import com.lzw.talk.util.TimeUtils;
 import com.lzw.talk.util.Utils;
 
@@ -118,6 +117,7 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
       try {
         me = (AVUser) me.fetch();  //to refresh object
         msgs = DBMsg.getMsgs(dbHelper, ChatService.getPeerId(me), ChatService.getPeerId(App.chatUser));
+        Logger.d("msgs="+msgs);
         res = true;
       } catch (Exception e) {
         e.printStackTrace();
@@ -205,19 +205,22 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
     protected Void doInBackground(Void... params) {
       try {
         msg = new Msg();
+        msg.setStatus(Msg.STATUS_SEND_START);
         msg.setContent(text);
-        msg.setFromPeerId(ChatService.getPeerId(me));
+        msg.setTimestamp(System.currentTimeMillis());
+        String selfId=ChatService.getSelfId();
+        Logger.d("selfId="+selfId);
+        msg.setFromPeerId(selfId);
         String peerId = ChatService.getPeerId(App.chatUser);
         List<String> peerIds = Utils.oneToList(peerId);
         msg.setToPeerIds(peerIds);
         msg.setObjectId(Utils.uuid());
 
-        AVMessage avMsg = msg.toAVMessage();
         DBMsg.insertMsg(dbHelper, msg);
-        List<String> ids = new ArrayList<String>();
-        ids.add(peerId);
-        String selfId = ChatService.getPeerId(User.curUser());
-        Session session = SessionManager.getInstance(selfId);
+        AVMessage avMsg = msg.toAVMessage();
+        Session session =ChatService.getSession();
+        String fromPeerId=avMsg.getFromPeerId();
+        Logger.d("fromPeerId="+fromPeerId);
         session.sendMessage(avMsg);
         res = true;
       } catch (Exception e) {
