@@ -6,7 +6,7 @@ import com.lzw.talk.base.App;
 import com.lzw.talk.db.DBHelper;
 import com.lzw.talk.db.DBMsg;
 import com.lzw.talk.entity.Msg;
-import com.lzw.talk.util.MyUtils;
+import com.lzw.talk.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,27 +16,34 @@ import java.util.List;
  */
 public class ChatService {
 
-  public static List<AVUser> findChatUsers() throws AVException {
-    AVQuery<AVUser> q = AVUser.getQuery();
-    List<AVUser> users = q.find();
+  public static List<User> findChatUsers() throws AVException {
+    List<User> users = getAllUsers();
     users.remove(User.curUser());
     return users;
   }
 
-  public static void insertDBMsg(String json) {
-    Msg msg = new Msg(json);
-    msg.setCreated(MyUtils.currentSecs());
+  public static List<User> getAllUsers() throws AVException {
+    AVQuery<User> q = AVUser.getQuery(User.class);
+    return q.find();
+  }
+
+  public static void insertDBMsg(AVMessage avMsg) {
+    Msg msg = Msg.fromAVMessage(avMsg);
     List<Msg> msgs = new ArrayList<Msg>();
     msgs.add(msg);
     DBHelper dbHelper = new DBHelper(App.cxt, App.DB_NAME, App.DB_VER);
     DBMsg.insertMsgs(dbHelper, msgs);
   }
 
-  public static String getPeerId(AVUser user) {
+  public static <T extends AVUser> String getPeerId(T user) {
     return user.getObjectId();
   }
 
-  public static void withUsersToWatch(List<AVUser> users, boolean watch) {
+  public static String getSelfId() {
+    return getPeerId(User.curUser());
+  }
+
+  public static <T extends AVUser> void withUsersToWatch(List<T> users, boolean watch) {
     List<String> peerIds = new ArrayList<String>();
     for (AVUser user : users) {
       peerIds.add(getPeerId(user));
@@ -48,8 +55,8 @@ public class ChatService {
     }
   }
 
-  public static void withUserToWatch(AVUser user, boolean watch) {
-    List<AVUser> users = new ArrayList<AVUser>();
+  public static <T extends AVUser> void withUserToWatch(T user, boolean watch) {
+    List<T> users = new ArrayList<T>();
     users.add(user);
     withUsersToWatch(users, watch);
   }

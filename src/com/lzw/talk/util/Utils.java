@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import com.lzw.talk.R;
+import com.lzw.talk.base.App;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -38,12 +39,10 @@ import org.json.JSONObject;
 
 import java.io.*;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 public class Utils {
   public static BufferedReader bufferedReader(String url) throws IOException,
@@ -155,27 +154,6 @@ public class Utils {
     output.close();
   }
 
-  public static ProgressDialog showSpinnerDialog(Activity activity) {
-    ProgressDialog dialog = new ProgressDialog(activity);
-    dialog.setMessage(activity.getString(R.string.hardLoading));
-    dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-    dialog.setCancelable(true);
-    dialog.show();
-    return dialog;
-  }
-
-  public static ProgressDialog showHorizontalDialog(Activity activity) {
-    ProgressDialog dialog = new ProgressDialog(activity);
-    dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-    dialog.setCancelable(true);
-    dialog.show();
-    return dialog;
-  }
-
-  public static void toast(Context context, int strId) {
-    toastIt(context, strId, false);
-  }
-
   public static void toastNonet(Context context) {
     toastIt(context, R.string.badNetwork, false);
   }
@@ -190,10 +168,6 @@ public class Utils {
     if (isLong) ti = Toast.LENGTH_LONG;
     else ti = Toast.LENGTH_SHORT;
     Toast.makeText(context, context.getString(strId), ti).show();
-  }
-
-  public static void toastLong(Context context, int strId) {
-    toastIt(context, strId, true);
   }
 
   public static boolean hasSDcard() {
@@ -527,8 +501,8 @@ public class Utils {
   public static String getRealPathFromURI(Context context, Uri contentUri) {
     Cursor cursor = null;
     try {
-      String[] proj = { MediaStore.Images.Media.DATA };
-      cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
+      String[] proj = {MediaStore.Images.Media.DATA};
+      cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
       int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
       cursor.moveToFirst();
       return cursor.getString(column_index);
@@ -540,7 +514,7 @@ public class Utils {
   }
 
   public static void openUrl(Context context, String url) {
-    Intent i=new Intent(Intent.ACTION_VIEW);
+    Intent i = new Intent(Intent.ACTION_VIEW);
     i.setData(Uri.parse(url));
     context.startActivity(i);
   }
@@ -553,7 +527,80 @@ public class Utils {
     return copy;
   }
 
-  public static Bitmap getEmptyBitmap(int w,int h) {
+  public static Bitmap getEmptyBitmap(int w, int h) {
     return Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+  }
+
+  public static void intentShare(Context context, String title, String shareContent) {
+    Intent intent = new Intent(Intent.ACTION_SEND);
+    intent.setType("text/plain");
+    intent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.share));
+    intent.putExtra(Intent.EXTRA_TEXT, shareContent);
+    intent.putExtra(Intent.EXTRA_TITLE, title);
+    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    context.startActivity(Intent.createChooser(intent, context.getString(R.string.please_choose)));
+  }
+
+  public static void toast(Context cxt, int id) {
+    Toast.makeText(cxt, id, Toast.LENGTH_SHORT).show();
+  }
+
+  public static void toastLong(Context cxt, int id) {
+    Toast.makeText(cxt, id, Toast.LENGTH_LONG).show();
+  }
+
+  public static ProgressDialog showSpinnerDialog(Activity activity) {
+    activity = modifyDialogContext(activity);
+    ProgressDialog dialog = new ProgressDialog(activity);
+    dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+    dialog.setCancelable(true);
+    dialog.setMessage(App.cxt.getString(R.string.hardLoading));
+    dialog.show();
+    return dialog;
+  }
+
+  public static ProgressDialog showHorizontalDialog(Activity activity) {
+    activity = modifyDialogContext(activity);
+    ProgressDialog dialog = new ProgressDialog(activity);
+    dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+    dialog.setCancelable(true);
+    dialog.show();
+    return dialog;
+  }
+
+  public static int currentSecs() {
+    int l;
+    l = (int) (new Date().getTime() / 1000);
+    return l;
+  }
+
+  public static List<String> oneToList(String s) {
+    List<String> list = new ArrayList<String>();
+    list.add(s);
+    return list;
+  }
+
+  public static String uuid() {
+    StringBuilder sb = new StringBuilder();
+    int start = 48, end = 58;
+    appendChar(sb, start, end);
+    appendChar(sb, 65, 90);
+    appendChar(sb, 97, 123);
+    String charSet = sb.toString();
+    StringBuilder sb1 = new StringBuilder();
+    Random random = new Random();
+    for (int i = 0; i < 24; i++) {
+      int len = charSet.length();
+      int pos = random.nextInt(len);
+      sb1.append(charSet.charAt(pos));
+    }
+    return sb1.toString();
+  }
+
+  public static void appendChar(StringBuilder sb, int start, int end) {
+    int i;
+    for (i = start; i < end; i++) {
+      sb.append((char)i);
+    }
   }
 }

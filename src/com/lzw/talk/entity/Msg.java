@@ -1,80 +1,94 @@
 package com.lzw.talk.entity;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.lzw.talk.base.C;
+import com.avos.avoscloud.AVMessage;
+import com.avos.avoscloud.AVUtils;
 
 import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 /**
  * Created by lzw on 14-8-7.
  */
 public class Msg {
-  int created;
-  String from;
-  String to;
-  String fromName;
-  String txt;
-  public Msg(){
+  public static final int STATUS_SEND_START = 0;
+  public static final int STATUS_SEND_RECEIVED = 1;
+  //long timestamp;
+  //String fromPeerId;
+  //List<String> toPeerIds;
+  String content;
+  String objectId;
+  AVMessage internalMessage;
+  int status;
+
+  public Msg() {
+    internalMessage=new AVMessage();
   }
 
-  public Msg(String json) {
-    JSONObject jobj = (JSONObject) JSON.parse(json);
-    from=jobj.getString(C.FROM);
-    to=jobj.getString(C.TO);
-    txt=jobj.getString(C.TXT);
-    created=jobj.getInteger(C.CREATED);
+  public AVMessage getInternalMessage() {
+    return internalMessage;
   }
 
-  public int getCreated() {
-    return created;
+  public void setInternalMessage(AVMessage internalMessage) {
+    this.internalMessage = internalMessage;
   }
 
-  public void setCreated(int created) {
-    this.created = created;
+  public List<String> getToPeerIds() {
+    return internalMessage.getToPeerIds();
   }
 
-  public String getFrom() {
-    return from;
+  public void setToPeerIds(List<String> toPeerIds) {
+    internalMessage.setToPeerIds(toPeerIds);
   }
 
-  public void setFrom(String from) {
-    this.from = from;
+  public String getFromPeerId() {
+    return internalMessage.getFromPeerId();
   }
 
-  public String getTo() {
-    return to;
+  public void setFromPeerId(String fromPeerId) {
+    internalMessage.setFromPeerId(fromPeerId);
   }
 
-  public void setTo(String to) {
-    this.to = to;
+  public long getTimestamp() {
+    return internalMessage.getTimestamp();
   }
 
-  public String getTxt() {
-    return txt;
+  public void setTimestamp(long timestamp) {
+    internalMessage.setTimestamp(timestamp);
   }
 
-  public void setTxt(String txt) {
-    this.txt = txt;
+  public String getContent() {
+    return content;
   }
 
-  public String getFromName() {
-    return fromName;
+  public void setContent(String content) {
+    this.content = content;
   }
 
-  public void setFromName(String fromName) {
-    this.fromName = fromName;
+  public String getObjectId() {
+    return objectId;
   }
 
-  public String toJson() {
-    Map<String, Object> map = new HashMap<String, Object>();
-    map.put(C.FROM, from);
-    map.put(C.TO, to);
-    map.put(C.TXT, txt);
-    map.put(C.FROM_NAME,fromName);
-    map.put(C.CREATED, created);
-    JSONObject json = new JSONObject(map);
-    return json.toJSONString();
+  public void setObjectId(String objectId) {
+    this.objectId = objectId;
+  }
+
+  public static Msg fromAVMessage(AVMessage avMsg) {
+    Msg msg = new Msg();
+    msg.setInternalMessage(avMsg);
+    if (!AVUtils.isBlankString(avMsg.getMessage())) {
+      HashMap<String, Object> params = JSON.parseObject(avMsg.getMessage(), HashMap.class);
+      msg.setObjectId((String)params.get("objectId"));
+      msg.setContent((String) params.get("content"));
+    }
+    return msg;
+  }
+
+  public AVMessage toAVMessage() {
+    HashMap<String, Object> params = new HashMap<String, Object>();
+    params.put("objectId",objectId);
+    params.put("content", content);
+    internalMessage.setMessage(JSON.toJSONString(params));
+    return internalMessage;
   }
 }

@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import com.avos.avoscloud.AVMessage;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.Session;
 import com.avos.avoscloud.SessionManager;
@@ -26,9 +27,8 @@ import com.lzw.talk.entity.Msg;
 import com.lzw.talk.receiver.MsgReceiver;
 import com.lzw.talk.service.ChatService;
 import com.lzw.talk.service.MessageListener;
-import com.lzw.talk.util.Logger;
-import com.lzw.talk.util.MyUtils;
 import com.lzw.talk.util.TimeUtils;
+import com.lzw.talk.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -116,7 +116,7 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
     @Override
     protected Void doInBackground(Void... params) {
       try {
-        me= (AVUser) me.fetch();  //to refresh object
+        me = (AVUser) me.fetch();  //to refresh object
         msgs = DBMsg.getMsgs(dbHelper, ChatService.getPeerId(me), ChatService.getPeerId(App.chatUser));
         res = true;
       } catch (Exception e) {
@@ -133,7 +133,7 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
       if (res) {
         addMsgsAndRefresh(msgs);
       } else {
-        MyUtils.toast(cxt, R.string.failedToGetData);
+        Utils.toast(cxt, R.string.failedToGetData);
       }
     }
   }
@@ -152,10 +152,9 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
 
   private ChatMsgEntity getChatMsgEntity(Msg msg) {
     ChatMsgEntity entity = new ChatMsgEntity();
-    int created = msg.getCreated();
-    Date date = new Date(created * 1000L);
+    Date date = new Date(msg.getTimestamp());
     entity.setDate(TimeUtils.getDate(date));
-    String fromId = msg.getFrom();
+    String fromId = msg.getFromPeerId();
     String curId = ChatService.getPeerId(me);
     if (curId.equals(fromId)) {
       entity.setName(me.getUsername());
@@ -164,7 +163,7 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
       entity.setName(App.chatUser.getUsername());
       entity.setMsgType(true);
     }
-    entity.setText(msg.getTxt());
+    entity.setText(msg.getContent());
     entity.setMsg(msg);
     return entity;
   }
@@ -206,21 +205,20 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
     protected Void doInBackground(Void... params) {
       try {
         msg = new Msg();
-        msg.setTxt(text);
-        msg.setFrom(ChatService.getPeerId(me));
-        int l;
-        l = MyUtils.currentSecs();
-        msg.setCreated(l);
-        Logger.d("my username =" + me.getUsername());
-        msg.setFromName(me.getUsername());
-        msg.setTo(ChatService.getPeerId(App.chatUser));
-        String json = msg.toJson();
+        msg.setContent(text);
+        msg.setFromPeerId(ChatService.getPeerId(me));
+        String peerId = ChatService.getPeerId(App.chatUser);
+        List<String> peerIds = Utils.oneToList(peerId);
+        msg.setToPeerIds(peerIds);
+        msg.setObjectId(Utils.uuid());
+
+        AVMessage avMsg = msg.toAVMessage();
         DBMsg.insertMsg(dbHelper, msg);
         List<String> ids = new ArrayList<String>();
-        ids.add(ChatService.getPeerId(App.chatUser));
+        ids.add(peerId);
         String selfId = ChatService.getPeerId(User.curUser());
         Session session = SessionManager.getInstance(selfId);
-        session.sendMessage(json, ids);
+        session.sendMessage(avMsg);
         res = true;
       } catch (Exception e) {
         e.printStackTrace();
@@ -235,7 +233,7 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
       if (res) {
         refresh();
       } else {
-        MyUtils.toast(cxt, R.string.badNetwork);
+        Utils.toast(cxt, R.string.badNetwork);
       }
     }
   }

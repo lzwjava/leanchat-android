@@ -12,12 +12,14 @@ import android.widget.ListView;
 import com.avos.avoscloud.AVUser;
 import com.lzw.talk.R;
 import com.lzw.talk.adapter.UserAdapter;
+import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
 import com.lzw.talk.base.C;
 import com.lzw.talk.receiver.MsgReceiver;
 import com.lzw.talk.service.ChatService;
 import com.lzw.talk.service.StatusListner;
 import com.lzw.talk.util.NetAsyncTask;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +32,7 @@ public class UsersActivity extends Activity implements AdapterView.OnItemClickLi
   ListView usersList;
   Activity cxt;
   private UserAdapter userAdapter;
-  List<AVUser> users;
+  List<User> users;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,13 @@ public class UsersActivity extends Activity implements AdapterView.OnItemClickLi
     setList();
     new GetDataTask(cxt).execute();
     MsgReceiver.registerSatusListener(this);
+    registerMyselfToCache();
+  }
+
+  private void registerMyselfToCache() {
+    User user = User.curUser();
+    String userId = user.getObjectId();
+    App.registerUserCache(userId, user);
   }
 
   @Override

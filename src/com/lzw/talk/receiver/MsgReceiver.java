@@ -56,7 +56,7 @@ public class MsgReceiver extends AVMessageReceiver {
   public void onMessage(Context context, Session session, AVMessage avMsg) {
     String msg = avMsg.getMessage();
     Logger.d("msg=" + msg);
-    ChatService.insertDBMsg(msg);
+    ChatService.insertDBMsg(avMsg);
     MessageListener listener = sessionMessageDispatchers.get(avMsg.getFromPeerId());
     if (listener == null) {
       notifyMsg(context, msg);
