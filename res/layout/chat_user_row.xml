@@ -9,6 +9,17 @@
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:gravity="center"
+        android:text="name"
         android:layout_centerInParent="true"
-        android:id="@+id/text" />
+        android:id="@+id/name" />
+
+    <TextView
+        android:id="@+id/onlineStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="[在线]"
+        android:textSize="12sp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_centerVertical="true" />
 </RelativeLayout>

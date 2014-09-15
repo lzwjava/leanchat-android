@@ -18,8 +18,6 @@ import com.lzw.talk.receiver.MsgReceiver;
 import com.lzw.talk.service.ChatService;
 import com.lzw.talk.service.StatusListner;
 import com.lzw.talk.util.NetAsyncTask;
-import com.lzw.talk.util.Utils;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +45,6 @@ public class UsersActivity extends Activity implements AdapterView.OnItemClickLi
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
-    menu.add(0, MENU_SET_NICKNAME, 0, R.string.tips);
     menu.add(0, MENU_LOGOUT, 0, R.string.logout);
     return super.onCreateOptionsMenu(menu);
   }
@@ -55,9 +52,7 @@ public class UsersActivity extends Activity implements AdapterView.OnItemClickLi
   @Override
   public boolean onMenuItemSelected(int featureId, MenuItem item) {
     int id = item.getItemId();
-    if (id == MENU_SET_NICKNAME) {
-      Utils.alertDialog(cxt, R.string.green_indicates_online);
-    } else if (id == MENU_LOGOUT) {
+    if (id == MENU_LOGOUT) {
       AVUser.logOut();
       finish();
     }
@@ -112,7 +107,7 @@ public class UsersActivity extends Activity implements AdapterView.OnItemClickLi
     protected void onPost(boolean res) {
       if (res) {
         userAdapter.setUsers(users);
-        ChatService.withUsers(users, true);
+        ChatService.withUsersToWatch(users, true);
         onStatusOnline(new ArrayList<String>(MsgReceiver.onlines));
       }
     }

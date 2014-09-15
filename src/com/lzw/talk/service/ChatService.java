@@ -36,7 +36,7 @@ public class ChatService {
     return user.getObjectId();
   }
 
-  public static void withUsers(List<AVUser> users, boolean watch) {
+  public static void withUsersToWatch(List<AVUser> users, boolean watch) {
     List<String> peerIds = new ArrayList<String>();
     for (AVUser user : users) {
       peerIds.add(getPeerId(user));
@@ -51,6 +51,6 @@ public class ChatService {
   public static void withUserToWatch(AVUser user, boolean watch) {
     List<AVUser> users = new ArrayList<AVUser>();
     users.add(user);
-    withUsers(users, watch);
+    withUsersToWatch(users, watch);
   }
 }

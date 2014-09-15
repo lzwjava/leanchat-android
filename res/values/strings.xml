@@ -86,4 +86,6 @@
     <string name="green_indicates_online">绿色表明在线</string>
     <string name="please_input_name_to_start">请输入用户名就开始</string>
     <string name="username_is_token_or_bad_net">用户名已使用或网络差</string>
+    <string name="status_online">[在线]</string>
+    <string name="status_offline">[离线]</string>
 </resources>

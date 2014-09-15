@@ -30,12 +30,12 @@ public class MsgReceiver extends AVMessageReceiver {
   private final Queue<String> failedMessage = new LinkedList<String>();
   PrefDao prefDao;
   public static StatusListner statusListner;
-  public static Set<String> onlines=new HashSet<String>();
+  public static Set<String> onlines = new HashSet<String>();
 
   @Override
   public void onSessionOpen(Context context, Session session) {
     Logger.d("onSessionOpen");
-    prefDao=new PrefDao(context);
+    prefDao = new PrefDao(context);
   }
 
   @Override
@@ -54,11 +54,11 @@ public class MsgReceiver extends AVMessageReceiver {
 
   @Override
   public void onMessage(Context context, Session session, AVMessage avMsg) {
-    String  msg=avMsg.getMessage();
-    Logger.d("msg="+msg);
+    String msg = avMsg.getMessage();
+    Logger.d("msg=" + msg);
     ChatService.insertDBMsg(msg);
     MessageListener listener = sessionMessageDispatchers.get(avMsg.getFromPeerId());
-    if (listener==null) {
+    if (listener == null) {
       notifyMsg(context, msg);
     } else {
       Logger.d("refresh datas");
@@ -68,23 +68,22 @@ public class MsgReceiver extends AVMessageReceiver {
 
   @Override
   public void onMessageSent(Context context, Session session, AVMessage msg) {
-    String s=msg.getMessage();
-    Logger.d("onMsgSent="+s);
-    Logger.d("From installationId"+ session.getSelfPeerId());
+    String s = msg.getMessage();
+    Logger.d("onMsgSent=" + s);
+    Logger.d("From installationId" + session.getSelfPeerId());
   }
 
   @Override
   public void onMessageFailure(Context context, Session session, AVMessage msg) {
-    String msgStr=msg.getMessage();
+    String msgStr = msg.getMessage();
     failedMessage.add(msgStr);
   }
 
   public static void notifyMsg(Context context, String jsonMsg) throws JSONException {
-    JSONObject jobj= JSON.parseObject(jsonMsg);
+    JSONObject jobj = JSON.parseObject(jsonMsg);
     int icon = context.getApplicationInfo().icon;
     PendingIntent pend = PendingIntent.getActivity(context, 0,
         new Intent(context, ChatActivity.class), 0);
-    Resources res = context.getResources();
     Notification.Builder builder = new Notification.Builder(context);
     String msg = jobj.getString(C.TXT);
     builder.setContentIntent(pend)
@@ -100,14 +99,14 @@ public class MsgReceiver extends AVMessageReceiver {
 
   @Override
   public void onStatusOnline(Context context, Session session, List<String> strings) {
-    Logger.d("onStatusOnline "+strings);
+    Logger.d("onStatusOnline " + strings);
     onlines.addAll(strings);
     statusListner.onStatusOnline(new ArrayList<String>(onlines));
   }
 
   @Override
   public void onStatusOffline(Context context, Session session, List<String> strings) {
-    Logger.d("onStatusOff "+strings);
+    Logger.d("onStatusOff " + strings);
     onlines.removeAll(strings);
     statusListner.onStatusOnline(new ArrayList<String>(onlines));
   }
@@ -131,14 +130,14 @@ public class MsgReceiver extends AVMessageReceiver {
       new HashMap<String, MessageListener>();
 
   public static void registerSatusListener(StatusListner listener) {
-    statusListner=listener;
+    statusListner = listener;
   }
 
   public static void unregisterSatutsListener() {
-    statusListner=null;
+    statusListner = null;
   }
 
-  public static List<String> getOnlines(){
+  public static List<String> getOnlines() {
     return new ArrayList<String>(onlines);
   }
 }

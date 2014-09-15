@@ -85,8 +85,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
   }
 
 
-  private void openSession() {
-    Logger.d("open SessionAndChat");
+  public void openSession() {
     final String selfId = ChatService.getPeerId(User.curUser());
     List<String> peerIds = new LinkedList<String>();
     Session session = SessionManager.getInstance(selfId);

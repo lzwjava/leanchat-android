@@ -13,7 +13,6 @@ import java.util.List;
  */
 public class DBMsg {
   public static final String CHAT = "chat";
-
   public static final String TXT = "txt";
   public static final String FROM_ID = "from_id";
   public static final String TO_ID = "to_id";
@@ -21,7 +20,7 @@ public class DBMsg {
 
   public static void createTable(SQLiteDatabase db) {
     db.execSQL("create table if not exists chat (id integer primary key, from_id varchar(255), " +
-        "to_id varchar(255), txt varchar(255), created integer)");
+        "to_id varchar(255), txt varchar(1023), created integer)");
   }
 
   public static int insertMsg(DBHelper dbHelper,Msg msg){

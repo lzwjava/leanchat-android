@@ -24,6 +24,11 @@ public class UserAdapter extends BaseAdapter {
     this.cxt = cxt;
   }
 
+  public static class ViewHolder {
+    TextView usernameView;
+    TextView onlineStatusView;
+  }
+
   public void setUsers(List<AVUser> users) {
     this.users = users;
   }
@@ -47,18 +52,21 @@ public class UserAdapter extends BaseAdapter {
   public View getView(int position, View conView, ViewGroup parent) {
     if (conView == null) {
       LayoutInflater inflater = LayoutInflater.from(cxt);
-      conView = inflater.inflate(R.layout.chat_user_row, null,false);
-      TextView textView = (TextView) conView.findViewById(R.id.text);
-      conView.setTag(textView);
+      conView = inflater.inflate(R.layout.chat_user_row, null, false);
+      ViewHolder viewHolder = new ViewHolder();
+      viewHolder.usernameView = (TextView) conView.findViewById(R.id.name);
+      viewHolder.onlineStatusView = (TextView) conView.findViewById(R.id.onlineStatus);
+      conView.setTag(viewHolder);
     }
-    TextView textView = (TextView) conView.getTag();
+    ViewHolder viewHolder = (ViewHolder) conView.getTag();
     AVUser user = users.get(position);
-    textView.setText(user.getUsername());
-    if(user.getBoolean(C.ONLINE)){
-      textView.setTextColor(cxt.getResources().getColor(R.color.tree_green));
-    }else{
-      textView.setTextColor(cxt.getResources().getColor(R.color.black));
-    }
+    viewHolder.usernameView.setText(user.getUsername());
+    setTextBasedOnFlag(user.getBoolean(C.ONLINE), viewHolder.onlineStatusView,
+        R.string.status_online, R.string.status_offline);
     return conView;
+  }
+
+  public void setTextBasedOnFlag(boolean flag, TextView textView, int onStringId, int offStringId) {
+    textView.setText(flag ? onStringId : offStringId);
   }
 }
