@@ -12,6 +12,7 @@ import com.lzw.talk.R;
 import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
 import com.lzw.talk.service.ChatService;
+import com.lzw.talk.service.UserManager;
 import com.lzw.talk.util.Logger;
 import com.lzw.talk.util.NetAsyncTask;
 import com.lzw.talk.util.Utils;
@@ -53,7 +54,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         new NetAsyncTask(ctx) {
           @Override
           protected void doInBack() throws Exception {
-            AVUser avUser = User.getAVUser(username);
+            AVUser avUser = UserManager.getAVUser(username);
             if (avUser == null) {
               AVUser user = new AVUser();
               user.put(User.USERNAME, username);

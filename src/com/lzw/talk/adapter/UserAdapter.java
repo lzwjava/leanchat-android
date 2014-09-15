@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import com.avos.avoscloud.AVUser;
 import com.lzw.talk.R;
+import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.C;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ import java.util.List;
  */
 public class UserAdapter extends BaseAdapter {
   Activity cxt;
-  List<AVUser> users = new ArrayList<AVUser>();
+  List<User> users = new ArrayList<User>();
 
   public UserAdapter(Activity cxt) {
     this.cxt = cxt;
@@ -29,7 +30,7 @@ public class UserAdapter extends BaseAdapter {
     TextView onlineStatusView;
   }
 
-  public void setUsers(List<AVUser> users) {
+  public void setUsers(List<User> users) {
     this.users = users;
   }
 
