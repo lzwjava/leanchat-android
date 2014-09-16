@@ -5,20 +5,16 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
-import com.alibaba.fastjson.JSONObject;
 import com.avos.avoscloud.AVMessage;
 import com.avos.avoscloud.AVMessageReceiver;
 import com.avos.avoscloud.Session;
 import com.lzw.talk.activity.ChatActivity;
-import com.lzw.talk.base.C;
 import com.lzw.talk.db.DBMsg;
 import com.lzw.talk.entity.Msg;
-import com.lzw.talk.service.PrefDao;
 import com.lzw.talk.service.ChatService;
 import com.lzw.talk.service.MessageListener;
+import com.lzw.talk.service.PrefDao;
 import com.lzw.talk.service.StatusListner;
 import com.lzw.talk.util.Logger;
 import com.lzw.talk.util.Utils;
@@ -72,7 +68,6 @@ public class MsgReceiver extends AVMessageReceiver {
       }
       ChatService.sendResponseMessage(msg);
     }else if(msg.getType()==Msg.TYPE_RESPONSE){
-      Logger.d("receive reponse message");
       DBMsg.updateStatusAndTimestamp(msg);
       if(listener!=null){
         listener.onMessage(msg);
