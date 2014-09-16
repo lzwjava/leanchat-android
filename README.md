@@ -4,6 +4,11 @@
 
 ![img](https://raw.githubusercontent.com/lzwjava/plan/master/im360.png)
 
+##当前特性
+* 消息支持文字，（图片，声音的传url类似）
+* 接受回执
+
+
 ## Install
 
 用到的依赖包：
