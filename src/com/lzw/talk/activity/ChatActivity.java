@@ -20,24 +20,21 @@ import com.lzw.talk.adapter.ChatMsgViewAdapter;
 import com.lzw.talk.base.App;
 import com.lzw.talk.db.DBHelper;
 import com.lzw.talk.db.DBMsg;
-import com.lzw.talk.entity.ChatMsgEntity;
 import com.lzw.talk.entity.Msg;
 import com.lzw.talk.receiver.MsgReceiver;
 import com.lzw.talk.service.ChatService;
 import com.lzw.talk.service.MessageListener;
 import com.lzw.talk.util.Logger;
-import com.lzw.talk.util.TimeUtils;
 import com.lzw.talk.util.Utils;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class ChatActivity extends Activity implements OnClickListener, MessageListener {
   private EditText mEditTextContent;
   private ListView mListView;
   private ChatMsgViewAdapter mAdapter;
-  private List<ChatMsgEntity> mDataArrays;
+  private List<Msg> msgs;
   public static ChatActivity instance;
   Activity cxt;
   ProgressBar progressBar;
@@ -89,7 +86,7 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
     title.setText(App.chatUser.getUsername());
     me = AVUser.getCurrentUser();
     dbHelper = new DBHelper(cxt, App.DB_NAME, App.DB_VER);
-    mDataArrays = new ArrayList<ChatMsgEntity>();
+    msgs = new ArrayList<Msg>();
     mAdapter = new ChatMsgViewAdapter(this);
     mListView.setAdapter(mAdapter);
   }
@@ -99,7 +96,7 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
   }
 
   @Override
-  public void onMessage(String msg) {
+  public void onMessage(Msg msg) {
     refresh();
   }
 
@@ -117,7 +114,6 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
       try {
         me = (AVUser) me.fetch();  //to refresh object
         msgs = DBMsg.getMsgs(dbHelper, ChatService.getPeerId(me), ChatService.getPeerId(App.chatUser));
-        Logger.d("msgs="+msgs);
         res = true;
       } catch (Exception e) {
         e.printStackTrace();
@@ -139,33 +135,10 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
   }
 
   public void addMsgsAndRefresh(List<Msg> msgs) {
-    List<ChatMsgEntity> sublists = new ArrayList<ChatMsgEntity>();
-    for (Msg msg : msgs) {
-      ChatMsgEntity entity = getChatMsgEntity(msg);
-      sublists.add(entity);
-    }
-    mDataArrays = sublists;
-    mAdapter.setDatas(mDataArrays);
+    this.msgs = msgs;
+    mAdapter.setDatas(this.msgs);
     mAdapter.notifyDataSetChanged();
     scroolToLast();
-  }
-
-  private ChatMsgEntity getChatMsgEntity(Msg msg) {
-    ChatMsgEntity entity = new ChatMsgEntity();
-    Date date = new Date(msg.getTimestamp());
-    entity.setDate(TimeUtils.getDate(date));
-    String fromId = msg.getFromPeerId();
-    String curId = ChatService.getPeerId(me);
-    if (curId.equals(fromId)) {
-      entity.setName(me.getUsername());
-      entity.setMsgType(false);
-    } else {
-      entity.setName(App.chatUser.getUsername());
-      entity.setMsgType(true);
-    }
-    entity.setText(msg.getContent());
-    entity.setMsg(msg);
-    return entity;
   }
 
   @Override
@@ -188,7 +161,7 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
 
   class SendTask extends AsyncTask<Void, Void, Void> {
     String text;
-    Msg msg;
+
     boolean res;
 
     public SendTask(String text) {
@@ -204,23 +177,20 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
     @Override
     protected Void doInBackground(Void... params) {
       try {
+        String peerId = ChatService.getPeerId(App.chatUser);
+        Msg msg;
         msg = new Msg();
         msg.setStatus(Msg.STATUS_SEND_START);
         msg.setContent(text);
         msg.setTimestamp(System.currentTimeMillis());
-        String selfId=ChatService.getSelfId();
-        Logger.d("selfId="+selfId);
-        msg.setFromPeerId(selfId);
-        String peerId = ChatService.getPeerId(App.chatUser);
-        List<String> peerIds = Utils.oneToList(peerId);
-        msg.setToPeerIds(peerIds);
+        msg.setFromPeerId(ChatService.getSelfId());
+        msg.setToPeerIds(Utils.oneToList(peerId));
         msg.setObjectId(Utils.uuid());
+        msg.setType(Msg.TYPE_TEXT);
 
         DBMsg.insertMsg(dbHelper, msg);
         AVMessage avMsg = msg.toAVMessage();
         Session session =ChatService.getSession();
-        String fromPeerId=avMsg.getFromPeerId();
-        Logger.d("fromPeerId="+fromPeerId);
         session.sendMessage(avMsg);
         res = true;
       } catch (Exception e) {

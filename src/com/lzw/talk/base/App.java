@@ -18,7 +18,7 @@ public class App extends Application {
   public static final String DB_NAME = "chat.db3";
   public static final int DB_VER = 1;
   public static boolean debug = true;
-  public static Context cxt;
+  public static Context ctx;
   public static AVUser chatUser;
   public static Session session;
   private static Map<String, User> usersCache = new HashMap<String, User>();
@@ -26,13 +26,13 @@ public class App extends Application {
   @Override
   public void onCreate() {
     super.onCreate();
-    cxt = this;
+    ctx = this;
     Utils.fixAsyncTaskBug();
     AVOSCloud.initialize(this, "x3o016bxnkpyee7e9pa5pre6efx2dadyerdlcez0wbzhw25g",
         "057x24cfdzhffnl3dzk14jh9xo2rq6w1hy1fdzt5tv46ym78");
     User.registerSubclass(User.class);
     AVInstallation.getCurrentInstallation().saveInBackground();
-    PushService.setDefaultPushCallback(cxt, LoginActivity.class);
+    PushService.setDefaultPushCallback(ctx, LoginActivity.class);
     AVOSUtils.showInternalDebugLog();
     if (App.debug) {
       Logger.open = true;
@@ -41,7 +41,7 @@ public class App extends Application {
     }
   }
 
-  public static AVUser lookupUser(String userId) {
+  public static User lookupUser(String userId) {
     return usersCache.get(userId);
   }
 

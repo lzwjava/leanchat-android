@@ -3,7 +3,9 @@ package com.lzw.talk.db;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import com.lzw.talk.base.App;
 import com.lzw.talk.entity.Msg;
+import com.lzw.talk.util.Logger;
 import com.lzw.talk.util.Utils;
 
 import java.util.ArrayList;
@@ -19,10 +21,12 @@ public class DBMsg {
   public static final String TIMESTAMP = "timestamp";
   public static final String OBJECT_ID = "objectId";
   public static final String CONTENT = "content";
+  public static final String STATUS = "status";
 
   public static void createTable(SQLiteDatabase db) {
     db.execSQL("create table if not exists messages (id integer primary key, objectId varchar(63)," +
-        "fromPeerId varchar(255), toPeerId varchar(255), content varchar(1023), timestamp varchar(63))");
+        "fromPeerId varchar(255), toPeerId varchar(255), content varchar(1023)," +
+        " status integer, timestamp varchar(63))");
   }
 
   public static int insertMsg(DBHelper dbHelper, Msg msg) {
@@ -44,6 +48,7 @@ public class DBMsg {
         cv.put(OBJECT_ID, msg.getObjectId());
         cv.put(TIMESTAMP, msg.getTimestamp() + "");
         cv.put(FROM_PEER_ID, msg.getFromPeerId());
+        cv.put(STATUS,msg.getStatus());
         cv.put(TO_PEER_ID, msg.getToPeerIds().get(0));
         cv.put(CONTENT, msg.getContent());
         db.insert(MESSAGES, null, cv);
@@ -61,7 +66,7 @@ public class DBMsg {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
     assert db != null;
     Cursor c = db.query(MESSAGES, new String[]{FROM_PEER_ID,
-            TO_PEER_ID, CONTENT, TIMESTAMP,OBJECT_ID},
+            TO_PEER_ID, CONTENT, TIMESTAMP,OBJECT_ID,STATUS},
         "fromPeerId =? and toPeerId = ? or fromPeerId = ? and toPeerId = ?",
         new String[]{me, he, he, me}, null, null,
         TIMESTAMP,
@@ -72,11 +77,27 @@ public class DBMsg {
       msg.setToPeerIds(Utils.oneToList(id));
       msg.setFromPeerId(c.getString(c.getColumnIndex(FROM_PEER_ID)));
       msg.setContent(c.getString(c.getColumnIndex(CONTENT)));
+      msg.setStatus(c.getInt(c.getColumnIndex(STATUS)));
       msg.setObjectId(c.getString(c.getColumnIndex(OBJECT_ID)));
       msg.setTimestamp(Long.parseLong(c.getString(c.getColumnIndex(TIMESTAMP))));
       msgs.add(msg);
     }
     c.close();
     return msgs;
+  }
+
+  public static void updateStatusAndTimestamp(Msg msg) {
+    ContentValues cv=new ContentValues();
+    cv.put(STATUS,Msg.STATUS_SEND_RECEIVED);
+    cv.put(TIMESTAMP,msg.getContent());
+    String objectId = msg.getObjectId();
+    updateMessage(objectId, cv);
+  }
+
+  public static void updateMessage(String objectId, ContentValues cv) {
+    DBHelper dbHelper=new DBHelper(App.ctx,App.DB_NAME,App.DB_VER);
+    SQLiteDatabase db=dbHelper.getWritableDatabase();
+    int update = db.update(MESSAGES, cv, "objectId=?", new String[]{objectId});
+    Logger.d("update n="+update);
   }
 }

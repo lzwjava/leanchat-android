@@ -39,7 +39,6 @@ import org.json.JSONObject;
 
 import java.io.*;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -554,7 +553,7 @@ public class Utils {
     ProgressDialog dialog = new ProgressDialog(activity);
     dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
     dialog.setCancelable(true);
-    dialog.setMessage(App.cxt.getString(R.string.hardLoading));
+    dialog.setMessage(App.ctx.getString(R.string.hardLoading));
     dialog.show();
     return dialog;
   }

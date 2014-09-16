@@ -110,6 +110,7 @@ public class UsersActivity extends Activity implements AdapterView.OnItemClickLi
     @Override
     protected void doInBack() throws Exception {
       users = ChatService.findChatUsers();
+      App.registerBatchUserCache(users);
     }
 
     @Override

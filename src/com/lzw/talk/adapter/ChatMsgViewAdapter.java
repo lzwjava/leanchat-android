@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import com.lzw.talk.R;
-import com.lzw.talk.entity.ChatMsgEntity;
+import com.lzw.talk.entity.Msg;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,7 @@ public class ChatMsgViewAdapter extends BaseAdapter {
 		int IMVT_TO_MSG = 1;
 	}
 
-	private List<ChatMsgEntity> datas=new ArrayList<ChatMsgEntity>();
+	private List<Msg> datas=new ArrayList<Msg>();
 
 	private Context ctx;
 
@@ -29,10 +29,9 @@ public class ChatMsgViewAdapter extends BaseAdapter {
 		mInflater = LayoutInflater.from(context);
 	}
 
-  public void setDatas(List<ChatMsgEntity> datas) {
+  public void setDatas(List<Msg> datas) {
     this.datas = datas;
   }
-
 
   public int getCount() {
 		return datas.size();
@@ -48,9 +47,9 @@ public class ChatMsgViewAdapter extends BaseAdapter {
 
 	public int getItemViewType(int position) {
 		// TODO Auto-generated method stub
-		ChatMsgEntity entity = datas.get(position);
+		Msg entity = datas.get(position);
 
-		if (entity.getMsgType()) {
+		if (entity.isComeMessage()) {
 			return IMsgViewType.IMVT_COM_MSG;
 		} else {
 			return IMsgViewType.IMVT_TO_MSG;
@@ -65,8 +64,8 @@ public class ChatMsgViewAdapter extends BaseAdapter {
 
 	public View getView(int position, View convertView, ViewGroup parent) {
 
-		ChatMsgEntity entity = datas.get(position);
-		boolean isComMsg = entity.getMsgType();
+		Msg entity = datas.get(position);
+		boolean isComMsg = entity.isComeMessage();
 
 		ViewHolder viewHolder;
     if (convertView == null) {
@@ -86,18 +85,23 @@ public class ChatMsgViewAdapter extends BaseAdapter {
       viewHolder.tvContent=(TextView) convertView
 					.findViewById(R.id.tv_chatcontent);
 			viewHolder.isComMsg = isComMsg;
-
+      if(isComMsg==false){
+        viewHolder.tvStatus= (TextView) convertView.findViewById(R.id.status);
+      }
 			convertView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
     TextView textView=viewHolder.tvContent;
 
-		viewHolder.tvSendTime.setText(entity.getDate());
-		viewHolder.tvUserName.setText(entity.getName());
+		viewHolder.tvSendTime.setText(entity.getTimestamp()+"");
+		viewHolder.tvUserName.setText(entity.getFromName());
     textView.setTag(viewHolder);
     viewHolder.msg =entity;
-    textView.setText(entity.getText());
+    textView.setText(entity.getContent());
+    if(isComMsg==false){
+      viewHolder.tvStatus.setText(entity.getStatusDesc());
+    }
 		return convertView;
 	}
 
@@ -106,6 +110,7 @@ public class ChatMsgViewAdapter extends BaseAdapter {
 		public TextView tvUserName;
 		public TextView tvContent;
 		public boolean isComMsg = true;
-    public ChatMsgEntity msg;
+    public Msg msg;
+    public TextView tvStatus;
   }
 }

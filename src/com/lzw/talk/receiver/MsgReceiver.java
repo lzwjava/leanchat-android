@@ -14,11 +14,14 @@ import com.avos.avoscloud.AVMessageReceiver;
 import com.avos.avoscloud.Session;
 import com.lzw.talk.activity.ChatActivity;
 import com.lzw.talk.base.C;
+import com.lzw.talk.db.DBMsg;
+import com.lzw.talk.entity.Msg;
 import com.lzw.talk.service.PrefDao;
 import com.lzw.talk.service.ChatService;
 import com.lzw.talk.service.MessageListener;
 import com.lzw.talk.service.StatusListner;
 import com.lzw.talk.util.Logger;
+import com.lzw.talk.util.Utils;
 
 import java.util.*;
 
@@ -54,22 +57,33 @@ public class MsgReceiver extends AVMessageReceiver {
 
   @Override
   public void onMessage(Context context, Session session, AVMessage avMsg) {
-    String msg = avMsg.getMessage();
-    Logger.d("msg=" + msg);
-    ChatService.insertDBMsg(avMsg);
-    MessageListener listener = sessionMessageDispatchers.get(avMsg.getFromPeerId());
-    if (listener == null) {
-      notifyMsg(context, msg);
-    } else {
-      Logger.d("refresh datas");
-      listener.onMessage(msg);
+    Msg msg=Msg.fromAVMessage(avMsg);
+    String selfId=ChatService.getSelfId();
+    msg.setToPeerIds(Utils.oneToList(selfId));
+    MessageListener listener = sessionMessageDispatchers.get(msg.getFromPeerId());
+    if(msg.getType()==Msg.TYPE_TEXT){
+      ChatService.insertDBMsg(msg);
+
+      if (listener == null) {
+        notifyMsg(context, msg);
+      } else {
+        Logger.d("refresh datas");
+        listener.onMessage(msg);
+      }
+      ChatService.sendResponseMessage(msg);
+    }else if(msg.getType()==Msg.TYPE_RESPONSE){
+      Logger.d("receive reponse message");
+      DBMsg.updateStatusAndTimestamp(msg);
+      if(listener!=null){
+        listener.onMessage(msg);
+      }
     }
   }
 
   @Override
   public void onMessageSent(Context context, Session session, AVMessage msg) {
     String s = msg.getMessage();
-    Logger.d("onMsgSent=" + s+" fromId"+msg.getFromPeerId());
+    Logger.d("onMsgSent=" + s+" toIds="+msg.getToPeerIds());
   }
 
   @Override
@@ -78,19 +92,18 @@ public class MsgReceiver extends AVMessageReceiver {
     failedMessage.add(msgStr);
   }
 
-  public static void notifyMsg(Context context, String jsonMsg) throws JSONException {
-    JSONObject jobj = JSON.parseObject(jsonMsg);
+  public static void notifyMsg(Context context, Msg msg) throws JSONException {
     int icon = context.getApplicationInfo().icon;
     PendingIntent pend = PendingIntent.getActivity(context, 0,
         new Intent(context, ChatActivity.class), 0);
     Notification.Builder builder = new Notification.Builder(context);
-    String msg = jobj.getString(C.TXT);
+    String content=msg.getContent();
     builder.setContentIntent(pend)
         .setSmallIcon(icon)
         .setWhen(System.currentTimeMillis())
-        .setTicker(msg)
-        .setContentTitle(jobj.getString(C.FROM_NAME))
-        .setContentText(msg)
+        .setTicker(content)
+        .setContentTitle("新的消息")
+        .setContentText(content)
         .setAutoCancel(true);
     NotificationManager man = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     man.notify(REPLY_NOTIFY_ID, builder.getNotification());

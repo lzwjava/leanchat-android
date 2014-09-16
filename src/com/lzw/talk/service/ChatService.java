@@ -27,11 +27,10 @@ public class ChatService {
     return q.find();
   }
 
-  public static void insertDBMsg(AVMessage avMsg) {
-    Msg msg = Msg.fromAVMessage(avMsg);
+  public static void insertDBMsg(Msg msg) {
     List<Msg> msgs = new ArrayList<Msg>();
     msgs.add(msg);
-    DBHelper dbHelper = new DBHelper(App.cxt, App.DB_NAME, App.DB_VER);
+    DBHelper dbHelper = new DBHelper(App.ctx, App.DB_NAME, App.DB_VER);
     DBMsg.insertMsgs(dbHelper, msgs);
   }
 
@@ -61,7 +60,18 @@ public class ChatService {
     withUsersToWatch(users, watch);
   }
 
-  public static Session getSession(){
+  public static Session getSession() {
     return SessionManager.getInstance(getPeerId(User.curUser()));
+  }
+
+  public static void sendResponseMessage(Msg msg) {
+    Msg resMsg = new Msg();
+    resMsg.setType(Msg.TYPE_RESPONSE);
+    resMsg.setToPeerIds(Utils.oneToList(msg.getFromPeerId()));
+    resMsg.setFromPeerId(getSelfId());
+    resMsg.setContent(msg.getTimestamp() + "");
+    resMsg.setObjectId(msg.getObjectId());
+    Session session = getSession();
+    session.sendMessage(resMsg.toAVMessage());
   }
 }
