@@ -13,16 +13,9 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/gen" isTestSource="false" generated="true" />
     </content>
-    <orderEntry type="jdk" jdkName="Android SDK" jdkType="Android SDK" />
+    <orderEntry type="jdk" jdkName="Android API 19 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="android-async-http-1.4.4-fix" level="application" />
     <orderEntry type="library" name="android-support-v4" level="application" />
-    <orderEntry type="library" name="fastjson" level="application" />
-    <orderEntry type="library" name="httpmime-4.2.4" level="application" />
-    <orderEntry type="library" name="avossns-v2.6.3" level="application" />
-    <orderEntry type="library" name="avosstatistics-v2.6.3" level="application" />
-    <orderEntry type="library" name="avoscloud-v2.6.3" level="application" />
-    <orderEntry type="library" name="avospush-v2.6.3" level="application" />
   </component>
 </module>
 
