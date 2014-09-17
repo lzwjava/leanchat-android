@@ -4,8 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/header"/>
-
     <LinearLayout
         android:id="@+id/main_bottom"
         android:layout_width="match_parent"
@@ -29,7 +27,7 @@
                 android:paddingBottom="2dip"
                 android:paddingTop="7dip"
                 android:scaleType="matrix"
-                android:text="@string/main_tab_recent"
+                android:text="@string/messages"
                 android:background="@null"
                 android:textColor="@drawable/tab_textcolor"
                 android:textSize="12sp" />
@@ -47,7 +45,7 @@
                 android:gravity="center"
                 android:textColor="@android:color/white"
                 android:textSize="12sp"
-                android:visibility="visible" />
+                android:visibility="gone" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -56,7 +54,7 @@
             android:layout_weight="1">
 
             <Button
-                android:id="@+id/btn_contract"
+                android:id="@+id/btn_contact"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:drawableTop="@drawable/tabbar_contacts"
@@ -65,7 +63,7 @@
                 android:background="@null"
                 android:paddingTop="7dip"
                 android:scaleType="matrix"
-                android:text="@string/main_tab_contact"
+                android:text="@string/contact"
                 android:textColor="@drawable/tab_textcolor"
                 android:textSize="12sp" />
 
@@ -82,7 +80,7 @@
                 android:gravity="center"
                 android:textColor="@android:color/white"
                 android:textSize="12sp"
-                android:visibility="visible" />
+                android:visibility="gone" />
         </RelativeLayout>
 
         <Button
@@ -96,12 +94,12 @@
             android:paddingTop="7dip"
             android:background="@null"
             android:scaleType="matrix"
-            android:text="@string/tabbar_discover"
+            android:text="@string/discover"
             android:textColor="@drawable/tab_textcolor"
             android:textSize="12sp" />
 
         <Button
-            android:id="@+id/btn_set"
+            android:id="@+id/btn_my_space"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -111,7 +109,7 @@
             android:paddingTop="7dip"
             android:background="@null"
             android:scaleType="matrix"
-            android:text="@string/tabbar_me"
+            android:text="@string/me"
             android:textColor="@drawable/tab_textcolor"
             android:textSize="12sp" />
     </LinearLayout>

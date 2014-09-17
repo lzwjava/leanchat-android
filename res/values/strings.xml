@@ -91,12 +91,14 @@
     <string name="sending">正在发送...</string>
     <string name="received">已接收</string>
 
-    <string name="main_tab_recent">会话</string>
-    <string name="main_tab_contact">联系人</string>
+    <string name="messages">会话</string>
+    <string name="contact">联系人</string>
     <string name="mian_tab_set">设置</string>
 
     <string name="action_settings">Settings</string>
-    <string name="tabbar_me">我</string>
-    <string name="tabbar_discover">发现</string>
+    <string name="me">我</string>
+    <string name="discover">发现</string>
+    <string name="emptyStr">\"\"</string>
+    <string name="back">返回</string>
 
 </resources>

@@ -3,7 +3,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="48dp"
     android:background="#2C97E8">
 
     <LinearLayout
@@ -13,6 +13,17 @@
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/backBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/back_btn"
+            android:background="@null"
+            android:text="back"
+            android:visibility="gone"
+            android:layout_marginLeft="10dp"
+            android:textColor="#fff"/>
     </LinearLayout>
 
     <TextView
@@ -21,6 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:textColor="#fff"
+        android:textSize="18sp"
         android:text="title" />
 
     <LinearLayout
@@ -29,5 +41,6 @@
         android:layout_height="match_parent"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
-        android:orientation="horizontal"></LinearLayout>
+        android:orientation="horizontal">
+    </LinearLayout>
 </RelativeLayout>
