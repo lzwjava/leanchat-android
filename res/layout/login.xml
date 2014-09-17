@@ -1,36 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:gravity="center">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical">
+
+    <include layout="@layout/header" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:text="@string/please_input_name_to_start"
-            android:gravity="center"/>
 
-        <EditText
-            android:id="@+id/username"
-            android:layout_width="200dp"
-            android:layout_marginTop="30dp"
-            android:layout_height="wrap_content" />
-
-        <Button
-            android:id="@+id/ok"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            style="@style/btn_blue_pad"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/start"/>
-    </LinearLayout>
-</LinearLayout>
+            android:orientation="vertical">
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:text="@string/please_input_name_to_start"
+                android:gravity="center" />
+
+            <EditText
+                android:id="@+id/username"
+                android:layout_width="200dp"
+                android:layout_marginTop="30dp"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                style="@style/btn_blue_pad"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/start" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+</LinearLayout>

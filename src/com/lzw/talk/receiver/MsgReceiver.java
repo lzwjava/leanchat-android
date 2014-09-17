@@ -9,7 +9,7 @@ import com.alibaba.fastjson.JSONException;
 import com.avos.avoscloud.AVMessage;
 import com.avos.avoscloud.AVMessageReceiver;
 import com.avos.avoscloud.Session;
-import com.lzw.talk.activity.ChatActivity;
+import com.lzw.talk.view.activity.ChatActivity;
 import com.lzw.talk.db.DBMsg;
 import com.lzw.talk.entity.Msg;
 import com.lzw.talk.service.ChatService;

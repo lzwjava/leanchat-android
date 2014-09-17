@@ -1,4 +1,4 @@
-package com.lzw.talk.activity;
+package com.lzw.talk.view.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -13,14 +13,13 @@ import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
 import com.lzw.talk.service.ChatService;
 import com.lzw.talk.service.UserManager;
-import com.lzw.talk.util.Logger;
 import com.lzw.talk.util.NetAsyncTask;
 import com.lzw.talk.util.Utils;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class LoginActivity extends Activity implements View.OnClickListener {
+public class LoginActivity extends BaseActivity implements View.OnClickListener {
   /**
    * Called when the activity is first created.
    */
@@ -37,6 +36,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     if (User.curUser() != null) {
       loginSucceed();
     }
+    headerLayout.showTitle(R.string.login);
   }
 
   private void findView() {
@@ -80,7 +80,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
   public void loginSucceed() {
     openSession();
-    Intent intent = new Intent(ctx, UsersActivity.class);
+    Intent intent = new Intent(ctx, MainActivity.class);
     startActivity(intent);
     finish();
   }

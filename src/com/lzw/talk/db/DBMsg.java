@@ -94,10 +94,10 @@ public class DBMsg {
     updateMessage(objectId, cv);
   }
 
-  public static void updateMessage(String objectId, ContentValues cv) {
+  public static int updateMessage(String objectId, ContentValues cv) {
     DBHelper dbHelper=new DBHelper(App.ctx,App.DB_NAME,App.DB_VER);
     SQLiteDatabase db=dbHelper.getWritableDatabase();
-    int update = db.update(MESSAGES, cv, "objectId=?", new String[]{objectId});
-    Logger.d("update n="+update);
+    int updateN = db.update(MESSAGES, cv, "objectId=?", new String[]{objectId});
+    return updateN;
   }
 }

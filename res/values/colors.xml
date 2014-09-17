@@ -12,4 +12,13 @@
     <color name="light_tree_green">#63C798</color>
 
     <color name="beauty_blue">#51d7b6</color>
+
+    <color name="color_half_transparent">#b0000000</color>
+    <color name="color_transparent_bg">#80000000</color>
+    <color name="color_transparent_bg1">#e0000000</color>
+
+    <color name="color_bottom_text_normal">#9da0a4</color>
+    <color name="color_bottom_text_press">#4f9ef6</color>
+
+    <color name="common_blue">#2C97E8</color>
 </resources>

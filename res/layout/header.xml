@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.lzw.talk.view.HeaderLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:id="@+id/headerLayout"
+    android:layout_height="48dp"></com.lzw.talk.view.HeaderLayout>
+

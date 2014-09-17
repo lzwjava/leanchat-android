@@ -3,7 +3,7 @@ package com.lzw.talk.base;
 import android.app.Application;
 import android.content.Context;
 import com.avos.avoscloud.*;
-import com.lzw.talk.activity.LoginActivity;
+import com.lzw.talk.view.activity.LoginActivity;
 import com.lzw.talk.avobject.User;
 import com.lzw.talk.util.*;
 

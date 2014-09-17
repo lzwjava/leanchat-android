@@ -1,4 +1,4 @@
-package com.lzw.talk.activity;
+package com.lzw.talk.view.activity;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -24,7 +24,6 @@ import com.lzw.talk.entity.Msg;
 import com.lzw.talk.receiver.MsgReceiver;
 import com.lzw.talk.service.ChatService;
 import com.lzw.talk.service.MessageListener;
-import com.lzw.talk.util.Logger;
 import com.lzw.talk.util.Utils;
 
 import java.util.ArrayList;

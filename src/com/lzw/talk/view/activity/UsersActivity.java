@@ -1,4 +1,4 @@
-package com.lzw.talk.activity;
+package com.lzw.talk.view.activity;
 
 import android.app.Activity;
 import android.content.Context;
