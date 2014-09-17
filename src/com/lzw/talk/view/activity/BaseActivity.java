@@ -10,11 +10,9 @@ import com.lzw.talk.view.HeaderLayout;
  * Created by lzw on 14-9-17.
  */
 public class BaseActivity extends FragmentActivity{
-  HeaderLayout headerLayout;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    headerLayout= (HeaderLayout) findViewById(R.id.headerLayout);
   }
 }

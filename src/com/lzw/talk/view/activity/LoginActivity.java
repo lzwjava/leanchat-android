@@ -15,6 +15,7 @@ import com.lzw.talk.service.ChatService;
 import com.lzw.talk.service.UserManager;
 import com.lzw.talk.util.NetAsyncTask;
 import com.lzw.talk.util.Utils;
+import com.lzw.talk.view.HeaderLayout;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -26,6 +27,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
   EditText usernameEdit;
   View start;
   private Activity ctx;
+  HeaderLayout headerLayout;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -36,11 +38,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     if (User.curUser() != null) {
       loginSucceed();
     }
-    headerLayout.showTitle(R.string.login);
+    headerLayout.setTitle(R.string.login);
   }
 
   private void findView() {
     usernameEdit = (EditText) findViewById(R.id.username);
+    headerLayout= (HeaderLayout) findViewById(R.id.headerLayout);
     start = findViewById(R.id.ok);
     start.setOnClickListener(this);
   }

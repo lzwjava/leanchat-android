@@ -36,7 +36,7 @@ public class HeaderLayout extends LinearLayout {
     addView(header);
   }
 
-  public void showTitle(int titleId){
+  public void setTitle(int titleId){
     titleView.setText(titleId);
   }
 
