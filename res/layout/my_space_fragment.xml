@@ -99,5 +99,20 @@
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/logoutLayout"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@drawable/btn_selector"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="注销" />
+
+    </RelativeLayout>
 
 </LinearLayout>

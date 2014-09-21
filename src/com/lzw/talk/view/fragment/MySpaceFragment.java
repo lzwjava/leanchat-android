@@ -33,7 +33,7 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
   private static final int CROP_REQUEST = 2;
   TextView usernameView, nicknameView;
   ImageView avatarView;
-  View nicknameLayout, usernameLayout, avatarLayout;
+  View nicknameLayout, usernameLayout, avatarLayout, logoutLayout;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,6 +57,7 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
         ProjectUtils.getImageLoaderOptions());
     nicknameLayout.setOnClickListener(this);
     avatarLayout.setOnClickListener(this);
+    logoutLayout.setOnClickListener(this);
   }
 
   private void findView() {
@@ -66,6 +67,7 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
     usernameLayout = ctx.findViewById(R.id.usernameLayout);
     nicknameLayout = ctx.findViewById(R.id.nicknameLayout);
     avatarLayout = ctx.findViewById(R.id.avatarLayout);
+    logoutLayout = ctx.findViewById(R.id.logoutLayout);
   }
 
   @Override
@@ -79,6 +81,9 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
       Intent intent = new Intent(Intent.ACTION_PICK, null);
       intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
       startActivityForResult(intent, IMAGE_PICK_REQUEST);
+    } else if (id == R.id.logoutLayout) {
+      User.logOut();
+      getActivity().finish();
     }
   }
 

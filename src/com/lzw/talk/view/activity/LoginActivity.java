@@ -1,24 +1,17 @@
 package com.lzw.talk.view.activity;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.Session;
-import com.avos.avoscloud.SessionManager;
 import com.lzw.talk.R;
 import com.lzw.talk.avobject.User;
-import com.lzw.talk.base.App;
 import com.lzw.talk.service.ChatService;
 import com.lzw.talk.service.UserService;
 import com.lzw.talk.util.NetAsyncTask;
 import com.lzw.talk.util.Utils;
 import com.lzw.talk.view.HeaderLayout;
-
-import java.util.LinkedList;
-import java.util.List;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
   /**
@@ -82,14 +75,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
   }
 
   public void loginSucceed() {
-    openSession();
-  }
-
-
-  public void openSession() {
-    final String selfId = ChatService.getPeerId(User.curUser());
-    Session session = SessionManager.getInstance(selfId);
-    session.open(new LinkedList<String>());
-    App.session = session;
+    ChatService.openSession();
   }
 }

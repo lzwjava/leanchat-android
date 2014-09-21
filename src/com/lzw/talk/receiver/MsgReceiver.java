@@ -11,7 +11,6 @@ import com.avos.avoscloud.AVMessageReceiver;
 import com.avos.avoscloud.Session;
 import com.lzw.talk.R;
 import com.lzw.talk.base.App;
-import com.lzw.talk.base.C;
 import com.lzw.talk.db.DBMsg;
 import com.lzw.talk.entity.Msg;
 import com.lzw.talk.service.ChatService;
@@ -124,7 +123,7 @@ public class MsgReceiver extends AVMessageReceiver {
         .setContentTitle(App.ctx.getString(R.string.newMessage))
         .setContentText(content)
         .setAutoCancel(true);
-    NotificationManager man = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+    NotificationManager man = (import com.lzw.talk.base.C;NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     man.notify(REPLY_NOTIFY_ID, builder.getNotification());
   }
 
@@ -154,7 +153,11 @@ public class MsgReceiver extends AVMessageReceiver {
         messageListener.onMessageFailure(msg);
       }
     }
-    Logger.d("onError");
+    if(errorMsg!=null && errorMsg.equals("Session is ")){
+      Session session1=ChatService.getSession();
+      session1.close();
+    }
+    Logger.d("onError "+errorMsg);
   }
 
   public static void registerMessageListener(MessageListener listener) {
