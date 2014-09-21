@@ -1,20 +1,28 @@
 #奇遇
 
-一个展示AVOS Cloud聊天功能的Demo
+一个展示 AVOS Cloud 聊天功能的 Demo
 
 ![img](https://raw.githubusercontent.com/lzwjava/plan/master/im360.png)
+
+##当前特性
+* 消息支持文字（图片、声音的传 URL 类似）
+* 接受回执
+* 本地保存消息记录
+* 顶部栏提醒新消息
+* 统一的服务器时间戳
+
 
 ## Install
 
 用到的依赖包：
 
-* [AVOS Cloud SDK](https://cn.avoscloud.com/docs/sdk_down.html), 基础模块和实时通信模块即可。
+* [AVOS Cloud SDK](https://cn.avoscloud.com/docs/sdk_down.html)，基础模块和实时通信模块即可。
 
 ## Summary
 
 总的来说，四步加聊天功能：
 
-1. open session （打开一个会话）
+1. open session（打开一个会话）
 2. watch peerIds（关注一些人，会收到相应的上线下线通知）
 3. send message 
 4. handle received message
