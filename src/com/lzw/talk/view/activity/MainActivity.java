@@ -7,9 +7,7 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import com.avos.avoscloud.Session;
 import com.lzw.talk.R;
-import com.lzw.talk.service.ChatService;
 import com.lzw.talk.view.fragment.ContactFragment;
 import com.lzw.talk.view.fragment.DiscoverFragment;
 import com.lzw.talk.view.fragment.MessageFragment;
@@ -122,12 +120,5 @@ public class MainActivity extends BaseActivity {
         transaction.hide(f);
       }
     }
-  }
-
-  @Override
-  protected void onDestroy() {
-    super.onDestroy();
-    Session session = ChatService.getSession();
-    session.close();
   }
 }

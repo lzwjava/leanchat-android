@@ -10,9 +10,13 @@ import android.widget.TextView;
 import com.lzw.talk.R;
 import com.lzw.talk.entity.Msg;
 import com.lzw.talk.util.Logger;
+import com.lzw.talk.util.PhotoUtil;
 import com.lzw.talk.util.TimeUtils;
 import com.lzw.talk.view.ViewHolder;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageSize;
+import com.nostra13.universalimageloader.utils.ImageSizeUtils;
 
 import java.io.File;
 import java.util.ArrayList;

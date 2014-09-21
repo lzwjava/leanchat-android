@@ -18,7 +18,7 @@
     <dimen name="userHead">45dp</dimen>
     <dimen name="chatItemMarginTop">3dp</dimen>
     <dimen name="item_icon">35dp</dimen>
-    <dimen name="chatContentMaxWidth">220dp</dimen>
+    <dimen name="chatContentMaxWidth">100dp</dimen>
     <dimen name="marginToUsername">5dp</dimen>
     <dimen name="chatContentPadding">5dp</dimen>
     <dimen name="usernamePad">3dp</dimen>

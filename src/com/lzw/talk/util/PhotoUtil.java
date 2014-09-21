@@ -5,6 +5,7 @@ import android.graphics.Bitmap.Config;
 import android.graphics.PorterDuff.Mode;
 import android.media.ExifInterface;
 import android.media.ThumbnailUtils;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -334,4 +335,5 @@ public class PhotoUtil {
     }
     return outPath;
   }
+
 }

@@ -39,6 +39,10 @@ public class MsgReceiver extends AVMessageReceiver {
   public void onSessionOpen(Context context, Session session) {
     Logger.d("onSessionOpen");
     prefDao = new PrefDao(context);
+    goMainActivity(context);
+  }
+
+  public void goMainActivity(Context context) {
     Intent intent = new Intent(context, MainActivity.class);
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -67,7 +71,6 @@ public class MsgReceiver extends AVMessageReceiver {
     msg.setToPeerIds(Utils.oneToList(selfId));
     if (msg.getType() == Msg.TYPE_TEXT || msg.getType() == Msg.TYPE_IMAGE) {
       ChatService.insertDBMsg(msg);
-
       if (messageListener == null) {
         notifyMsg(context, msg);
       } else {
@@ -113,8 +116,8 @@ public class MsgReceiver extends AVMessageReceiver {
         new Intent(context, ChatActivity.class), 0);
     Notification.Builder builder = new Notification.Builder(context);
     String content = msg.getContent();
-    if(msg.getType()==Msg.TYPE_IMAGE){
-      content=App.ctx.getString(R.string.image);
+    if (msg.getType() == Msg.TYPE_IMAGE) {
+      content = App.ctx.getString(R.string.image);
     }
     builder.setContentIntent(pend)
         .setSmallIcon(icon)
@@ -123,7 +126,7 @@ public class MsgReceiver extends AVMessageReceiver {
         .setContentTitle(App.ctx.getString(R.string.newMessage))
         .setContentText(content)
         .setAutoCancel(true);
-    NotificationManager man = (import com.lzw.talk.base.C;NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+    NotificationManager man = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     man.notify(REPLY_NOTIFY_ID, builder.getNotification());
   }
 
@@ -153,11 +156,10 @@ public class MsgReceiver extends AVMessageReceiver {
         messageListener.onMessageFailure(msg);
       }
     }
-    if(errorMsg!=null && errorMsg.equals("Session is ")){
-      Session session1=ChatService.getSession();
-      session1.close();
+    //if error is Session is Already open ,we still go next Activity.
+    if (errorMsg != null && errorMsg.equals("Session is ")) {
+      goMainActivity(context);
     }
-    Logger.d("onError "+errorMsg);
   }
 
   public static void registerMessageListener(MessageListener listener) {
