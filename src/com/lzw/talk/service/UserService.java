@@ -1,17 +1,16 @@
 package com.lzw.talk.service;
 
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVQuery;
-import com.avos.avoscloud.AVUser;
+import android.text.TextUtils;
+import com.avos.avoscloud.*;
 import com.lzw.talk.avobject.User;
+import com.lzw.talk.util.Logger;
 
 import java.util.List;
 
 /**
  * Created by lzw on 14-9-15.
  */
-public class UserManager {
+public class UserService {
   public static AVUser getAVUser(String username) throws AVException {
     AVQuery<AVUser> q = getUserQuery(username);
     List<AVUser> users = q.find();
@@ -26,5 +25,13 @@ public class UserManager {
     q.whereEqualTo(User.USERNAME, username);
     q.setLimit(1);
     return q;
+  }
+
+  public static void updateNickname(User curUser, String value, SaveCallback saveCallback) {
+    if (TextUtils.isEmpty(value) == false) {
+      Logger.d("value=" + value);
+      curUser.setNickname(value);
+      curUser.saveInBackground(saveCallback);
+    }
   }
 }

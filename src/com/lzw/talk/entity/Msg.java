@@ -16,17 +16,20 @@ import java.util.List;
  */
 public class Msg {
   public static final int STATUS_SEND_START = 0;
-  public static final int STATUS_SEND_RECEIVED = 1;
+  public static final int STATUS_SEND_SUCCEED = 1;
+  public static final int STATUS_SEND_RECEIVED = 2;
+  public static final int STATUS_SEND_FAILED = 3;
   public static final int TYPE_TEXT = 0;
   public static final int TYPE_RESPONSE = 1;
+  public static final int TYPE_IMAGE = 2;
   //long timestamp;
   //String fromPeerId;
   //List<String> toPeerIds;
   String content;
   String objectId;
   AVMessage internalMessage;
-  int status=STATUS_SEND_START;
-  int type=TYPE_TEXT;
+  int status = STATUS_SEND_START;
+  int type = TYPE_TEXT;
 
   public Msg() {
     internalMessage = new AVMessage();
@@ -72,11 +75,15 @@ public class Msg {
     return status;
   }
 
-  public String getStatusDesc(){
-    if(status==STATUS_SEND_START){
+  public String getStatusDesc() {
+    if (status == STATUS_SEND_START) {
       return App.ctx.getString(R.string.sending);
-    }else if(status==STATUS_SEND_RECEIVED){
+    } else if (status == STATUS_SEND_RECEIVED) {
       return App.ctx.getString(R.string.received);
+    } else if (status == STATUS_SEND_SUCCEED) {
+      return App.ctx.getString(R.string.sent);
+    } else if(status==STATUS_SEND_FAILED){
+      return App.ctx.getString(R.string.failed);
     }else{
       throw new IllegalArgumentException("unknown status");
     }
@@ -106,13 +113,13 @@ public class Msg {
     this.type = type;
   }
 
-  public boolean isComeMessage(){
-    String fromPeerId=getFromPeerId();
-    return fromPeerId.equals(ChatService.getSelfId())==false;
+  public boolean isComeMessage() {
+    String fromPeerId = getFromPeerId();
+    return fromPeerId.equals(ChatService.getSelfId()) == false;
   }
 
-  public String getFromName(){
-    String peerId=getFromPeerId();
+  public String getFromName() {
+    String peerId = getFromPeerId();
     User user = App.lookupUser(peerId);
     return user.getUsername();
   }
@@ -125,7 +132,7 @@ public class Msg {
       msg.setObjectId((String) params.get("objectId"));
       msg.setContent((String) params.get("content"));
       msg.setStatus((Integer) params.get("status"));
-      msg.setType((Integer)params.get("type"));
+      msg.setType((Integer) params.get("type"));
     }
     return msg;
   }
@@ -135,7 +142,7 @@ public class Msg {
     params.put("objectId", objectId);
     params.put("content", content);
     params.put("status", status);
-    params.put("type",type);
+    params.put("type", type);
     internalMessage.setMessage(JSON.toJSONString(params));
     return internalMessage;
   }
@@ -143,7 +150,7 @@ public class Msg {
   @Override
   public String toString() {
     return "{content:" + getContent() + " objectId:" + getObjectId() + " status:" + getStatus() + " fromPeerId:" +
-        getFromPeerId() +" toPeerIds:" + getToPeerIds()
-        + " timestamp:" + getTimestamp()+" type="+getType()+"}";
+        getFromPeerId() + " toPeerIds:" + getToPeerIds()
+        + " timestamp:" + getTimestamp() + " type=" + getType() + "}";
   }
 }

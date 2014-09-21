@@ -12,7 +12,7 @@ import com.lzw.talk.R;
 import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
 import com.lzw.talk.service.ChatService;
-import com.lzw.talk.service.UserManager;
+import com.lzw.talk.service.UserService;
 import com.lzw.talk.util.NetAsyncTask;
 import com.lzw.talk.util.Utils;
 import com.lzw.talk.view.HeaderLayout;
@@ -38,7 +38,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     if (User.curUser() != null) {
       loginSucceed();
     }
-    headerLayout.setTitle(R.string.login);
+    headerLayout.showTitle(R.string.login);
   }
 
   private void findView() {
@@ -57,7 +57,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         new NetAsyncTask(ctx) {
           @Override
           protected void doInBack() throws Exception {
-            AVUser avUser = UserManager.getAVUser(username);
+            AVUser avUser = UserService.getAVUser(username);
             if (avUser == null) {
               AVUser user = new AVUser();
               user.put(User.USERNAME, username);
@@ -83,17 +83,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
   public void loginSucceed() {
     openSession();
-    Intent intent = new Intent(ctx, MainActivity.class);
-    startActivity(intent);
-    finish();
   }
 
 
   public void openSession() {
     final String selfId = ChatService.getPeerId(User.curUser());
-    List<String> peerIds = new LinkedList<String>();
     Session session = SessionManager.getInstance(selfId);
-    session.open(selfId, peerIds);
+    session.open(new LinkedList<String>());
     App.session = session;
   }
 }

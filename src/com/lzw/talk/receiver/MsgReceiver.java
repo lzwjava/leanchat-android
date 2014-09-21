@@ -9,15 +9,19 @@ import com.alibaba.fastjson.JSONException;
 import com.avos.avoscloud.AVMessage;
 import com.avos.avoscloud.AVMessageReceiver;
 import com.avos.avoscloud.Session;
-import com.lzw.talk.view.activity.ChatActivity;
+import com.lzw.talk.R;
+import com.lzw.talk.base.App;
+import com.lzw.talk.base.C;
 import com.lzw.talk.db.DBMsg;
 import com.lzw.talk.entity.Msg;
 import com.lzw.talk.service.ChatService;
 import com.lzw.talk.service.MessageListener;
 import com.lzw.talk.service.PrefDao;
-import com.lzw.talk.service.StatusListner;
+import com.lzw.talk.service.StatusListener;
 import com.lzw.talk.util.Logger;
 import com.lzw.talk.util.Utils;
+import com.lzw.talk.view.activity.ChatActivity;
+import com.lzw.talk.view.activity.MainActivity;
 
 import java.util.*;
 
@@ -28,13 +32,18 @@ public class MsgReceiver extends AVMessageReceiver {
   private static final int REPLY_NOTIFY_ID = 1;
   private final Queue<String> failedMessage = new LinkedList<String>();
   PrefDao prefDao;
-  public static StatusListner statusListner;
+  public static StatusListener statusListener;
   public static Set<String> onlines = new HashSet<String>();
+  public static MessageListener messageListener;
 
   @Override
   public void onSessionOpen(Context context, Session session) {
     Logger.d("onSessionOpen");
     prefDao = new PrefDao(context);
+    Intent intent = new Intent(context, MainActivity.class);
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+    context.startActivity(intent);
   }
 
   @Override
@@ -53,38 +62,50 @@ public class MsgReceiver extends AVMessageReceiver {
 
   @Override
   public void onMessage(Context context, Session session, AVMessage avMsg) {
-    Msg msg=Msg.fromAVMessage(avMsg);
-    String selfId=ChatService.getSelfId();
+    Logger.d("onMessage");
+    Msg msg = Msg.fromAVMessage(avMsg);
+    String selfId = ChatService.getSelfId();
     msg.setToPeerIds(Utils.oneToList(selfId));
-    MessageListener listener = sessionMessageDispatchers.get(msg.getFromPeerId());
-    if(msg.getType()==Msg.TYPE_TEXT){
+    if (msg.getType() == Msg.TYPE_TEXT || msg.getType() == Msg.TYPE_IMAGE) {
       ChatService.insertDBMsg(msg);
 
-      if (listener == null) {
+      if (messageListener == null) {
         notifyMsg(context, msg);
       } else {
         Logger.d("refresh datas");
-        listener.onMessage(msg);
+        messageListener.onMessage(msg);
       }
       ChatService.sendResponseMessage(msg);
-    }else if(msg.getType()==Msg.TYPE_RESPONSE){
+    } else if (msg.getType() == Msg.TYPE_RESPONSE) {
       DBMsg.updateStatusAndTimestamp(msg);
-      if(listener!=null){
-        listener.onMessage(msg);
+      if (messageListener != null) {
+        messageListener.onMessage(msg);
       }
     }
   }
 
   @Override
-  public void onMessageSent(Context context, Session session, AVMessage msg) {
-    String s = msg.getMessage();
-    Logger.d("onMsgSent=" + s+" toIds="+msg.getToPeerIds());
+  public void onMessageSent(Context context, Session session, AVMessage avMsg) {
+    Logger.d("onMessageSent");
+    Msg msg = Msg.fromAVMessage(avMsg);
+    if (msg.getType() == Msg.TYPE_TEXT || msg.getType() == Msg.TYPE_IMAGE) {
+      DBMsg.updateStatusToSendSucceed(msg);
+      if (messageListener != null) {
+        messageListener.onMessageSent(msg);
+      }
+    }
   }
 
   @Override
-  public void onMessageFailure(Context context, Session session, AVMessage msg) {
-    String msgStr = msg.getMessage();
-    failedMessage.add(msgStr);
+  public void onMessageFailure(Context context, Session session, AVMessage avMsg) {
+    Msg msg = Msg.fromAVMessage(avMsg);
+    Logger.d("onMessageFailure");
+    if (msg.getType() == Msg.TYPE_TEXT || msg.getType() == Msg.TYPE_IMAGE) {
+      DBMsg.updateStatusToSendFailed(msg);
+      if (messageListener != null) {
+        messageListener.onMessageSent(msg);
+      }
+    }
   }
 
   public static void notifyMsg(Context context, Msg msg) throws JSONException {
@@ -92,12 +113,15 @@ public class MsgReceiver extends AVMessageReceiver {
     PendingIntent pend = PendingIntent.getActivity(context, 0,
         new Intent(context, ChatActivity.class), 0);
     Notification.Builder builder = new Notification.Builder(context);
-    String content=msg.getContent();
+    String content = msg.getContent();
+    if(msg.getType()==Msg.TYPE_IMAGE){
+      content=App.ctx.getString(R.string.image);
+    }
     builder.setContentIntent(pend)
         .setSmallIcon(icon)
         .setWhen(System.currentTimeMillis())
         .setTicker(content)
-        .setContentTitle("新的消息")
+        .setContentTitle(App.ctx.getString(R.string.newMessage))
         .setContentText(content)
         .setAutoCancel(true);
     NotificationManager man = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -108,40 +132,45 @@ public class MsgReceiver extends AVMessageReceiver {
   public void onStatusOnline(Context context, Session session, List<String> strings) {
     Logger.d("onStatusOnline " + strings);
     onlines.addAll(strings);
-    statusListner.onStatusOnline(new ArrayList<String>(onlines));
+    statusListener.onStatusOnline(new ArrayList<String>(onlines));
   }
 
   @Override
   public void onStatusOffline(Context context, Session session, List<String> strings) {
     Logger.d("onStatusOff " + strings);
     onlines.removeAll(strings);
-    statusListner.onStatusOnline(new ArrayList<String>(onlines));
+    statusListener.onStatusOnline(new ArrayList<String>(onlines));
   }
 
   @Override
   public void onError(Context context, Session session, Throwable throwable) {
     throwable.printStackTrace();
-    Logger.d(throwable.getMessage());
+    String errorMsg = throwable.getMessage();
+    if (errorMsg != null && errorMsg.startsWith("{")) {
+      AVMessage avMsg = new AVMessage(errorMsg);
+      Msg msg = Msg.fromAVMessage(avMsg);
+      DBMsg.updateStatusToSendFailed(msg);
+      if (messageListener != null) {
+        messageListener.onMessageFailure(msg);
+      }
+    }
     Logger.d("onError");
   }
 
-  public static void registerSessionListener(String peerId, MessageListener listener) {
-    sessionMessageDispatchers.put(peerId, listener);
+  public static void registerMessageListener(MessageListener listener) {
+    messageListener = listener;
   }
 
-  public static void unregisterSessionListener(String peerId) {
-    sessionMessageDispatchers.remove(peerId);
+  public static void unregisterMessageListener() {
+    messageListener = null;
   }
 
-  static HashMap<String, MessageListener> sessionMessageDispatchers =
-      new HashMap<String, MessageListener>();
-
-  public static void registerSatusListener(StatusListner listener) {
-    statusListner = listener;
+  public static void registerStatusListener(StatusListener listener) {
+    statusListener = listener;
   }
 
   public static void unregisterSatutsListener() {
-    statusListner = null;
+    statusListener = null;
   }
 
   public static List<String> getOnlines() {

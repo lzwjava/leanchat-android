@@ -4,7 +4,7 @@
     android:layout_height="fill_parent"
     android:background="#f9f9f9">
 
-    <include layout="@layout/header"/>
+    <include layout="@layout/header" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -61,10 +61,20 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
+                android:layout_toRightOf="@+id/addImageBtn"
                 android:layout_toLeftOf="@id/btn_send"
                 android:background="@drawable/login_edit_normal"
                 android:singleLine="true"
                 android:textSize="18sp" />
+
+            <ImageButton
+                android:id="@+id/addImageBtn"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/btn_chat_add_picture_selector"
+                android:background="@null" />
         </RelativeLayout>
     </RelativeLayout>
 

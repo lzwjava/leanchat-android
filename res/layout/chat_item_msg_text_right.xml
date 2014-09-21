@@ -12,8 +12,8 @@
         android:gravity="center_horizontal">
 
         <TextView
-            android:id="@+id/tv_sendtime"
-            android:visibility="gone"
+            android:id="@+id/sendTimeView"
+            android:visibility="visible"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="time"
@@ -53,7 +53,7 @@
                 android:background="@drawable/top_background_default_thumb_blue" />
 
             <TextView
-                android:id="@+id/tv_chatcontent"
+                android:id="@+id/textContent"
                 android:layout_marginLeft="@dimen/marginToUsername"
                 android:layout_width="wrap_content"
                 android:maxWidth="@dimen/chatContentMaxWidth"
@@ -62,23 +62,11 @@
                 android:padding="@dimen/chatContentPadding"
                 android:background="@null"
                 android:layout_marginRight="5dp"
-                android:layout_toLeftOf="@+id/tv_username"
+                android:layout_toLeftOf="@+id/username"
                 style="@style/chat_content_date_style" />
 
-            <ImageView
-                android:id="@+id/voiceImg"
-                android:visibility="gone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/iv_userhead"
-                android:layout_marginLeft="20dp"
-                android:layout_alignTop="@+id/tv_chatcontent"
-                android:layout_marginTop="8dp"
-                android:src="@drawable/chat_right" />
-
-
             <TextView
-                android:id="@+id/tv_username"
+                android:id="@+id/username"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:paddingLeft="@dimen/usernamePad"

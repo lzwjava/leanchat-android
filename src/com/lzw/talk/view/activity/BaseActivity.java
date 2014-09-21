@@ -10,9 +10,11 @@ import com.lzw.talk.view.HeaderLayout;
  * Created by lzw on 14-9-17.
  */
 public class BaseActivity extends FragmentActivity{
+  Activity ctx;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    ctx=this;
   }
 }

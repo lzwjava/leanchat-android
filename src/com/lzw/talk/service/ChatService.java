@@ -1,13 +1,16 @@
 package com.lzw.talk.service;
 
+import android.app.Activity;
 import com.avos.avoscloud.*;
 import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
 import com.lzw.talk.db.DBHelper;
 import com.lzw.talk.db.DBMsg;
 import com.lzw.talk.entity.Msg;
+import com.lzw.talk.util.NetAsyncTask;
 import com.lzw.talk.util.Utils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,5 +76,38 @@ public class ChatService {
     resMsg.setObjectId(msg.getObjectId());
     Session session = getSession();
     session.sendMessage(resMsg.toAVMessage());
+  }
+
+  public static void sendImageMsg(User user, String imagePath) throws IOException, AVException {
+    AVFile file = AVFile.withAbsoluteLocalPath("img", imagePath);
+    file.save();
+    String url = file.getUrl();
+    String sendText=imagePath+"&"+url;
+    Msg msg = sendMessage(ChatService.getPeerId(user), Msg.TYPE_IMAGE, sendText);
+    DBMsg.insertMsg(msg);
+  }
+
+  public static void sendTextMsg(User user, String content) {
+    String peerId = getPeerId(user);
+    int type = Msg.TYPE_TEXT;
+    Msg msg = sendMessage(peerId, type, content);
+    DBMsg.insertMsg(msg);
+  }
+
+  public static Msg sendMessage(String peerId, int type, String content) {
+    Msg msg;
+    msg = new Msg();
+    msg.setStatus(Msg.STATUS_SEND_START);
+    msg.setContent(content);
+    msg.setTimestamp(System.currentTimeMillis());
+    msg.setFromPeerId(getSelfId());
+    msg.setToPeerIds(Utils.oneToList(peerId));
+    msg.setObjectId(Utils.uuid());
+    msg.setType(type);
+
+    AVMessage avMsg = msg.toAVMessage();
+    Session session = getSession();
+    session.sendMessage(avMsg);
+    return msg;
   }
 }

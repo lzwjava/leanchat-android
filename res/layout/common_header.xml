@@ -23,7 +23,7 @@
             android:text="back"
             android:visibility="gone"
             android:layout_marginLeft="10dp"
-            android:textColor="#fff"/>
+            android:textColor="#fff" />
     </LinearLayout>
 
     <TextView
@@ -41,6 +41,7 @@
         android:layout_height="match_parent"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
-        android:orientation="horizontal">
-    </LinearLayout>
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingRight="10dp"></LinearLayout>
 </RelativeLayout>

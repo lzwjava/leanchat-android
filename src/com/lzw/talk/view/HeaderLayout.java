@@ -5,10 +5,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.widget.*;
 import com.lzw.talk.R;
 
 /**
@@ -41,22 +38,37 @@ public class HeaderLayout extends LinearLayout {
     addView(header);
   }
 
-  public void setTitle(int titleId) {
+  public void showTitle(int titleId) {
     titleView.setText(titleId);
   }
 
-  public void showLeftBackButton() {
-    showLeftBackButton(R.string.emptyStr);
+  public void showTitle(String s) {
+    titleView.setText(s);
   }
 
-  public void showLeftBackButton(int backTextId) {
+  public void showLeftBackButton(OnClickListener listener) {
+    showLeftBackButton(R.string.emptyStr, listener);
+  }
+
+  public void showLeftBackButton(int backTextId, OnClickListener listener) {
     backBtn.setVisibility(View.VISIBLE);
     backBtn.setText(backTextId);
-    backBtn.setOnClickListener(new OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        ((Activity) getContext()).finish();
-      }
-    });
+    if (listener == null) {
+      listener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          ((Activity) getContext()).finish();
+        }
+      };
+    }
+    backBtn.setOnClickListener(listener);
+  }
+
+  public void showRightImageButton(int rightResId, OnClickListener listener) {
+    View imageViewLayout = mInflater.inflate(R.layout.header_right_image_btn, null, false);
+    ImageButton imageBtn = (ImageButton) imageViewLayout.findViewById(R.id.imageView);
+    imageBtn.setBackgroundResource(rightResId);
+    imageBtn.setOnClickListener(listener);
+    rightContainer.addView(imageViewLayout);
   }
 }

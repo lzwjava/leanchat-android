@@ -21,4 +21,8 @@ public class TimeUtils {
     sbBuffer.append(month + "-" + day + " " + hour + ":" + mins+":"+secs);
     return sbBuffer.toString();
   }
+
+  public static String millisecs2DateString(long timestamp) {
+    return getDate(new Date(timestamp));
+  }
 }

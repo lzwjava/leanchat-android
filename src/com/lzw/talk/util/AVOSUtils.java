@@ -14,7 +14,6 @@ public class AVOSUtils {
       startMethod.invoke(null, true);
     } catch (Exception e) {
       e.printStackTrace();
-      Logger.d("failed to show internal logs");
     }
   }
 }

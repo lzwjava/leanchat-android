@@ -1,22 +1,22 @@
 package com.lzw.talk.view.activity;
 
-import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.provider.MediaStore;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
-import com.avos.avoscloud.AVMessage;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.Session;
 import com.lzw.talk.R;
-import com.lzw.talk.adapter.ChatMsgViewAdapter;
+import com.lzw.talk.adapter.ChatMsgAdapter;
+import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
 import com.lzw.talk.db.DBHelper;
 import com.lzw.talk.db.DBMsg;
@@ -24,69 +24,74 @@ import com.lzw.talk.entity.Msg;
 import com.lzw.talk.receiver.MsgReceiver;
 import com.lzw.talk.service.ChatService;
 import com.lzw.talk.service.MessageListener;
+import com.lzw.talk.util.NetAsyncTask;
+import com.lzw.talk.util.PhotoUtil;
 import com.lzw.talk.util.Utils;
+import com.lzw.talk.view.HeaderLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ChatActivity extends Activity implements OnClickListener, MessageListener {
+  private static final int IMAGE_REQUEST = 0;
   private EditText mEditTextContent;
   private ListView mListView;
-  private ChatMsgViewAdapter mAdapter;
+  private ChatMsgAdapter mAdapter;
   private List<Msg> msgs;
   public static ChatActivity instance;
-  Activity cxt;
   ProgressBar progressBar;
-  AVUser me;
+  User me;
   DBHelper dbHelper;
-  View btnSend;
+  View btnSend, addImageBtn;
+  HeaderLayout headerLayout;
+  private Activity ctx;
 
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    cxt = this;
+    ctx = this;
     instance = this;
     getWindow().setSoftInputMode(
         WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     setContentView(R.layout.chat_room);
     findView();
+    initHeader();
     initData();
+  }
+
+  private void initHeader() {
+    headerLayout.showTitle(App.chatUser.getUsername());
   }
 
   private void findView() {
     progressBar = (ProgressBar) findViewById(R.id.progressBar);
     mListView = (ListView) findViewById(R.id.listview);
+    addImageBtn = findViewById(R.id.addImageBtn);
 
     mEditTextContent = (EditText) findViewById(R.id.et_sendmessage);
+    headerLayout = (HeaderLayout) findViewById(R.id.headerLayout);
     btnSend = findViewById(R.id.btn_send);
     btnSend.setOnClickListener(this);
+    addImageBtn.setOnClickListener(this);
   }
 
   @Override
   public void onResume() {
     super.onResume();
     refresh();
-    MsgReceiver.registerSessionListener(ChatService.getPeerId(App.chatUser), this);
+    MsgReceiver.registerMessageListener(this);
   }
 
   @Override
   public void onPause() {
     super.onPause();
-    MsgReceiver.unregisterSessionListener(ChatService.getPeerId(App.chatUser));
+    MsgReceiver.unregisterMessageListener();
   }
 
   public void initData() {
-    ActionBar actionBar = getActionBar();
-    View view = LayoutInflater.from(cxt).inflate(R.layout.chat_bar, null);
-    TextView title = (TextView) view.findViewById(R.id.title);
-    actionBar.setDisplayShowCustomEnabled(true);
-    actionBar.setDisplayShowTitleEnabled(false);
-    actionBar.setDisplayShowHomeEnabled(false);
-    actionBar.setCustomView(view);
-    title.setText(App.chatUser.getUsername());
-    me = AVUser.getCurrentUser();
-    dbHelper = new DBHelper(cxt, App.DB_NAME, App.DB_VER);
+    me = User.curUser();
+    dbHelper = new DBHelper(ctx, App.DB_NAME, App.DB_VER);
     msgs = new ArrayList<Msg>();
-    mAdapter = new ChatMsgViewAdapter(this);
+    mAdapter = new ChatMsgAdapter(this);
     mListView.setAdapter(mAdapter);
   }
 
@@ -96,6 +101,16 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
 
   @Override
   public void onMessage(Msg msg) {
+    refresh();
+  }
+
+  @Override
+  public void onMessageFailure(Msg msg) {
+    refresh();
+  }
+
+  @Override
+  public void onMessageSent(Msg msg) {
     refresh();
   }
 
@@ -111,7 +126,6 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
     @Override
     protected Void doInBackground(Void... params) {
       try {
-        me = (AVUser) me.fetch();  //to refresh object
         msgs = DBMsg.getMsgs(dbHelper, ChatService.getPeerId(me), ChatService.getPeerId(App.chatUser));
         res = true;
       } catch (Exception e) {
@@ -128,7 +142,7 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
       if (res) {
         addMsgsAndRefresh(msgs);
       } else {
-        Utils.toast(cxt, R.string.failedToGetData);
+        Utils.toast(ctx, R.string.failedToGetData);
       }
     }
   }
@@ -147,7 +161,23 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
       case R.id.btn_send:
         send();
         break;
+      case R.id.addImageBtn:
+        selectImageFromLocal();
+        break;
     }
+  }
+
+  public void selectImageFromLocal() {
+    Intent intent;
+    if (Build.VERSION.SDK_INT < 19) {
+      intent = new Intent(Intent.ACTION_GET_CONTENT);
+      intent.setType("image/*");
+    } else {
+      intent = new Intent(
+          Intent.ACTION_PICK,
+          MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+    }
+    startActivityForResult(intent, IMAGE_REQUEST);
   }
 
   private void send() {
@@ -156,6 +186,43 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
       new SendTask(contString).execute();
       mEditTextContent.setText("");
     }
+  }
+
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    if (resultCode == RESULT_OK) switch (requestCode) {
+      case IMAGE_REQUEST:
+        if (data != null) {
+          Uri selectedImage = data.getData();
+          if (selectedImage != null) {
+            Cursor cursor = getContentResolver().query(
+                selectedImage, null, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex("_data");
+            final String localSelectPath = cursor.getString(columnIndex);
+            cursor.close();
+            if (localSelectPath == null
+                || localSelectPath.equals("null")) {
+              Utils.toast(ctx, R.string.cannotFindImage);
+              return;
+            }
+            final String newPath = PhotoUtil.compressImage(localSelectPath);
+            new NetAsyncTask(App.ctx, false) {
+              @Override
+              protected void doInBack() throws Exception {
+                ChatService.sendImageMsg(App.chatUser, newPath);
+              }
+
+              @Override
+              protected void onPost(boolean res) {
+                refresh();
+              }
+            }.execute();
+          }
+        }
+        break;
+    }
+    super.onActivityResult(requestCode, resultCode, data);
   }
 
   class SendTask extends AsyncTask<Void, Void, Void> {
@@ -176,21 +243,7 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
     @Override
     protected Void doInBackground(Void... params) {
       try {
-        String peerId = ChatService.getPeerId(App.chatUser);
-        Msg msg;
-        msg = new Msg();
-        msg.setStatus(Msg.STATUS_SEND_START);
-        msg.setContent(text);
-        msg.setTimestamp(System.currentTimeMillis());
-        msg.setFromPeerId(ChatService.getSelfId());
-        msg.setToPeerIds(Utils.oneToList(peerId));
-        msg.setObjectId(Utils.uuid());
-        msg.setType(Msg.TYPE_TEXT);
-
-        DBMsg.insertMsg(dbHelper, msg);
-        AVMessage avMsg = msg.toAVMessage();
-        Session session =ChatService.getSession();
-        session.sendMessage(avMsg);
+        ChatService.sendTextMsg(App.chatUser, text);
         res = true;
       } catch (Exception e) {
         e.printStackTrace();
@@ -205,7 +258,7 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
       if (res) {
         refresh();
       } else {
-        Utils.toast(cxt, R.string.badNetwork);
+        Utils.toast(ctx, R.string.badNetwork);
       }
     }
   }

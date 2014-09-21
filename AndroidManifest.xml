@@ -51,5 +51,7 @@
         </receiver>
 
         <activity android:name=".view.activity.MainActivity"></activity>
+
+        <activity android:name=".view.activity.UpdateContentActivity" />
     </application>
 </manifest>

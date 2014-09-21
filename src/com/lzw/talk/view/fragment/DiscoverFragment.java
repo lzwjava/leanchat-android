@@ -18,6 +18,6 @@ public class DiscoverFragment extends BaseFragment {
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    headerLayout.setTitle(R.string.discover);
+    headerLayout.showTitle(R.string.discover);
   }
 }

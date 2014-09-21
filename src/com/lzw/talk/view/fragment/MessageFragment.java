@@ -18,6 +18,6 @@ public class MessageFragment extends BaseFragment {
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    headerLayout.setTitle(R.string.messages);
+    headerLayout.showTitle(R.string.messages);
   }
 }

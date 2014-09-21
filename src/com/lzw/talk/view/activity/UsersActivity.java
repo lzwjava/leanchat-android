@@ -17,7 +17,7 @@ import com.lzw.talk.base.App;
 import com.lzw.talk.base.C;
 import com.lzw.talk.receiver.MsgReceiver;
 import com.lzw.talk.service.ChatService;
-import com.lzw.talk.service.StatusListner;
+import com.lzw.talk.service.StatusListener;
 import com.lzw.talk.util.NetAsyncTask;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * Created by lzw on 14-7-9.
  */
-public class UsersActivity extends Activity implements AdapterView.OnItemClickListener, StatusListner {
+public class UsersActivity extends Activity implements AdapterView.OnItemClickListener, StatusListener {
   public static final int MENU_SET_NICKNAME = 0;
   private static final int MENU_LOGOUT = 1;
   ListView usersList;
@@ -42,7 +42,7 @@ public class UsersActivity extends Activity implements AdapterView.OnItemClickLi
     findView();
     setList();
     new GetDataTask(cxt).execute();
-    MsgReceiver.registerSatusListener(this);
+    MsgReceiver.registerStatusListener(this);
     registerMyselfToCache();
   }
 
@@ -69,7 +69,7 @@ public class UsersActivity extends Activity implements AdapterView.OnItemClickLi
   }
 
   private void findView() {
-    usersList = (ListView) findViewById(R.id.topicList);
+    usersList = (ListView) findViewById(R.id.contactList);
   }
 
   private void setList() {
@@ -81,7 +81,7 @@ public class UsersActivity extends Activity implements AdapterView.OnItemClickLi
   @Override
   public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
     Intent intent = new Intent(cxt, ChatActivity.class);
-    AVUser user = (AVUser) parent.getItemAtPosition(position);
+    User user = (User) parent.getItemAtPosition(position);
     App.chatUser = user;
     startActivity(intent);
   }
