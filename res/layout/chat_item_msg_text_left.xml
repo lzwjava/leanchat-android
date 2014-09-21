@@ -5,22 +5,7 @@
     android:orientation="vertical"
     android:padding="3dp">
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal">
-
-        <TextView
-            android:id="@+id/sendTimeView"
-            android:visibility="visible"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="time"
-            style="@style/chat_text_date_style" />
-
-    </LinearLayout>
-
+    <include layout="@layout/chat_item_time_layout" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -44,26 +29,12 @@
                 android:gravity="center_vertical" />
 
             <ImageView
-                android:id="@+id/iv_userhead"
+                android:id="@+id/avatar"
                 android:layout_width="@dimen/userHead"
                 android:layout_height="@dimen/userHead"
                 android:clickable="true"
-                android:visibility="gone"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
+                android:visibility="visible"
                 android:background="@drawable/top_background_default_thumb_blue" />
-
-            <TextView
-                android:id="@+id/username"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentLeft="true"
-                android:gravity="center"
-                android:minWidth="@dimen/usernameMinWidth"
-                android:background="@android:color/holo_blue_dark"
-                android:textColor="#fff"
-                android:text="username"
-                style="@style/chat_text_name_style" />
 
             <TextView
                 android:id="@+id/textContent"
@@ -74,7 +45,6 @@
                 android:layout_height="wrap_content"
                 android:text="chat_content"
                 android:background="@null"
-                android:layout_toRightOf="@+id/username"
                 style="@style/chat_content_date_style" />
         </LinearLayout>
     </LinearLayout>

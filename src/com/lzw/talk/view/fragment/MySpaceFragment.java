@@ -54,7 +54,7 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
     nicknameView.setText(curUser.getNickname());
     ImageLoader imageLoader = ImageLoader.getInstance();
     imageLoader.displayImage(curUser.getAvatarUrl(), avatarView,
-        ProjectUtils.getImageLoaderOptions());
+        PhotoUtil.getImageLoaderOptions());
     nicknameLayout.setOnClickListener(this);
     avatarLayout.setOnClickListener(this);
     logoutLayout.setOnClickListener(this);

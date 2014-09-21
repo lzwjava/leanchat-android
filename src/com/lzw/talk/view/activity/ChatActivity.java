@@ -60,6 +60,7 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
 
   private void initHeader() {
     headerLayout.showTitle(App.chatUser.getUsername());
+    headerLayout.showLeftBackButton(R.string.back,null);
   }
 
   private void findView() {

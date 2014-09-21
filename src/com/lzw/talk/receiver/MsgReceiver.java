@@ -157,9 +157,10 @@ public class MsgReceiver extends AVMessageReceiver {
       }
     }
     //if error is Session is Already open ,we still go next Activity.
-    if (errorMsg != null && errorMsg.equals("Session is ")) {
+    if (errorMsg != null && errorMsg.equals("Session is already opened")) {
       goMainActivity(context);
     }
+    Logger.d("error "+errorMsg);
   }
 
   public static void registerMessageListener(MessageListener listener) {

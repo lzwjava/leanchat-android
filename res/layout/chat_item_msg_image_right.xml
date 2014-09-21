@@ -5,21 +5,7 @@
     android:orientation="vertical"
     android:padding="3dp">
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal">
-
-        <TextView
-            android:id="@+id/sendTimeView"
-            android:visibility="visible"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="time"
-            style="@style/chat_text_date_style" />
-
-    </LinearLayout>
+    <include layout="@layout/chat_item_time_layout" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,34 +20,13 @@
             android:layout_marginLeft="5dp"
             android:background="@drawable/card_background_white">
 
-            <TextView
-                android:id="@+id/status"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="发送中"
-                android:textSize="12sp"
-                android:gravity="center_vertical" />
-
             <ImageView
-                android:id="@+id/iv_userhead"
+                android:id="@+id/avatar"
                 android:layout_width="@dimen/userHead"
                 android:layout_height="@dimen/userHead"
                 android:clickable="true"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:background="@drawable/top_background_default_thumb_blue" />
-
-            <TextView
-                android:id="@+id/username"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:paddingLeft="@dimen/usernamePad"
-                android:paddingRight="@dimen/usernamePad"
-                android:gravity="center"
-                android:minWidth="@dimen/usernameMinWidth"
-                android:background="@android:color/holo_purple"
-                android:text=""
-                android:textColor="#fff"
-                style="@style/chat_text_name_style" />
 
         </LinearLayout>
 
@@ -69,12 +34,22 @@
             android:id="@+id/imageView"
             android:layout_marginLeft="@dimen/marginToUsername"
             android:layout_width="wrap_content"
-            android:maxWidth="@dimen/chatContentMaxWidth"
+            android:maxWidth="@dimen/chatImageMaxWidth"
+            android:maxHeight="@dimen/chatImageMaxWidth"
             android:layout_height="wrap_content"
             android:padding="@dimen/chatContentPadding"
             android:background="@null"
             android:src="@drawable/xiaohei"
             android:layout_marginRight="5dp"
             style="@style/chat_content_date_style" />
+
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:text="发送中"
+            android:textSize="12sp"
+            android:gravity="center_vertical" />
     </LinearLayout>
 </LinearLayout>

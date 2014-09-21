@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.lzw.talk.R;
+import com.lzw.talk.avobject.User;
+import com.lzw.talk.base.App;
 import com.lzw.talk.entity.Msg;
 import com.lzw.talk.util.Logger;
 import com.lzw.talk.util.PhotoUtil;
@@ -94,13 +96,16 @@ public class ChatMsgAdapter extends BaseAdapter {
       conView = createViewByType(itemViewType);
     }
     TextView sendTimeView= ViewHolder.findViewById(conView, R.id.sendTimeView);
-    TextView usernameView = ViewHolder.findViewById(conView, R.id.username);
     TextView contentView = ViewHolder.findViewById(conView,R.id.textContent);
     TextView statusView = ViewHolder.findViewById(conView,R.id.status);
     ImageView imageView = ViewHolder.findViewById(conView,R.id.imageView);
-    //viewHolder.sendTimeView.setText(msg.getTimestamp() + "");
+    ImageView avatarView=ViewHolder.findViewById(conView,R.id.avatar);
     sendTimeView.setText(TimeUtils.millisecs2DateString(msg.getTimestamp()));
-    usernameView.setText(msg.getFromName());
+    String peerId=msg.getFromPeerId();
+    User user = App.lookupUser(peerId);
+    imageLoader.displayImage(user.getAvatarUrl(),avatarView,
+        PhotoUtil.getImageLoaderOptions());
+
     if (msg.getType() == Msg.TYPE_TEXT) {
       contentView.setText(msg.getContent());
     } else {
