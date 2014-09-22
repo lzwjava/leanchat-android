@@ -2,7 +2,7 @@
 
 一个展示 AVOS Cloud 聊天功能的 Demo
 
-![img](https://raw.githubusercontent.com/lzwjava/plan/master/im360.png)
+![img](https://raw.githubusercontent.com/lzwjava/plan/master/im3601.png)
 
 ##当前特性
 * 消息支持文字（图片、声音的传 URL 类似）
