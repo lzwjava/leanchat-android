@@ -30,8 +30,12 @@ public class PathUtils {
     return dir;
   }
 
-  public static String getImageDir(){
-    String dir=getAppPath()+"image/";
+  public static String getAvatarTmpPath() {
+    return getAvatarDir() + "tmp";
+  }
+
+  public static String getImageDir() {
+    String dir = getAppPath() + "image/";
     checkAndMkdirs(dir);
     return dir;
   }

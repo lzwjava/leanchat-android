@@ -20,6 +20,7 @@ public class ChatService {
 
   public static List<User> findChatUsers() throws AVException {
     List<User> users = getAllUsers();
+    App.registerBatchUserCache(users);
     users.remove(User.curUser());
     return users;
   }

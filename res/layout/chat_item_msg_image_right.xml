@@ -8,17 +8,33 @@
     <include layout="@layout/chat_item_time_layout" />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="right"
-        android:orientation="vertical">
+        style="@style/chat_item_layout"
+        android:gravity="right">
 
         <LinearLayout
+            style="@style/chat_item_inner_layout"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/chatItemMarginTop"
-            android:layout_marginLeft="5dp"
-            android:background="@drawable/card_background_white">
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/status"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginRight="10dp"
+                android:text="发送中"
+                android:textSize="12sp"
+                android:gravity="center_vertical" />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_marginLeft="@dimen/marginToUsername"
+                android:layout_width="wrap_content"
+                android:maxWidth="@dimen/chatImageMaxWidth"
+                android:maxHeight="@dimen/chatImageMaxWidth"
+                android:layout_height="wrap_content"
+                android:background="@drawable/chat_right_qp"
+                android:src="@drawable/xiaohei"
+                android:layout_marginRight="5dp"/>
 
             <ImageView
                 android:id="@+id/avatar"
@@ -30,26 +46,5 @@
 
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_marginLeft="@dimen/marginToUsername"
-            android:layout_width="wrap_content"
-            android:maxWidth="@dimen/chatImageMaxWidth"
-            android:maxHeight="@dimen/chatImageMaxWidth"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/chatContentPadding"
-            android:background="@null"
-            android:src="@drawable/xiaohei"
-            android:layout_marginRight="5dp"
-            style="@style/chat_content_date_style" />
-
-        <TextView
-            android:id="@+id/status"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginRight="10dp"
-            android:text="发送中"
-            android:textSize="12sp"
-            android:gravity="center_vertical" />
     </LinearLayout>
 </LinearLayout>

@@ -8,16 +8,13 @@
     <include layout="@layout/chat_item_time_layout" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        style="@style/chat_item_layout">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/chatItemMarginTop"
-            android:layout_marginLeft="5dp"
-            android:background="@drawable/card_background_white">
+            android:layout_marginLeft="5dp">
 
             <ImageView
                 android:id="@+id/avatar"
@@ -27,19 +24,20 @@
                 android:visibility="visible"
                 android:background="@drawable/top_background_default_thumb_blue" />
 
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_marginLeft="@dimen/marginToUsername"
+                android:layout_width="wrap_content"
+                android:maxWidth="@dimen/chatImageMaxWidth"
+                android:maxHeight="@dimen/chatImageMaxWidth"
+                android:padding="@dimen/chatContentPadding"
+                android:src="@drawable/xiaohei"
+                android:layout_height="wrap_content"
+                android:background="@drawable/chat_left_qp"
+                style="@style/chat_content_date_style" />
+
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_marginLeft="@dimen/marginToUsername"
-            android:layout_width="wrap_content"
-            android:maxWidth="@dimen/chatImageMaxWidth"
-            android:maxHeight="@dimen/chatImageMaxWidth"
-            android:padding="@dimen/chatContentPadding"
-            android:src="@drawable/xiaohei"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            style="@style/chat_content_date_style" />
 
         <TextView
             android:id="@+id/status"

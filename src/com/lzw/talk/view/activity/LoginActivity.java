@@ -28,9 +28,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     ctx = this;
     setContentView(R.layout.login);
     findView();
-    if (User.curUser() != null) {
-      loginSucceed();
-    }
     headerLayout.showTitle(R.string.login);
   }
 

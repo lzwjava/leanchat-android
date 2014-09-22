@@ -1,6 +1,7 @@
 package com.lzw.talk.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,14 +12,13 @@ import com.lzw.talk.R;
 import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
 import com.lzw.talk.entity.Msg;
-import com.lzw.talk.util.Logger;
+import com.lzw.talk.service.ChatService;
+import com.lzw.talk.service.UserService;
 import com.lzw.talk.util.PhotoUtil;
 import com.lzw.talk.util.TimeUtils;
 import com.lzw.talk.view.ViewHolder;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.lzw.talk.view.activity.ImageBrowerActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageSize;
-import com.nostra13.universalimageloader.utils.ImageSizeUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -95,21 +95,21 @@ public class ChatMsgAdapter extends BaseAdapter {
     if (conView == null) {
       conView = createViewByType(itemViewType);
     }
-    TextView sendTimeView= ViewHolder.findViewById(conView, R.id.sendTimeView);
-    TextView contentView = ViewHolder.findViewById(conView,R.id.textContent);
-    TextView statusView = ViewHolder.findViewById(conView,R.id.status);
-    ImageView imageView = ViewHolder.findViewById(conView,R.id.imageView);
-    ImageView avatarView=ViewHolder.findViewById(conView,R.id.avatar);
+    TextView sendTimeView = ViewHolder.findViewById(conView, R.id.sendTimeView);
+    TextView contentView = ViewHolder.findViewById(conView, R.id.textContent);
+    TextView statusView = ViewHolder.findViewById(conView, R.id.status);
+    ImageView imageView = ViewHolder.findViewById(conView, R.id.imageView);
+    ImageView avatarView = ViewHolder.findViewById(conView, R.id.avatar);
     sendTimeView.setText(TimeUtils.millisecs2DateString(msg.getTimestamp()));
-    String peerId=msg.getFromPeerId();
+    String peerId = msg.getFromPeerId();
     User user = App.lookupUser(peerId);
-    imageLoader.displayImage(user.getAvatarUrl(),avatarView,
-        PhotoUtil.getImageLoaderOptions());
+    UserService.displayAvatar(user,avatarView);
 
     if (msg.getType() == Msg.TYPE_TEXT) {
       contentView.setText(msg.getContent());
     } else {
-      displayImage(msg,imageView);
+      displayImage(msg, imageView);
+      setImageOnClickListener(msg.getContent(), imageView);
     }
     if (isComMsg == false) {
       statusView.setText(msg.getStatusDesc());
@@ -117,23 +117,39 @@ public class ChatMsgAdapter extends BaseAdapter {
     return conView;
   }
 
-  private void displayImage(Msg msg, ImageView imageView) {
-    String content=msg.getContent();
-    String[] strings = content.split("&");
-    String localPath=strings[0];
-    String url=strings[1];
-    File file=new File(localPath);
-    if(msg.isComeMessage()==false && file.exists()){
+  private void setImageOnClickListener(final String uri, ImageView imageView) {
+    imageView.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        Intent intent = new Intent(ctx, ImageBrowerActivity.class);
+        intent.putExtra("uri", uri);
+        ctx.startActivity(intent);
+      }
+    });
+  }
+
+  public static void displayImage(Msg msg, ImageView imageView) {
+    String content = msg.getContent();
+    displayImageByUri(imageView, content);
+  }
+
+  public static void displayImageByUri(ImageView imageView, String uri) {
+    String[] strings = uri.split("&");
+    String localPath = strings[0];
+    String url = strings[1];
+    File file = new File(localPath);
+    ImageLoader imageLoader = ImageLoader.getInstance();
+    if (file.exists()) {
       //Logger.d("display from path "+localPath);
-      imageLoader.displayImage("file://"+localPath, imageView);
-    }else{
+      imageLoader.displayImage("file://" + localPath, imageView);
+    } else {
       //Logger.d("display from url");
-      imageLoader.displayImage(url,imageView);
+      imageLoader.displayImage(url, imageView);
     }
   }
 
   public View createViewByType(int itemViewType) {
-    View conView=null;
+    View conView = null;
     switch (itemViewType) {
       case MsgViewType.COME_TEXT:
         conView = inflater.inflate(R.layout.chat_item_msg_text_left,

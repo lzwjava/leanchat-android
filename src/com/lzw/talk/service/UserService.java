@@ -1,9 +1,12 @@
 package com.lzw.talk.service;
 
 import android.text.TextUtils;
+import android.widget.ImageView;
 import com.avos.avoscloud.*;
+import com.lzw.talk.*;
 import com.lzw.talk.avobject.User;
 import com.lzw.talk.util.Logger;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
 
@@ -32,6 +35,21 @@ public class UserService {
       Logger.d("value=" + value);
       curUser.setNickname(value);
       curUser.saveInBackground(saveCallback);
+    }
+  }
+
+  public static List<User> findFriends() throws AVException {
+    User curUser = User.curUser();
+    AVRelation<User> relation = curUser.getRelation(User.FRIENDS);
+    return relation.getQuery().find();
+  }
+
+  public static void displayAvatar(User user, ImageView avatarView) {
+    ImageLoader imageLoader = ImageLoader.getInstance();
+    if (user.getAvatar() != null) {
+      imageLoader.displayImage(user.getAvatarUrl(), avatarView);
+    } else {
+      avatarView.setImageResource(com.lzw.talk.R.drawable.default_user_avatar);
     }
   }
 }

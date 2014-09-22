@@ -1,12 +1,18 @@
 package com.lzw.talk.util;
 
+import android.content.Context;
 import android.graphics.*;
 import android.graphics.Bitmap.Config;
 import android.graphics.PorterDuff.Mode;
 import android.media.ExifInterface;
 import android.media.ThumbnailUtils;
+import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
 import java.io.File;
@@ -298,43 +304,45 @@ public class PhotoUtil {
     options.inJustDecodeBounds = true;
     BitmapFactory.decodeFile(path, options);
     int inSampleSize = 1;
-    int maxSize = 500;
-    Logger.d("outWidth="+options.outWidth+" outHeight="+options.outHeight);
-    if (options.outWidth > maxSize || options.outHeight> maxSize) {
-      int widthScale= (int) Math.ceil(options.outWidth * 1.0 / maxSize);
-      int heightScale= (int) Math.ceil(options.outHeight * 1.0 / maxSize);
-      inSampleSize=Math.max(widthScale,heightScale);
+    int maxSize = 3000;
+    Logger.d("outWidth=" + options.outWidth + " outHeight=" + options.outHeight);
+    if (options.outWidth > maxSize || options.outHeight > maxSize) {
+      int widthScale = (int) Math.ceil(options.outWidth * 1.0 / maxSize);
+      int heightScale = (int) Math.ceil(options.outHeight * 1.0 / maxSize);
+      inSampleSize = Math.max(widthScale, heightScale);
     }
-    Logger.d("inSampleSize="+inSampleSize);
+    Logger.d("inSampleSize=" + inSampleSize);
     options.inJustDecodeBounds = false;
     options.inSampleSize = inSampleSize;
     Bitmap bitmap = BitmapFactory.decodeFile(path, options);
-    int w=bitmap.getWidth();
-    int h=bitmap.getHeight();
-    int newW=w;
-    int newH=h;
-    if(w>maxSize || h>maxSize){
-      if(w>h){
-        newW=500;
-        newH= (int) (newW*h*1.0/w);
-      }else{
-        newH=500;
-        newW=(int)(newH*w*1.0/h);
+    int w = bitmap.getWidth();
+    int h = bitmap.getHeight();
+    int newW = w;
+    int newH = h;
+    if (w > maxSize || h > maxSize) {
+      if (w > h) {
+        newW = maxSize;
+        newH = (int) (newW * h * 1.0 / w);
+      } else {
+        newH = maxSize;
+        newW = (int) (newH * w * 1.0 / h);
       }
     }
-    Bitmap newBitmap=Bitmap.createScaledBitmap(bitmap,newW,newH,false);
-    recycle(bitmap);
-    Logger.d("bitmap width="+newBitmap.getWidth()+" h="+newBitmap.getHeight());
+    Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, newW, newH, false);
+    //recycle(bitmap);
+    Logger.d("bitmap width=" + newBitmap.getWidth() + " h=" + newBitmap.getHeight());
     String fileName = System.currentTimeMillis() + "";
-    String outPath=PathUtils.getImageDir() + fileName;
+    String outPath = PathUtils.getImageDir() + fileName;
 
-    FileOutputStream outputStream= null;
+    FileOutputStream outputStream = null;
     try {
       outputStream = new FileOutputStream(outPath);
-      newBitmap.compress(Bitmap.CompressFormat.JPEG,80,outputStream);
+      newBitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream);
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }
+    recycle(newBitmap);
+    recycle(bitmap);
     return outPath;
   }
 
@@ -370,5 +378,20 @@ public class PhotoUtil {
         .build();
 
     return options;
+  }
+
+  public static ImageLoaderConfiguration getImageLoaderConfig(Context context, File cacheDir) {
+    return new ImageLoaderConfiguration.Builder(
+        context)
+        .threadPoolSize(3).threadPriority(Thread.NORM_PRIORITY - 2)
+        .memoryCache(new WeakMemoryCache())
+        .denyCacheImageMultipleSizesInMemory()
+        .discCacheFileNameGenerator(new Md5FileNameGenerator())
+            // 将保存的时候的URI名称用MD5 加密
+        .tasksProcessingOrder(QueueProcessingType.LIFO)
+        .discCache(new UnlimitedDiscCache(cacheDir))// 自定义缓存路径
+            // .defaultDisplayImageOptions(DisplayImageOptions.createSimple())
+        .writeDebugLogs() // Remove for release app
+        .build();
   }
 }

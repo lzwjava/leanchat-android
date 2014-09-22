@@ -43,14 +43,6 @@ public class ContactFragment extends BaseFragment implements StatusListener, Ada
     setList();
     new GetDataTask(ctx).execute();
     MsgReceiver.registerStatusListener(this);
-    registerMyselfToCache();
-  }
-
-
-  private void registerMyselfToCache() {
-    User user = User.curUser();
-    String userId = user.getObjectId();
-    App.registerUserCache(userId, user);
   }
 
   private void findView() {
@@ -95,7 +87,6 @@ public class ContactFragment extends BaseFragment implements StatusListener, Ada
     @Override
     protected void doInBack() throws Exception {
       users = ChatService.findChatUsers();
-      App.registerBatchUserCache(users);
     }
 
     @Override

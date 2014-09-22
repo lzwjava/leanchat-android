@@ -16,8 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/chatItemMarginTop"
-            android:layout_marginLeft="5dp"
-            android:background="@drawable/card_background_white">
+            android:layout_marginLeft="5dp">
 
             <TextView
                 android:id="@+id/status"
@@ -44,7 +43,7 @@
                 android:padding="@dimen/chatContentPadding"
                 android:layout_height="wrap_content"
                 android:text="chat_content"
-                android:background="@null"
+                android:background="@drawable/chat_left_qp"
                 style="@style/chat_content_date_style" />
         </LinearLayout>
     </LinearLayout>

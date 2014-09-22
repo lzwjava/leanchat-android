@@ -25,11 +25,9 @@
         android:name=".base.App">
         <activity
             android:name=".view.activity.LoginActivity"
-            android:label="@string/app_name">
-        </activity>
+            android:label="@string/app_name"></activity>
 
         <activity android:name=".view.activity.ChatActivity"></activity>
-        <activity android:name=".view.activity.UsersActivity"></activity>
 
         <service android:name="com.avos.avoscloud.PushService" />
 
@@ -49,12 +47,15 @@
         <activity android:name=".view.activity.MainActivity"></activity>
 
         <activity android:name=".view.activity.UpdateContentActivity" />
-        <activity android:name=".view.activity.SplashActivity"
+        <activity
+            android:name=".view.activity.SplashActivity"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".view.activity.ImageBrowerActivity" />
     </application>
 </manifest>

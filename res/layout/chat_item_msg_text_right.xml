@@ -24,18 +24,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/chatItemMarginTop"
-            android:layout_marginLeft="5dp"
-            android:background="@drawable/card_background_white">
+            android:layout_marginLeft="5dp">
 
             <TextView
                 android:id="@+id/textContent"
                 android:layout_marginLeft="@dimen/marginToUsername"
                 android:layout_width="wrap_content"
                 android:maxWidth="@dimen/chatContentMaxWidth"
+                android:layout_marginTop="5dp"
                 android:layout_height="wrap_content"
-                android:text="chat_content"
-                android:padding="@dimen/chatContentPadding"
-                android:background="@null"
+                android:text="c"
+                android:paddingRight="10dp"
+                android:minWidth="@dimen/chatTextMinWidth"
+                android:gravity="center"
+                android:textColor="#fff"
+                android:background="@drawable/chat_right_qp"
                 android:layout_marginRight="5dp"
                 style="@style/chat_content_date_style" />
 

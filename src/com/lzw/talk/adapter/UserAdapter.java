@@ -5,11 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
-import com.avos.avoscloud.AVUser;
 import com.lzw.talk.R;
 import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.C;
+import com.lzw.talk.service.UserService;
+import com.lzw.talk.view.ViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,11 +25,6 @@ public class UserAdapter extends BaseAdapter {
 
   public UserAdapter(Activity cxt) {
     this.cxt = cxt;
-  }
-
-  public static class ViewHolder {
-    TextView usernameView;
-    TextView onlineStatusView;
   }
 
   public void setUsers(List<User> users) {
@@ -54,16 +51,15 @@ public class UserAdapter extends BaseAdapter {
     if (conView == null) {
       LayoutInflater inflater = LayoutInflater.from(cxt);
       conView = inflater.inflate(R.layout.chat_user_row, null, false);
-      ViewHolder viewHolder = new ViewHolder();
-      viewHolder.usernameView = (TextView) conView.findViewById(R.id.name);
-      viewHolder.onlineStatusView = (TextView) conView.findViewById(R.id.onlineStatus);
-      conView.setTag(viewHolder);
     }
-    ViewHolder viewHolder = (ViewHolder) conView.getTag();
-    AVUser user = users.get(position);
-    viewHolder.usernameView.setText(user.getUsername());
-    setTextBasedOnFlag(user.getBoolean(C.ONLINE), viewHolder.onlineStatusView,
+    TextView usernameView = ViewHolder.findViewById(conView, R.id.name);
+    TextView onlineStatusView = ViewHolder.findViewById(conView, R.id.onlineStatus);
+    ImageView avatarView = ViewHolder.findViewById(conView, R.id.userAvatar);
+    User user = users.get(position);
+    usernameView.setText(user.getUsername());
+    setTextBasedOnFlag(user.getBoolean(C.ONLINE), onlineStatusView,
         R.string.status_online, R.string.status_offline);
+    UserService.displayAvatar(user, avatarView);
     return conView;
   }
 

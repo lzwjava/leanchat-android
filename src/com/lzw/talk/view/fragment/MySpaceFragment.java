@@ -17,10 +17,14 @@ import com.avos.avoscloud.SaveCallback;
 import com.lzw.talk.R;
 import com.lzw.talk.avobject.User;
 import com.lzw.talk.service.UserService;
-import com.lzw.talk.util.*;
+import com.lzw.talk.util.Logger;
+import com.lzw.talk.util.PathUtils;
+import com.lzw.talk.util.PhotoUtil;
+import com.lzw.talk.util.Utils;
 import com.lzw.talk.view.activity.UpdateContentActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -112,15 +116,17 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
         startImageCrop(uri, 200, 200, CROP_REQUEST);
       }
     } else if (requestCode == CROP_REQUEST) {
-      String path = saveCropAvator(data);
-      User curUser = User.curUser();
-      curUser.saveAvatar(path);
+      if (resultCode == Activity.RESULT_OK) {
+        String path = saveCropAvatar(data);
+        User curUser = User.curUser();
+        curUser.saveAvatar(path);
+      }
     }
     super.onActivityResult(requestCode, resultCode, data);
   }
 
-  private void startImageCrop(Uri uri, int outputX, int outputY,
-                              int requestCode) {
+  public Uri startImageCrop(Uri uri, int outputX, int outputY,
+                            int requestCode) {
     Intent intent = null;
     intent = new Intent("com.android.camera.action.CROP");
     intent.setDataAndType(uri, "image/*");
@@ -130,14 +136,17 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
     intent.putExtra("outputX", outputX);
     intent.putExtra("outputY", outputY);
     intent.putExtra("scale", true);
-    intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+    String outputPath =PathUtils.getAvatarTmpPath();
+    Uri outputUri = Uri.fromFile(new File(outputPath));
+    intent.putExtra(MediaStore.EXTRA_OUTPUT, outputUri);
     intent.putExtra("return-data", true);
     intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
     intent.putExtra("noFaceDetection", true); // no face detection
     startActivityForResult(intent, requestCode);
+    return outputUri;
   }
 
-  private String saveCropAvator(Intent data) {
+  private String saveCropAvatar(Intent data) {
     Bundle extras = data.getExtras();
     String path = null;
     if (extras != null) {
@@ -151,8 +160,8 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
         path = PathUtils.getAvatarDir() + filename;
         PhotoUtil.saveBitmap(PathUtils.getAvatarDir(), filename,
             bitmap, true);
-        if (bitmap != null && bitmap.isRecycled()) {
-          bitmap.recycle();
+        if (bitmap != null && bitmap.isRecycled() == false) {
+          //bitmap.recycle();
         }
       }
     }

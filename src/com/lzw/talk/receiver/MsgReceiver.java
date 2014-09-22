@@ -88,7 +88,7 @@ public class MsgReceiver extends AVMessageReceiver {
 
   @Override
   public void onMessageSent(Context context, Session session, AVMessage avMsg) {
-    Logger.d("onMessageSent");
+    Logger.d("onMessageSent "+avMsg.getMessage());
     Msg msg = Msg.fromAVMessage(avMsg);
     if (msg.getType() == Msg.TYPE_TEXT || msg.getType() == Msg.TYPE_IMAGE) {
       DBMsg.updateStatusToSendSucceed(msg);
@@ -157,7 +157,8 @@ public class MsgReceiver extends AVMessageReceiver {
       }
     }
     //if error is Session is Already open ,we still go next Activity.
-    if (errorMsg != null && errorMsg.equals("Session is already opened")) {
+    if (errorMsg != null && errorMsg.equals("Session is already opened.")) {
+      Logger.d("goActivity by session error");
       goMainActivity(context);
     }
     Logger.d("error "+errorMsg);

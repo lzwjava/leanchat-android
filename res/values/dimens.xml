@@ -20,10 +20,13 @@
     <dimen name="item_icon">35dp</dimen>
     <dimen name="chatContentMaxWidth">200dp</dimen>
     <dimen name="marginToUsername">5dp</dimen>
-    <dimen name="chatContentPadding">5dp</dimen>
+    <dimen name="chatContentPadding">10dp</dimen>
     <dimen name="usernamePad">3dp</dimen>
     <dimen name="usernameMinWidth">40dp</dimen>
     <dimen name="chatImageMaxWidth">80dp</dimen>
+    <dimen name="chatTextMinWidth">60dp</dimen>
+    <dimen name="chatContentPadRight">10dp</dimen>
+    <dimen name="avatarWidth">50dp</dimen>
 
 
 </resources>

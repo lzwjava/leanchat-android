@@ -24,6 +24,7 @@ import com.lzw.talk.entity.Msg;
 import com.lzw.talk.receiver.MsgReceiver;
 import com.lzw.talk.service.ChatService;
 import com.lzw.talk.service.MessageListener;
+import com.lzw.talk.service.UserService;
 import com.lzw.talk.util.NetAsyncTask;
 import com.lzw.talk.util.PhotoUtil;
 import com.lzw.talk.util.Utils;
@@ -59,8 +60,8 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
   }
 
   private void initHeader() {
-    headerLayout.showTitle(App.chatUser.getUsername());
-    headerLayout.showLeftBackButton(R.string.back,null);
+    headerLayout.showTitle(App.chatUser.getNickname());
+    headerLayout.showLeftBackButton(R.string.back, null);
   }
 
   private void findView() {
@@ -264,7 +265,7 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
     }
   }
 
-  private void scroolToLast() {
+  public void scroolToLast() {
     mListView.setSelection(mListView.getCount() - 1);
   }
 }

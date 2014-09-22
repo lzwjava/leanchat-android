@@ -7,15 +7,11 @@ import com.lzw.talk.avobject.User;
 import com.lzw.talk.service.ChatService;
 import com.lzw.talk.util.AVOSUtils;
 import com.lzw.talk.util.Logger;
+import com.lzw.talk.util.PhotoUtil;
 import com.lzw.talk.util.Utils;
-import com.lzw.talk.view.activity.ChatActivity;
 import com.lzw.talk.view.activity.LoginActivity;
-import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
-import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
-import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 
 import java.io.File;
@@ -61,18 +57,7 @@ public class App extends Application {
   public static void initImageLoader(Context context) {
     File cacheDir = StorageUtils.getOwnCacheDirectory(context,
         "leanchat/Cache");
-    ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
-        context)
-        .threadPoolSize(3).threadPriority(Thread.NORM_PRIORITY - 2)
-        .memoryCache(new WeakMemoryCache())
-        .denyCacheImageMultipleSizesInMemory()
-        .discCacheFileNameGenerator(new Md5FileNameGenerator())
-            // 将保存的时候的URI名称用MD5 加密
-        .tasksProcessingOrder(QueueProcessingType.LIFO)
-        .discCache(new UnlimitedDiscCache(cacheDir))// 自定义缓存路径
-            // .defaultDisplayImageOptions(DisplayImageOptions.createSimple())
-        .writeDebugLogs() // Remove for release app
-        .build();
+    ImageLoaderConfiguration config = PhotoUtil.getImageLoaderConfig(context, cacheDir);
     // Initialize ImageLoader with configuration.
     ImageLoader.getInstance().init(config);// 全局初始化此配置
   }
