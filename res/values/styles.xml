@@ -93,4 +93,9 @@
     <style name="chat_item_inner_right_layout" parent="chat_item_inner_layout">
         <item name="android:layout_marginRight">5dp</item>
     </style>
+
+    <style name="play_btn">
+        <item name="android:layout_width">@dimen/playBtnWidth</item>
+        <item name="android:layout_height">@dimen/playBtnWidth</item>
+    </style>
 </resources>

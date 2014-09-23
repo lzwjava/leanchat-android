@@ -111,5 +111,6 @@
     <string name="newMessage">新的消息</string>
     <string name="image">图片</string>
     <string name="cancelRecord">取消录音</string>
+    <string name="audio">声音</string>
 
 </resources>

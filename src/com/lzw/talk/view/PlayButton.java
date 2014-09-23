@@ -41,9 +41,9 @@ public class PlayButton extends View implements View.OnClickListener {
       }
     }
     if (left) {
-      backResourceId = R.drawable.voice_left;
-    } else {
       backResourceId = R.drawable.voice_right;
+    } else {
+      backResourceId = R.drawable.voice_left;
     }
     init();
   }
@@ -68,7 +68,7 @@ public class PlayButton extends View implements View.OnClickListener {
             setBackgroundResource(backResourceId);
           }
         });
-        setBackground(null);
+        setBackgroundDrawable(null);
         prepared = true;
       } catch (IOException e) {
         e.printStackTrace();
@@ -76,7 +76,7 @@ public class PlayButton extends View implements View.OnClickListener {
       }
     } else {
       mediaPlayer.start();
-      setBackground(null);
+      setBackgroundDrawable(null);
     }
   }
 
@@ -87,9 +87,11 @@ public class PlayButton extends View implements View.OnClickListener {
 
   @Override
   protected void onDetachedFromWindow() {
-    mediaPlayer.stop();
-    mediaPlayer.release();
-    mediaPlayer = null;
+    if(mediaPlayer!=null){
+      mediaPlayer.stop();
+      mediaPlayer.release();
+      mediaPlayer = null;
+    }
     super.onDetachedFromWindow();
   }
 

@@ -86,22 +86,25 @@ public class MsgReceiver extends AVMessageReceiver {
     new NetAsyncTask(context, false) {
       @Override
       protected void doInBack() throws Exception {
-        if(msg.getType()==Msg.TYPE_AUDIO){
-          File file=new File(msg.getAudioPath());
-          Utils.downloadFile(msg.getContent(), file);
+        if (msg.getType() == Msg.TYPE_AUDIO) {
+          File file = new File(msg.getAudioPath());
+          String uri = msg.getContent();
+          Map<String, String> parts = ChatService.parseUri(uri);
+          String url = parts.get("url");
+          Utils.downloadFileIfNotExists(url, file);
         }
       }
 
       @Override
       protected void onPost(boolean res) {
-        if(res){
+        if (res) {
           ChatService.insertDBMsg(msg);
           if (messageListener == null) {
             notifyMsg(context, msg);
           } else {
             messageListener.onMessage(msg);
           }
-        }else{
+        } else {
           Utils.toast(context, R.string.badNetwork);
         }
       }
@@ -143,6 +146,8 @@ public class MsgReceiver extends AVMessageReceiver {
     String content = msg.getContent();
     if (msg.getType() == Msg.TYPE_IMAGE) {
       content = App.ctx.getString(R.string.image);
+    } else if (msg.getType() == Msg.TYPE_AUDIO) {
+      content = App.ctx.getString(R.string.audio);
     }
     builder.setContentIntent(pend)
         .setSmallIcon(icon)

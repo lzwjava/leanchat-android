@@ -10,6 +10,7 @@ import com.lzw.talk.util.Utils;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -127,5 +128,13 @@ public class ChatService {
   public static void openSession() {
     Session session = getSession();
     session.open(new LinkedList<String>());
+  }
+
+  public static HashMap<String,String> parseUri(String uri){
+    String[] parts = uri.split("&");
+    HashMap<String,String> map=new HashMap<String, String>();
+    map.put("path", parts[0]);
+    map.put("url", parts[1]);
+    return map;
   }
 }

@@ -12,8 +12,8 @@ import com.lzw.talk.R;
 import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
 import com.lzw.talk.entity.Msg;
+import com.lzw.talk.service.ChatService;
 import com.lzw.talk.service.UserService;
-import com.lzw.talk.util.PathUtils;
 import com.lzw.talk.util.TimeUtils;
 import com.lzw.talk.view.PlayButton;
 import com.lzw.talk.view.ViewHolder;
@@ -22,6 +22,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ChatMsgAdapter extends BaseAdapter {
@@ -152,9 +153,9 @@ public class ChatMsgAdapter extends BaseAdapter {
   }
 
   public static void displayImageByUri(ImageView imageView, String uri) {
-    String[] strings = uri.split("&");
-    String localPath = strings[0];
-    String url = strings[1];
+    HashMap<String, String> parts = ChatService.parseUri(uri);
+    String localPath=parts.get("path");
+    String url=parts.get("url");
     File file = new File(localPath);
     ImageLoader imageLoader = ImageLoader.getInstance();
     if (file.exists()) {

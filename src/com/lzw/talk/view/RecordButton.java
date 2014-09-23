@@ -17,15 +17,12 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import com.lzw.talk.R;
 import com.lzw.talk.base.App;
-import com.lzw.talk.util.Logger;
-
 import java.io.File;
 import java.io.IOException;
 
 public class RecordButton extends Button {
-
-  public static final int RECORD_BTN_OFF = R.drawable.circle_green_off;
-  public static final int RECORD_BTN_ON = R.drawable.circle_green_on;
+  public static final int BACK_RECORDING = R.color.blue;
+  public static final int BACK_IDLE = R.color.white;
 
   public RecordButton(Context context) {
     super(context);
@@ -61,18 +58,14 @@ public class RecordButton extends Button {
 
   private static int[] res = {R.drawable.mic_2, R.drawable.mic_3,
       R.drawable.mic_4, R.drawable.mic_5};
-
   private static ImageView view;
-
   private MediaRecorder recorder;
-
   private ObtainDecibelThread thread;
-
   private Handler volumeHandler;
 
   private void init() {
     volumeHandler = new ShowVolumeHandler();
-    setBackgroundResource(RECORD_BTN_OFF);
+    setBackgroundResource(BACK_IDLE);
   }
 
   @Override
@@ -108,7 +101,7 @@ public class RecordButton extends Button {
     recordIndicator.setOnDismissListener(onDismiss);
     LayoutParams lp = recordIndicator.getWindow().getAttributes();
     lp.gravity = Gravity.CENTER;
-    setBackgroundResource(RECORD_BTN_OFF);
+    setBackgroundResource(BACK_RECORDING);
     startRecording();
     recordIndicator.show();
   }
@@ -116,7 +109,7 @@ public class RecordButton extends Button {
   private void finishRecord() {
     stopRecording();
     recordIndicator.dismiss();
-    setBackgroundResource(RECORD_BTN_ON);
+    setBackgroundResource(BACK_IDLE);
 
     long intervalTime = System.currentTimeMillis() - startTime;
     if (intervalTime < MIN_INTERVAL_TIME) {

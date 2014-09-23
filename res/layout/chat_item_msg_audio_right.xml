@@ -46,9 +46,8 @@
 
                 <com.lzw.talk.view.PlayButton
                     android:id="@+id/playBtn"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    custom:left="true" />
+                    style="@style/play_btn"
+                    custom:left="false" />
             </LinearLayout>
 
             <ImageView

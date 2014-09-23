@@ -29,5 +29,6 @@
     <dimen name="avatarWidth">50dp</dimen>
     <dimen name="sendBtnWidth">70dp</dimen>
 
+    <dimen name="playBtnWidth">30dp</dimen>
 
 </resources>

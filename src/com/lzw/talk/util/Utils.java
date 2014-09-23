@@ -119,19 +119,23 @@ public class Utils {
   public static Bitmap saveBitmapLocal(String bitmapUrl, File bitmapFile)
       throws IOException, FileNotFoundException, ClientProtocolException {
     Bitmap resultBitmap;
-    downloadFile(bitmapUrl, bitmapFile);
+    downloadFileIfNotExists(bitmapUrl, bitmapFile);
     resultBitmap = Utils.bitmapFromFile(bitmapFile);
     return resultBitmap;
   }
 
-  public static void downloadFile(String url, File toFile) throws IOException {
+  public static void downloadFileIfNotExists(String url, File toFile) throws IOException {
     if (toFile.exists()) {
     } else {
-      toFile.createNewFile();
-      FileOutputStream outputStream = new FileOutputStream(toFile);
-      InputStream inputStream = Utils.inputStreamFromUrl(url);
-      Utils.inputToOutput(outputStream, inputStream);
+      downloadFile(url, toFile);
     }
+  }
+
+  public static void downloadFile(String url, File toFile) throws IOException {
+    toFile.createNewFile();
+    FileOutputStream outputStream = new FileOutputStream(toFile);
+    InputStream inputStream = Utils.inputStreamFromUrl(url);
+    Utils.inputToOutput(outputStream, inputStream);
   }
 
   public static Bitmap getBitmapFromUrl(String logoUrl, String filmEnName,
