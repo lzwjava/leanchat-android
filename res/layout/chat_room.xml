@@ -42,8 +42,7 @@
                     android:layout_width="@dimen/chatBottomBtnWidth"
                     android:layout_height="@dimen/chatBottomBtnWidth"
                     android:layout_marginLeft="10dp"
-                    android:src="@drawable/btn_chat_add_selector"
-                    android:background="@null" />
+                    android:background="@drawable/btn_chat_add_selector"/>
 
                 <Button
                     android:id="@+id/btn_chat_emo"

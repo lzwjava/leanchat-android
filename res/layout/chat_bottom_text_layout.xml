@@ -41,7 +41,8 @@
             android:layout_height="30dp"
             android:visibility="visible"
             android:background="@drawable/btn_chat_voice_selector"
-            android:textColor="@color/base_color_text_black"></Button>
+            android:textColor="@color/base_color_text_black">
+        </Button>
     </LinearLayout>
 
 
