@@ -18,10 +18,12 @@ import com.lzw.talk.service.MessageListener;
 import com.lzw.talk.service.PrefDao;
 import com.lzw.talk.service.StatusListener;
 import com.lzw.talk.util.Logger;
+import com.lzw.talk.util.NetAsyncTask;
 import com.lzw.talk.util.Utils;
 import com.lzw.talk.view.activity.ChatActivity;
 import com.lzw.talk.view.activity.MainActivity;
 
+import java.io.File;
 import java.util.*;
 
 /**
@@ -64,20 +66,13 @@ public class MsgReceiver extends AVMessageReceiver {
   }
 
   @Override
-  public void onMessage(Context context, Session session, AVMessage avMsg) {
+  public void onMessage(final Context context, Session session, AVMessage avMsg) {
     Logger.d("onMessage");
-    Msg msg = Msg.fromAVMessage(avMsg);
+    final Msg msg = Msg.fromAVMessage(avMsg);
     String selfId = ChatService.getSelfId();
     msg.setToPeerIds(Utils.oneToList(selfId));
-    if (msg.getType() == Msg.TYPE_TEXT || msg.getType() == Msg.TYPE_IMAGE) {
-      ChatService.insertDBMsg(msg);
-      if (messageListener == null) {
-        notifyMsg(context, msg);
-      } else {
-        Logger.d("refresh datas");
-        messageListener.onMessage(msg);
-      }
-      ChatService.sendResponseMessage(msg);
+    if (msg.getType() != Msg.TYPE_RESPONSE) {
+      responseAndReceiveMsg(context, msg);
     } else if (msg.getType() == Msg.TYPE_RESPONSE) {
       DBMsg.updateStatusAndTimestamp(msg);
       if (messageListener != null) {
@@ -86,11 +81,38 @@ public class MsgReceiver extends AVMessageReceiver {
     }
   }
 
+  public void responseAndReceiveMsg(final Context context, final Msg msg) {
+    ChatService.sendResponseMessage(msg);
+    new NetAsyncTask(context, false) {
+      @Override
+      protected void doInBack() throws Exception {
+        if(msg.getType()==Msg.TYPE_AUDIO){
+          File file=new File(msg.getAudioPath());
+          Utils.downloadFile(msg.getContent(), file);
+        }
+      }
+
+      @Override
+      protected void onPost(boolean res) {
+        if(res){
+          ChatService.insertDBMsg(msg);
+          if (messageListener == null) {
+            notifyMsg(context, msg);
+          } else {
+            messageListener.onMessage(msg);
+          }
+        }else{
+          Utils.toast(context, R.string.badNetwork);
+        }
+      }
+    }.execute();
+  }
+
   @Override
   public void onMessageSent(Context context, Session session, AVMessage avMsg) {
-    Logger.d("onMessageSent "+avMsg.getMessage());
+    Logger.d("onMessageSent " + avMsg.getMessage());
     Msg msg = Msg.fromAVMessage(avMsg);
-    if (msg.getType() == Msg.TYPE_TEXT || msg.getType() == Msg.TYPE_IMAGE) {
+    if (msg.getType() != Msg.TYPE_RESPONSE) {
       DBMsg.updateStatusToSendSucceed(msg);
       if (messageListener != null) {
         messageListener.onMessageSent(msg);
@@ -100,12 +122,15 @@ public class MsgReceiver extends AVMessageReceiver {
 
   @Override
   public void onMessageFailure(Context context, Session session, AVMessage avMsg) {
+    updateStatusToFailed(avMsg);
+  }
+
+  public void updateStatusToFailed(AVMessage avMsg) {
     Msg msg = Msg.fromAVMessage(avMsg);
-    Logger.d("onMessageFailure");
-    if (msg.getType() == Msg.TYPE_TEXT || msg.getType() == Msg.TYPE_IMAGE) {
+    if (msg.getType() == Msg.TYPE_RESPONSE) {
       DBMsg.updateStatusToSendFailed(msg);
       if (messageListener != null) {
-        messageListener.onMessageSent(msg);
+        messageListener.onMessageFailure(msg);
       }
     }
   }
@@ -150,18 +175,14 @@ public class MsgReceiver extends AVMessageReceiver {
     String errorMsg = throwable.getMessage();
     if (errorMsg != null && errorMsg.startsWith("{")) {
       AVMessage avMsg = new AVMessage(errorMsg);
-      Msg msg = Msg.fromAVMessage(avMsg);
-      DBMsg.updateStatusToSendFailed(msg);
-      if (messageListener != null) {
-        messageListener.onMessageFailure(msg);
-      }
+      updateStatusToFailed(avMsg);
     }
     //if error is Session is Already open ,we still go next Activity.
     if (errorMsg != null && errorMsg.equals("Session is already opened.")) {
       Logger.d("goActivity by session error");
       goMainActivity(context);
     }
-    Logger.d("error "+errorMsg);
+    Logger.d("error " + errorMsg);
   }
 
   public static void registerMessageListener(MessageListener listener) {

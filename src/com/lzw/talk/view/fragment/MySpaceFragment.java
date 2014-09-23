@@ -17,7 +17,6 @@ import com.avos.avoscloud.SaveCallback;
 import com.lzw.talk.R;
 import com.lzw.talk.avobject.User;
 import com.lzw.talk.service.UserService;
-import com.lzw.talk.util.Logger;
 import com.lzw.talk.util.PathUtils;
 import com.lzw.talk.util.PhotoUtil;
 import com.lzw.talk.util.Utils;
@@ -96,7 +95,6 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
     if (requestCode == REQUEST_CODE_NICKNAME) {
       if (resultCode == Activity.RESULT_OK) {
         String value = data.getStringExtra(UpdateContentActivity.VALUE);
-        Logger.d("updateNickname");
         UserService.updateNickname(User.curUser(), value, new SaveCallback() {
 
           @Override
@@ -136,7 +134,7 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
     intent.putExtra("outputX", outputX);
     intent.putExtra("outputY", outputY);
     intent.putExtra("scale", true);
-    String outputPath =PathUtils.getAvatarTmpPath();
+    String outputPath = PathUtils.getAvatarTmpPath();
     Uri outputUri = Uri.fromFile(new File(outputPath));
     intent.putExtra(MediaStore.EXTRA_OUTPUT, outputUri);
     intent.putExtra("return-data", true);

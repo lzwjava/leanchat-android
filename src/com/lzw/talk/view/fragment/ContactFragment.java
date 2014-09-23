@@ -11,7 +11,6 @@ import android.widget.ListView;
 import com.lzw.talk.R;
 import com.lzw.talk.adapter.UserAdapter;
 import com.lzw.talk.avobject.User;
-import com.lzw.talk.base.App;
 import com.lzw.talk.base.C;
 import com.lzw.talk.receiver.MsgReceiver;
 import com.lzw.talk.service.ChatService;
@@ -59,7 +58,7 @@ public class ContactFragment extends BaseFragment implements StatusListener, Ada
   public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
     Intent intent = new Intent(ctx, ChatActivity.class);
     User user = (User) parent.getItemAtPosition(position);
-    App.chatUser = user;
+    intent.putExtra(ChatActivity.CHAT_USER_ID, user.getObjectId());
     startActivity(intent);
   }
 

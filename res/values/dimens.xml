@@ -10,7 +10,7 @@
     <dimen name="pairLayoutText">14sp</dimen>
     <dimen name="little_radius">3dp</dimen>
 
-    <dimen name="bottomHeight">50dp</dimen>
+    <dimen name="chatBottomHeight">50dp</dimen>
     <dimen name="fullContent">300dp</dimen>
     <dimen name="usernameSize">13sp</dimen>
 
@@ -27,6 +27,7 @@
     <dimen name="chatTextMinWidth">60dp</dimen>
     <dimen name="chatContentPadRight">10dp</dimen>
     <dimen name="avatarWidth">50dp</dimen>
+    <dimen name="sendBtnWidth">70dp</dimen>
 
 
 </resources>

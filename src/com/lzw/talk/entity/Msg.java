@@ -7,6 +7,7 @@ import com.lzw.talk.R;
 import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
 import com.lzw.talk.service.ChatService;
+import com.lzw.talk.util.PathUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +23,7 @@ public class Msg {
   public static final int TYPE_TEXT = 0;
   public static final int TYPE_RESPONSE = 1;
   public static final int TYPE_IMAGE = 2;
+  public static final int TYPE_AUDIO=3;
   //long timestamp;
   //String fromPeerId;
   //List<String> toPeerIds;
@@ -152,5 +154,9 @@ public class Msg {
     return "{content:" + getContent() + " objectId:" + getObjectId() + " status:" + getStatus() + " fromPeerId:" +
         getFromPeerId() + " toPeerIds:" + getToPeerIds()
         + " timestamp:" + getTimestamp() + " type=" + getType() + "}";
+  }
+
+  public String getAudioPath() {
+    return PathUtils.getAudioDir()+getObjectId();
   }
 }

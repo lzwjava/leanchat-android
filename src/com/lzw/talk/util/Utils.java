@@ -119,17 +119,19 @@ public class Utils {
   public static Bitmap saveBitmapLocal(String bitmapUrl, File bitmapFile)
       throws IOException, FileNotFoundException, ClientProtocolException {
     Bitmap resultBitmap;
-    if (bitmapFile.exists()) {
-    } else {
-      Log.i("lzw", bitmapFile.getAbsolutePath());
-      bitmapFile.createNewFile();
-
-      FileOutputStream outputStream = new FileOutputStream(bitmapFile);
-      InputStream inputStream = Utils.inputStreamFromUrl(bitmapUrl);
-      Utils.inputToOutput(outputStream, inputStream);
-    }
+    downloadFile(bitmapUrl, bitmapFile);
     resultBitmap = Utils.bitmapFromFile(bitmapFile);
     return resultBitmap;
+  }
+
+  public static void downloadFile(String url, File toFile) throws IOException {
+    if (toFile.exists()) {
+    } else {
+      toFile.createNewFile();
+      FileOutputStream outputStream = new FileOutputStream(toFile);
+      InputStream inputStream = Utils.inputStreamFromUrl(url);
+      Utils.inputToOutput(outputStream, inputStream);
+    }
   }
 
   public static Bitmap getBitmapFromUrl(String logoUrl, String filmEnName,
@@ -599,7 +601,7 @@ public class Utils {
   public static void appendChar(StringBuilder sb, int start, int end) {
     int i;
     for (i = start; i < end; i++) {
-      sb.append((char)i);
+      sb.append((char) i);
     }
   }
 }

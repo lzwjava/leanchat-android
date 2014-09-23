@@ -27,7 +27,6 @@ public class App extends Application {
   public static final int DB_VER = 1;
   public static boolean debug = true;
   public static Context ctx;
-  public static User chatUser;
   public static Session session;
   private static Map<String, User> usersCache = new HashMap<String, User>();
 

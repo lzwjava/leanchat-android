@@ -8,12 +8,13 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import com.lzw.talk.R;
 import com.lzw.talk.adapter.ChatMsgAdapter;
 import com.lzw.talk.avobject.User;
@@ -24,28 +25,32 @@ import com.lzw.talk.entity.Msg;
 import com.lzw.talk.receiver.MsgReceiver;
 import com.lzw.talk.service.ChatService;
 import com.lzw.talk.service.MessageListener;
-import com.lzw.talk.service.UserService;
-import com.lzw.talk.util.NetAsyncTask;
-import com.lzw.talk.util.PhotoUtil;
-import com.lzw.talk.util.Utils;
+import com.lzw.talk.util.*;
 import com.lzw.talk.view.HeaderLayout;
+import com.lzw.talk.view.RecordButton;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ChatActivity extends Activity implements OnClickListener, MessageListener {
+  public static final String CHAT_USER_ID = "chatUserId";
   private static final int IMAGE_REQUEST = 0;
-  private EditText mEditTextContent;
-  private ListView mListView;
-  private ChatMsgAdapter mAdapter;
+  private ChatMsgAdapter adapter;
   private List<Msg> msgs;
   public static ChatActivity instance;
-  ProgressBar progressBar;
   User me;
   DBHelper dbHelper;
-  View btnSend, addImageBtn;
-  HeaderLayout headerLayout;
   private Activity ctx;
+  User chatUser;
+
+  HeaderLayout headerLayout;
+  View chatTextLayout, chatAudioLayout;
+  View turnToTextBtn, turnToAudioBtn, sendBtn, addImageBtn;
+  private EditText contentEdit;
+  private ListView listView;
+  RecordButton recordBtn;
 
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -55,25 +60,104 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
         WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     setContentView(R.layout.chat_room);
     findView();
-    initHeader();
     initData();
+    initHeader();
+    initRecordBtn();
+    setEditTextChangeListener();
+    turnToAudioBtn.performClick();
+  }
+
+  public void initRecordBtn() {
+    setNewRecordPath();
+    recordBtn.setOnFinishedRecordListener(new RecordButton.RecordEventListener() {
+      @Override
+      public void onFinishedRecord(final String audioPath, int secs) {
+        Pattern pattern = Pattern.compile(".*/(.*)");
+        Matcher matcher = pattern.matcher(audioPath);
+        matcher.matches();
+        final String objectId = matcher.group(1);
+        new NetAsyncTask(ctx, false) {
+          @Override
+          protected void doInBack() throws Exception {
+            ChatService.sendAudioMsg(chatUser, audioPath, objectId);
+          }
+
+          @Override
+          protected void onPost(boolean res) {
+            if (res) {
+              refresh();
+            } else {
+              Utils.toast(ctx, R.string.badNetwork);
+            }
+          }
+        }.execute();
+        setNewRecordPath();
+      }
+
+      @Override
+      public void onStartRecord() {
+      }
+    });
+  }
+
+  public void setNewRecordPath() {
+    recordBtn.setSavePath(PathUtils.getRecordUuidPath());
+  }
+
+  public void setEditTextChangeListener() {
+    contentEdit.addTextChangedListener(new TextWatcher() {
+      @Override
+      public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+      }
+
+      @Override
+      public void onTextChanged(CharSequence s, int start, int before, int count) {
+        if (s.length() > 0) {
+          showSendBtn();
+        } else {
+          showTurnToRecordBtn();
+        }
+      }
+
+      @Override
+      public void afterTextChanged(Editable s) {
+      }
+    });
+  }
+
+  private void showTurnToRecordBtn() {
+    sendBtn.setVisibility(View.GONE);
+    turnToAudioBtn.setVisibility(View.VISIBLE);
+  }
+
+  private void showSendBtn() {
+    sendBtn.setVisibility(View.VISIBLE);
+    turnToAudioBtn.setVisibility(View.GONE);
   }
 
   private void initHeader() {
-    headerLayout.showTitle(App.chatUser.getNickname());
+    headerLayout.showTitle(chatUser.getNickname());
     headerLayout.showLeftBackButton(R.string.back, null);
   }
 
   private void findView() {
-    progressBar = (ProgressBar) findViewById(R.id.progressBar);
-    mListView = (ListView) findViewById(R.id.listview);
+    listView = (ListView) findViewById(R.id.listview);
     addImageBtn = findViewById(R.id.addImageBtn);
 
-    mEditTextContent = (EditText) findViewById(R.id.et_sendmessage);
+    contentEdit = (EditText) findViewById(R.id.textEdit);
     headerLayout = (HeaderLayout) findViewById(R.id.headerLayout);
-    btnSend = findViewById(R.id.btn_send);
-    btnSend.setOnClickListener(this);
+    chatTextLayout = findViewById(R.id.chatTextLayout);
+    chatAudioLayout = findViewById(R.id.chatRecordLayout);
+    turnToAudioBtn = findViewById(R.id.turnToAudioBtn);
+    turnToTextBtn = findViewById(R.id.turnToTextBtn);
+    recordBtn = (RecordButton) findViewById(R.id.recordBtn);
+
+    sendBtn = findViewById(R.id.sendBtn);
+    sendBtn.setOnClickListener(this);
     addImageBtn.setOnClickListener(this);
+    turnToAudioBtn.setOnClickListener(this);
+    turnToTextBtn.setOnClickListener(this);
   }
 
   @Override
@@ -93,8 +177,11 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
     me = User.curUser();
     dbHelper = new DBHelper(ctx, App.DB_NAME, App.DB_VER);
     msgs = new ArrayList<Msg>();
-    mAdapter = new ChatMsgAdapter(this);
-    mListView.setAdapter(mAdapter);
+    adapter = new ChatMsgAdapter(this);
+    Intent intent = getIntent();
+    String chatUserId = intent.getStringExtra("chatUserId");
+    chatUser = App.lookupUser(chatUserId);
+    listView.setAdapter(adapter);
   }
 
   public void refresh() {
@@ -128,7 +215,8 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
     @Override
     protected Void doInBackground(Void... params) {
       try {
-        msgs = DBMsg.getMsgs(dbHelper, ChatService.getPeerId(me), ChatService.getPeerId(App.chatUser));
+        msgs = DBMsg.getMsgs(dbHelper, ChatService.getPeerId(me),
+            ChatService.getPeerId(chatUser));
         res = true;
       } catch (Exception e) {
         e.printStackTrace();
@@ -140,7 +228,6 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
     @Override
     protected void onPostExecute(Void aVoid) {
       super.onPostExecute(aVoid);
-      progressBar.setVisibility(View.INVISIBLE);
       if (res) {
         addMsgsAndRefresh(msgs);
       } else {
@@ -151,8 +238,8 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
 
   public void addMsgsAndRefresh(List<Msg> msgs) {
     this.msgs = msgs;
-    mAdapter.setDatas(this.msgs);
-    mAdapter.notifyDataSetChanged();
+    adapter.setDatas(this.msgs);
+    adapter.notifyDataSetChanged();
     scroolToLast();
   }
 
@@ -160,13 +247,29 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
   public void onClick(View v) {
     // TODO Auto-generated method stub
     switch (v.getId()) {
-      case R.id.btn_send:
+      case R.id.sendBtn:
         send();
         break;
       case R.id.addImageBtn:
         selectImageFromLocal();
         break;
+      case R.id.turnToAudioBtn:
+        showAudioLayout();
+        break;
+      case R.id.turnToTextBtn:
+        showTextLayout();
+        break;
     }
+  }
+
+  private void showTextLayout() {
+    chatTextLayout.setVisibility(View.VISIBLE);
+    chatAudioLayout.setVisibility(View.GONE);
+  }
+
+  private void showAudioLayout() {
+    chatTextLayout.setVisibility(View.GONE);
+    chatAudioLayout.setVisibility(View.VISIBLE);
   }
 
   public void selectImageFromLocal() {
@@ -183,10 +286,10 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
   }
 
   private void send() {
-    String contString = mEditTextContent.getText().toString();
+    String contString = contentEdit.getText().toString();
     if (contString.length() > 0) {
       new SendTask(contString).execute();
-      mEditTextContent.setText("");
+      contentEdit.setText("");
     }
   }
 
@@ -208,11 +311,14 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
               Utils.toast(ctx, R.string.cannotFindImage);
               return;
             }
-            final String newPath = PhotoUtil.compressImage(localSelectPath);
+            final String objectId = Utils.uuid();
+            final String newPath = PathUtils.getImageDir() + objectId;
+
+            PhotoUtil.compressImage(localSelectPath, newPath);
             new NetAsyncTask(App.ctx, false) {
               @Override
               protected void doInBack() throws Exception {
-                ChatService.sendImageMsg(App.chatUser, newPath);
+                ChatService.sendImageMsg(chatUser, newPath, objectId);
               }
 
               @Override
@@ -239,13 +345,12 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
     @Override
     protected void onPreExecute() {
       super.onPreExecute();
-      progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     protected Void doInBackground(Void... params) {
       try {
-        ChatService.sendTextMsg(App.chatUser, text);
+        ChatService.sendTextMsg(chatUser, text);
         res = true;
       } catch (Exception e) {
         e.printStackTrace();
@@ -256,7 +361,6 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
 
     @Override
     protected void onPostExecute(Void aVoid) {
-      progressBar.setVisibility(View.GONE);
       if (res) {
         refresh();
       } else {
@@ -266,6 +370,6 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
   }
 
   public void scroolToLast() {
-    mListView.setSelection(mListView.getCount() - 1);
+    listView.setSelection(listView.getCount() - 1);
   }
 }

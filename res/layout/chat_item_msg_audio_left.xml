@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res/com.lzw.talk"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="3dp">
+
+    <include layout="@layout/chat_item_time_layout" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/chatItemMarginTop"
+            android:layout_marginLeft="5dp">
+
+            <TextView
+                android:id="@+id/status"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="发送中"
+                android:visibility="gone"
+                android:textSize="12sp"
+                android:gravity="center_vertical" />
+
+            <ImageView
+                android:id="@+id/avatar"
+                android:layout_width="@dimen/userHead"
+                android:layout_height="@dimen/userHead"
+                android:clickable="true"
+                android:visibility="visible"
+                android:background="@drawable/top_background_default_thumb_blue" />
+
+            <LinearLayout
+                android:id="@+id/contentLayout"
+                android:layout_marginLeft="@dimen/marginToUsername"
+                android:layout_width="wrap_content"
+                android:maxWidth="@dimen/chatContentMaxWidth"
+                android:padding="@dimen/chatContentPadding"
+                android:layout_height="wrap_content"
+                android:text="chat_content"
+                android:background="@drawable/chat_left_qp"
+                style="@style/chat_content_date_style">
+
+                <com.lzw.talk.view.PlayButton
+                    android:id="@+id/playBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    custom:left="true" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

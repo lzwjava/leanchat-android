@@ -78,12 +78,20 @@ public class ChatService {
     session.sendMessage(resMsg.toAVMessage());
   }
 
-  public static void sendImageMsg(User user, String imagePath) throws IOException, AVException {
-    AVFile file = AVFile.withAbsoluteLocalPath("img", imagePath);
+  public static void sendAudioMsg(User user, String path, String msgId) throws IOException, AVException {
+    sendFileMsg(user, msgId, Msg.TYPE_AUDIO, path);
+  }
+
+  public static void sendImageMsg(User user, String filePath, String msgId) throws IOException, AVException {
+    sendFileMsg(user, msgId, Msg.TYPE_IMAGE, filePath);
+  }
+
+  public static void sendFileMsg(User user, String objectId, int type, String filePath) throws IOException, AVException {
+    AVFile file = AVFile.withAbsoluteLocalPath(objectId, filePath);
     file.save();
     String url = file.getUrl();
-    String sendText = imagePath + "&" + url;
-    Msg msg = sendMessage(ChatService.getPeerId(user), Msg.TYPE_IMAGE, sendText);
+    String sendText = filePath + "&" + url;
+    Msg msg = sendMessage(ChatService.getPeerId(user), type, sendText, objectId);
     DBMsg.insertMsg(msg);
   }
 
@@ -95,6 +103,11 @@ public class ChatService {
   }
 
   public static Msg sendMessage(String peerId, int type, String content) {
+    String objectId = Utils.uuid();
+    return sendMessage(peerId, type, content, objectId);
+  }
+
+  public static Msg sendMessage(String peerId, int type, String content, String objectId) {
     Msg msg;
     msg = new Msg();
     msg.setStatus(Msg.STATUS_SEND_START);
@@ -102,7 +115,7 @@ public class ChatService {
     msg.setTimestamp(System.currentTimeMillis());
     msg.setFromPeerId(getSelfId());
     msg.setToPeerIds(Utils.oneToList(peerId));
-    msg.setObjectId(Utils.uuid());
+    msg.setObjectId(objectId);
     msg.setType(type);
 
     AVMessage avMsg = msg.toAVMessage();

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/chatTextLayout"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/chatBottomHeight"
+    android:gravity="center_vertical">
+
+    <EditText
+        android:id="@+id/textEdit"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="40dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/login_edit_normal"
+        android:singleLine="true"
+        android:textSize="18sp" />
+
+    <LinearLayout
+        android:id="@+id/chatBottomRightLayout"
+        android:layout_width="@dimen/sendBtnWidth"
+        android:layout_height="35dp"
+        android:gravity="center"
+        android:layout_marginRight="5dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/sendBtn"
+            android:layout_height="wrap_content"
+            android:textColor="#000"
+            android:background="@drawable/bg_resend_in_failed_msg_detail"
+            android:text="发送"
+            android:visibility="gone"
+            android:layout_width="@dimen/sendBtnWidth" />
+
+        <Button
+            android:id="@+id/turnToAudioBtn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:visibility="visible"
+            android:background="@drawable/btn_chat_voice_selector"
+            android:textColor="@color/base_color_text_black"></Button>
+    </LinearLayout>
+
+
+</LinearLayout>

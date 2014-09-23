@@ -299,7 +299,7 @@ public class PhotoUtil {
     return output;
   }
 
-  public static String compressImage(String path) {
+  public static String compressImage(String path,String newPath) {
     BitmapFactory.Options options = new BitmapFactory.Options();
     options.inJustDecodeBounds = true;
     BitmapFactory.decodeFile(path, options);
@@ -331,19 +331,17 @@ public class PhotoUtil {
     Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, newW, newH, false);
     //recycle(bitmap);
     Logger.d("bitmap width=" + newBitmap.getWidth() + " h=" + newBitmap.getHeight());
-    String fileName = System.currentTimeMillis() + "";
-    String outPath = PathUtils.getImageDir() + fileName;
 
     FileOutputStream outputStream = null;
     try {
-      outputStream = new FileOutputStream(outPath);
+      outputStream = new FileOutputStream(newPath);
       newBitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream);
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }
     recycle(newBitmap);
     recycle(bitmap);
-    return outPath;
+    return newPath;
   }
 
   /**

@@ -1,6 +1,7 @@
 package com.lzw.talk.util;
 
 import android.os.Environment;
+import com.lzw.talk.avobject.User;
 
 import java.io.File;
 
@@ -12,22 +13,22 @@ public class PathUtils {
     return Environment.getExternalStorageDirectory().getPath() + "/";
   }
 
-  public static void checkAndMkdirs(String dir) {
+  public static String checkAndMkdirs(String dir) {
     File file = new File(dir);
-    if (file.exists() == false) file.mkdirs();
+    if (file.exists() == false) {
+      file.mkdirs();
+    }
+    return dir;
   }
 
   public static String getAppPath() {
     String dir = getSDcardDir() + "leanchat/";
-    checkAndMkdirs(dir);
-    return dir;
+    return checkAndMkdirs(dir);
   }
 
   public static String getAvatarDir() {
-    String appPath = getAppPath();
-    String dir = appPath + "avatar/";
-    checkAndMkdirs(dir);
-    return dir;
+    String dir = getAppPath() + "avatar/";
+    return checkAndMkdirs(dir);
   }
 
   public static String getAvatarTmpPath() {
@@ -36,7 +37,18 @@ public class PathUtils {
 
   public static String getImageDir() {
     String dir = getAppPath() + "image/";
-    checkAndMkdirs(dir);
-    return dir;
+    return checkAndMkdirs(dir);
+  }
+
+  public static String getRecordTmpPath() {
+    return getAudioDir() + "tmp";
+  }
+
+  public static String getAudioDir() {
+    return checkAndMkdirs(getAppPath() + "audio/");
+  }
+
+  public static String getRecordUuidPath(){
+    return getAudioDir()+ Utils.uuid();
   }
 }
