@@ -171,7 +171,9 @@ public class MsgReceiver extends AVMessageReceiver {
   public void onStatusOffline(Context context, Session session, List<String> strings) {
     Logger.d("onStatusOff " + strings);
     onlines.removeAll(strings);
-    statusListener.onStatusOnline(new ArrayList<String>(onlines));
+    if(statusListener!=null){
+      statusListener.onStatusOnline(new ArrayList<String>(onlines));
+    }
   }
 
   @Override

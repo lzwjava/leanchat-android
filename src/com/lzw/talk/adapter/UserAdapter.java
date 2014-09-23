@@ -11,6 +11,7 @@ import com.lzw.talk.R;
 import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.C;
 import com.lzw.talk.service.UserService;
+import com.lzw.talk.util.Logger;
 import com.lzw.talk.view.ViewHolder;
 
 import java.util.ArrayList;
@@ -64,6 +65,7 @@ public class UserAdapter extends BaseAdapter {
   }
 
   public void setTextBasedOnFlag(boolean flag, TextView textView, int onStringId, int offStringId) {
+    Logger.d("textView"+textView);
     textView.setText(flag ? onStringId : offStringId);
   }
 }

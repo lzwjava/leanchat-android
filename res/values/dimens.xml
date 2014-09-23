@@ -30,5 +30,6 @@
     <dimen name="sendBtnWidth">70dp</dimen>
 
     <dimen name="playBtnWidth">30dp</dimen>
+    <dimen name="chatBottomBtnWidth">30dp</dimen>
 
 </resources>

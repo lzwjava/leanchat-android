@@ -112,5 +112,14 @@
     <string name="image">图片</string>
     <string name="cancelRecord">取消录音</string>
     <string name="audio">声音</string>
+    <string name="getGeoInfoFailed">获取地理位置信息失败!</string>
+    <string name="position">位置</string>
+    <string name="geoIsSame">获取坐标相同</string>
+    <string name="mapKeyErrorTips">key 验证出错! 请在 AndroidManifest.xml 文件中检查 key 设置</string>
+    <string name="cannotFindResult">抱歉，未能找到结果</string>
+    <string name="reverseGeoCodeResultIs">反编码得到的地址：</string>
 
+    <string name="picture">照片</string>
+    <string name="camera">拍摄</string>
+    <string name="location">位置</string>
 </resources>

@@ -4,7 +4,7 @@
     android:layout_height="fill_parent"
     android:background="#f9f9f9">
 
-    <include layout="@layout/header" />
+    <include layout="@layout/header_layout" />
 
     <ListView
         android:id="@+id/listview"
@@ -22,27 +22,45 @@
         android:id="@+id/bottomLayout"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/chatBottomHeight"
+        android:layout_height="wrap_content"
         android:background="@drawable/home_bg_bottombar"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <RelativeLayout
-            android:id="@+id/chatBottomLeftLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/chatBottomHeight"
+            android:orientation="horizontal">
 
-            <ImageButton
-                android:id="@+id/addImageBtn"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/btn_chat_add_picture_selector"
-                android:background="@null" />
-        </RelativeLayout>
+            <LinearLayout
+                android:id="@+id/chatBottomLeftLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical">
 
-        <include layout="@layout/chat_text_layout" />
+                <Button
+                    android:id="@+id/addBtn"
+                    android:layout_width="@dimen/chatBottomBtnWidth"
+                    android:layout_height="@dimen/chatBottomBtnWidth"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/btn_chat_add_selector"
+                    android:background="@null" />
 
-        <include layout="@layout/chat_record_layout" />
+                <Button
+                    android:id="@+id/btn_chat_emo"
+                    android:layout_width="@dimen/chatBottomBtnWidth"
+                    android:layout_height="@dimen/chatBottomBtnWidth"
+                    android:layout_marginLeft="6dp"
+                    android:background="@drawable/btn_chat_emo_selector"
+                    android:gravity="center" />
+
+            </LinearLayout>
+
+            <include layout="@layout/chat_bottom_text_layout" />
+
+            <include layout="@layout/chat_bottom_record_layout" />
+        </LinearLayout>
+
+        <include layout="@layout/chat_bottom_more_layout" />
     </LinearLayout>
+
 </RelativeLayout>

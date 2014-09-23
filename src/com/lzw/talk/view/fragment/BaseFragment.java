@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import com.lzw.talk.R;
-import com.lzw.talk.avobject.User;
 import com.lzw.talk.view.HeaderLayout;
 
 /**

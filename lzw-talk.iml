@@ -49,6 +49,16 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="module-library">
+      <library name="baidumapapi_v3_0_0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/baidumapapi_v3_0_0.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/locSDK_4.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
 

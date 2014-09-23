@@ -25,7 +25,10 @@ import com.lzw.talk.entity.Msg;
 import com.lzw.talk.receiver.MsgReceiver;
 import com.lzw.talk.service.ChatService;
 import com.lzw.talk.service.MessageListener;
-import com.lzw.talk.util.*;
+import com.lzw.talk.util.NetAsyncTask;
+import com.lzw.talk.util.PathUtils;
+import com.lzw.talk.util.PhotoUtil;
+import com.lzw.talk.util.Utils;
 import com.lzw.talk.view.HeaderLayout;
 import com.lzw.talk.view.RecordButton;
 
@@ -46,7 +49,7 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
   User chatUser;
 
   HeaderLayout headerLayout;
-  View chatTextLayout, chatAudioLayout;
+  View chatTextLayout, chatAudioLayout, chatMoreLayout, chatAddLayout;
   View turnToTextBtn, turnToAudioBtn, sendBtn, addImageBtn;
   private EditText contentEdit;
   private ListView listView;
