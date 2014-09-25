@@ -2,14 +2,15 @@
 
 一个展示 AVOS Cloud 聊天功能的 Demo
 
-![img](https://raw.githubusercontent.com/lzwjava/plan/master/im360.png)
+![img](https://raw.githubusercontent.com/lzwjava/plan/master/im361.png)
 
 ##当前特性
-* 消息支持文字（图片、声音的传 URL 类似）
-* 接受回执
+* 消息支持文字，图片
+* 接受回执，有发送失败、发送成功，已接收状态。
 * 本地保存消息记录
 * 顶部栏提醒新消息
 * 统一的服务器时间戳
+
 
 
 ## Install
