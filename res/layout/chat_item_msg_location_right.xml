@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="3dp">
+
+    <include layout="@layout/chat_item_time_layout" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right">
+
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="发送中"
+            android:textSize="12sp"
+            android:gravity="center_vertical" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/chatItemMarginTop"
+            android:layout_marginLeft="5dp">
+
+
+            <LinearLayout
+                android:layout_marginLeft="@dimen/marginToUsername"
+                android:layout_width="wrap_content"
+                android:maxWidth="@dimen/chatContentMaxWidth"
+                android:layout_marginTop="5dp"
+                android:layout_height="wrap_content"
+                android:paddingRight="10dp"
+                android:minWidth="@dimen/chatTextMinWidth"
+                android:gravity="center"
+                android:textColor="#fff"
+                android:background="@drawable/chat_right_qp"
+                android:layout_marginRight="5dp"
+                style="@style/chat_content_date_style">
+
+                <TextView
+                    android:id="@+id/locationView"
+                    style="@style/chat_content_date_style"
+                    android:layout_width="wrap_content"
+                    android:maxWidth="200dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="10sp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:background="@drawable/location_default"
+                    android:gravity="center|bottom"
+                    android:textColor="@android:color/white" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/avatar"
+                android:layout_width="@dimen/userHead"
+                android:layout_height="@dimen/userHead"
+                android:clickable="true"
+                android:visibility="visible"
+                android:background="@drawable/top_background_default_thumb_blue" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

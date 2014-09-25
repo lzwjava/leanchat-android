@@ -14,20 +14,19 @@
         android:focusable="false" />
 
     <LinearLayout
-        android:id="@+id/emotionLayout"
+        android:id="@+id/chatEmotionLayout"
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:orientation="vertical"
         android:visibility="gone">
 
         <android.support.v4.view.ViewPager
-            android:id="@+id/pager_emo"
+            android:id="@+id/emotionPager"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
 
     <include
-        android:id="@+id/chatAddLayout"
         android:visibility="gone"
         layout="@layout/chat_bottom_add_layout" />
 </LinearLayout>

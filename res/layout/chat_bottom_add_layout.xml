@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/chatAddLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:weightSum="4"
@@ -28,7 +29,7 @@
         android:text="@string/camera" />
 
     <TextView
-        android:id="@+id/addLocatinoBtn"
+        android:id="@+id/addLocationBtn"
         android:layout_width="0dp"
         android:layout_weight="1.0"
         android:drawablePadding="10dp"

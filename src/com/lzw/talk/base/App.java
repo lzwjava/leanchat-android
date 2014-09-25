@@ -14,7 +14,7 @@ import com.lzw.talk.util.AVOSUtils;
 import com.lzw.talk.util.Logger;
 import com.lzw.talk.util.PhotoUtil;
 import com.lzw.talk.util.Utils;
-import com.lzw.talk.view.activity.LoginActivity;
+import com.lzw.talk.ui.activity.LoginActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.utils.StorageUtils;

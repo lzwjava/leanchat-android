@@ -6,6 +6,7 @@ import com.lzw.talk.base.App;
 import com.lzw.talk.db.DBHelper;
 import com.lzw.talk.db.DBMsg;
 import com.lzw.talk.entity.Msg;
+import com.lzw.talk.util.Logger;
 import com.lzw.talk.util.Utils;
 
 import java.io.IOException;
@@ -130,11 +131,18 @@ public class ChatService {
     session.open(new LinkedList<String>());
   }
 
-  public static HashMap<String,String> parseUri(String uri){
+  public static HashMap<String, String> parseUri(String uri) {
     String[] parts = uri.split("&");
-    HashMap<String,String> map=new HashMap<String, String>();
+    HashMap<String, String> map = new HashMap<String, String>();
     map.put("path", parts[0]);
     map.put("url", parts[1]);
     return map;
+  }
+
+  public static void sendLocationMessage(String peerId, String address, double latitude, double longtitude) {
+    String content = address + "&" + latitude + "&" + longtitude;
+    Logger.d("content=" + content);
+    Msg msg = sendMessage(peerId, Msg.TYPE_LOCATION, content);
+    DBMsg.insertMsg(msg);
   }
 }

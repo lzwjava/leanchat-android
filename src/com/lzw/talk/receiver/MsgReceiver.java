@@ -20,8 +20,8 @@ import com.lzw.talk.service.StatusListener;
 import com.lzw.talk.util.Logger;
 import com.lzw.talk.util.NetAsyncTask;
 import com.lzw.talk.util.Utils;
-import com.lzw.talk.view.activity.ChatActivity;
-import com.lzw.talk.view.activity.MainActivity;
+import com.lzw.talk.ui.activity.ChatActivity;
+import com.lzw.talk.ui.activity.MainActivity;
 
 import java.io.File;
 import java.util.*;
@@ -164,7 +164,9 @@ public class MsgReceiver extends AVMessageReceiver {
   public void onStatusOnline(Context context, Session session, List<String> strings) {
     Logger.d("onStatusOnline " + strings);
     onlines.addAll(strings);
-    statusListener.onStatusOnline(new ArrayList<String>(onlines));
+    if(statusListener!=null){
+      statusListener.onStatusOnline(new ArrayList<String>(onlines));
+    }
   }
 
   @Override

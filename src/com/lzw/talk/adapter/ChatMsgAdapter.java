@@ -14,10 +14,11 @@ import com.lzw.talk.base.App;
 import com.lzw.talk.entity.Msg;
 import com.lzw.talk.service.ChatService;
 import com.lzw.talk.service.UserService;
+import com.lzw.talk.ui.activity.ImageBrowerActivity;
+import com.lzw.talk.ui.activity.LocationActivity;
+import com.lzw.talk.ui.view.PlayButton;
+import com.lzw.talk.ui.view.ViewHolder;
 import com.lzw.talk.util.TimeUtils;
-import com.lzw.talk.view.PlayButton;
-import com.lzw.talk.view.ViewHolder;
-import com.lzw.talk.view.activity.ImageBrowerActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
@@ -26,8 +27,9 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ChatMsgAdapter extends BaseAdapter {
-  int msgViewTypes = 6;
   ImageLoader imageLoader;
+
+  int msgViewTypes = 8;
 
   public static interface MsgViewType {
     int COME_TEXT = 0;
@@ -36,6 +38,8 @@ public class ChatMsgAdapter extends BaseAdapter {
     int TO_IMAGE = 3;
     int COME_AUDIO = 4;
     int TO_AUDIO = 5;
+    int COME_LOCATION = 6;
+    int TO_LOCATION = 7;
   }
 
   private List<Msg> datas = new ArrayList<Msg>();
@@ -73,24 +77,14 @@ public class ChatMsgAdapter extends BaseAdapter {
     boolean comeMsg = entity.isComeMessage();
     int type = entity.getType();
     if (type == Msg.TYPE_TEXT) {
-      if (comeMsg) {
-        return MsgViewType.COME_TEXT;
-      } else {
-        return MsgViewType.TO_TEXT;
-      }
+      return comeMsg ? MsgViewType.COME_TEXT : MsgViewType.TO_TEXT;
     } else if (type == Msg.TYPE_IMAGE) {
-      if (comeMsg) {
-        return MsgViewType.COME_IMAGE;
-      } else {
-        return MsgViewType.TO_IMAGE;
-      }
+      return comeMsg ? MsgViewType.COME_IMAGE : MsgViewType.TO_IMAGE;
+    } else if (type == Msg.TYPE_AUDIO) {
+      return comeMsg ? MsgViewType.COME_AUDIO : MsgViewType.TO_AUDIO;
     } else {
-      assert Msg.TYPE_AUDIO == type;
-      if (comeMsg) {
-        return MsgViewType.COME_AUDIO;
-      } else {
-        return MsgViewType.TO_AUDIO;
-      }
+      assert type == Msg.TYPE_LOCATION;
+      return comeMsg ? MsgViewType.COME_LOCATION : MsgViewType.TO_LOCATION;
     }
   }
 
@@ -111,7 +105,9 @@ public class ChatMsgAdapter extends BaseAdapter {
     TextView statusView = ViewHolder.findViewById(conView, R.id.status);
     ImageView imageView = ViewHolder.findViewById(conView, R.id.imageView);
     ImageView avatarView = ViewHolder.findViewById(conView, R.id.avatar);
-    PlayButton playBtn=ViewHolder.findViewById(conView,R.id.playBtn);
+    PlayButton playBtn = ViewHolder.findViewById(conView, R.id.playBtn);
+    TextView locationView = ViewHolder.findViewById(conView, R.id.locationView);
+
     sendTimeView.setText(TimeUtils.millisecs2DateString(msg.getTimestamp()));
     String peerId = msg.getFromPeerId();
     User user = App.lookupUser(peerId);
@@ -120,16 +116,43 @@ public class ChatMsgAdapter extends BaseAdapter {
     int type = msg.getType();
     if (type == Msg.TYPE_TEXT) {
       contentView.setText(msg.getContent());
-    } else if(type ==Msg.TYPE_IMAGE){
+    } else if (type == Msg.TYPE_IMAGE) {
       displayImage(msg, imageView);
       setImageOnClickListener(msg.getContent(), imageView);
-    }else if(type==Msg.TYPE_AUDIO){
-      initPlayBtn(msg,playBtn);
+    } else if (type == Msg.TYPE_AUDIO) {
+      initPlayBtn(msg, playBtn);
+    } else if (type == Msg.TYPE_LOCATION) {
+      setLocationView(msg, locationView);
     }
     if (isComMsg == false) {
       statusView.setText(msg.getStatusDesc());
     }
     return conView;
+  }
+
+  public void setLocationView(Msg msg, TextView locationView) {
+    try {
+      String content = msg.getContent();
+      if (content != null && !content.equals("")) {
+        String address = content.split("&")[0];
+        final String latitude = content.split("&")[1];//维度
+        final String longtitude = content.split("&")[2];//经度
+        locationView.setText(address);
+        locationView.setOnClickListener(new View.OnClickListener() {
+
+          @Override
+          public void onClick(View arg0) {
+            // TODO Auto-generated method stub
+            Intent intent = new Intent(ctx, LocationActivity.class);
+            intent.putExtra("type", "scan");
+            intent.putExtra("latitude", Double.parseDouble(latitude));//维度
+            intent.putExtra("longtitude", Double.parseDouble(longtitude));//经度
+            ctx.startActivity(intent);
+          }
+        });
+      }
+    } catch (Exception e) {
+    }
   }
 
   private void initPlayBtn(Msg msg, PlayButton playBtn) {
@@ -154,43 +177,37 @@ public class ChatMsgAdapter extends BaseAdapter {
 
   public static void displayImageByUri(ImageView imageView, String uri) {
     HashMap<String, String> parts = ChatService.parseUri(uri);
-    String localPath=parts.get("path");
-    String url=parts.get("url");
+    String localPath = parts.get("path");
+    String url = parts.get("url");
     File file = new File(localPath);
     ImageLoader imageLoader = ImageLoader.getInstance();
     if (file.exists()) {
-      //Logger.d("display from path "+localPath);
       imageLoader.displayImage("file://" + localPath, imageView);
     } else {
-      //Logger.d("display from url");
       imageLoader.displayImage(url, imageView);
     }
   }
 
   public View createViewByType(int itemViewType) {
-    View conView = null;
-    switch (itemViewType) {
-      case MsgViewType.COME_TEXT:
-        conView = inflater.inflate(R.layout.chat_item_msg_text_left,
-            null);
+    int[] types = new int[]{MsgViewType.COME_TEXT, MsgViewType.TO_TEXT,
+        MsgViewType.COME_IMAGE, MsgViewType.TO_IMAGE, MsgViewType.COME_AUDIO,
+        MsgViewType.TO_AUDIO, MsgViewType.COME_LOCATION, MsgViewType.TO_LOCATION};
+    int[] layoutIds = new int[]{
+        R.layout.chat_item_msg_text_left,
+        R.layout.chat_item_msg_text_left,
+        R.layout.chat_item_msg_image_left,
+        R.layout.chat_item_msg_image_right,
+        R.layout.chat_item_msg_audio_left,
+        R.layout.chat_item_msg_audio_right,
+        R.layout.chat_item_msg_location_left,
+        R.layout.chat_item_msg_location_right
+    };
+    int i;
+    for (i = 0; i < types.length; i++) {
+      if (itemViewType == types[i]) {
         break;
-      case MsgViewType.TO_TEXT:
-        conView = inflater.inflate(R.layout.chat_item_msg_text_right,
-            null);
-        break;
-      case MsgViewType.COME_IMAGE:
-        conView = inflater.inflate(R.layout.chat_item_msg_image_left, null);
-        break;
-      case MsgViewType.TO_IMAGE:
-        conView = inflater.inflate(R.layout.chat_item_msg_image_right, null);
-        break;
-      case MsgViewType.COME_AUDIO:
-        conView=inflater.inflate(R.layout.chat_item_msg_audio_left,null);
-        break;
-      case MsgViewType.TO_AUDIO:
-        conView=inflater.inflate(R.layout.chat_item_msg_audio_right,null);
-        break;
+      }
     }
-    return conView;
+    return inflater.inflate(layoutIds[i], null);
   }
 }

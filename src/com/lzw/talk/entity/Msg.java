@@ -24,6 +24,7 @@ public class Msg {
   public static final int TYPE_RESPONSE = 1;
   public static final int TYPE_IMAGE = 2;
   public static final int TYPE_AUDIO=3;
+  public static final int TYPE_LOCATION = 4;
   //long timestamp;
   //String fromPeerId;
   //List<String> toPeerIds;

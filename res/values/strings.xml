@@ -122,4 +122,6 @@
     <string name="picture">照片</string>
     <string name="camera">拍摄</string>
     <string name="location">位置</string>
+    <string name="send">发送</string>
+    <string name="cannotGetYourAddressInfo">无法获取到您的位置信息！</string>
 </resources>

@@ -44,7 +44,7 @@
                 android:layout_marginRight="5dp"
                 style="@style/chat_content_date_style">
 
-                <com.lzw.talk.view.PlayButton
+                <com.lzw.talk.ui.view.PlayButton
                     android:id="@+id/playBtn"
                     style="@style/play_btn"
                     custom:left="false" />

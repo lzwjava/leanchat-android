@@ -5,10 +5,11 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <ImageButton
+    <Button
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/base_action_bar_true_bg_selector"
-        android:background="@null" />
+        android:text=""
+        android:textColor="#fff"
+        android:background="@drawable/base_action_bar_true_bg_selector" />
 </LinearLayout>
