@@ -13,10 +13,7 @@ import com.lzw.talk.R;
 import com.lzw.talk.base.App;
 import com.lzw.talk.db.DBMsg;
 import com.lzw.talk.entity.Msg;
-import com.lzw.talk.service.ChatService;
-import com.lzw.talk.service.MessageListener;
-import com.lzw.talk.service.PrefDao;
-import com.lzw.talk.service.StatusListener;
+import com.lzw.talk.service.*;
 import com.lzw.talk.util.Logger;
 import com.lzw.talk.util.NetAsyncTask;
 import com.lzw.talk.util.Utils;
@@ -93,12 +90,14 @@ public class MsgReceiver extends AVMessageReceiver {
           String url = parts.get("url");
           Utils.downloadFileIfNotExists(url, file);
         }
+        String fromId = msg.getFromPeerId();
+        App.cacheUserIfNot(fromId);
       }
 
       @Override
       protected void onPost(boolean res) {
         if (res) {
-          ChatService.insertDBMsg(msg);
+          DBMsg.insertMsg(msg);
           if (messageListener == null) {
             notifyMsg(context, msg);
           } else {
@@ -140,14 +139,18 @@ public class MsgReceiver extends AVMessageReceiver {
 
   public static void notifyMsg(Context context, Msg msg) throws JSONException {
     int icon = context.getApplicationInfo().icon;
+    Intent intent = new Intent(context, ChatActivity.class);
+    intent.putExtra(ChatActivity.CHAT_USER_ID,msg.getFromPeerId());
     PendingIntent pend = PendingIntent.getActivity(context, 0,
-        new Intent(context, ChatActivity.class), 0);
+        intent, 0);
     Notification.Builder builder = new Notification.Builder(context);
     String content = msg.getContent();
     if (msg.getType() == Msg.TYPE_IMAGE) {
       content = App.ctx.getString(R.string.image);
     } else if (msg.getType() == Msg.TYPE_AUDIO) {
       content = App.ctx.getString(R.string.audio);
+    }else if(msg.getType()==Msg.TYPE_LOCATION){
+      content=App.ctx.getString(R.string.position);
     }
     builder.setContentIntent(pend)
         .setSmallIcon(icon)

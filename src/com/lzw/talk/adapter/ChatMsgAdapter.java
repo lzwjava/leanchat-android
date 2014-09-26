@@ -110,8 +110,8 @@ public class ChatMsgAdapter extends BaseAdapter {
     TextView locationView = ViewHolder.findViewById(conView, R.id.locationView);
 
     sendTimeView.setText(TimeUtils.millisecs2DateString(msg.getTimestamp()));
-    String peerId = msg.getFromPeerId();
-    User user = App.lookupUser(peerId);
+    String fromPeerId = msg.getFromPeerId();
+    User user = App.lookupUser(fromPeerId);
     UserService.displayAvatar(user, avatarView);
 
     int type = msg.getType();

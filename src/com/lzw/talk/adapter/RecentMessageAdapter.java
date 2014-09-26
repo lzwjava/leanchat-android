@@ -40,7 +40,7 @@ public class RecentMessageAdapter extends BaseListAdpter<RecentMsg> {
     TextView tv_recent_unread = ViewHolder.findViewById(convertView, R.id.tv_recent_unread);
 
     Msg msg = item.msg;
-    User user = item.user;
+    User user = item.toUser;
     String avatar = user.getAvatarUrl();
     if (avatar != null && !avatar.equals("")) {
       ImageLoader.getInstance().displayImage(avatar, iv_recent_avatar);

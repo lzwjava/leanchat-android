@@ -50,7 +50,7 @@ public class RecentMessageFragment extends BaseFragment implements AdapterView.O
   public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
     // TODO Auto-generated method stub
     RecentMsg recent = (RecentMsg) adapter.getItem(position);
-    String userId = recent.user.getObjectId();
+    String userId = recent.toUser.getObjectId();
     Intent intent = new Intent(getActivity(), ChatActivity.class);
     Logger.d("userId="+userId);
     intent.putExtra(ChatActivity.CHAT_USER_ID, userId);

@@ -1,5 +1,6 @@
 package com.lzw.talk.service;
 
+import android.util.Log;
 import com.avos.avoscloud.*;
 import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
@@ -31,13 +32,6 @@ public class ChatService {
   public static List<User> getAllUsers() throws AVException {
     AVQuery<User> q = AVUser.getQuery(User.class);
     return q.find();
-  }
-
-  public static void insertDBMsg(Msg msg) {
-    List<Msg> msgs = new ArrayList<Msg>();
-    msgs.add(msg);
-    DBHelper dbHelper = new DBHelper(App.ctx, App.DB_NAME, App.DB_VER);
-    DBMsg.insertMsgs(dbHelper, msgs);
   }
 
   public static <T extends AVUser> String getPeerId(T user) {
@@ -102,6 +96,7 @@ public class ChatService {
     String peerId = getPeerId(user);
     int type = Msg.TYPE_TEXT;
     Msg msg = sendMessage(peerId, type, content);
+    Log.i("lzw","sendTextMsg fromId="+msg.getFromPeerId()+" toId="+msg.getToPeerIds());
     DBMsg.insertMsg(msg);
   }
 
@@ -110,16 +105,17 @@ public class ChatService {
     return sendMessage(peerId, type, content, objectId);
   }
 
-  public static Msg sendMessage(String peerId, int type, String content, String objectId) {
+  public static Msg sendMessage(String toPeerId, int type, String content, String objectId) {
     Msg msg;
     msg = new Msg();
     msg.setStatus(Msg.STATUS_SEND_START);
     msg.setContent(content);
     msg.setTimestamp(System.currentTimeMillis());
     msg.setFromPeerId(getSelfId());
-    msg.setToPeerIds(Utils.oneToList(peerId));
+    msg.setToPeerIds(Utils.oneToList(toPeerId));
     msg.setObjectId(objectId);
     msg.setType(type);
+    Log.i("lzw","sendMsg fromPeerId="+getSelfId()+" toPeerId="+toPeerId);
 
     AVMessage avMsg = msg.toAVMessage();
     Session session = getSession();
@@ -153,7 +149,10 @@ public class ChatService {
     ArrayList<RecentMsg> recentMsgs = new ArrayList<RecentMsg>();
     for (Msg msg : msgs) {
       RecentMsg recentMsg = new RecentMsg();
-      recentMsg.user = App.lookupUser(msg.getFromPeerId());
+      String chatUserId = msg.getChatUserId();
+      recentMsg.toUser = App.lookupUser(chatUserId);
+      Logger.d("toUser="+recentMsg.toUser.getUsername()
+      +" fromId="+msg.getFromPeerId()+" toPeerId="+msg.getToPeerIds());
       recentMsg.msg = msg;
       recentMsgs.add(recentMsg);
     }
@@ -163,10 +162,8 @@ public class ChatService {
   public static void cacheUserFromMsgs(List<Msg> msgs) throws AVException {
     List<String> uncachedId = new ArrayList<String>();
     for (Msg msg : msgs) {
-      String fromPeerId = msg.getFromPeerId();
-      if (App.lookupUser(fromPeerId) == null) {
-        uncachedId.add(fromPeerId);
-      }
+      String chatUserId = msg.getChatUserId();
+      uncachedId.add(chatUserId);
     }
     UserService.cacheUser(uncachedId);
   }

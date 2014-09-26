@@ -3,9 +3,11 @@ package com.lzw.talk.db;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import com.lzw.talk.base.App;
 import com.lzw.talk.entity.Msg;
 import com.lzw.talk.util.AVOSUtils;
+import com.lzw.talk.util.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,24 +24,25 @@ public class DBMsg {
   public static final String CONTENT = "content";
   public static final String STATUS = "status";
   public static final String TYPE = "type";
+  public static final String TO_PEER_ID = "toPeerId";
 
   public static String[] columns = {FROM_PEER_ID,
-      CONVID, CONTENT, TIMESTAMP, OBJECT_ID, STATUS, TYPE};
+      CONVID,TO_PEER_ID, CONTENT, TIMESTAMP, OBJECT_ID, STATUS, TYPE};
 
   public static void createTable(SQLiteDatabase db) {
     db.execSQL("create table if not exists messages (id integer primary key, objectId varchar(63) unique," +
-        "fromPeerId varchar(255), convid varchar(255), content varchar(1023)," +
+        "fromPeerId varchar(255), convid varchar(255),toPeerId varchar(255), content varchar(1023)," +
         " status integer,type integer,timestamp varchar(63))");
   }
 
   public static int insertMsg(Msg msg) {
-    DBHelper dbHelper = new DBHelper(App.ctx, App.DB_NAME, App.DB_VER);
     List<Msg> msgs = new ArrayList<Msg>();
     msgs.add(msg);
-    return insertMsgs(dbHelper, msgs);
+    return insertMsgs(msgs);
   }
 
-  public static int insertMsgs(DBHelper dbHelper, List<Msg> msgs) {
+  public static int insertMsgs(List<Msg> msgs) {
+    DBHelper dbHelper=new DBHelper(App.ctx,App.DB_NAME,App.DB_VER);
     if (msgs == null || msgs.size() == 0) {
       return 0;
     }
@@ -55,6 +58,10 @@ public class DBMsg {
         cv.put(STATUS, msg.getStatus());
         cv.put(CONVID, msg.getConvid());
         cv.put(TYPE, msg.getType());
+        String toPeerId = msg.getToPeerIds().get(0);
+        Log.i("lzw","toPeerId="+toPeerId+" fromPeerId="+msg.getFromPeerId());
+        assert !toPeerId.equals(msg.getFromPeerId());
+        cv.put(TO_PEER_ID, toPeerId);
         cv.put(CONTENT, msg.getContent());
         db.insert(MESSAGES, null, cv);
         n++;
@@ -89,7 +96,11 @@ public class DBMsg {
     msg.setFromPeerId(c.getString(c.getColumnIndex(FROM_PEER_ID)));
     msg.setContent(c.getString(c.getColumnIndex(CONTENT)));
     msg.setStatus(c.getInt(c.getColumnIndex(STATUS)));
+    msg.setConvid(c.getString(c.getColumnIndex(CONVID)));
     msg.setObjectId(c.getString(c.getColumnIndex(OBJECT_ID)));
+    List<String> toPeerIds = new ArrayList<String>();
+    toPeerIds.add(c.getString(c.getColumnIndex(TO_PEER_ID)));
+    msg.setToPeerIds(toPeerIds);
     msg.setTimestamp(Long.parseLong(c.getString(c.getColumnIndex(TIMESTAMP))));
     msg.setType(c.getInt(c.getColumnIndex(TYPE)));
     return msg;

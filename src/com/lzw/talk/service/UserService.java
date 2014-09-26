@@ -23,6 +23,11 @@ public class UserService {
     return null;
   }
 
+  public static User findUser(String id) throws AVException {
+    AVQuery<User> q=User.getQuery(User.class);
+    return q.get(id);
+  }
+
   public static AVQuery<AVUser> getUserQuery(String username) {
     AVQuery<AVUser> q = AVObject.getQuery(AVUser.class);
     q.whereEqualTo(User.USERNAME, username);

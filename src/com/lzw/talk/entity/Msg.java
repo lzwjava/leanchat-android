@@ -8,9 +8,10 @@ import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
 import com.lzw.talk.service.ChatService;
 import com.lzw.talk.util.AVOSUtils;
+import com.lzw.talk.util.Logger;
 import com.lzw.talk.util.PathUtils;
-import com.lzw.talk.util.Utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -35,6 +36,7 @@ public class Msg {
   AVMessage internalMessage;
   int status = STATUS_SEND_START;
   int type = TYPE_TEXT;
+  String convid;
 
   public Msg() {
     internalMessage = new AVMessage();
@@ -68,10 +70,18 @@ public class Msg {
     return internalMessage.getTimestamp();
   }
 
-  public String getConvid(){
-    List<String> convids = getToPeerIds();
-    convids.add(getFromPeerId());
-    return AVOSUtils.convid(convids);
+  public String getConvid() {
+    if (convid == null) {
+      List<String> convids = new ArrayList<String>();
+      convids.addAll(getToPeerIds());
+      convids.add(getFromPeerId());
+      convid = AVOSUtils.convid(convids);
+    }
+    return convid;
+  }
+
+  public void setConvid(String convid) {
+    this.convid = convid;
   }
 
   public void setTimestamp(long timestamp) {
@@ -126,7 +136,23 @@ public class Msg {
 
   public boolean isComeMessage() {
     String fromPeerId = getFromPeerId();
-    return fromPeerId.equals(ChatService.getSelfId()) == false;
+    return !fromPeerId.equals(ChatService.getSelfId());
+  }
+
+  public String getChatUserId() {
+    String fromPeerId = getFromPeerId();
+    String selfId = ChatService.getSelfId();
+    Logger.d("selfId="+selfId);
+    if (fromPeerId.equals(selfId)) {
+      List<String> toPeerIds = getToPeerIds();
+      if (toPeerIds != null && toPeerIds.size() > 0) {
+        return toPeerIds.get(0);
+      } else {
+        throw new RuntimeException("toPeerIds is not set");
+      }
+    } else {
+      return fromPeerId;
+    }
   }
 
   public String getFromName() {

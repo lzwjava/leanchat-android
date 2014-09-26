@@ -7,5 +7,5 @@ import com.lzw.talk.avobject.User;
  */
 public class RecentMsg {
   public Msg msg;
-  public User user;
+  public User toUser;
 }

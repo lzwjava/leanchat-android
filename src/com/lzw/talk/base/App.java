@@ -10,6 +10,7 @@ import com.baidu.mapapi.SDKInitializer;
 import com.lzw.talk.R;
 import com.lzw.talk.avobject.User;
 import com.lzw.talk.service.ChatService;
+import com.lzw.talk.service.UserService;
 import com.lzw.talk.util.AVOSUtils;
 import com.lzw.talk.util.Logger;
 import com.lzw.talk.util.PhotoUtil;
@@ -124,6 +125,12 @@ public class App extends Application {
         }
       }
       lastPoint = new AVGeoPoint(longtitude, latitude);
+    }
+  }
+
+  public static void cacheUserIfNot(String userId) throws AVException {
+    if(lookupUser(userId)==null){
+      registerUserCache(UserService.findUser(userId));
     }
   }
 }
