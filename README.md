@@ -1,6 +1,6 @@
 #奇遇
 
-一个展示 AVOS Cloud 聊天功能的 Demo
+用 AVOS Cloud 实时通信 SDK做的企业内部沟通工具
 
 ![img](https://raw.githubusercontent.com/lzwjava/plan/master/im361.png)
 
