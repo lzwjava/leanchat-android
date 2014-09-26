@@ -17,10 +17,10 @@ import com.avos.avoscloud.SaveCallback;
 import com.lzw.talk.R;
 import com.lzw.talk.avobject.User;
 import com.lzw.talk.service.UserService;
+import com.lzw.talk.ui.activity.UpdateContentActivity;
 import com.lzw.talk.util.PathUtils;
 import com.lzw.talk.util.PhotoUtil;
 import com.lzw.talk.util.Utils;
-import com.lzw.talk.ui.activity.UpdateContentActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;

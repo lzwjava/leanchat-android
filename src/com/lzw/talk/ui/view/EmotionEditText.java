@@ -6,17 +6,17 @@ import android.util.AttributeSet;
 import android.widget.EditText;
 import com.lzw.talk.service.EmotionService;
 
-public class EmotionsEditText extends EditText {
+public class EmotionEditText extends EditText {
 
-  public EmotionsEditText(Context context) {
+  public EmotionEditText(Context context) {
     super(context);
   }
 
-  public EmotionsEditText(Context context, AttributeSet attrs, int defStyle) {
+  public EmotionEditText(Context context, AttributeSet attrs, int defStyle) {
     super(context, attrs, defStyle);
   }
 
-  public EmotionsEditText(Context context, AttributeSet attrs) {
+  public EmotionEditText(Context context, AttributeSet attrs) {
     super(context, attrs);
   }
 

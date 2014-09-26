@@ -11,5 +11,6 @@ public class C {
   public static final String TO = "to";
   public static final String CREATED = "created";
   public static final String ONLINE = "online";
+  public static final String OBJECT_ID = "objectId";
   public static String FROM_NAME="fromName";
 }

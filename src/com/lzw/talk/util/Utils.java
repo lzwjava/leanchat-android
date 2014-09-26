@@ -39,6 +39,8 @@ import org.json.JSONObject;
 
 import java.io.*;
 import java.net.URLEncoder;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -606,6 +608,34 @@ public class Utils {
     int i;
     for (i = start; i < end; i++) {
       sb.append((char) i);
+    }
+  }
+
+  public static String md5(String string) {
+    byte[] hash = null;
+    try {
+      hash = string.getBytes("UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException("Huh,UTF-8 should be supported?", e);
+    }
+    return computeMD5(hash);
+  }
+
+  public static String computeMD5(byte[] input) {
+    try {
+      MessageDigest md = MessageDigest.getInstance("MD5");
+      md.update(input, 0, input.length);
+      byte[] md5bytes = md.digest();
+
+      StringBuffer hexString = new StringBuffer();
+      for (int i = 0; i < md5bytes.length; i++) {
+        String hex = Integer.toHexString(0xff & md5bytes[i]);
+        if (hex.length() == 1) hexString.append('0');
+        hexString.append(hex);
+      }
+      return hexString.toString();
+    } catch (NoSuchAlgorithmException e) {
+      throw new RuntimeException(e);
     }
   }
 }

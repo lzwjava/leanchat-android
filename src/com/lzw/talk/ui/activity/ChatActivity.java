@@ -32,7 +32,7 @@ import com.lzw.talk.receiver.MsgReceiver;
 import com.lzw.talk.service.ChatService;
 import com.lzw.talk.service.EmotionService;
 import com.lzw.talk.service.MessageListener;
-import com.lzw.talk.ui.view.EmotionsEditText;
+import com.lzw.talk.ui.view.EmotionEditText;
 import com.lzw.talk.ui.view.HeaderLayout;
 import com.lzw.talk.ui.view.RecordButton;
 import com.lzw.talk.util.NetAsyncTask;
@@ -63,7 +63,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
   View chatTextLayout, chatAudioLayout, chatAddLayout, chatEmotionLayout;
   View turnToTextBtn, turnToAudioBtn, sendBtn, addImageBtn, showAddBtn, addLocationBtn, showEmotionBtn;
   ViewPager emotionPager;
-  private EmotionsEditText contentEdit;
+  private EmotionEditText contentEdit;
   private ListView listView;
   RecordButton recordBtn;
   List<String> emotions = EmotionService.emotionTexts;
@@ -203,7 +203,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
     listView = (ListView) findViewById(R.id.listview);
     addImageBtn = findViewById(R.id.addImageBtn);
 
-    contentEdit = (EmotionsEditText) findViewById(R.id.textEdit);
+    contentEdit = (EmotionEditText) findViewById(R.id.textEdit);
     headerLayout = (HeaderLayout) findViewById(R.id.headerLayout);
     chatTextLayout = findViewById(R.id.chatTextLayout);
     chatAudioLayout = findViewById(R.id.chatRecordLayout);
@@ -422,7 +422,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
         @Override
         protected void onPost(boolean res) {
           if (res) {
-            hideSoftInputView();
             refresh();
           } else {
             Utils.toast(ctx, R.string.badNetwork);

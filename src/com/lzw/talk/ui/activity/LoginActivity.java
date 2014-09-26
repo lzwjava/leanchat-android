@@ -9,9 +9,14 @@ import com.lzw.talk.R;
 import com.lzw.talk.avobject.User;
 import com.lzw.talk.service.ChatService;
 import com.lzw.talk.service.UserService;
+import com.lzw.talk.ui.view.HeaderLayout;
+import com.lzw.talk.util.AVOSUtils;
+import com.lzw.talk.util.Logger;
 import com.lzw.talk.util.NetAsyncTask;
 import com.lzw.talk.util.Utils;
-import com.lzw.talk.ui.view.HeaderLayout;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
   /**
@@ -33,7 +38,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
   private void findView() {
     usernameEdit = (EditText) findViewById(R.id.username);
-    headerLayout= (HeaderLayout) findViewById(R.id.headerLayout);
+    headerLayout = (HeaderLayout) findViewById(R.id.headerLayout);
     start = findViewById(R.id.ok);
     start.setOnClickListener(this);
   }

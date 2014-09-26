@@ -1,6 +1,7 @@
 package com.lzw.talk.adapter;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -13,10 +14,12 @@ import java.util.List;
  */
 public class BaseListAdpter<T> extends BaseAdapter {
   Context ctx;
+  LayoutInflater inflater;
   List<T> datas = new ArrayList<T>();
 
   public BaseListAdpter(Context ctx) {
     this.ctx = ctx;
+    inflater=LayoutInflater.from(ctx);
   }
 
   public void setDatas(List<T> datas) {

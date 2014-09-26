@@ -9,8 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import com.lzw.talk.R;
 import com.lzw.talk.ui.fragment.ContactFragment;
+import com.lzw.talk.ui.fragment.RecentMessageFragment;
 import com.lzw.talk.ui.fragment.DiscoverFragment;
-import com.lzw.talk.ui.fragment.MessageFragment;
 import com.lzw.talk.ui.fragment.MySpaceFragment;
 
 /**
@@ -21,7 +21,7 @@ public class MainActivity extends BaseActivity {
   View fragmentContainer;
   ContactFragment contactFragment;
   DiscoverFragment discoverFragment;
-  MessageFragment messageFragment;
+  RecentMessageFragment recentMessageFragment;
   MySpaceFragment mySpaceFragment;
   public static final int FRAGMENT_N = 4;
   Button[] tabs;
@@ -41,7 +41,8 @@ public class MainActivity extends BaseActivity {
     findView();
     init();
     //mySpaceBtn.performClick();
-    contactBtn.performClick();
+    //contactBtn.performClick();
+    messageBtn.performClick();
   }
 
   private void init() {
@@ -65,11 +66,11 @@ public class MainActivity extends BaseActivity {
     hideFragments(transaction);
     setNormalBackgrounds();
     if (id == R.id.btn_message) {
-      if (messageFragment == null) {
-        messageFragment = new MessageFragment();
-        transaction.add(R.id.fragment_container, messageFragment);
+      if (recentMessageFragment == null) {
+        recentMessageFragment = new RecentMessageFragment();
+        transaction.add(R.id.fragment_container, recentMessageFragment);
       }
-      transaction.show(messageFragment);
+      transaction.show(recentMessageFragment);
     } else if (id == R.id.btn_contact) {
       if (contactFragment == null) {
         contactFragment = new ContactFragment();
@@ -112,7 +113,7 @@ public class MainActivity extends BaseActivity {
 
   private void hideFragments(FragmentTransaction transaction) {
     Fragment[] fragments = new Fragment[]{
-        messageFragment, contactFragment,
+        recentMessageFragment, contactFragment,
         discoverFragment, mySpaceFragment
     };
     for (Fragment f : fragments) {

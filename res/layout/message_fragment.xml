@@ -6,4 +6,12 @@
     android:layout_height="match_parent">
 
     <include layout="@layout/header_layout" />
+
+    <ListView
+        android:id="@+id/convList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:cacheColorHint="#00000000"
+        android:divider="@null" />
 </LinearLayout>

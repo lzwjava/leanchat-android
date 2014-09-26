@@ -6,7 +6,11 @@ import com.lzw.talk.R;
 import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
 import com.lzw.talk.service.ChatService;
+import com.lzw.talk.util.AVOSUtils;
+import com.lzw.talk.util.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -33,5 +37,14 @@ public class SplashActivity extends BaseActivity {
         }
       }
     }, time);
+    getConvId();
+  }
+
+  private void getConvId() {
+    List<String> ids = new ArrayList<String>();
+    ids.add("u1234");
+    ids.add("u0988");
+    String convid = AVOSUtils.convid(ids);
+    Logger.d("convid=" + convid);
   }
 }

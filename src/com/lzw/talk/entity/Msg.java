@@ -7,7 +7,9 @@ import com.lzw.talk.R;
 import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
 import com.lzw.talk.service.ChatService;
+import com.lzw.talk.util.AVOSUtils;
 import com.lzw.talk.util.PathUtils;
+import com.lzw.talk.util.Utils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -64,6 +66,12 @@ public class Msg {
 
   public long getTimestamp() {
     return internalMessage.getTimestamp();
+  }
+
+  public String getConvid(){
+    List<String> convids = getToPeerIds();
+    convids.add(getFromPeerId());
+    return AVOSUtils.convid(convids);
   }
 
   public void setTimestamp(long timestamp) {

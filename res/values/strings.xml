@@ -125,4 +125,5 @@
     <string name="send">发送</string>
     <string name="cannotGetYourAddressInfo">无法获取到您的位置信息！</string>
     <string name="emotion">表情</string>
+    <string name="pleaseCheckNetwork">请检查网络</string>
 </resources>

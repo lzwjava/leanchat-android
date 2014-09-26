@@ -27,9 +27,11 @@
     <dimen name="chatTextMinWidth">60dp</dimen>
     <dimen name="chatContentPadRight">10dp</dimen>
     <dimen name="avatarWidth">50dp</dimen>
-    <dimen name="sendBtnWidth">70dp</dimen>
+    <dimen name="sendBtnSize">30dp</dimen>
 
     <dimen name="playBtnWidth">30dp</dimen>
     <dimen name="chatBottomBtnWidth">30dp</dimen>
 
+    <dimen name="message_top_height">70.0dip</dimen>
+    <dimen name="base_line_width_1">1dip</dimen>
 </resources>

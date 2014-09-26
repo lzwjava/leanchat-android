@@ -6,6 +6,7 @@ import com.lzw.talk.base.App;
 import com.lzw.talk.db.DBHelper;
 import com.lzw.talk.db.DBMsg;
 import com.lzw.talk.entity.Msg;
+import com.lzw.talk.entity.RecentMsg;
 import com.lzw.talk.util.Logger;
 import com.lzw.talk.util.Utils;
 
@@ -144,5 +145,29 @@ public class ChatService {
     Logger.d("content=" + content);
     Msg msg = sendMessage(peerId, Msg.TYPE_LOCATION, content);
     DBMsg.insertMsg(msg);
+  }
+
+  public static List<RecentMsg> getRecentMsgs() throws AVException {
+    List<Msg> msgs = DBMsg.getRecentMsgs();
+    cacheUserFromMsgs(msgs);
+    ArrayList<RecentMsg> recentMsgs = new ArrayList<RecentMsg>();
+    for (Msg msg : msgs) {
+      RecentMsg recentMsg = new RecentMsg();
+      recentMsg.user = App.lookupUser(msg.getFromPeerId());
+      recentMsg.msg = msg;
+      recentMsgs.add(recentMsg);
+    }
+    return recentMsgs;
+  }
+
+  public static void cacheUserFromMsgs(List<Msg> msgs) throws AVException {
+    List<String> uncachedId = new ArrayList<String>();
+    for (Msg msg : msgs) {
+      String fromPeerId = msg.getFromPeerId();
+      if (App.lookupUser(fromPeerId) == null) {
+        uncachedId.add(fromPeerId);
+      }
+    }
+    UserService.cacheUser(uncachedId);
   }
 }

@@ -3,9 +3,9 @@ package com.lzw.talk.service;
 import android.text.TextUtils;
 import android.widget.ImageView;
 import com.avos.avoscloud.*;
-import com.lzw.talk.*;
 import com.lzw.talk.avobject.User;
-import com.lzw.talk.util.Logger;
+import com.lzw.talk.base.App;
+import com.lzw.talk.base.C;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
@@ -32,7 +32,6 @@ public class UserService {
 
   public static void updateNickname(User curUser, String value, SaveCallback saveCallback) {
     if (TextUtils.isEmpty(value) == false) {
-      Logger.d("value=" + value);
       curUser.setNickname(value);
       curUser.saveInBackground(saveCallback);
     }
@@ -51,5 +50,12 @@ public class UserService {
     } else {
       avatarView.setImageResource(com.lzw.talk.R.drawable.default_user_avatar);
     }
+  }
+
+  public static void cacheUser(List<String> uncachedId) throws AVException {
+    AVQuery<User> q = User.getQuery(User.class);
+    q.whereContainedIn(C.OBJECT_ID, uncachedId);
+    List<User> users = q.find();
+    App.registerBatchUserCache(users);
   }
 }
