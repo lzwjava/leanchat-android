@@ -23,7 +23,7 @@ public class Msg {
   public static final int TYPE_TEXT = 0;
   public static final int TYPE_RESPONSE = 1;
   public static final int TYPE_IMAGE = 2;
-  public static final int TYPE_AUDIO=3;
+  public static final int TYPE_AUDIO = 3;
   public static final int TYPE_LOCATION = 4;
   //long timestamp;
   //String fromPeerId;
@@ -85,9 +85,9 @@ public class Msg {
       return App.ctx.getString(R.string.received);
     } else if (status == STATUS_SEND_SUCCEED) {
       return App.ctx.getString(R.string.sent);
-    } else if(status==STATUS_SEND_FAILED){
+    } else if (status == STATUS_SEND_FAILED) {
       return App.ctx.getString(R.string.failed);
-    }else{
+    } else {
       throw new IllegalArgumentException("unknown status");
     }
   }
@@ -158,6 +158,6 @@ public class Msg {
   }
 
   public String getAudioPath() {
-    return PathUtils.getAudioDir()+getObjectId();
+    return PathUtils.getAudioDir() + getObjectId();
   }
 }

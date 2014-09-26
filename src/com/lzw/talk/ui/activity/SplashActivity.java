@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import com.lzw.talk.R;
 import com.lzw.talk.avobject.User;
+import com.lzw.talk.base.App;
 import com.lzw.talk.service.ChatService;
 
 import java.util.Timer;
@@ -17,6 +18,10 @@ public class SplashActivity extends BaseActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.splash_layout);
+    int time = 1000;
+    if (App.debug) {
+      time = 0;
+    }
     new Timer().schedule(new TimerTask() {
       @Override
       public void run() {
@@ -27,6 +32,6 @@ public class SplashActivity extends BaseActivity {
           startActivity(intent);
         }
       }
-    }, 200);
+    }, time);
   }
 }

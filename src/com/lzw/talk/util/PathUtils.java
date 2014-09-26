@@ -1,7 +1,6 @@
 package com.lzw.talk.util;
 
 import android.os.Environment;
-import com.lzw.talk.avobject.User;
 
 import java.io.File;
 
@@ -48,7 +47,11 @@ public class PathUtils {
     return checkAndMkdirs(getAppPath() + "audio/");
   }
 
-  public static String getRecordUuidPath(){
-    return getAudioDir()+ Utils.uuid();
+  public static String getRecordUuidPath() {
+    return getAudioDir() + Utils.uuid();
+  }
+
+  public static String getTmpPath() {
+    return getAppPath() + "tmp";
   }
 }

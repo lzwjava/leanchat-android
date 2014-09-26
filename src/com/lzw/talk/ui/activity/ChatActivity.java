@@ -8,15 +8,21 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.view.ViewPager;
 import android.text.Editable;
+import android.text.Selection;
+import android.text.Spannable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
-import android.widget.EditText;
+import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.ListView;
 import com.lzw.talk.R;
 import com.lzw.talk.adapter.ChatMsgAdapter;
+import com.lzw.talk.adapter.EmotionGridAdapter;
+import com.lzw.talk.adapter.EmotionPagerAdapter;
 import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
 import com.lzw.talk.db.DBHelper;
@@ -24,20 +30,27 @@ import com.lzw.talk.db.DBMsg;
 import com.lzw.talk.entity.Msg;
 import com.lzw.talk.receiver.MsgReceiver;
 import com.lzw.talk.service.ChatService;
+import com.lzw.talk.service.EmotionService;
 import com.lzw.talk.service.MessageListener;
+import com.lzw.talk.ui.view.EmotionsEditText;
 import com.lzw.talk.ui.view.HeaderLayout;
 import com.lzw.talk.ui.view.RecordButton;
-import com.lzw.talk.util.*;
+import com.lzw.talk.util.NetAsyncTask;
+import com.lzw.talk.util.PathUtils;
+import com.lzw.talk.util.PhotoUtil;
+import com.lzw.talk.util.Utils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ChatActivity extends Activity implements OnClickListener, MessageListener {
+public class ChatActivity extends BaseActivity implements OnClickListener, MessageListener {
   public static final String CHAT_USER_ID = "chatUserId";
   private static final int IMAGE_REQUEST = 0;
   public static final int LOCATION_REQUEST = 1;
+  private static final int TAKE_CAMERA_REQUEST = 2;
   private ChatMsgAdapter adapter;
   private List<Msg> msgs;
   public static ChatActivity instance;
@@ -47,26 +60,69 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
   User chatUser;
 
   HeaderLayout headerLayout;
-  View chatTextLayout, chatAudioLayout, chatMoreLayout, chatAddLayout, chatEmotionLayout;
+  View chatTextLayout, chatAudioLayout, chatAddLayout, chatEmotionLayout;
   View turnToTextBtn, turnToAudioBtn, sendBtn, addImageBtn, showAddBtn, addLocationBtn, showEmotionBtn;
-  private EditText contentEdit;
+  ViewPager emotionPager;
+  private EmotionsEditText contentEdit;
   private ListView listView;
   RecordButton recordBtn;
+  List<String> emotions = EmotionService.emotionTexts;
+  private String localCameraPath = PathUtils.getTmpPath();
+  private View addCameraBtn;
 
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     ctx = this;
     instance = this;
-    getWindow().setSoftInputMode(
-        WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     setContentView(R.layout.chat_layout);
     findView();
     initData();
     initHeader();
+    initEmotionPager();
     initRecordBtn();
     setEditTextChangeListener();
     //turnToAudioBtn.performClick();
     refresh();
+    setSoftInputMode();
+  }
+
+  private void initEmotionPager() {
+    List<View> views = new ArrayList<View>();
+    for (int i = 0; i < 2; i++) {
+      views.add(getEmotionGridView(i));
+    }
+    EmotionPagerAdapter pagerAdapter = new EmotionPagerAdapter(views);
+    emotionPager.setAdapter(pagerAdapter);
+  }
+
+  private View getEmotionGridView(int pos) {
+    LayoutInflater inflater = LayoutInflater.from(ctx);
+    View emotionView = inflater.inflate(R.layout.chat_emotion_gridview, null);
+    GridView gridView = (GridView) emotionView.findViewById(R.id.gridview);
+    EmotionGridAdapter emotionGridAdapter = new EmotionGridAdapter(ctx);
+    List<String> pageEmotions;
+    if (pos == 0) {
+      pageEmotions = emotions.subList(0, 20);
+    } else {
+      pageEmotions = emotions.subList(20, emotions.size());
+    }
+    emotionGridAdapter.setDatas(pageEmotions);
+    gridView.setAdapter(emotionGridAdapter);
+    gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+      @Override
+      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        String emotionText = (String) parent.getAdapter().getItem(position);
+        int start = contentEdit.getSelectionStart();
+        CharSequence content = contentEdit.getText().insert(start, emotionText);
+        contentEdit.setText(content);
+        CharSequence info = contentEdit.getText();
+        if (info instanceof Spannable) {
+          Spannable spannable = (Spannable) info;
+          Selection.setSelection(spannable, start + emotionText.length());
+        }
+      }
+    });
+    return gridView;
   }
 
   public void initRecordBtn() {
@@ -77,7 +133,7 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
         Pattern pattern = Pattern.compile(".*/(.*)");
         Matcher matcher = pattern.matcher(audioPath);
         matcher.matches();
-        final String objectId = matcher.group(LOCATION_REQUEST);
+        final String objectId = matcher.group(1);
         new NetAsyncTask(ctx, false) {
           @Override
           protected void doInBack() throws Exception {
@@ -147,14 +203,13 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
     listView = (ListView) findViewById(R.id.listview);
     addImageBtn = findViewById(R.id.addImageBtn);
 
-    contentEdit = (EditText) findViewById(R.id.textEdit);
+    contentEdit = (EmotionsEditText) findViewById(R.id.textEdit);
     headerLayout = (HeaderLayout) findViewById(R.id.headerLayout);
     chatTextLayout = findViewById(R.id.chatTextLayout);
     chatAudioLayout = findViewById(R.id.chatRecordLayout);
     turnToAudioBtn = findViewById(R.id.turnToAudioBtn);
     turnToTextBtn = findViewById(R.id.turnToTextBtn);
     recordBtn = (RecordButton) findViewById(R.id.recordBtn);
-    chatMoreLayout = findViewById(R.id.chatMoreLayout);
     chatTextLayout = findViewById(R.id.chatTextLayout);
     chatAddLayout = findViewById(R.id.chatAddLayout);
     addLocationBtn = findViewById(R.id.addLocationBtn);
@@ -162,14 +217,18 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
     showAddBtn = findViewById(R.id.showAddBtn);
     showEmotionBtn = findViewById(R.id.showEmotionBtn);
     sendBtn = findViewById(R.id.sendBtn);
+    emotionPager = (ViewPager) findViewById(R.id.emotionPager);
+    addCameraBtn = findViewById(R.id.addCameraBtn);
 
     sendBtn.setOnClickListener(this);
+    contentEdit.setOnClickListener(this);
     addImageBtn.setOnClickListener(this);
     addLocationBtn.setOnClickListener(this);
     turnToAudioBtn.setOnClickListener(this);
     turnToTextBtn.setOnClickListener(this);
     showAddBtn.setOnClickListener(this);
     showEmotionBtn.setOnClickListener(this);
+    addCameraBtn.setOnClickListener(this);
   }
 
   @Override
@@ -190,7 +249,7 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
     msgs = new ArrayList<Msg>();
     adapter = new ChatMsgAdapter(this);
     Intent intent = getIntent();
-    String chatUserId = intent.getStringExtra("chatUserId");
+    String chatUserId = intent.getStringExtra(CHAT_USER_ID);
     chatUser = App.lookupUser(chatUserId);
     listView.setAdapter(adapter);
   }
@@ -259,7 +318,7 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
     // TODO Auto-generated method stub
     switch (v.getId()) {
       case R.id.sendBtn:
-        send();
+        sendText();
         break;
       case R.id.addImageBtn:
         selectImageFromLocal();
@@ -279,7 +338,19 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
       case R.id.addLocationBtn:
         selectLocationFromMap();
         break;
+      case R.id.textEdit:
+        onTextEditClick();
+        break;
+      case R.id.addCameraBtn:
+        selectImageFromCamera();
+        break;
     }
+  }
+
+  private void onTextEditClick() {
+    chatAddLayout.setVisibility(View.GONE);
+    chatEmotionLayout.setVisibility(View.GONE);
+    scroolToLast();
   }
 
   private void selectLocationFromMap() {
@@ -294,6 +365,7 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
     } else {
       chatEmotionLayout.setVisibility(View.VISIBLE);
       chatAddLayout.setVisibility(View.GONE);
+      showTextLayout();
     }
   }
 
@@ -303,6 +375,7 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
     } else {
       chatEmotionLayout.setVisibility(View.GONE);
       chatAddLayout.setVisibility(View.VISIBLE);
+      hideSoftInputView();
     }
   }
 
@@ -314,6 +387,7 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
   private void showAudioLayout() {
     chatTextLayout.setVisibility(View.GONE);
     chatAudioLayout.setVisibility(View.VISIBLE);
+    hideSoftInputView();
   }
 
   public void selectImageFromLocal() {
@@ -328,12 +402,57 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
     startActivityForResult(intent, IMAGE_REQUEST);
   }
 
-  private void send() {
-    String contString = contentEdit.getText().toString();
+  public void selectImageFromCamera() {
+    Intent openCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    Uri imageUri = Uri.fromFile(new File(localCameraPath));
+    openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+    startActivityForResult(openCameraIntent,
+        TAKE_CAMERA_REQUEST);
+  }
+
+  private void sendText() {
+    final String contString = contentEdit.getText().toString();
     if (contString.length() > 0) {
-      new SendTask(contString).execute();
+      new NetAsyncTask(ctx, false) {
+        @Override
+        protected void doInBack() throws Exception {
+          ChatService.sendTextMsg(chatUser, contString);
+        }
+
+        @Override
+        protected void onPost(boolean res) {
+          if (res) {
+            hideSoftInputView();
+            refresh();
+          } else {
+            Utils.toast(ctx, R.string.badNetwork);
+          }
+        }
+      }.execute();
       contentEdit.setText("");
     }
+  }
+
+  private String parsePathByReturnData(Intent data) {
+    if (data == null) {
+      return null;
+    }
+    String localSelectPath = null;
+    Uri selectedImage = data.getData();
+    if (selectedImage != null) {
+      Cursor cursor = getContentResolver().query(
+          selectedImage, null, null, null, null);
+      cursor.moveToFirst();
+      int columnIndex = cursor.getColumnIndex("_data");
+      localSelectPath = cursor.getString(columnIndex);
+      cursor.close();
+      if (localSelectPath == null
+          || localSelectPath.equals("null")) {
+        Utils.toast(ctx, R.string.cannotFindImage);
+        return null;
+      }
+    }
+    return localSelectPath;
   }
 
   @Override
@@ -341,90 +460,51 @@ public class ChatActivity extends Activity implements OnClickListener, MessageLi
     if (resultCode == RESULT_OK) {
       switch (requestCode) {
         case IMAGE_REQUEST:
-          if (data != null) {
-            Uri selectedImage = data.getData();
-            if (selectedImage != null) {
-              Cursor cursor = getContentResolver().query(
-                  selectedImage, null, null, null, null);
-              cursor.moveToFirst();
-              int columnIndex = cursor.getColumnIndex("_data");
-              final String localSelectPath = cursor.getString(columnIndex);
-              cursor.close();
-              if (localSelectPath == null
-                  || localSelectPath.equals("null")) {
-                Utils.toast(ctx, R.string.cannotFindImage);
-                return;
-              }
-              final String objectId = Utils.uuid();
-              final String newPath = PathUtils.getImageDir() + objectId;
-
-              PhotoUtil.compressImage(localSelectPath, newPath);
-              new NetAsyncTask(App.ctx, false) {
-                @Override
-                protected void doInBack() throws Exception {
-                  ChatService.sendImageMsg(chatUser, newPath, objectId);
-                }
-
-                @Override
-                protected void onPost(boolean res) {
-                  refresh();
-                }
-              }.execute();
-            }
+          String localSelectPath = parsePathByReturnData(data);
+          if (localSelectPath != null) {
+            sendImageByPath(localSelectPath);
           }
           break;
+        case TAKE_CAMERA_REQUEST:
+          sendImageByPath(localCameraPath);
+          break;
         case LOCATION_REQUEST:
-          double latitude = data.getDoubleExtra("x", 0);// 维度
-          double longtitude = data.getDoubleExtra("y", 0);// 经度
-          String address = data.getStringExtra("address");
-          if (address != null && !address.equals("")) {
-            ChatService.sendLocationMessage(ChatService.getPeerId(chatUser), address, latitude, longtitude);
-          } else {
-            Utils.toast(ctx, R.string.cannotGetYourAddressInfo);
-          }
+          sendLocationByReturnData(data);
           break;
       }
     }
     super.onActivityResult(requestCode, resultCode, data);
   }
 
-  class SendTask extends AsyncTask<Void, Void, Void> {
-    String text;
-
-    boolean res;
-
-    public SendTask(String text) {
-      this.text = text;
-    }
-
-    @Override
-    protected void onPreExecute() {
-      super.onPreExecute();
-    }
-
-    @Override
-    protected Void doInBackground(Void... params) {
-      try {
-        ChatService.sendTextMsg(chatUser, text);
-        res = true;
-      } catch (Exception e) {
-        e.printStackTrace();
-        res = false;
-      }
-      return null;
-    }
-
-    @Override
-    protected void onPostExecute(Void aVoid) {
-      if (res) {
-        refresh();
-      } else {
-        Utils.toast(ctx, R.string.badNetwork);
-      }
+  private void sendLocationByReturnData(Intent data) {
+    double latitude = data.getDoubleExtra("x", 0);// 维度
+    double longtitude = data.getDoubleExtra("y", 0);// 经度
+    String address = data.getStringExtra("address");
+    if (address != null && !address.equals("")) {
+      ChatService.sendLocationMessage(ChatService.getPeerId(chatUser), address, latitude, longtitude);
+    } else {
+      Utils.toast(ctx, R.string.cannotGetYourAddressInfo);
     }
   }
 
+  private void sendImageByPath(String localSelectPath) {
+    final String objectId = Utils.uuid();
+    final String newPath = PathUtils.getImageDir() + objectId;
+    PhotoUtil.compressImage(localSelectPath, newPath);
+    new NetAsyncTask(App.ctx, false) {
+      @Override
+      protected void doInBack() throws Exception {
+        ChatService.sendImageMsg(chatUser, newPath, objectId);
+      }
+
+      @Override
+      protected void onPost(boolean res) {
+        refresh();
+      }
+    }.execute();
+  }
+
   public void scroolToLast() {
-    listView.setSelection(listView.getCount() - LOCATION_REQUEST);
+    listView.setSelection(listView.getCount() - 1);
   }
 }

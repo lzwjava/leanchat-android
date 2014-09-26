@@ -13,6 +13,7 @@ import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
 import com.lzw.talk.entity.Msg;
 import com.lzw.talk.service.ChatService;
+import com.lzw.talk.service.EmotionService;
 import com.lzw.talk.service.UserService;
 import com.lzw.talk.ui.activity.ImageBrowerActivity;
 import com.lzw.talk.ui.activity.LocationActivity;
@@ -115,7 +116,7 @@ public class ChatMsgAdapter extends BaseAdapter {
 
     int type = msg.getType();
     if (type == Msg.TYPE_TEXT) {
-      contentView.setText(msg.getContent());
+      contentView.setText(EmotionService.replace(ctx, msg.getContent()));
     } else if (type == Msg.TYPE_IMAGE) {
       displayImage(msg, imageView);
       setImageOnClickListener(msg.getContent(), imageView);
@@ -194,7 +195,7 @@ public class ChatMsgAdapter extends BaseAdapter {
         MsgViewType.TO_AUDIO, MsgViewType.COME_LOCATION, MsgViewType.TO_LOCATION};
     int[] layoutIds = new int[]{
         R.layout.chat_item_msg_text_left,
-        R.layout.chat_item_msg_text_left,
+        R.layout.chat_item_msg_text_right,
         R.layout.chat_item_msg_image_left,
         R.layout.chat_item_msg_image_right,
         R.layout.chat_item_msg_audio_left,

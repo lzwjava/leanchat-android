@@ -1,0 +1,13 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="3dp">
+
+    <ImageView
+        android:id="@+id/emotionImageView"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:contentDescription="@string/emotion"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>
