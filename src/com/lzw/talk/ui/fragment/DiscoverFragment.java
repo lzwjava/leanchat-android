@@ -25,7 +25,7 @@ import java.util.List;
  * Created by lzw on 14-9-17.
  */
 public class DiscoverFragment extends BaseFragment
-    implements AdapterView.OnItemClickListener,XListView.IXListViewListener{
+    implements AdapterView.OnItemClickListener, XListView.IXListViewListener {
   XListView listView;
   NearPeopleAdapter adapter;
   List<User> nears = new ArrayList<User>();
