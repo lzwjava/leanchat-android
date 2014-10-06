@@ -3,9 +3,7 @@ package com.lzw.talk.ui.fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,16 +21,13 @@ import com.lzw.talk.service.AddRequestService;
 import com.lzw.talk.service.CloudService;
 import com.lzw.talk.service.UserService;
 import com.lzw.talk.ui.activity.AddFriendActivity;
+import com.lzw.talk.ui.activity.ChatActivity;
 import com.lzw.talk.ui.activity.NewFriendActivity;
-import com.lzw.talk.ui.activity.PersonInfoActivity;
 import com.lzw.talk.ui.view.ClearEditText;
 import com.lzw.talk.ui.view.EnLetterView;
 import com.lzw.talk.ui.view.HeaderLayout;
 import com.lzw.talk.ui.view.dialog.DialogTips;
-import com.lzw.talk.util.CharacterParser;
-import com.lzw.talk.util.PinyinComparator;
-import com.lzw.talk.util.SimpleNetTask;
-import com.lzw.talk.util.Utils;
+import com.lzw.talk.util.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -63,7 +58,6 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
   public void onActivityCreated(Bundle savedInstanceState) {
     // TODO Auto-generated method stub
     super.onActivityCreated(savedInstanceState);
-
     init();
     refresh();
   }
@@ -86,23 +80,10 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
 
   private void initEditText() {
     clearEditText = (ClearEditText) getView().findViewById(R.id.et_msg_search);
-    clearEditText.addTextChangedListener(new TextWatcher() {
-
+    clearEditText.addTextChangedListener(new SimpleTextWatcher() {
       @Override
-      public void onTextChanged(CharSequence s, int start, int before,
-                                int count) {
-        filterData(s.toString());
-      }
-
-      @Override
-      public void beforeTextChanged(CharSequence s, int start, int count,
-                                    int after) {
-
-      }
-
-      @Override
-      public void afterTextChanged(Editable s) {
-
+      public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+        filterData(charSequence.toString());
       }
     });
   }
@@ -215,7 +196,7 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
   }
 
   private void setAddRequestTipsAndListView(boolean hasAddRequest, List<User> friends) {
-    msgTipsView.setVisibility(hasAddRequest?View.VISIBLE:View.GONE);
+    msgTipsView.setVisibility(hasAddRequest ? View.VISIBLE : View.GONE);
     fillFriendsData(friends);
     if (userAdapter == null) {
       userAdapter = new UserFriendAdapter(getActivity(), friends);
@@ -239,7 +220,7 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
   @Override
   public void onResume() {
     super.onResume();
-    if(!hidden){
+    if (!hidden) {
       refresh();
     }
   }
@@ -269,9 +250,8 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
   public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
     // TODO Auto-generated method stub
     User user = (User) userAdapter.getItem(position - 1);
-    Intent intent = new Intent(getActivity(), PersonInfoActivity.class);
-    intent.putExtra("from", "other");
-    intent.putExtra("username", user.getUsername());
+    Intent intent = new Intent(getActivity(), ChatActivity.class);
+    intent.putExtra(ChatActivity.CHAT_USER_ID, user.getObjectId());
     startActivity(intent);
   }
 

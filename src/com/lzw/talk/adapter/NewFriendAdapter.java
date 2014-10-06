@@ -85,7 +85,6 @@ public class NewFriendAdapter extends BaseListAdapter<AddRequest> {
           Utils.toast(App.ctx.getString(R.string.addFailed), e.getMessage());
         } else {
           toAgreedTextView(addBtn);
-          App.getInstance().getFriends().add(fromUser);
         }
       }
     }.execute();

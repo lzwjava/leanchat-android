@@ -1,12 +1,12 @@
 package com.lzw.talk.service;
 
-import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import com.lzw.talk.R;
 import com.lzw.talk.base.App;
+import com.lzw.talk.util.SimpleAnimationListener;
 
 /**
  * Created by lzw on 14-10-6.

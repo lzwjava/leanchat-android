@@ -82,7 +82,7 @@ public class PersonInfoActivity extends BaseActivity implements OnClickListener 
       headerLayout.showTitle(R.string.detailInfo);
       headerLayout.showLeftBackButton();
       avatarArrowView.setVisibility(View.INVISIBLE);
-      if (from.equals("add")) {// 从附近的人列表添加好友--因为获取附近的人的方法里面有是否显示好友的情况，因此在这里需要判断下这个用户是否是自己的好友
+      if (from.equals("add")) {
         App app = App.getInstance();
         if (UserService.isMyFriend(app.getFriends(), username)) {// 是好友
           chatBtn.setVisibility(View.VISIBLE);
@@ -132,8 +132,8 @@ public class PersonInfoActivity extends BaseActivity implements OnClickListener 
     sexView.setText(user.getSex() == true ? R.string.male : R.string.female);
   }
 
-  private void refreshAvatar(String avatarUrl) {
-    UserService.displayAvatar(avatarUrl,avatarView);
+  private void refreshAvatar(String avatar) {
+    UserService.displayAvatar(avatar,avatarView);
   }
 
   @Override

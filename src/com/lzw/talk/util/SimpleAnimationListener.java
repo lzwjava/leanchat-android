@@ -1,4 +1,4 @@
-package com.lzw.talk.service;
+package com.lzw.talk.util;
 
 import android.view.animation.Animation;
 
