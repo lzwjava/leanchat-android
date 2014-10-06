@@ -21,7 +21,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="6.0dip"
         android:padding="5dp"
-        android:src="@drawable/head" />
+        android:src="@drawable/default_user_avatar" />
 
     <TextView
         android:id="@+id/tv_friend_name"
