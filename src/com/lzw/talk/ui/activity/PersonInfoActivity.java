@@ -132,9 +132,8 @@ public class PersonInfoActivity extends BaseActivity implements OnClickListener 
     sexView.setText(user.getSex() == true ? R.string.male : R.string.female);
   }
 
-  private void refreshAvatar(String avatar) {
-    ImageLoader.getInstance().displayImage(avatar, avatarView,
-        PhotoUtil.getAvatarImageOptions());
+  private void refreshAvatar(String avatarUrl) {
+    UserService.displayAvatar(avatarUrl,avatarView);
   }
 
   @Override

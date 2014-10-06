@@ -45,9 +45,9 @@ public class UserService {
     return users;
   }
 
-  public static void displayAvatar(User user, ImageView avatarView) {
+  public static void displayAvatar(String imageUrl, ImageView avatarView) {
     ImageLoader imageLoader = ImageLoader.getInstance();
-    imageLoader.displayImage(user.getAvatarUrl(), avatarView, PhotoUtil.getAvatarImageOptions());
+    imageLoader.displayImage(imageUrl, avatarView, PhotoUtil.getAvatarImageOptions());
   }
 
   public static void cacheUser(List<String> uncachedIds) throws AVException {

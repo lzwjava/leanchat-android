@@ -12,6 +12,7 @@ import com.lzw.talk.R;
 import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
 import com.lzw.talk.service.AddRequestService;
+import com.lzw.talk.service.UserService;
 import com.lzw.talk.ui.view.ViewHolder;
 import com.lzw.talk.util.NetAsyncTask;
 import com.lzw.talk.util.PhotoUtil;
@@ -37,7 +38,7 @@ public class AddFriendAdapter extends BaseListAdapter<User> {
     ImageView avatarView = ViewHolder.findViewById(conView, R.id.avatar);
     Button addBtn = ViewHolder.findViewById(conView, R.id.add);
     String avatarUrl = contact.getAvatarUrl();
-    ImageLoader.getInstance().displayImage(avatarUrl, avatarView, PhotoUtil.getAvatarImageOptions());
+    UserService.displayAvatar(avatarUrl,avatarView);
     nameView.setText(contact.getUsername());
     addBtn.setText(R.string.add);
     addBtn.setOnClickListener(new OnClickListener() {

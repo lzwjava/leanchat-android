@@ -10,6 +10,7 @@ import com.lzw.talk.R;
 import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
 import com.lzw.talk.service.PrefDao;
+import com.lzw.talk.service.UserService;
 import com.lzw.talk.ui.view.ViewHolder;
 import com.lzw.talk.util.PhotoUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -45,10 +46,9 @@ public class NearPeopleAdapter extends BaseListAdapter<User> {
     TextView distanceView = ViewHolder.findViewById(convertView, R.id.distance_text);
     TextView logintimView = ViewHolder.findViewById(convertView, R.id.login_time_text);
     ImageView avatarView = ViewHolder.findViewById(convertView, R.id.avatar_view);
-    String avatar = user.getAvatarUrl();
+    String avatarUrl = user.getAvatarUrl();
 
-    ImageLoader.getInstance().displayImage(avatar, avatarView,
-        PhotoUtil.getAvatarImageOptions());
+    UserService.displayAvatar(avatarUrl,avatarView);
 
     AVGeoPoint geoPoint = user.getLocation();
     PrefDao prefDao = PrefDao.getCurUserPrefDao(ctx);

@@ -59,7 +59,7 @@ public class UserAdapter extends BaseAdapter {
     usernameView.setText(user.getUsername());
     setTextBasedOnFlag(user.getBoolean(C.ONLINE), onlineStatusView,
         R.string.status_online, R.string.status_offline);
-    UserService.displayAvatar(user, avatarView);
+    UserService.displayAvatar(user.getAvatarUrl(), avatarView);
     return conView;
   }
 

@@ -107,7 +107,7 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
     if (user == null) {
       throw new RuntimeException("cannot find user");
     }
-    UserService.displayAvatar(user, avatarView);
+    UserService.displayAvatar(user.getAvatarUrl(), avatarView);
 
     int type = msg.getType();
     if (type == Msg.TYPE_TEXT) {

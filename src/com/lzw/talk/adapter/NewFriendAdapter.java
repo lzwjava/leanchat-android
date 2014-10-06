@@ -14,6 +14,7 @@ import com.lzw.talk.avobject.AddRequest;
 import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
 import com.lzw.talk.service.CloudService;
+import com.lzw.talk.service.UserService;
 import com.lzw.talk.ui.view.ViewHolder;
 import com.lzw.talk.util.NetAsyncTask;
 import com.lzw.talk.util.PhotoUtil;
@@ -42,7 +43,8 @@ public class NewFriendAdapter extends BaseListAdapter<AddRequest> {
     final Button addBtn = ViewHolder.findViewById(conView, R.id.add);
 
     String avatarUrl = addRequest.getFromUser().getAvatarUrl();
-    ImageLoader.getInstance().displayImage(avatarUrl, avatarView, PhotoUtil.getAvatarImageOptions());
+    UserService.displayAvatar(avatarUrl,avatarView);
+
     int status = addRequest.getStatus();
     if (status == AddRequest.STATUS_WAIT) {
       addBtn.setOnClickListener(new OnClickListener() {

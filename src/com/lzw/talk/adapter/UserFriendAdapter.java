@@ -12,6 +12,7 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 import com.lzw.talk.R;
 import com.lzw.talk.avobject.User;
+import com.lzw.talk.service.UserService;
 import com.lzw.talk.ui.view.ViewHolder;
 import com.lzw.talk.util.PhotoUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -65,9 +66,9 @@ public class UserFriendAdapter extends BaseAdapter implements SectionIndexer {
 
     User friend = data.get(position);
     final String name = friend.getUsername();
-    final String avatar = friend.getAvatarUrl();
+    final String avatarUrl = friend.getAvatarUrl();
 
-    ImageLoader.getInstance().displayImage(avatar, avatarView, PhotoUtil.getAvatarImageOptions());
+    UserService.displayAvatar(avatarUrl,avatarView);
     nameView.setText(name);
 
     int section = getSectionForPosition(position);

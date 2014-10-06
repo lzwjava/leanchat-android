@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.lzw.talk.R;
 import com.lzw.talk.avobject.User;
+import com.lzw.talk.service.UserService;
 import com.lzw.talk.util.PathUtils;
 import com.lzw.talk.util.PhotoUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -48,9 +49,7 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
   private void init() {
     User curUser = User.curUser();
     usernameView.setText(curUser.getUsername());
-    ImageLoader imageLoader = ImageLoader.getInstance();
-    imageLoader.displayImage(curUser.getAvatarUrl(), avatarView,
-        PhotoUtil.getAvatarImageOptions());
+    UserService.displayAvatar(curUser.getAvatarUrl(),avatarView);
     avatarLayout.setOnClickListener(this);
     logoutLayout.setOnClickListener(this);
   }
