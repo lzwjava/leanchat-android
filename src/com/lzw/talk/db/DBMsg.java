@@ -7,9 +7,9 @@ import android.util.Log;
 import com.lzw.talk.base.App;
 import com.lzw.talk.entity.Msg;
 import com.lzw.talk.util.AVOSUtils;
-import com.lzw.talk.util.Logger;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -27,7 +27,7 @@ public class DBMsg {
   public static final String TO_PEER_ID = "toPeerId";
 
   public static String[] columns = {FROM_PEER_ID,
-      CONVID,TO_PEER_ID, CONTENT, TIMESTAMP, OBJECT_ID, STATUS, TYPE};
+      CONVID, TO_PEER_ID, CONTENT, TIMESTAMP, OBJECT_ID, STATUS, TYPE};
 
   public static void createTable(SQLiteDatabase db) {
     db.execSQL("create table if not exists messages (id integer primary key, objectId varchar(63) unique," +
@@ -42,7 +42,7 @@ public class DBMsg {
   }
 
   public static int insertMsgs(List<Msg> msgs) {
-    DBHelper dbHelper=new DBHelper(App.ctx,App.DB_NAME,App.DB_VER);
+    DBHelper dbHelper = new DBHelper(App.ctx, App.DB_NAME, App.DB_VER);
     if (msgs == null || msgs.size() == 0) {
       return 0;
     }
@@ -59,7 +59,7 @@ public class DBMsg {
         cv.put(CONVID, msg.getConvid());
         cv.put(TYPE, msg.getType());
         String toPeerId = msg.getToPeerIds().get(0);
-        Log.i("lzw","toPeerId="+toPeerId+" fromPeerId="+msg.getFromPeerId());
+        Log.i("lzw", "toPeerId=" + toPeerId + " fromPeerId=" + msg.getFromPeerId());
         assert !toPeerId.equals(msg.getFromPeerId());
         cv.put(TO_PEER_ID, toPeerId);
         cv.put(CONTENT, msg.getContent());
@@ -69,11 +69,12 @@ public class DBMsg {
       db.setTransactionSuccessful();
     } finally {
       db.endTransaction();
+      db.close();
     }
     return n;
   }
 
-  public static List<Msg> getMsgs(DBHelper dbHelper, String me, String he) {
+  public static List<Msg> getMsgs(DBHelper dbHelper, String me, String he, int size) {
     List<Msg> msgs = new ArrayList<Msg>();
     SQLiteDatabase db = dbHelper.getReadableDatabase();
     assert db != null;
@@ -81,13 +82,15 @@ public class DBMsg {
     Cursor c = db.query(MESSAGES, columns,
         "convid=?",
         new String[]{convid}, null, null,
-        TIMESTAMP,
-        "1000");
+        TIMESTAMP + " desc",
+        size + "");
     while (c.moveToNext()) {
       Msg msg = createMsgByCursor(c);
       msgs.add(msg);
     }
     c.close();
+    Collections.reverse(msgs);
+    db.close();
     return msgs;
   }
 
@@ -116,6 +119,8 @@ public class DBMsg {
       Msg msg = createMsgByCursor(c);
       msgs.add(msg);
     }
+    c.close();
+    db.close();
     return msgs;
   }
 
@@ -131,6 +136,7 @@ public class DBMsg {
     DBHelper dbHelper = new DBHelper(App.ctx, App.DB_NAME, App.DB_VER);
     SQLiteDatabase db = dbHelper.getWritableDatabase();
     int updateN = db.update(MESSAGES, cv, "objectId=?", new String[]{objectId});
+    db.close();
     return updateN;
   }
 
@@ -144,9 +150,7 @@ public class DBMsg {
     return updateStatus(msg, Msg.STATUS_SEND_SUCCEED);
   }
 
-  public static void updateStatusToSendFailed(Msg msg) {
-    updateStatus(msg, Msg.STATUS_SEND_FAILED);
+  public static int updateStatusToSendFailed(Msg msg) {
+    return updateStatus(msg, Msg.STATUS_SEND_FAILED);
   }
-
-
 }

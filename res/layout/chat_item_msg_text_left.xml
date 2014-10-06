@@ -40,9 +40,10 @@
                 android:layout_marginLeft="@dimen/marginToUsername"
                 android:layout_width="wrap_content"
                 android:maxWidth="@dimen/chatContentMaxWidth"
-                android:padding="@dimen/chatContentPadding"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:text="chat_content"
+                android:textColor="#fff"
                 android:background="@drawable/chat_left_qp"
                 style="@style/chat_content_date_style" />
         </LinearLayout>

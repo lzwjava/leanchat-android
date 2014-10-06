@@ -6,9 +6,6 @@ import android.os.Bundle;
 import com.lzw.talk.R;
 import com.lzw.talk.ui.view.HeaderLayout;
 
-/**
- * Created by lzw on 14-9-17.
- */
 public class BaseFragment extends Fragment {
   HeaderLayout headerLayout;
   Activity ctx;

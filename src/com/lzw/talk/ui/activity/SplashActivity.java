@@ -1,50 +1,45 @@
 package com.lzw.talk.ui.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import com.lzw.talk.R;
 import com.lzw.talk.avobject.User;
-import com.lzw.talk.base.App;
-import com.lzw.talk.service.ChatService;
-import com.lzw.talk.util.AVOSUtils;
-import com.lzw.talk.util.Logger;
+import com.lzw.talk.util.ChatUtils;
+import com.lzw.talk.util.Utils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
-/**
- * Created by lzw on 14-9-21.
- */
 public class SplashActivity extends BaseActivity {
+  private static final int GO_MAIN_MSG = 1;
+  private static final int GO_LOGIN_MSG = 2;
+  public static final int GO_NEXT_PERIOD = 2000;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+    // TODO Auto-generated method stub
     super.onCreate(savedInstanceState);
     setContentView(R.layout.splash_layout);
-    int time = 1000;
-    if (App.debug) {
-      time = 0;
+
+    if (User.curUser() != null) {
+      ChatUtils.updateUserInfo();
+      handler.sendEmptyMessageDelayed(GO_MAIN_MSG, GO_NEXT_PERIOD);
+    } else {
+      handler.sendEmptyMessageDelayed(GO_LOGIN_MSG, 2000);
     }
-    new Timer().schedule(new TimerTask() {
-      @Override
-      public void run() {
-        if (User.curUser() != null) {
-          ChatService.openSession();
-        } else {
-          Intent intent = new Intent(ctx, LoginActivity.class);
-          startActivity(intent);
-        }
-      }
-    }, time);
-    getConvId();
   }
 
-  private void getConvId() {
-    List<String> ids = new ArrayList<String>();
-    ids.add("u1234");
-    ids.add("u0988");
-    String convid = AVOSUtils.convid(ids);
-    Logger.d("convid=" + convid);
-  }
+  private Handler handler = new Handler() {
+    @Override
+    public void handleMessage(Message msg) {
+      switch (msg.what) {
+        case GO_MAIN_MSG:
+          Utils.goActivity(ctx, MainActivity.class);
+          finish();
+          break;
+        case GO_LOGIN_MSG:
+          Utils.goActivity(ctx, LoginActivity.class);
+          finish();
+          break;
+      }
+    }
+  };
 }

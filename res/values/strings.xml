@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">LeanChat</string>
     <string name="tips">提示</string>
     <string name="please_choose">请选择</string>
@@ -71,7 +70,6 @@
     <string name="hometown">家乡</string>
     <string name="logout">注销</string>
 
-    <string name="campus_chat">校友聊天</string>
     <string name="please_input_your_nickname">请输入你的昵称</string>
     <string name="set_nickname">设置昵称</string>
     <string name="change_succeed">修改成功</string>
@@ -111,7 +109,7 @@
     <string name="newMessage">新的消息</string>
     <string name="image">图片</string>
     <string name="cancelRecord">取消录音</string>
-    <string name="audio">声音</string>
+    <string name="audio">语音</string>
     <string name="getGeoInfoFailed">获取地理位置信息失败!</string>
     <string name="position">位置</string>
     <string name="geoIsSame">获取坐标相同</string>
@@ -126,4 +124,110 @@
     <string name="cannotGetYourAddressInfo">无法获取到您的位置信息！</string>
     <string name="emotion">表情</string>
     <string name="pleaseCheckNetwork">请检查网络</string>
+    <string name="login_username_hint">请输入用户名</string>
+    <string name="ensurePasswordHint">请在此输入密码</string>
+    <string name="login_password_hint">请输入密码</string>
+    <string name="ensurePassword">确认密码 </string>
+    <string name="register">注册</string>
+
+    <string name="password_can_not_null">密码不能为空</string>
+    <string name="username_cannot_null">用户名不能为空</string>
+    <string name="password_not_consistent">输入的两次密码不一致</string>
+    <string name="registering">正在注册中...</string>
+    <string name="registerSucceed">注册成功</string>
+    <string name="registerFailed">注册失败。</string>
+
+    <string name="not_have_account">还没有账号？</string>
+    <string name="register_rightnow">立即注册 ></string>
+    <string name="nearby_people">附近的人</string>
+    <string name="metre">米</string>
+    <string name="unknown">未知</string>
+    <string name="recent_login_time">最近登录时间:</string>
+    <string name="none_neerby_people">暂无附近的人!</string>
+
+    <string name="password_input_hint">请在此输入密码</string>
+    <string name="account">账号 </string>
+    <string name="ensure_password">确认密码 </string>
+    <string name="search">搜索</string>
+
+    <string name="conversation">会话</string>
+
+    <string name="xlistview_header_hint_normal">下拉刷新</string>
+    <string name="xlistview_header_hint_ready">松开刷新数据</string>
+    <string name="xlistview_header_hint_loading">正在加载&#8230;</string>
+    <string name="xlistview_header_last_time">上次更新时间：</string>
+    <string name="xlistview_footer_hint_normal">查看更多</string>
+    <string name="xlistview_footer_hint_ready">松开载入更多</string>
+
+    <string name="nickname_input_hint">请输入昵称&#8230;</string>
+
+    <string name="receive_notify">接收新消息通知</string>
+    <string name="myinfo">个人资料</string>
+    <string name="blacklist">黑名单</string>
+    <string name="vibrate">震动</string>
+
+    <string name="take_photo">拍照</string>
+    <string name="choose_photo">从手机相册选中</string>
+    <string name="network_tips">当前网络不可用,请检查您的网络!</string>
+
+    <string name="chat">发起会话</string>
+    <string name="add_friend">添加好友</string>
+
+    <string name="send_state">已读</string>
+
+    <string name="longclick_speak">长按说话</string>
+
+    <string name="black_tips">已添加至黑名单，你将不再收到对方的消息!</string>
+
+
+    <string name="new_friends">新朋友</string>
+
+    <string name="near_people">附近的人</string>
+
+    <string name="voice_up_tips">手指上滑,取消发送</string>
+    <string name="voice_cancel_tips">松开手指，取消发送</string>
+
+    <string name="voice_seconds_tips">还可以说%1$s秒</string>
+
+    <string name="voice_short_tips">录音时间太短</string>
+    <string name="deleteFriendRequest">删除好友请求</string>
+    <string name="agreed">已同意</string>
+    <string name="deleteContact">删除联系人</string>
+    <string name="sure">确定</string>
+    <string name="deleteSucceed">删除成功</string>
+    <string name="deleteFailed">删除失败</string>
+    <string name="userNotExist">用户不存在</string>
+    <string name="findFriends">查找好友</string>
+    <string name="searching">正在搜索...</string>
+    <string name="searchFinish">用户搜索完成!</string>
+    <string name="pleaseInputUsername">请输入用户名</string>
+    <string name="dataLoadFinish">数据加载完成</string>
+    <string name="searchError">搜索出错</string>
+    <string name="addFailed">添加失败</string>
+    <string name="add">添加</string>
+    <string name="sendRequestFailed">发送请求失败，请重新添加! </string>
+    <string name="sendRequestSucceed">发送请求成功，等待对方验证!</string>
+    <string name="deleting">正在删除...</string>
+    <string name="loadError">加载错误</string>
+    <string name="personalInfo">个人资料</string>
+    <string name="detailInfo">详细资料</string>
+    <string name="male">男</string>
+    <string name="female">女</string>
+    <string name="singleChoose">单选框</string>
+    <string name="changeSucceed">修改成功</string>
+    <string name="changeFailed">修改失败.</string>
+    <string name="addToBlackList">加入黑名单</string>
+    <string name="addToBlackListTips">加入黑名单，你将不再收到对方的消息，确定要继续吗？</string>
+    <string name="addToBlackListSucceed">黑名单添加成功!</string>
+    <string name="sdcardNotVailable">SD不可用</string>
+    <string name="failToGetPhoto">照片获取失败</string>
+    <string name="avatarUploadFailed">头像上传失败。</string>
+    <string name="avatarUpdateFailed">头像更新失败。</string>
+    <string name="avatarUpdateSucceed">头像更新成功！</string>
+    <string name="findingNearbyPeople">正在查询附近的人...</string>
+    <string name="cannotFindUser">无相关用户</string>
+    <string name="nearbyPeopleSearchFinish">附近的人搜索完成！</string>
+    <string name="noNearbyPeople">暂无附近的人！</string>
+    <string name="noResult">无相关结果</string>
+    <string name="loadMessagesFinish">聊天记录加载完毕</string>
 </resources>

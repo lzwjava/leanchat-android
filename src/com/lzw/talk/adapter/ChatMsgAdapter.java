@@ -2,10 +2,8 @@ package com.lzw.talk.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.lzw.talk.R;
@@ -23,11 +21,10 @@ import com.lzw.talk.util.TimeUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class ChatMsgAdapter extends BaseAdapter {
+public class ChatMsgAdapter extends BaseListAdapter<Msg> {
   ImageLoader imageLoader;
 
   int msgViewTypes = 8;
@@ -43,33 +40,28 @@ public class ChatMsgAdapter extends BaseAdapter {
     int TO_LOCATION = 7;
   }
 
-  private List<Msg> datas = new ArrayList<Msg>();
-
-  private Context ctx;
-
-  private LayoutInflater inflater;
-
-  public ChatMsgAdapter(Context context) {
-    ctx = context;
-    inflater = LayoutInflater.from(context);
+  public ChatMsgAdapter(Context ctx, List<Msg> datas) {
+    super(ctx, datas);
     imageLoader = ImageLoader.getInstance();
-    ctx = context;
   }
 
-  public void setDatas(List<Msg> datas) {
-    this.datas = datas;
+  public int getItemPosById(String objectId) {
+    for (int i = 0; i < getCount(); i++) {
+      Msg itemMsg = datas.get(i);
+      if (itemMsg.getObjectId().equals(objectId)) {
+        return i;
+      }
+    }
+    return -1;
   }
 
-  public int getCount() {
-    return datas.size();
-  }
-
-  public Object getItem(int position) {
-    return datas.get(position);
-  }
-
-  public long getItemId(int position) {
-    return position;
+  public Msg getItem(String objectId) {
+    for (Msg msg : datas) {
+      if (msg.getObjectId().equals(objectId)) {
+        return msg;
+      }
+    }
+    return null;
   }
 
   public int getItemViewType(int position) {
@@ -112,6 +104,9 @@ public class ChatMsgAdapter extends BaseAdapter {
     sendTimeView.setText(TimeUtils.millisecs2DateString(msg.getTimestamp()));
     String fromPeerId = msg.getFromPeerId();
     User user = App.lookupUser(fromPeerId);
+    if (user == null) {
+      throw new RuntimeException("cannot find user");
+    }
     UserService.displayAvatar(user, avatarView);
 
     int type = msg.getType();

@@ -17,7 +17,7 @@
 
         <TextView
             android:id="@+id/fieldName"
-            style="@style/Smile.TextView._Black"
+            style="@style/My.TextView._Black"
             android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"

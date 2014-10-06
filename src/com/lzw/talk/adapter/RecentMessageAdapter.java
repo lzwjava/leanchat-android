@@ -15,7 +15,7 @@ import com.lzw.talk.service.EmotionService;
 import com.lzw.talk.ui.view.ViewHolder;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-public class RecentMessageAdapter extends BaseListAdpter<RecentMsg> {
+public class RecentMessageAdapter extends BaseListAdapter<RecentMsg> {
 
   private LayoutInflater inflater;
   private Context ctx;
@@ -33,44 +33,44 @@ public class RecentMessageAdapter extends BaseListAdpter<RecentMsg> {
     if (convertView == null) {
       convertView = inflater.inflate(R.layout.conversation_item, parent, false);
     }
-    ImageView iv_recent_avatar = ViewHolder.findViewById(convertView, R.id.iv_recent_avatar);
-    TextView tv_recent_name = ViewHolder.findViewById(convertView, R.id.tv_recent_name);
-    TextView tv_recent_msg = ViewHolder.findViewById(convertView, R.id.tv_recent_msg);
-    TextView tv_recent_time = ViewHolder.findViewById(convertView, R.id.tv_recent_time);
-    TextView tv_recent_unread = ViewHolder.findViewById(convertView, R.id.tv_recent_unread);
+    ImageView recentAvatarView = ViewHolder.findViewById(convertView, R.id.iv_recent_avatar);
+    TextView recentNameView = ViewHolder.findViewById(convertView, R.id.recent_time_text);
+    TextView recentMsgView = ViewHolder.findViewById(convertView, R.id.recent_msg_text);
+    TextView recentTimeView = ViewHolder.findViewById(convertView, R.id.recent_teim_text);
+    TextView recentUnreadView = ViewHolder.findViewById(convertView, R.id.recent_unread);
 
     Msg msg = item.msg;
     User user = item.toUser;
     String avatar = user.getAvatarUrl();
     if (avatar != null && !avatar.equals("")) {
-      ImageLoader.getInstance().displayImage(avatar, iv_recent_avatar);
+      ImageLoader.getInstance().displayImage(avatar, recentAvatarView);
     } else {
-      iv_recent_avatar.setImageResource(R.drawable.default_user_avatar);
+      recentAvatarView.setImageResource(R.drawable.default_user_avatar);
     }
 
-    tv_recent_name.setText(user.getUsername());
-    //tv_recent_time.setText(TimeUtils.getDate);
-    int num = 0;//BmobDB.create(mContext).getUnreadCount(item.getTargetid());
+    recentNameView.setText(user.getUsername());
+    //recentTimeView.setText(TimeUtils.getDate);
+    int num = 0;//unread count
     if (msg.getType() == Msg.TYPE_TEXT) {
       CharSequence spannableString = EmotionService.replace(ctx, msg.getContent());
-      tv_recent_msg.setText(spannableString);
+      recentMsgView.setText(spannableString);
     } else if (msg.getType() == Msg.TYPE_IMAGE) {
-      tv_recent_msg.setText("[" + App.ctx.getString(R.string.image) + "]");
+      recentMsgView.setText("[" + App.ctx.getString(R.string.image) + "]");
     } else if (msg.getType() == Msg.TYPE_LOCATION) {
       String all = msg.getContent();
       if (all != null && !all.equals("")) {
         String address = all.split("&")[0];
-        tv_recent_msg.setText("[" + App.ctx.getString(R.string.position) + "]" + address);
+        recentMsgView.setText("[" + App.ctx.getString(R.string.position) + "]" + address);
       }
     } else if (msg.getType() == Msg.TYPE_AUDIO) {
-      tv_recent_msg.setText("[" + App.ctx.getString(R.string.audio) + "]");
+      recentMsgView.setText("[" + App.ctx.getString(R.string.audio) + "]");
     }
 
     if (num > 0) {
-      tv_recent_unread.setVisibility(View.VISIBLE);
-      tv_recent_unread.setText(num + "");
+      recentUnreadView.setVisibility(View.VISIBLE);
+      recentUnreadView.setText(num + "");
     } else {
-      tv_recent_unread.setVisibility(View.GONE);
+      recentUnreadView.setVisibility(View.GONE);
     }
     return convertView;
   }

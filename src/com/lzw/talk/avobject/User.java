@@ -9,22 +9,34 @@ import java.io.IOException;
 /**
  * Created by lzw on 14-6-26.
  */
-@AVClassName("User")
+@AVClassName("_User")
 public class User extends AVUser {
   public static final String USERNAME = "username";
   public static final String PASSWORD = "password";
   public static final String AVATAR = "avatar";
-  public static final String NICKNAME = "nickname";
   public static final String FRIENDS = "friends";
+  public static final String LOCATION = "location";
   //AVFile avatar;
-  //String nickname;
+  //AVGeoPoint location;
+  private String sortLetters;
+  private boolean sex;// true is male ; false is female
 
   public User() {
   }
 
   public static User curUser() {
-    AVUser user = User.getCurrentUser(User.class);
-    return User.cast(user, User.class);
+    AVUser avUser = User.getCurrentUser(User.class);
+    User user = User.cast(avUser, User.class);
+    return user;
+  }
+
+  public static String curUserId() {
+    User user = curUser();
+    if (user != null) {
+      return user.getObjectId();
+    } else {
+      return null;
+    }
   }
 
   public AVFile getAvatar() {
@@ -44,18 +56,6 @@ public class User extends AVUser {
     }
   }
 
-  public String getNickname() {
-    String name = getString(NICKNAME);
-    if (name == null) {
-      return App.ctx.getString(R.string.anonymous);
-    }
-    return name;
-  }
-
-  public void setNickname(String nickname) {
-    put(NICKNAME, nickname);
-  }
-
   public void saveAvatar(String path) {
     try {
       final AVFile file = AVFile.withAbsoluteLocalPath(getUsername(), path);
@@ -72,11 +72,42 @@ public class User extends AVUser {
   }
 
   public void addFriend(User user) {
-    AVRelation<User> friendsRelation = getRelation("friends");
-    friendsRelation.add(user);
+    getRelation(FRIENDS).add(user);
   }
 
   public void removeFriend(User user) {
     getRelation(FRIENDS).remove(user);
+  }
+
+  public AVGeoPoint getLocation() {
+    return getAVGeoPoint(LOCATION);
+  }
+
+  public void setLocation(AVGeoPoint location) {
+    put(LOCATION, location);
+  }
+
+  public boolean getSex() {
+    return sex;
+  }
+
+  public void setSex(boolean isMale) {
+    this.sex = isMale;
+  }
+
+  public String getSexInfo() {
+    if (getSex()) {
+      return App.ctx.getString(R.string.male);
+    } else {
+      return App.ctx.getString(R.string.female);
+    }
+  }
+
+  public String getSortLetters() {
+    return sortLetters;
+  }
+
+  public void setSortLetters(String sortLetters) {
+    this.sortLetters = sortLetters;
   }
 }

@@ -1,5 +1,11 @@
 package com.lzw.talk.util;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVGeoPoint;
+import com.avos.avoscloud.SaveCallback;
+import com.lzw.talk.avobject.User;
+import com.lzw.talk.base.App;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,8 +26,8 @@ public class AVOSUtils {
     }
   }
 
-  public static String convid(String myId, String otherId){
-    List<String> ids=new ArrayList<String>();
+  public static String convid(String myId, String otherId) {
+    List<String> ids = new ArrayList<String>();
     ids.add(myId);
     ids.add(otherId);
     return convid(ids);
@@ -38,4 +44,5 @@ public class AVOSUtils {
     }
     return Utils.md5(sb.toString());
   }
+
 }

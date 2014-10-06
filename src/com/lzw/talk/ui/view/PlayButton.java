@@ -57,7 +57,7 @@ public class PlayButton extends View implements View.OnClickListener {
     if (prepared == false) {
       try {
         //Logger.d("path="+path);
-        Logger.d("mediaplayer"+mediaPlayer);
+        Logger.d("mediaplayer" + mediaPlayer);
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setDataSource(path);
         mediaPlayer.prepare();
@@ -87,7 +87,7 @@ public class PlayButton extends View implements View.OnClickListener {
 
   @Override
   protected void onDetachedFromWindow() {
-    if(mediaPlayer!=null){
+    if (mediaPlayer != null) {
       mediaPlayer.stop();
       mediaPlayer.release();
       mediaPlayer = null;
@@ -97,7 +97,7 @@ public class PlayButton extends View implements View.OnClickListener {
 
   @Override
   public void onClick(View v) {
-    if (mediaPlayer!=null && mediaPlayer.isPlaying()) {
+    if (mediaPlayer != null && mediaPlayer.isPlaying()) {
       mediaPlayer.pause();
     } else {
       playAudio();

@@ -9,10 +9,10 @@ import android.os.AsyncTask;
  * Created by lzw on 14-6-7.
  */
 public abstract class NetAsyncTask extends AsyncTask<Void, Void, Void> {
-  public boolean res;
   ProgressDialog dialog;
   public Context cxt;
   boolean openDialog = true;
+  Exception exception;
 
   protected NetAsyncTask(Context cxt) {
     this.cxt = cxt;
@@ -44,10 +44,9 @@ public abstract class NetAsyncTask extends AsyncTask<Void, Void, Void> {
   protected Void doInBackground(Void... params) {
     try {
       doInBack();
-      res = true;
     } catch (Exception e) {
       e.printStackTrace();
-      res = false;
+      exception = e;
     }
     return null;
   }
@@ -56,14 +55,14 @@ public abstract class NetAsyncTask extends AsyncTask<Void, Void, Void> {
   protected void onPostExecute(Void aVoid) {
     super.onPostExecute(aVoid);
     if (openDialog) {
-      if(dialog.isShowing()){
+      if (dialog.isShowing()) {
         dialog.dismiss();
       }
     }
-    onPost(res);
+    onPost(exception);
   }
 
   protected abstract void doInBack() throws Exception;
 
-  protected abstract void onPost(boolean res);
+  protected abstract void onPost(Exception e);
 }

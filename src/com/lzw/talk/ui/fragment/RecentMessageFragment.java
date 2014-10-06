@@ -52,7 +52,7 @@ public class RecentMessageFragment extends BaseFragment implements AdapterView.O
     RecentMsg recent = (RecentMsg) adapter.getItem(position);
     String userId = recent.toUser.getObjectId();
     Intent intent = new Intent(getActivity(), ChatActivity.class);
-    Logger.d("userId="+userId);
+    Logger.d("userId=" + userId);
     intent.putExtra(ChatActivity.CHAT_USER_ID, userId);
     startActivity(intent);
   }
@@ -64,7 +64,7 @@ public class RecentMessageFragment extends BaseFragment implements AdapterView.O
     super.onHiddenChanged(hidden);
     this.hidden = hidden;
     if (!hidden) {
-      refresh();
+      //refresh();
     }
   }
 
@@ -93,17 +93,16 @@ public class RecentMessageFragment extends BaseFragment implements AdapterView.O
 
     @Override
     protected void doInBack() throws Exception {
-      recentMsgs = ChatService.getRecentMsgs();
-      Logger.d("msgs size="+recentMsgs.size());
+      recentMsgs = ChatService.getRecentMsgsAndCache();
     }
 
     @Override
-    protected void onPost(boolean res) {
-      if (res) {
+    protected void onPost(Exception e) {
+      if (e != null) {
+        Utils.toast(ctx, R.string.pleaseCheckNetwork);
+      } else {
         adapter.setDatas(recentMsgs);
         adapter.notifyDataSetChanged();
-      } else {
-        Utils.toast(ctx, R.string.pleaseCheckNetwork);
       }
     }
   }

@@ -59,12 +59,20 @@ public class EmotionService {
     return Pattern.compile("\\\\ue[a-z0-9]{3}", Pattern.CASE_INSENSITIVE);
   }
 
+  public static boolean haveEmotion(String text) {
+    Matcher matcher = buildMatcher(text);
+    if (matcher.find()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   public static CharSequence replace(Context ctx, String text) {
     try {
       SpannableString spannableString = new SpannableString(text);
       int start = 0;
-      Pattern pattern = buildPattern();
-      Matcher matcher = pattern.matcher(text);
+      Matcher matcher = buildMatcher(text);
       while (matcher.find()) {
         String faceText = matcher.group();
         String key = faceText.substring(1);
@@ -85,5 +93,10 @@ public class EmotionService {
     } catch (Exception e) {
       return text;
     }
+  }
+
+  public static Matcher buildMatcher(String text) {
+    Pattern pattern = buildPattern();
+    return pattern.matcher(text);
   }
 }

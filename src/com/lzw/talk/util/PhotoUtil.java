@@ -74,15 +74,6 @@ public class PhotoUtil {
     return bitmap;
   }
 
-  /**
-   * saveBitmap
-   *
-   * @param @param filename---完整的路径格式-包含目录以及文件名
-   * @param @param bitmap
-   * @param @param isDelete --是否只留一张
-   * @return void
-   * @throws
-   */
   public static void saveBitmap(String dirpath, String filename,
                                 Bitmap bitmap, boolean isDelete) {
     File dir = new File(dirpath);
@@ -91,7 +82,6 @@ public class PhotoUtil {
     }
 
     File file = new File(dirpath, filename);
-    // 若存在即删除-默认只保留一张
     if (isDelete) {
       if (file.exists()) {
         file.delete();
@@ -299,7 +289,7 @@ public class PhotoUtil {
     return output;
   }
 
-  public static String compressImage(String path,String newPath) {
+  public static String compressImage(String path, String newPath) {
     BitmapFactory.Options options = new BitmapFactory.Options();
     options.inJustDecodeBounds = true;
     BitmapFactory.decodeFile(path, options);
@@ -372,7 +362,7 @@ public class PhotoUtil {
             // 。preProcessor(BitmapProcessor preProcessor)
         .resetViewBeforeLoading(true)// 设置图片在下载前是否重置，复位
             // .displayer(new RoundedBitmapDisplayer(20))//是否设置为圆角，弧度为多少
-        .displayer(new FadeInBitmapDisplayer(100))// 淡入
+        //.displayer(new FadeInBitmapDisplayer(100))// 淡入
         .build();
 
     return options;

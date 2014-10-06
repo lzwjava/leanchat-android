@@ -18,9 +18,12 @@ import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import com.lzw.talk.R;
+import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -161,8 +164,8 @@ public class Utils {
     output.close();
   }
 
-  public static void toastNonet(Context context) {
-    toastIt(context, R.string.badNetwork, false);
+  public static void toastCheckNetwork(Context context) {
+    toastIt(context, R.string.pleaseCheckNetwork, false);
   }
 
 
@@ -548,6 +551,26 @@ public class Utils {
     context.startActivity(Intent.createChooser(intent, context.getString(R.string.please_choose)));
   }
 
+  public static void toast(int id) {
+    toast(App.ctx, id);
+  }
+
+  public static void toast(String s) {
+    toast(App.ctx, s);
+  }
+
+  public static void toast(String s, String exceptionMsg) {
+    if (App.debug) {
+      s = s + exceptionMsg;
+    }
+    toast(s);
+  }
+
+  public static void toast(int resId, String exceptionMsg) {
+    String s = App.ctx.getString(resId);
+    toast(s, exceptionMsg);
+  }
+
   public static void toast(Context cxt, int id) {
     Toast.makeText(cxt, id, Toast.LENGTH_SHORT).show();
   }
@@ -581,13 +604,11 @@ public class Utils {
     return l;
   }
 
-  public static List<String> oneToList(String s) {
-    List<String> list = new ArrayList<String>();
-    list.add(s);
-    return list;
+  public static String uuid() {
+    return UUID.randomUUID().toString().substring(0, 24);
   }
 
-  public static String uuid() {
+  public static String myUUID() {
     StringBuilder sb = new StringBuilder();
     int start = 48, end = 58;
     appendChar(sb, start, end);
@@ -637,5 +658,50 @@ public class Utils {
     } catch (NoSuchAlgorithmException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  public static boolean isListNotEmpty(Collection<?> collection) {
+    if (collection != null && collection.size() > 0) {
+      return true;
+    }
+    return false;
+  }
+
+  public static Map<String, User> list2map(List<User> users) {
+    Map<String, User> friends = new HashMap<String, User>();
+    for (User user : users) {
+      friends.put(user.getUsername(), user);
+    }
+    return friends;
+  }
+
+  public static List<User> map2list(Map<String, User> maps) {
+    List<User> users = new ArrayList<User>();
+    Iterator<Map.Entry<String, User>> iterator = maps.entrySet().iterator();
+    while (iterator.hasNext()) {
+      Map.Entry<String, User> entry = iterator.next();
+      users.add(entry.getValue());
+    }
+    return users;
+  }
+
+  public static int getColor(int resId) {
+    return App.ctx.getResources().getColor(resId);
+  }
+
+  public static void hideSoftInputView(Activity ctx) {
+    if (ctx.getWindow().getAttributes().softInputMode !=
+        WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN) {
+      InputMethodManager manager = (InputMethodManager) ctx.getSystemService(Context.INPUT_METHOD_SERVICE);
+      View currentFocus = ctx.getCurrentFocus();
+      if (currentFocus != null) {
+        manager.hideSoftInputFromWindow(currentFocus.getWindowToken(),
+            InputMethodManager.HIDE_NOT_ALWAYS);
+      }
+    }
+  }
+
+  public static boolean doubleEqual(double a, double b) {
+    return Math.abs(a - b) < 1E-8;
   }
 }

@@ -12,7 +12,7 @@ import com.lzw.talk.ui.view.ViewHolder;
 /**
  * Created by lzw on 14-9-25.
  */
-public class EmotionGridAdapter extends BaseListAdpter<String> {
+public class EmotionGridAdapter extends BaseListAdapter<String> {
 
   public EmotionGridAdapter(Context ctx) {
     super(ctx);

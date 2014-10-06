@@ -15,10 +15,10 @@ public class TimeUtils {
     String day = String.valueOf(c.get(Calendar.DAY_OF_MONTH) + 1);
     String hour = String.valueOf(c.get(Calendar.HOUR_OF_DAY));
     String mins = String.valueOf(c.get(Calendar.MINUTE));
-    String secs=String.valueOf(c.get(Calendar.SECOND));
+    String secs = String.valueOf(c.get(Calendar.SECOND));
 
     StringBuffer sbBuffer = new StringBuffer();
-    sbBuffer.append(month + "-" + day + " " + hour + ":" + mins+":"+secs);
+    sbBuffer.append(month + "-" + day + " " + hour + ":" + mins + ":" + secs);
     return sbBuffer.toString();
   }
 

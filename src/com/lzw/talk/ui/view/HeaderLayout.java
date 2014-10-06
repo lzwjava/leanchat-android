@@ -5,10 +5,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.widget.*;
 import com.lzw.talk.R;
 
 /**
@@ -53,6 +50,10 @@ public class HeaderLayout extends LinearLayout {
     showLeftBackButton(R.string.emptyStr, listener);
   }
 
+  public void showLeftBackButton(){
+    showLeftBackButton(null);
+  }
+
   public void showLeftBackButton(int backTextId, OnClickListener listener) {
     backBtn.setVisibility(View.VISIBLE);
     backBtn.setText(backTextId);
@@ -68,22 +69,17 @@ public class HeaderLayout extends LinearLayout {
   }
 
   public void showRightImageButton(int rightResId, OnClickListener listener) {
-    showRightButton(rightResId, listener, true);
+    View imageViewLayout = mInflater.inflate(R.layout.header_right_image_btn, null, false);
+    ImageButton rightButton = (ImageButton) imageViewLayout.findViewById(R.id.imageBtn);
+    rightButton.setImageResource(rightResId);
+    rightButton.setOnClickListener(listener);
+    rightContainer.addView(imageViewLayout);
   }
 
   public void showRightTextButton(int rightResId, OnClickListener listener) {
-    showRightButton(rightResId, listener, false);
-  }
-
-  public void showRightButton(int rightResId, OnClickListener listener, boolean showImage) {
-    View imageViewLayout = mInflater.inflate(R.layout.header_right_image_btn, null, false);
-    Button rightButton = (Button) imageViewLayout.findViewById(R.id.imageView);
-    if (showImage) {
-      rightButton.setBackgroundResource(rightResId);
-    } else {
-      rightButton.setBackgroundColor(R.drawable.btn_login_selector);
-      rightButton.setText(rightResId);
-    }
+    View imageViewLayout = mInflater.inflate(R.layout.header_right_btn, null, false);
+    Button rightButton = (Button) imageViewLayout.findViewById(R.id.textBtn);
+    rightButton.setText(rightResId);
     rightButton.setOnClickListener(listener);
     rightContainer.addView(imageViewLayout);
   }

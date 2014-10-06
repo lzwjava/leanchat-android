@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/theme_bg_color"
+    android:orientation="vertical">
+
+    <include layout="@layout/header_layout" />
+
+    <LinearLayout style="@style/Register_Input">
+
+        <TextView
+            style="@style/My.TextView._Black"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:text="@string/username"
+            android:layout_width="@dimen/registerLeftWidth"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/usernameEdit"
+            style="@style/Register_Edit"
+            android:hint="@string/login_username_hint" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/Register_Input">
+
+        <TextView
+            style="@style/My.TextView._Black"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:text="@string/password"
+            android:textStyle="bold"
+            android:layout_width="@dimen/registerLeftWidth" />
+
+        <EditText
+            android:id="@+id/passwordEdit"
+            style="@style/Register_Edit"
+            android:inputType="textPassword"
+            android:hint="@string/login_password_hint" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/Register_Input">
+
+        <TextView
+            style="@style/My.TextView._Black"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:text="@string/ensurePassword"
+            android:textStyle="bold"
+            android:layout_width="@dimen/registerLeftWidth" />
+
+        <EditText
+            android:id="@+id/ensurePasswordEdit"
+            style="@style/Register_Edit"
+            android:inputType="textPassword"
+            android:hint="@string/ensurePasswordHint" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_register"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/base_action_bar_height"
+        android:layout_margin="@dimen/activity_vertical_margin"
+        android:background="@drawable/login_btn_selector"
+        android:text="@string/register"
+        android:textColor="@color/base_color_text_white"
+        android:textSize="@dimen/text_size_large" />
+
+</LinearLayout>

@@ -1,24 +1,23 @@
 package com.lzw.talk.ui.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.view.ViewPager;
-import android.text.Editable;
-import android.text.Selection;
-import android.text.Spannable;
-import android.text.TextWatcher;
+import android.text.*;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ListView;
+import android.widget.TextView;
 import com.lzw.talk.R;
 import com.lzw.talk.adapter.ChatMsgAdapter;
 import com.lzw.talk.adapter.EmotionGridAdapter;
@@ -28,17 +27,15 @@ import com.lzw.talk.base.App;
 import com.lzw.talk.db.DBHelper;
 import com.lzw.talk.db.DBMsg;
 import com.lzw.talk.entity.Msg;
-import com.lzw.talk.receiver.MsgReceiver;
 import com.lzw.talk.service.ChatService;
 import com.lzw.talk.service.EmotionService;
 import com.lzw.talk.service.MessageListener;
+import com.lzw.talk.service.MsgReceiver;
 import com.lzw.talk.ui.view.EmotionEditText;
 import com.lzw.talk.ui.view.HeaderLayout;
 import com.lzw.talk.ui.view.RecordButton;
-import com.lzw.talk.util.NetAsyncTask;
-import com.lzw.talk.util.PathUtils;
-import com.lzw.talk.util.PhotoUtil;
-import com.lzw.talk.util.Utils;
+import com.lzw.talk.ui.view.xlist.XListView;
+import com.lzw.talk.util.*;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -46,13 +43,15 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ChatActivity extends BaseActivity implements OnClickListener, MessageListener {
+public class ChatActivity extends BaseActivity implements OnClickListener, MessageListener,
+    XListView.IXListViewListener {
   public static final String CHAT_USER_ID = "chatUserId";
   private static final int IMAGE_REQUEST = 0;
   public static final int LOCATION_REQUEST = 1;
   private static final int TAKE_CAMERA_REQUEST = 2;
+  public static final int PAGE_SIZE = 10;
   private ChatMsgAdapter adapter;
-  private List<Msg> msgs;
+  private List<Msg> msgs = new ArrayList<Msg>();
   public static ChatActivity instance;
   User me;
   DBHelper dbHelper;
@@ -64,11 +63,12 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
   View turnToTextBtn, turnToAudioBtn, sendBtn, addImageBtn, showAddBtn, addLocationBtn, showEmotionBtn;
   ViewPager emotionPager;
   private EmotionEditText contentEdit;
-  private ListView listView;
+  private XListView xListView;
   RecordButton recordBtn;
   List<String> emotions = EmotionService.emotionTexts;
   private String localCameraPath = PathUtils.getTmpPath();
   private View addCameraBtn;
+  int msgSize = PAGE_SIZE;
 
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -82,8 +82,19 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
     initRecordBtn();
     setEditTextChangeListener();
     //turnToAudioBtn.performClick();
-    refresh();
+    initListView();
     setSoftInputMode();
+    ChatService.withUserToWatch(chatUser, true);
+    loadNewMsg();
+  }
+
+  private void initListView() {
+    adapter = new ChatMsgAdapter(ctx, msgs);
+    adapter.setDatas(msgs);
+    xListView.setAdapter(adapter);
+    xListView.setPullRefreshEnable(true);
+    xListView.setPullLoadEnable(false);
+    xListView.setXListViewListener(this);
   }
 
   private void initEmotionPager() {
@@ -134,19 +145,10 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
         Matcher matcher = pattern.matcher(audioPath);
         matcher.matches();
         final String objectId = matcher.group(1);
-        new NetAsyncTask(ctx, false) {
+        new SendMsgTask(ctx) {
           @Override
-          protected void doInBack() throws Exception {
-            ChatService.sendAudioMsg(chatUser, audioPath, objectId);
-          }
-
-          @Override
-          protected void onPost(boolean res) {
-            if (res) {
-              refresh();
-            } else {
-              Utils.toast(ctx, R.string.badNetwork);
-            }
+          Msg sendMsg() throws Exception {
+            return ChatService.sendAudioMsg(chatUser, audioPath, objectId);
           }
         }.execute();
         setNewRecordPath();
@@ -195,12 +197,12 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
   }
 
   private void initHeader() {
-    headerLayout.showTitle(chatUser.getNickname());
+    headerLayout.showTitle(chatUser.getUsername());
     headerLayout.showLeftBackButton(R.string.back, null);
   }
 
   private void findView() {
-    listView = (ListView) findViewById(R.id.listview);
+    xListView = (XListView) findViewById(R.id.listview);
     addImageBtn = findViewById(R.id.addImageBtn);
 
     contentEdit = (EmotionEditText) findViewById(R.id.textEdit);
@@ -234,48 +236,115 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
   @Override
   public void onResume() {
     super.onResume();
-    MsgReceiver.registerMessageListener(this);
+    MsgReceiver.registerMessageListener(chatUser.getObjectId(), this);
   }
 
   @Override
   public void onPause() {
     super.onPause();
-    MsgReceiver.unregisterMessageListener();
+    MsgReceiver.unregisterMessageListener(chatUser.getObjectId());
   }
 
   public void initData() {
     me = User.curUser();
     dbHelper = new DBHelper(ctx, App.DB_NAME, App.DB_VER);
-    msgs = new ArrayList<Msg>();
-    adapter = new ChatMsgAdapter(this);
     Intent intent = getIntent();
     String chatUserId = intent.getStringExtra(CHAT_USER_ID);
     chatUser = App.lookupUser(chatUserId);
-    listView.setAdapter(adapter);
-  }
-
-  public void refresh() {
-    new GetDataTask().execute();
   }
 
   @Override
   public void onMessage(Msg msg) {
-    refresh();
+    Logger.d("onMessage on ChatActivity " + msg.getContent());
+    if (msg.getType() == Msg.TYPE_RESPONSE) {
+      loadNewMsg();
+    } else {
+      addMsgAndScrollToLast(msg);
+    }
+  }
+
+  public void addMsgAndScrollToLast(Msg msg) {
+    adapter.add(msg);
+    hideBottomLayoutAndScrollToLast();
   }
 
   @Override
-  public void onMessageFailure(Msg msg) {
-    refresh();
+  public void onMessageFailure(Msg failMsg) {
+    Logger.d("onMessageFailure on Chat Activity " + failMsg.getContent());
+    Msg msg = adapter.getItem(failMsg.getObjectId());
+    if (msg != null) {
+      msg.setStatus(Msg.STATUS_SEND_FAILED);
+      adapter.notifyDataSetChanged();
+    }
   }
 
   @Override
-  public void onMessageSent(Msg msg) {
-    refresh();
+  public void onMessageSent(Msg sentMsg) {
+    Logger.d("onMessageSent on ChatActivity " + sentMsg.getContent());
+    Msg msg = adapter.getItem(sentMsg.getObjectId());
+    if (msg != null) {
+      msg.setStatus(Msg.STATUS_SEND_SUCCEED);
+      adapter.notifyDataSetChanged();
+    }
+  }
+
+  public void setViewStatusByMsg(Msg msg) {
+    View msgView;
+    msgView = getMsgViewByMsg(msg);
+    if (msgView != null) {
+      TextView contentView = (TextView) msgView.findViewById(R.id.textContent);
+      Logger.w("find view's content=" + contentView.getText().toString());
+      TextView statusView = (TextView) msgView.findViewById(R.id.status);
+      statusView.setText(msg.getStatusDesc());
+    }
+  }
+
+  public View getMsgViewByMsg(Msg msg) {
+    int msgPos = adapter.getItemPosById(msg.getObjectId());
+    if (msgPos < 0) {
+      Logger.i("cannot find msg " + msg.getContent());
+      return null;
+    }
+    Logger.d("msgPos=" + msgPos);
+    int firstPos = xListView.getFirstVisiblePosition()
+        - xListView.getHeaderViewsCount();
+    int wantedChild = msgPos - firstPos;
+    Logger.d("wanted child pos=" + wantedChild);
+    if (wantedChild < 0 || wantedChild >= xListView.getChildCount()) {
+      Logger.d("Unable to get view for desired position");
+      return null;
+    }
+    return xListView.getChildAt(wantedChild);
+
+  }
+
+  public void loadNewMsg() {
+    new GetDataTask(true).execute();
+  }
+
+  @Override
+  public void onRefresh() {
+    new Handler().postDelayed(new Runnable() {
+      @Override
+      public void run() {
+        msgSize += 6;
+        new GetDataTask(false).execute();
+      }
+    }, 1000);
+  }
+
+  @Override
+  public void onLoadMore() {
   }
 
   class GetDataTask extends AsyncTask<Void, Void, Void> {
     boolean res;
     List<Msg> msgs;
+    boolean scrollToLast = true;
+
+    GetDataTask(boolean scrollToLast) {
+      this.scrollToLast = scrollToLast;
+    }
 
     @Override
     protected void onPreExecute() {
@@ -286,7 +355,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
     protected Void doInBackground(Void... params) {
       try {
         msgs = DBMsg.getMsgs(dbHelper, ChatService.getPeerId(me),
-            ChatService.getPeerId(chatUser));
+            ChatService.getPeerId(chatUser), msgSize);
         res = true;
       } catch (Exception e) {
         e.printStackTrace();
@@ -297,20 +366,26 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
 
     @Override
     protected void onPostExecute(Void aVoid) {
-      super.onPostExecute(aVoid);
+      ChatUtils.stopRefresh(xListView);
       if (res) {
-        addMsgsAndRefresh(msgs);
+        addMsgsAndRefresh(msgs, scrollToLast);
       } else {
         Utils.toast(ctx, R.string.failedToGetData);
       }
     }
   }
 
-  public void addMsgsAndRefresh(List<Msg> msgs) {
+  public void addMsgsAndRefresh(List<Msg> msgs, boolean scrollToLast) {
+    int lastN = adapter.getCount();
+    int newN = msgs.size();
     this.msgs = msgs;
     adapter.setDatas(this.msgs);
     adapter.notifyDataSetChanged();
-    scroolToLast();
+    if (scrollToLast) {
+      scrollToLast();
+    } else {
+      xListView.setSelection(newN - lastN - 1);
+    }
   }
 
   @Override
@@ -339,7 +414,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
         selectLocationFromMap();
         break;
       case R.id.textEdit:
-        onTextEditClick();
+        hideBottomLayoutAndScrollToLast();
         break;
       case R.id.addCameraBtn:
         selectImageFromCamera();
@@ -347,10 +422,10 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
     }
   }
 
-  private void onTextEditClick() {
+  private void hideBottomLayoutAndScrollToLast() {
     chatAddLayout.setVisibility(View.GONE);
     chatEmotionLayout.setVisibility(View.GONE);
-    scroolToLast();
+    scrollToLast();
   }
 
   private void selectLocationFromMap() {
@@ -366,6 +441,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
       chatEmotionLayout.setVisibility(View.VISIBLE);
       chatAddLayout.setVisibility(View.GONE);
       showTextLayout();
+      hideSoftInputView();
     }
   }
 
@@ -412,20 +488,11 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
 
   private void sendText() {
     final String contString = contentEdit.getText().toString();
-    if (contString.length() > 0) {
-      new NetAsyncTask(ctx, false) {
+    if (TextUtils.isEmpty(contString) == false) {
+      new SendMsgTask(ctx) {
         @Override
-        protected void doInBack() throws Exception {
-          ChatService.sendTextMsg(chatUser, contString);
-        }
-
-        @Override
-        protected void onPost(boolean res) {
-          if (res) {
-            refresh();
-          } else {
-            Utils.toast(ctx, R.string.badNetwork);
-          }
+        Msg sendMsg() throws Exception {
+          return ChatService.sendTextMsg(chatUser, contString);
         }
       }.execute();
       contentEdit.setText("");
@@ -445,8 +512,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
       int columnIndex = cursor.getColumnIndex("_data");
       localSelectPath = cursor.getString(columnIndex);
       cursor.close();
-      if (localSelectPath == null
-          || localSelectPath.equals("null")) {
+      if (localSelectPath == null) {
         Utils.toast(ctx, R.string.cannotFindImage);
         return null;
       }
@@ -476,34 +542,62 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
   }
 
   private void sendLocationByReturnData(Intent data) {
-    double latitude = data.getDoubleExtra("x", 0);// 维度
-    double longtitude = data.getDoubleExtra("y", 0);// 经度
-    String address = data.getStringExtra("address");
+    final double latitude = data.getDoubleExtra("x", 0);// 维度
+    final double longtitude = data.getDoubleExtra("y", 0);// 经度
+    final String address = data.getStringExtra("address");
     if (address != null && !address.equals("")) {
-      ChatService.sendLocationMessage(ChatService.getPeerId(chatUser), address, latitude, longtitude);
+      new SendMsgTask(ctx) {
+        @Override
+        Msg sendMsg() throws Exception {
+          return ChatService.sendLocationMessage(ChatService.getPeerId(chatUser),
+              address, latitude, longtitude);
+        }
+      }.execute();
     } else {
       Utils.toast(ctx, R.string.cannotGetYourAddressInfo);
     }
+  }
+
+  public abstract class SendMsgTask extends SimpleNetTask {
+    Msg msg;
+
+    protected SendMsgTask(Context cxt) {
+      super(cxt, false);
+    }
+
+    @Override
+    protected void doInBack() throws Exception {
+      msg = sendMsg();
+    }
+
+    @Override
+    public void onSucceed() {
+      addMsgAndScrollToLast(msg);
+    }
+
+    abstract Msg sendMsg() throws Exception;
   }
 
   private void sendImageByPath(String localSelectPath) {
     final String objectId = Utils.uuid();
     final String newPath = PathUtils.getImageDir() + objectId;
     PhotoUtil.compressImage(localSelectPath, newPath);
-    new NetAsyncTask(App.ctx, false) {
+    new SendMsgTask(ctx) {
       @Override
-      protected void doInBack() throws Exception {
-        ChatService.sendImageMsg(chatUser, newPath, objectId);
-      }
-
-      @Override
-      protected void onPost(boolean res) {
-        refresh();
+      Msg sendMsg() throws Exception {
+        return ChatService.sendImageMsg(chatUser, newPath, objectId);
       }
     }.execute();
   }
 
-  public void scroolToLast() {
-    listView.setSelection(listView.getCount() - 1);
+  public void scrollToLast() {
+    Logger.d("scrollToLast");
+    xListView.setSelection(adapter.getCount()-1);
+  }
+
+  @Override
+  protected void onDestroy() {
+    ChatService.withUserToWatch(chatUser, false);
+    super.onDestroy();
   }
 }

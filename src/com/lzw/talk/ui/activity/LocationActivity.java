@@ -17,37 +17,23 @@ import com.baidu.mapapi.search.core.SearchResult;
 import com.baidu.mapapi.search.geocode.*;
 import com.lzw.talk.R;
 import com.lzw.talk.base.App;
+import com.lzw.talk.ui.view.HeaderLayout;
 import com.lzw.talk.util.Logger;
 import com.lzw.talk.util.Utils;
-import com.lzw.talk.ui.view.HeaderLayout;
 
-/**
- * 用于发送位置的界面
- *
- * @author smile
- * @ClassName: LocationActivity
- * @Description: TODO
- * @date 2014-6-23 下午3:17:05
- */
 public class LocationActivity extends BaseActivity implements
     OnGetGeoCoderResultListener {
+  LocationClient locClient;
+  public MyLocationListener myListener = new MyLocationListener();
 
-  // 定位相关
-  LocationClient mLocClient;
-  public MyLocationListenner myListener = new MyLocationListenner();
-  BitmapDescriptor mCurrentMarker;
-
-  MapView mMapView;
-  BaiduMap mBaiduMap;
+  MapView mapView;
+  BaiduMap baiduMap;
   HeaderLayout headerLayout;
-
-  private BaiduReceiver mReceiver;// 注册广播接收器，用于监听网络以及验证key
-
-  GeoCoder mSearch = null; // 搜索模块，因为百度定位sdk能够得到经纬度，但是却无法得到具体的详细地址，因此需要采取反编码方式去搜索此经纬度代表的地址
-
+  private BaiduReceiver receiver;
+  GeoCoder geoCoder = null;
   static BDLocation lastLocation = null;
 
-  BitmapDescriptor bdgeo = BitmapDescriptorFactory.fromResource(R.drawable.icon_geo);
+  BitmapDescriptor descriptor = BitmapDescriptorFactory.fromResource(R.drawable.icon_geo);
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -57,18 +43,17 @@ public class LocationActivity extends BaseActivity implements
   }
 
   private void initBaiduMap() {
-    // 地图初始化
-    mMapView = (MapView) findViewById(R.id.bmapView);
+    mapView = (MapView) findViewById(R.id.bmapView);
     headerLayout = (HeaderLayout) findViewById(R.id.headerLayout);
-    mBaiduMap = mMapView.getMap();
+    baiduMap = mapView.getMap();
     //设置缩放级别
-    mBaiduMap.setMaxAndMinZoomLevel(18, 13);
+    baiduMap.setMaxAndMinZoomLevel(18, 13);
     // 注册 SDK 广播监听者
     IntentFilter iFilter = new IntentFilter();
     iFilter.addAction(SDKInitializer.SDK_BROADTCAST_ACTION_STRING_PERMISSION_CHECK_ERROR);
     iFilter.addAction(SDKInitializer.SDK_BROADCAST_ACTION_STRING_NETWORK_ERROR);
-    mReceiver = new BaiduReceiver();
-    registerReceiver(mReceiver, iFilter);
+    receiver = new BaiduReceiver();
+    registerReceiver(receiver, iFilter);
 
     Intent intent = getIntent();
     String type = intent.getStringExtra("type");
@@ -85,14 +70,14 @@ public class LocationActivity extends BaseActivity implements
       headerLayout.showTitle(R.string.position);
       Bundle b = intent.getExtras();
       LatLng latlng = new LatLng(b.getDouble("latitude"), b.getDouble("longtitude"));//维度在前，经度在后
-      mBaiduMap.setMapStatus(MapStatusUpdateFactory.newLatLng(latlng));
+      baiduMap.setMapStatus(MapStatusUpdateFactory.newLatLng(latlng));
       //显示当前位置图标
-      OverlayOptions ooA = new MarkerOptions().position(latlng).icon(bdgeo).zIndex(9);
-      mBaiduMap.addOverlay(ooA);
+      OverlayOptions ooA = new MarkerOptions().position(latlng).icon(descriptor).zIndex(9);
+      baiduMap.addOverlay(ooA);
     }
 
-    mSearch = GeoCoder.newInstance();
-    mSearch.setOnGetGeoCodeResultListener(this);
+    geoCoder = GeoCoder.newInstance();
+    geoCoder.setOnGetGeoCodeResultListener(this);
 
   }
 
@@ -120,43 +105,43 @@ public class LocationActivity extends BaseActivity implements
 
   private void initLocClient() {
 //		 开启定位图层
-    mBaiduMap.setMyLocationEnabled(true);
-    mBaiduMap.setMyLocationConfigeration(new MyLocationConfigeration(
+    baiduMap.setMyLocationEnabled(true);
+    baiduMap.setMyLocationConfigeration(new MyLocationConfigeration(
         MyLocationConfigeration.LocationMode.NORMAL, true, null));
     // 定位初始化
-    mLocClient = new LocationClient(this);
-    mLocClient.registerLocationListener(myListener);
+    locClient = new LocationClient(this);
+    locClient.registerLocationListener(myListener);
     LocationClientOption option = new LocationClientOption();
-    option.setProdName("bmobim");// 设置产品线
-    option.setOpenGps(true);// 打开gps
-    option.setCoorType("bd09ll"); // 设置坐标类型
+    option.setProdName("avosim");
+    option.setOpenGps(true);
+    option.setCoorType("bd09ll");
     option.setScanSpan(1000);
     option.setOpenGps(true);
     option.setIsNeedAddress(true);
     option.setIgnoreKillProcess(true);
-    mLocClient.setLocOption(option);
-    mLocClient.start();
-    if (mLocClient != null && mLocClient.isStarted())
-      mLocClient.requestLocation();
+    locClient.setLocOption(option);
+    locClient.start();
+    if (locClient != null && locClient.isStarted())
+      locClient.requestLocation();
 
     if (lastLocation != null) {
       // 显示在地图上
       LatLng ll = new LatLng(lastLocation.getLatitude(),
           lastLocation.getLongitude());
       MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
-      mBaiduMap.animateMapStatus(u);
+      baiduMap.animateMapStatus(u);
     }
   }
 
   /**
    * 定位SDK监听函数
    */
-  public class MyLocationListenner implements BDLocationListener {
+  public class MyLocationListener implements BDLocationListener {
 
     @Override
     public void onReceiveLocation(BDLocation location) {
       // map view 销毁后不在处理新接收的位置
-      if (location == null || mMapView == null)
+      if (location == null || mapView == null)
         return;
 
       if (lastLocation != null) {
@@ -164,7 +149,7 @@ public class LocationActivity extends BaseActivity implements
             && lastLocation.getLongitude() == location
             .getLongitude()) {
           Logger.d(App.ctx.getString(R.string.geoIsSame));// 若两次请求获取到的地理位置坐标是相同的，则不再定位
-          mLocClient.stop();
+          locClient.stop();
           return;
         }
       }
@@ -179,7 +164,7 @@ public class LocationActivity extends BaseActivity implements
               // 此处设置开发者获取到的方向信息，顺时针0-360
           .direction(100).latitude(location.getLatitude())
           .longitude(location.getLongitude()).build();
-      mBaiduMap.setMyLocationData(locData);
+      baiduMap.setMyLocationData(locData);
       LatLng ll = new LatLng(location.getLatitude(),
           location.getLongitude());
       String address = location.getAddrStr();
@@ -187,11 +172,11 @@ public class LocationActivity extends BaseActivity implements
         lastLocation.setAddrStr(address);
       } else {
         // 反Geo搜索
-        mSearch.reverseGeoCode(new ReverseGeoCodeOption().location(ll));
+        geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(ll));
       }
       // 显示在地图上
       MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
-      mBaiduMap.animateMapStatus(u);
+      baiduMap.animateMapStatus(u);
       //设置按钮可点击
     }
   }
@@ -230,32 +215,32 @@ public class LocationActivity extends BaseActivity implements
 
   @Override
   protected void onPause() {
-    mMapView.onPause();
+    mapView.onPause();
     super.onPause();
     lastLocation = null;
   }
 
   @Override
   protected void onResume() {
-    mMapView.onResume();
+    mapView.onResume();
     super.onResume();
   }
 
   @Override
   protected void onDestroy() {
-    if (mLocClient != null && mLocClient.isStarted()) {
+    if (locClient != null && locClient.isStarted()) {
       // 退出时销毁定位
-      mLocClient.stop();
+      locClient.stop();
     }
     // 关闭定位图层
-    mBaiduMap.setMyLocationEnabled(false);
-    mMapView.onDestroy();
-    mMapView = null;
+    baiduMap.setMyLocationEnabled(false);
+    mapView.onDestroy();
+    mapView = null;
     // 取消监听 SDK 广播
-    unregisterReceiver(mReceiver);
+    unregisterReceiver(receiver);
     super.onDestroy();
     // 回收 bitmap 资源
-    bdgeo.recycle();
+    descriptor.recycle();
   }
 
 }

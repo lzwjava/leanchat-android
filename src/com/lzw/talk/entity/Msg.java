@@ -7,6 +7,7 @@ import com.lzw.talk.R;
 import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
 import com.lzw.talk.service.ChatService;
+import com.lzw.talk.service.EmotionService;
 import com.lzw.talk.util.AVOSUtils;
 import com.lzw.talk.util.Logger;
 import com.lzw.talk.util.PathUtils;
@@ -142,7 +143,10 @@ public class Msg {
   public String getChatUserId() {
     String fromPeerId = getFromPeerId();
     String selfId = ChatService.getSelfId();
-    Logger.d("selfId="+selfId);
+    if (fromPeerId == null) {
+      Logger.v("fromPeerId=null");
+      fromPeerId = selfId;
+    }
     if (fromPeerId.equals(selfId)) {
       List<String> toPeerIds = getToPeerIds();
       if (toPeerIds != null && toPeerIds.size() > 0) {
@@ -159,6 +163,25 @@ public class Msg {
     String peerId = getFromPeerId();
     User user = App.lookupUser(peerId);
     return user.getUsername();
+  }
+
+  public CharSequence getNotifyContent() {
+    switch (type) {
+      case TYPE_AUDIO:
+        return App.ctx.getString(R.string.audio);
+      case TYPE_TEXT:
+        if(EmotionService.haveEmotion(getContent())){
+          return App.ctx.getString(R.string.emotion);
+        }else{
+          return getContent();
+        }
+      case TYPE_IMAGE:
+        return App.ctx.getString(R.string.image);
+      case TYPE_LOCATION:
+        return App.ctx.getString(R.string.position);
+      default:
+        return App.ctx.getString(R.string.newMessage);
+    }
   }
 
   public static Msg fromAVMessage(AVMessage avMsg) {

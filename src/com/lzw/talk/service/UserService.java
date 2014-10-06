@@ -1,13 +1,15 @@
 package com.lzw.talk.service;
 
-import android.text.TextUtils;
 import android.widget.ImageView;
 import com.avos.avoscloud.*;
 import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
 import com.lzw.talk.base.C;
+import com.lzw.talk.util.Logger;
+import com.lzw.talk.util.PhotoUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,7 +26,7 @@ public class UserService {
   }
 
   public static User findUser(String id) throws AVException {
-    AVQuery<User> q=User.getQuery(User.class);
+    AVQuery<User> q = User.getQuery(User.class);
     return q.get(id);
   }
 
@@ -35,32 +37,68 @@ public class UserService {
     return q;
   }
 
-  public static void updateNickname(User curUser, String value, SaveCallback saveCallback) {
-    if (TextUtils.isEmpty(value) == false) {
-      curUser.setNickname(value);
-      curUser.saveInBackground(saveCallback);
-    }
-  }
-
   public static List<User> findFriends() throws AVException {
     User curUser = User.curUser();
     AVRelation<User> relation = curUser.getRelation(User.FRIENDS);
-    return relation.getQuery().find();
+    List<User> users = relation.getQuery(User.class).find();
+    App.registerBatchUserCache(users);
+    return users;
   }
 
   public static void displayAvatar(User user, ImageView avatarView) {
     ImageLoader imageLoader = ImageLoader.getInstance();
     if (user.getAvatar() != null) {
-      imageLoader.displayImage(user.getAvatarUrl(), avatarView);
+      imageLoader.displayImage(user.getAvatarUrl(), avatarView, PhotoUtil.getImageLoaderOptions());
     } else {
       avatarView.setImageResource(com.lzw.talk.R.drawable.default_user_avatar);
     }
   }
 
-  public static void cacheUser(List<String> uncachedId) throws AVException {
+  public static void cacheUser(List<String> uncachedIds) throws AVException {
     AVQuery<User> q = User.getQuery(User.class);
-    q.whereContainedIn(C.OBJECT_ID, uncachedId);
+    q.whereContainedIn(C.OBJECT_ID, uncachedIds);
     List<User> users = q.find();
     App.registerBatchUserCache(users);
+  }
+
+  public static void searchUser(String searchName, int skip, FindCallback<User> findCallback) {
+    AVQuery<User> q = User.getQuery(User.class);
+    q.whereContains(User.USERNAME, searchName);
+    q.limit(C.PAGE_SIZE);
+    q.skip(skip);
+    User user = User.curUser();
+    q.whereNotEqualTo(C.OBJECT_ID, user.getObjectId());
+    q.findInBackground(findCallback);
+  }
+
+  public static boolean isMyFriend(List<User> friends, String username) {
+    for (User friend : friends) {
+      if (friend.getUsername().equals(username)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public static void findUserInfo(String name, FindCallback<User> findCallback) {
+    AVQuery<User> q = User.getQuery(User.class);
+    q.whereEqualTo(User.USERNAME, name);
+    q.findInBackground(findCallback);
+  }
+
+  public static List<User> findNearbyPeople(int skip) throws AVException {
+    PrefDao prefDao = PrefDao.getCurUserPrefDao(App.ctx);
+    AVGeoPoint geoPoint = prefDao.getLocation();
+    if (geoPoint == null) {
+      Logger.i("geo point is null");
+      return new ArrayList<User>();
+    }
+    AVQuery<User> q = AVObject.getQuery(User.class);
+    User user = User.curUser();
+    q.whereNotEqualTo(C.OBJECT_ID, user.getObjectId());
+    q.whereNear(User.LOCATION, geoPoint);
+    q.skip(skip);
+    q.limit(C.PAGE_SIZE);
+    return q.find();
   }
 }

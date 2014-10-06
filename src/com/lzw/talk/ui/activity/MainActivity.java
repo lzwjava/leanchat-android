@@ -7,11 +7,21 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import com.avos.avoscloud.AVGeoPoint;
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
 import com.lzw.talk.R;
+import com.lzw.talk.avobject.User;
+import com.lzw.talk.service.ChatService;
+import com.lzw.talk.service.PrefDao;
 import com.lzw.talk.ui.fragment.ContactFragment;
-import com.lzw.talk.ui.fragment.RecentMessageFragment;
 import com.lzw.talk.ui.fragment.DiscoverFragment;
 import com.lzw.talk.ui.fragment.MySpaceFragment;
+import com.lzw.talk.ui.fragment.RecentMessageFragment;
+import com.lzw.talk.util.ChatUtils;
+import com.lzw.talk.util.Logger;
 
 /**
  * Created by lzw on 14-9-17.
@@ -32,6 +42,8 @@ public class MainActivity extends BaseActivity {
       R.drawable.tabbar_me_active};
   private Activity ctx;
   View recentTips, contactTips;
+  public LocationClient locClient;
+  public MyLocationListener mMyLocationListener;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +52,56 @@ public class MainActivity extends BaseActivity {
     ctx = this;
     findView();
     init();
+
     //mySpaceBtn.performClick();
-    //contactBtn.performClick();
-    messageBtn.performClick();
+    contactBtn.performClick();
+    //messageBtn.performClick();
+    //discoverBtn.performClick();
+    ChatService.openSession();
+    initBaiduLocClient();
+  }
+
+  private void initBaiduLocClient() {
+    locClient = new LocationClient(this.getApplicationContext());
+    locClient.setDebug(true);
+    LocationClientOption option = new LocationClientOption();
+    option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
+    option.setScanSpan(5000);
+    option.setIsNeedAddress(false);
+    option.setCoorType("bd09ll");
+    option.setIsNeedAddress(true);
+    locClient.setLocOption(option);
+
+    mMyLocationListener = new MyLocationListener();
+    locClient.registerLocationListener(mMyLocationListener);
+    locClient.start();
+  }
+
+  public class MyLocationListener implements BDLocationListener {
+
+    @Override
+    public void onReceiveLocation(BDLocation location) {
+      double latitude = location.getLatitude();
+      double longitude = location.getLongitude();
+      int locType = location.getLocType();
+      Logger.d("onReceiveLocation latitude=" + latitude + " longitude=" + longitude
+          + " locType=" + locType + " address=" + location.getAddrStr());
+      User user = User.curUser();
+      PrefDao prefDao = new PrefDao(ctx, user.getObjectId());
+      if (user != null) {
+        AVGeoPoint avGeoPoint = prefDao.getLocation();
+        if (avGeoPoint != null && avGeoPoint.getLatitude() == location.getLatitude()
+            && avGeoPoint.getLongitude() == location.getLongitude()) {
+          ChatUtils.updateUserLocation();
+          ChatUtils.updateUserInfo();
+          locClient.stop();
+          return;
+        }
+      }
+      AVGeoPoint avGeoPoint = new AVGeoPoint(location.getLatitude(),
+          location.getLongitude());
+      prefDao.setLocation(avGeoPoint);
+    }
   }
 
   private void init() {
@@ -121,5 +180,11 @@ public class MainActivity extends BaseActivity {
         transaction.hide(f);
       }
     }
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    ChatService.closeSession();
   }
 }
