@@ -131,8 +131,8 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
       String content = msg.getContent();
       if (content != null && !content.equals("")) {
         String address = content.split("&")[0];
-        final String latitude = content.split("&")[1];//维度
-        final String longtitude = content.split("&")[2];//经度
+        final String latitude = content.split("&")[1];//缁村害
+        final String longtitude = content.split("&")[2];//缁忓害
         locationView.setText(address);
         locationView.setOnClickListener(new View.OnClickListener() {
 
@@ -141,8 +141,8 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
             // TODO Auto-generated method stub
             Intent intent = new Intent(ctx, LocationActivity.class);
             intent.putExtra("type", "scan");
-            intent.putExtra("latitude", Double.parseDouble(latitude));//维度
-            intent.putExtra("longtitude", Double.parseDouble(longtitude));//经度
+            intent.putExtra("latitude", Double.parseDouble(latitude));//缁村害
+            intent.putExtra("longtitude", Double.parseDouble(longtitude));//缁忓害
             ctx.startActivity(intent);
           }
         });

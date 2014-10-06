@@ -26,5 +26,6 @@ public abstract class SimpleNetTask extends NetAsyncTask {
     }
   }
 
-  public abstract void onSucceed();
+  protected abstract void doInBack() throws Exception;
+  protected abstract void onSucceed();
 }

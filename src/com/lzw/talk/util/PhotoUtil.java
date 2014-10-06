@@ -6,6 +6,7 @@ import android.graphics.Bitmap.Config;
 import android.graphics.PorterDuff.Mode;
 import android.media.ExifInterface;
 import android.media.ThumbnailUtils;
+import com.lzw.talk.R;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
@@ -23,14 +24,14 @@ import java.io.IOException;
 public class PhotoUtil {
 
   /**
-   * »ØÊÕÀ¬»ø recycle
+   * å›æ”¶åƒåœ¾ recycle
    *
    * @throws
    */
   public static void recycle(Bitmap bitmap) {
-    // ÏÈÅĞ¶ÏÊÇ·ñÒÑ¾­»ØÊÕ
+    // å…ˆåˆ¤æ–­æ˜¯å¦å·²ç»å›æ”¶
     if (bitmap != null && !bitmap.isRecycled()) {
-      // »ØÊÕ²¢ÇÒÖÃÎªnull
+      // å›æ”¶å¹¶ä¸”ç½®ä¸ºnull
       bitmap.recycle();
       bitmap = null;
     }
@@ -38,7 +39,7 @@ public class PhotoUtil {
   }
 
   /**
-   * »ñÈ¡Ö¸¶¨Â·¾¶ÏÂµÄÍ¼Æ¬µÄÖ¸¶¨´óĞ¡µÄËõÂÔÍ¼ getImageThumbnail
+   * è·å–æŒ‡å®šè·¯å¾„ä¸‹çš„å›¾ç‰‡çš„æŒ‡å®šå¤§å°çš„ç¼©ç•¥å›¾ getImageThumbnail
    *
    * @return Bitmap
    * @throws
@@ -48,10 +49,10 @@ public class PhotoUtil {
     Bitmap bitmap = null;
     BitmapFactory.Options options = new BitmapFactory.Options();
     options.inJustDecodeBounds = true;
-    // »ñÈ¡Õâ¸öÍ¼Æ¬µÄ¿íºÍ¸ß£¬×¢Òâ´Ë´¦µÄbitmapÎªnull
+    // è·å–è¿™ä¸ªå›¾ç‰‡çš„å®½å’Œé«˜ï¼Œæ³¨æ„æ­¤å¤„çš„bitmapä¸ºnull
     bitmap = BitmapFactory.decodeFile(imagePath, options);
-    options.inJustDecodeBounds = false; // ÉèÎª false
-    // ¼ÆËãËõ·Å±È
+    options.inJustDecodeBounds = false; // è®¾ä¸º false
+    // è®¡ç®—ç¼©æ”¾æ¯”
     int h = options.outHeight;
     int w = options.outWidth;
     int beWidth = w / width;
@@ -66,9 +67,9 @@ public class PhotoUtil {
       be = 1;
     }
     options.inSampleSize = be;
-    // ÖØĞÂ¶ÁÈëÍ¼Æ¬£¬¶ÁÈ¡Ëõ·ÅºóµÄbitmap£¬×¢ÒâÕâ´ÎÒª°Ñoptions.inJustDecodeBounds ÉèÎª false
+    // é‡æ–°è¯»å…¥å›¾ç‰‡ï¼Œè¯»å–ç¼©æ”¾åçš„bitmapï¼Œæ³¨æ„è¿™æ¬¡è¦æŠŠoptions.inJustDecodeBounds è®¾ä¸º false
     bitmap = BitmapFactory.decodeFile(imagePath, options);
-    // ÀûÓÃThumbnailUtilsÀ´´´½¨ËõÂÔÍ¼£¬ÕâÀïÒªÖ¸¶¨ÒªËõ·ÅÄÄ¸öBitmap¶ÔÏó
+    // åˆ©ç”¨ThumbnailUtilsæ¥åˆ›å»ºç¼©ç•¥å›¾ï¼Œè¿™é‡Œè¦æŒ‡å®šè¦ç¼©æ”¾å“ªä¸ªBitmapå¯¹è±¡
     bitmap = ThumbnailUtils.extractThumbnail(bitmap, width, height,
         ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
     return bitmap;
@@ -146,10 +147,10 @@ public class PhotoUtil {
   }
 
   /**
-   * ¶ÁÈ¡Í¼Æ¬ÊôĞÔ£ºĞı×ªµÄ½Ç¶È
+   * è¯»å–å›¾ç‰‡å±æ€§ï¼šæ—‹è½¬çš„è§’åº¦
    *
-   * @param path Í¼Æ¬¾ø¶ÔÂ·¾¶
-   * @return degreeĞı×ªµÄ½Ç¶È
+   * @param path å›¾ç‰‡ç»å¯¹è·¯å¾„
+   * @return degreeæ—‹è½¬çš„è§’åº¦
    */
 
   public static int readPictureDegree(String path) {
@@ -178,28 +179,28 @@ public class PhotoUtil {
   }
 
   /**
-   * Ğı×ªÍ¼Æ¬Ò»¶¨½Ç¶È
+   * æ—‹è½¬å›¾ç‰‡ä¸€å®šè§’åº¦
    * rotaingImageView
    *
    * @return Bitmap
    * @throws
    */
   public static Bitmap rotaingImageView(int angle, Bitmap bitmap) {
-    // Ğı×ªÍ¼Æ¬ ¶¯×÷
+    // æ—‹è½¬å›¾ç‰‡ åŠ¨ä½œ
     Matrix matrix = new Matrix();
     matrix.postRotate(angle);
-    // ´´½¨ĞÂµÄÍ¼Æ¬
+    // åˆ›å»ºæ–°çš„å›¾ç‰‡
     Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0,
         bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     return resizedBitmap;
   }
 
   /**
-   * ½«Í¼Æ¬±äÎªÔ²½Ç
+   * å°†å›¾ç‰‡å˜ä¸ºåœ†è§’
    *
-   * @param bitmap Ô­BitmapÍ¼Æ¬
-   * @param pixels Í¼Æ¬Ô²½ÇµÄ»¡¶È(µ¥Î»:ÏñËØ(px))
-   * @return ´øÓĞÔ²½ÇµÄÍ¼Æ¬(Bitmap ÀàĞÍ)
+   * @param bitmap åŸBitmapå›¾ç‰‡
+   * @param pixels å›¾ç‰‡åœ†è§’çš„å¼§åº¦(å•ä½:åƒç´ (px))
+   * @return å¸¦æœ‰åœ†è§’çš„å›¾ç‰‡(Bitmap ç±»å‹)
    */
   public static Bitmap toRoundCorner(Bitmap bitmap, int pixels) {
     Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
@@ -224,7 +225,7 @@ public class PhotoUtil {
   }
 
   /**
-   * ½«Í¼Æ¬×ª»¯ÎªÔ²ĞÎÍ·Ïñ
+   * å°†å›¾ç‰‡è½¬åŒ–ä¸ºåœ†å½¢å¤´åƒ
    *
    * @throws
    * @Title: toRoundBitmap
@@ -275,16 +276,16 @@ public class PhotoUtil {
         (int) dst_right, (int) dst_bottom);
     final RectF rectF = new RectF(dst);
 
-    paint.setAntiAlias(true);// ÉèÖÃ»­±ÊÎŞ¾â³İ
+    paint.setAntiAlias(true);// è®¾ç½®ç”»ç¬”æ— é”¯é½¿
 
-    canvas.drawARGB(0, 0, 0, 0); // Ìî³äÕû¸öCanvas
+    canvas.drawARGB(0, 0, 0, 0); // å¡«å……æ•´ä¸ªCanvas
 
-    // ÒÔÏÂÓĞÁ½ÖÖ·½·¨»­Ô²,drawRounRectºÍdrawCircle
-    canvas.drawRoundRect(rectF, roundPx, roundPx, paint);// »­Ô²½Ç¾ØĞÎ£¬µÚÒ»¸ö²ÎÊıÎªÍ¼ĞÎÏÔÊ¾ÇøÓò£¬µÚ¶ş¸ö²ÎÊıºÍµÚÈı¸ö²ÎÊı·Ö±ğÊÇË®Æ½Ô²½Ç°ë¾¶ºÍ´¹Ö±Ô²½Ç°ë¾¶¡£
+    // ä»¥ä¸‹æœ‰ä¸¤ç§æ–¹æ³•ç”»åœ†,drawRounRectå’ŒdrawCircle
+    canvas.drawRoundRect(rectF, roundPx, roundPx, paint);// ç”»åœ†è§’çŸ©å½¢ï¼Œç¬¬ä¸€ä¸ªå‚æ•°ä¸ºå›¾å½¢æ˜¾ç¤ºåŒºåŸŸï¼Œç¬¬äºŒä¸ªå‚æ•°å’Œç¬¬ä¸‰ä¸ªå‚æ•°åˆ†åˆ«æ˜¯æ°´å¹³åœ†è§’åŠå¾„å’Œå‚ç›´åœ†è§’åŠå¾„ã€‚
     // canvas.drawCircle(roundPx, roundPx, roundPx, paint);
 
-    paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));// ÉèÖÃÁ½ÕÅÍ¼Æ¬Ïà½»Ê±µÄÄ£Ê½,²Î¿¼http://trylovecatch.iteye.com/blog/1189452
-    canvas.drawBitmap(bitmap, src, dst, paint); // ÒÔMode.SRC_INÄ£Ê½ºÏ²¢bitmapºÍÒÑ¾­drawÁËµÄCircle
+    paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));// è®¾ç½®ä¸¤å¼ å›¾ç‰‡ç›¸äº¤æ—¶çš„æ¨¡å¼,å‚è€ƒhttp://trylovecatch.iteye.com/blog/1189452
+    canvas.drawBitmap(bitmap, src, dst, paint); // ä»¥Mode.SRC_INæ¨¡å¼åˆå¹¶bitmapå’Œå·²ç»drawäº†çš„Circle
 
     return output;
   }
@@ -334,37 +335,27 @@ public class PhotoUtil {
     return newPath;
   }
 
-  /**
-   * ĞÂÎÅÁĞ±íÖĞÓÃµ½µÄÍ¼Æ¬¼ÓÔØÅäÖÃ
-   */
-  public static DisplayImageOptions getImageLoaderOptions() {
+  public static DisplayImageOptions getAvatarImageOptions() {
     DisplayImageOptions options = new DisplayImageOptions.Builder()
-        // // ÉèÖÃÍ¼Æ¬ÔÚÏÂÔØÆÚ¼äÏÔÊ¾µÄÍ¼Æ¬
-        // .showImageOnLoading(R.drawable.small_image_holder_listpage)
-        // // ÉèÖÃÍ¼Æ¬UriÎª¿Õ»òÊÇ´íÎóµÄÊ±ºòÏÔÊ¾µÄÍ¼Æ¬
-        // .showImageForEmptyUri(R.drawable.small_image_holder_listpage)
-        // // ÉèÖÃÍ¼Æ¬¼ÓÔØ/½âÂë¹ı³ÌÖĞ´íÎóÊ±ºòÏÔÊ¾µÄÍ¼Æ¬
-        // .showImageOnFail(R.drawable.small_image_holder_listpage)
+        .showImageOnLoading(R.drawable.default_user_avatar)
+        .showImageForEmptyUri(R.drawable.default_user_avatar)
+        .showImageOnFail(R.drawable.default_user_avatar)
         .cacheInMemory(true)
-            // ÉèÖÃÏÂÔØµÄÍ¼Æ¬ÊÇ·ñ»º´æÔÚÄÚ´æÖĞ
         .cacheOnDisc(true)
-            // ÉèÖÃÏÂÔØµÄÍ¼Æ¬ÊÇ·ñ»º´æÔÚSD¿¨ÖĞ
         .considerExifParams(true)
-        .imageScaleType(ImageScaleType.EXACTLY)// ÉèÖÃÍ¼Æ¬ÒÔÈçºÎµÄ±àÂë·½Ê½ÏÔÊ¾
-        .bitmapConfig(Config.RGB_565)// ÉèÖÃÍ¼Æ¬µÄ½âÂëÀàĞÍ
+        .imageScaleType(ImageScaleType.EXACTLY)
+        .bitmapConfig(Config.RGB_565)
             // .decodingOptions(android.graphics.BitmapFactory.Options
-            // decodingOptions)//ÉèÖÃÍ¼Æ¬µÄ½âÂëÅäÖÃ
-        .considerExifParams(true)
-            // ÉèÖÃÍ¼Æ¬ÏÂÔØÇ°µÄÑÓ³Ù
+            // decodingOptions)//è®¾ç½®å›¾ç‰‡çš„è§£ç é…ç½®.considerExifParams(true)
+            // è®¾ç½®å›¾ç‰‡ä¸‹è½½å‰çš„å»¶è¿Ÿ
             // .delayBeforeLoading(int delayInMillis)//int
-            // delayInMillisÎªÄãÉèÖÃµÄÑÓ³ÙÊ±¼ä
-            // ÉèÖÃÍ¼Æ¬¼ÓÈë»º´æÇ°£¬¶Ôbitmap½øĞĞÉèÖÃ
-            // ¡£preProcessor(BitmapProcessor preProcessor)
-        .resetViewBeforeLoading(true)// ÉèÖÃÍ¼Æ¬ÔÚÏÂÔØÇ°ÊÇ·ñÖØÖÃ£¬¸´Î»
-            // .displayer(new RoundedBitmapDisplayer(20))//ÊÇ·ñÉèÖÃÎªÔ²½Ç£¬»¡¶ÈÎª¶àÉÙ
-        //.displayer(new FadeInBitmapDisplayer(100))// µ­Èë
+            // delayInMillisä¸ºä½ è®¾ç½®çš„å»¶è¿Ÿæ—¶é—´
+            // è®¾ç½®å›¾ç‰‡åŠ å…¥ç¼“å­˜å‰ï¼Œå¯¹bitmapè¿›è¡Œè®¾ç½®
+            // ã€‚preProcessor(BitmapProcessor preProcessor)
+        .resetViewBeforeLoading(true)// è®¾ç½®å›¾ç‰‡åœ¨ä¸‹è½½å‰æ˜¯å¦é‡ç½®ï¼Œå¤ä½
+            // .displayer(new RoundedBitmapDisplayer(20))//æ˜¯å¦è®¾ç½®ä¸ºåœ†è§’ï¼Œå¼§åº¦ä¸ºå¤šå°‘
+        //.displayer(new FadeInBitmapDisplayer(100))// æ·¡å…¥
         .build();
-
     return options;
   }
 
@@ -375,9 +366,9 @@ public class PhotoUtil {
         .memoryCache(new WeakMemoryCache())
         .denyCacheImageMultipleSizesInMemory()
         .discCacheFileNameGenerator(new Md5FileNameGenerator())
-            // ½«±£´æµÄÊ±ºòµÄURIÃû³ÆÓÃMD5 ¼ÓÃÜ
+            // å°†ä¿å­˜çš„æ—¶å€™çš„URIåç§°ç”¨MD5 åŠ å¯†
         .tasksProcessingOrder(QueueProcessingType.LIFO)
-        .discCache(new UnlimitedDiscCache(cacheDir))// ×Ô¶¨Òå»º´æÂ·¾¶
+        .discCache(new UnlimitedDiscCache(cacheDir))// è‡ªå®šä¹‰ç¼“å­˜è·¯å¾„
             // .defaultDisplayImageOptions(DisplayImageOptions.createSimple())
         .writeDebugLogs() // Remove for release app
         .build();

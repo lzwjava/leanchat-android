@@ -8,7 +8,7 @@
     <ImageView
         android:id="@+id/avatar_view"
         style="@style/My.ImageView.Photo_Middle"
-        android:src="@drawable/default_avatar" />
+        android:src="@drawable/default_user_avatar" />
 
     <RelativeLayout
         android:layout_width="0dp"

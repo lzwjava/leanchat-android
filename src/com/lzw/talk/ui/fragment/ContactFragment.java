@@ -1,6 +1,5 @@
 package com.lzw.talk.ui.fragment;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,8 +15,6 @@ import android.view.ViewGroup;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.SaveCallback;
 import com.lzw.talk.R;
 import com.lzw.talk.adapter.UserFriendAdapter;
 import com.lzw.talk.avobject.User;
@@ -131,7 +128,7 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
     userAdapter.updateListView(filterDateList);
   }
 
-  private void filledData(List<User> datas) {
+  private void fillFriendsData(List<User> datas) {
     friends.clear();
     int total = datas.size();
     for (int i = 0; i < total; i++) {
@@ -218,12 +215,8 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
   }
 
   private void setAddRequestTipsAndListView(boolean hasAddRequest, List<User> friends) {
-    if (hasAddRequest) {
-      msgTipsView.setVisibility(View.VISIBLE);
-    } else {
-      msgTipsView.setVisibility(View.GONE);
-    }
-    filledData(friends);
+    msgTipsView.setVisibility(hasAddRequest?View.VISIBLE:View.GONE);
+    fillFriendsData(friends);
     if (userAdapter == null) {
       userAdapter = new UserFriendAdapter(getActivity(), friends);
       friendsList.setAdapter(userAdapter);
@@ -239,6 +232,14 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
     super.onHiddenChanged(hidden);
     this.hidden = hidden;
     if (!hidden) {
+      refresh();
+    }
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    if(!hidden){
       refresh();
     }
   }
@@ -299,15 +300,15 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
   private void deleteFriend(final User user) {
     new SimpleNetTask(ctx) {
       @Override
-      public void onSucceed() {
-        Utils.toast(App.ctx.getString(R.string.deleteSucceed));
-        userAdapter.remove(user);
-      }
-
-      @Override
       protected void doInBack() throws Exception {
         User curUser = User.curUser();
         CloudService.removeFriendForBoth(curUser, user);
+      }
+
+      @Override
+      public void onSucceed() {
+        Utils.toast(App.ctx.getString(R.string.deleteSucceed));
+        userAdapter.remove(user);
       }
     }.execute();
   }

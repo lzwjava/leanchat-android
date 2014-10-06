@@ -50,7 +50,7 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
     usernameView.setText(curUser.getUsername());
     ImageLoader imageLoader = ImageLoader.getInstance();
     imageLoader.displayImage(curUser.getAvatarUrl(), avatarView,
-        PhotoUtil.getImageLoaderOptions());
+        PhotoUtil.getAvatarImageOptions());
     avatarLayout.setOnClickListener(this);
     logoutLayout.setOnClickListener(this);
   }

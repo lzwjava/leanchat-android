@@ -64,12 +64,12 @@ public class RecentMessageFragment extends BaseFragment implements AdapterView.O
     super.onHiddenChanged(hidden);
     this.hidden = hidden;
     if (!hidden) {
-      //refresh();
+      refresh();
     }
   }
 
   public void refresh() {
-    new GetDataTask(ctx).execute();
+    new GetDataTask(ctx, false).execute();
   }
 
   @Override
@@ -83,11 +83,7 @@ public class RecentMessageFragment extends BaseFragment implements AdapterView.O
   class GetDataTask extends NetAsyncTask {
     List<RecentMsg> recentMsgs;
 
-    GetDataTask(Context cxt) {
-      super(cxt);
-    }
-
-    protected GetDataTask(Context cxt, boolean openDialog) {
+    GetDataTask(Context cxt, boolean openDialog) {
       super(cxt, openDialog);
     }
 

@@ -42,12 +42,7 @@ public class NewFriendAdapter extends BaseListAdapter<AddRequest> {
     final Button addBtn = ViewHolder.findViewById(conView, R.id.add);
 
     String avatarUrl = addRequest.getFromUser().getAvatarUrl();
-    if (!TextUtils.isEmpty(avatarUrl)) {
-      ImageLoader.getInstance().displayImage(avatarUrl, avatarView, PhotoUtil.getImageLoaderOptions());
-    } else {
-      avatarView.setImageResource(R.drawable.default_avatar);
-    }
-
+    ImageLoader.getInstance().displayImage(avatarUrl, avatarView, PhotoUtil.getAvatarImageOptions());
     int status = addRequest.getStatus();
     if (status == AddRequest.STATUS_WAIT) {
       addBtn.setOnClickListener(new OnClickListener() {

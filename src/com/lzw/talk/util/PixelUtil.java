@@ -5,7 +5,7 @@ import android.content.res.Resources;
 import com.lzw.talk.base.App;
 
 /**
- * ����ת������
+ * 像素转换工具
  *
  * @author MarkMjw
  */
@@ -17,7 +17,7 @@ public class PixelUtil {
   private static Context mContext = App.ctx;
 
   /**
-   * dpת px.
+   * dp转 px.
    *
    * @param value the value
    * @return the int
@@ -28,7 +28,7 @@ public class PixelUtil {
   }
 
   /**
-   * dpת px.
+   * dp转 px.
    *
    * @param value   the value
    * @param context the context
@@ -40,7 +40,7 @@ public class PixelUtil {
   }
 
   /**
-   * pxתdp.
+   * px转dp.
    *
    * @param value the value
    * @return the int
@@ -51,7 +51,7 @@ public class PixelUtil {
   }
 
   /**
-   * pxתdp.
+   * px转dp.
    *
    * @param value   the value
    * @param context the context
@@ -63,7 +63,7 @@ public class PixelUtil {
   }
 
   /**
-   * spתpx.
+   * sp转px.
    *
    * @param value the value
    * @return the int
@@ -80,7 +80,7 @@ public class PixelUtil {
   }
 
   /**
-   * spתpx.
+   * sp转px.
    *
    * @param value   the value
    * @param context the context
@@ -98,7 +98,7 @@ public class PixelUtil {
   }
 
   /**
-   * pxתsp.
+   * px转sp.
    *
    * @param value the value
    * @return the int
@@ -109,7 +109,7 @@ public class PixelUtil {
   }
 
   /**
-   * pxתsp.
+   * px转sp.
    *
    * @param value   the value
    * @param context the context

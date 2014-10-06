@@ -67,11 +67,7 @@ public class UserFriendAdapter extends BaseAdapter implements SectionIndexer {
     final String name = friend.getUsername();
     final String avatar = friend.getAvatarUrl();
 
-    if (!TextUtils.isEmpty(avatar)) {
-      ImageLoader.getInstance().displayImage(avatar, avatarView, PhotoUtil.getImageLoaderOptions());
-    } else {
-      avatarView.setImageDrawable(ct.getResources().getDrawable(R.drawable.head));
-    }
+    ImageLoader.getInstance().displayImage(avatar, avatarView, PhotoUtil.getAvatarImageOptions());
     nameView.setText(name);
 
     int section = getSectionForPosition(position);

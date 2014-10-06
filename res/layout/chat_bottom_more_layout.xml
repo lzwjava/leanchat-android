@@ -27,6 +27,6 @@
     </LinearLayout>
 
     <include
-        android:visibility="gone"
+
         layout="@layout/chat_bottom_add_layout" />
 </LinearLayout>

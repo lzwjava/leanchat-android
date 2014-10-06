@@ -81,7 +81,7 @@ public class RecordButton extends Button {
       case MotionEvent.ACTION_UP:
         finishRecord();
         break;
-      case MotionEvent.ACTION_CANCEL:// 当手指移动到view外面，会cancel
+      case MotionEvent.ACTION_CANCEL:// 褰撴墜鎸囩Щ鍔ㄥ埌view澶栭潰锛屼細cancel
         cancelRecord();
         break;
     }

@@ -47,11 +47,7 @@ public class UserService {
 
   public static void displayAvatar(User user, ImageView avatarView) {
     ImageLoader imageLoader = ImageLoader.getInstance();
-    if (user.getAvatar() != null) {
-      imageLoader.displayImage(user.getAvatarUrl(), avatarView, PhotoUtil.getImageLoaderOptions());
-    } else {
-      avatarView.setImageResource(com.lzw.talk.R.drawable.default_user_avatar);
-    }
+    imageLoader.displayImage(user.getAvatarUrl(), avatarView, PhotoUtil.getAvatarImageOptions());
   }
 
   public static void cacheUser(List<String> uncachedIds) throws AVException {

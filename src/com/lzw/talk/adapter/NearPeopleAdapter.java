@@ -40,32 +40,30 @@ public class NearPeopleAdapter extends BaseListAdapter<User> {
     if (convertView == null) {
       convertView = inflater.inflate(R.layout.item_near_people, null);
     }
-    final User contract = datas.get(position);
+    final User user = datas.get(position);
     TextView nameView = ViewHolder.findViewById(convertView, R.id.name_text);
     TextView distanceView = ViewHolder.findViewById(convertView, R.id.distance_text);
     TextView logintimView = ViewHolder.findViewById(convertView, R.id.login_time_text);
     ImageView avatarView = ViewHolder.findViewById(convertView, R.id.avatar_view);
-    String avatar = contract.getAvatarUrl();
-    if (avatar != null && !avatar.equals("")) {
-      ImageLoader.getInstance().displayImage(avatar, avatarView,
-          PhotoUtil.getImageLoaderOptions());
-    } else {
-      avatarView.setImageResource(R.drawable.default_avatar);
-    }
-    AVGeoPoint geoPoint = contract.getLocation();
+    String avatar = user.getAvatarUrl();
+
+    ImageLoader.getInstance().displayImage(avatar, avatarView,
+        PhotoUtil.getAvatarImageOptions());
+
+    AVGeoPoint geoPoint = user.getLocation();
     PrefDao prefDao = PrefDao.getCurUserPrefDao(ctx);
     AVGeoPoint location = prefDao.getLocation();
     String currentLat = String.valueOf(location.getLatitude());
     String currentLong = String.valueOf(location.getLongitude());
     if (geoPoint != null && !currentLat.equals("") && !currentLong.equals("")) {
-      double distance = DistanceOfTwoPoints(Double.parseDouble(currentLat), Double.parseDouble(currentLong), contract.getLocation().getLatitude(),
-          contract.getLocation().getLongitude());
+      double distance = DistanceOfTwoPoints(Double.parseDouble(currentLat), Double.parseDouble(currentLong), user.getLocation().getLatitude(),
+          user.getLocation().getLongitude());
       distanceView.setText(String.valueOf(distance) + App.ctx.getString(R.string.metre));
     } else {
       distanceView.setText(App.ctx.getString(R.string.unknown));
     }
-    nameView.setText(contract.getUsername());
-    Date updatedAt = contract.getUpdatedAt();
+    nameView.setText(user.getUsername());
+    Date updatedAt = user.getUpdatedAt();
     String prettyTimeStr = this.prettyTime.format(updatedAt);
     logintimView.setText(App.ctx.getString(R.string.recent_login_time) +prettyTimeStr);
     return convertView;

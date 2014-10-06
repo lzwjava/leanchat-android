@@ -1,5 +1,7 @@
 package com.lzw.talk.ui.activity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -15,9 +17,7 @@ import android.text.*;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.GridView;
-import android.widget.TextView;
+import android.widget.*;
 import com.lzw.talk.R;
 import com.lzw.talk.adapter.ChatMsgAdapter;
 import com.lzw.talk.adapter.EmotionGridAdapter;
@@ -27,10 +27,7 @@ import com.lzw.talk.base.App;
 import com.lzw.talk.db.DBHelper;
 import com.lzw.talk.db.DBMsg;
 import com.lzw.talk.entity.Msg;
-import com.lzw.talk.service.ChatService;
-import com.lzw.talk.service.EmotionService;
-import com.lzw.talk.service.MessageListener;
-import com.lzw.talk.service.MsgReceiver;
+import com.lzw.talk.service.*;
 import com.lzw.talk.ui.view.EmotionEditText;
 import com.lzw.talk.ui.view.HeaderLayout;
 import com.lzw.talk.ui.view.RecordButton;
@@ -61,6 +58,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
   HeaderLayout headerLayout;
   View chatTextLayout, chatAudioLayout, chatAddLayout, chatEmotionLayout;
   View turnToTextBtn, turnToAudioBtn, sendBtn, addImageBtn, showAddBtn, addLocationBtn, showEmotionBtn;
+  LinearLayout chatBottomLayout;
   ViewPager emotionPager;
   private EmotionEditText contentEdit;
   private XListView xListView;
@@ -69,6 +67,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
   private String localCameraPath = PathUtils.getTmpPath();
   private View addCameraBtn;
   int msgSize = PAGE_SIZE;
+  AnimService animService;
 
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -209,6 +208,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
     headerLayout = (HeaderLayout) findViewById(R.id.headerLayout);
     chatTextLayout = findViewById(R.id.chatTextLayout);
     chatAudioLayout = findViewById(R.id.chatRecordLayout);
+    chatBottomLayout= (LinearLayout) findViewById(R.id.bottomLayout);
     turnToAudioBtn = findViewById(R.id.turnToAudioBtn);
     turnToTextBtn = findViewById(R.id.turnToTextBtn);
     recordBtn = (RecordButton) findViewById(R.id.recordBtn);
@@ -251,6 +251,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
     Intent intent = getIntent();
     String chatUserId = intent.getStringExtra(CHAT_USER_ID);
     chatUser = App.lookupUser(chatUserId);
+    animService= AnimService.getInstance();
   }
 
   @Override
@@ -385,6 +386,9 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
       scrollToLast();
     } else {
       xListView.setSelection(newN - lastN - 1);
+      if(lastN==newN){
+        Utils.toast(R.string.loadMessagesFinish);
+      }
     }
   }
 
@@ -423,7 +427,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
   }
 
   private void hideBottomLayoutAndScrollToLast() {
-    chatAddLayout.setVisibility(View.GONE);
+    hideAddLayout();
     chatEmotionLayout.setVisibility(View.GONE);
     scrollToLast();
   }
@@ -439,7 +443,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
       chatEmotionLayout.setVisibility(View.GONE);
     } else {
       chatEmotionLayout.setVisibility(View.VISIBLE);
-      chatAddLayout.setVisibility(View.GONE);
+      hideAddLayout();
       showTextLayout();
       hideSoftInputView();
     }
@@ -447,11 +451,24 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
 
   private void toggleBottomAddLayout() {
     if (chatAddLayout.getVisibility() == View.VISIBLE) {
-      chatAddLayout.setVisibility(View.GONE);
+      hideAddLayout();
     } else {
       chatEmotionLayout.setVisibility(View.GONE);
-      chatAddLayout.setVisibility(View.VISIBLE);
       hideSoftInputView();
+      showAddLayout();
+    }
+  }
+
+  private void hideAddLayout(){
+    if(chatAddLayout.getVisibility()==View.VISIBLE){
+      animService.hideView(chatAddLayout);
+    }
+  }
+
+  private void showAddLayout() {
+    if(chatAddLayout.getVisibility()==View.GONE){
+      chatAddLayout.setVisibility(View.VISIBLE);
+      chatAddLayout.startAnimation(animService.popupFromBottomAnim);
     }
   }
 
@@ -542,8 +559,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
   }
 
   private void sendLocationByReturnData(Intent data) {
-    final double latitude = data.getDoubleExtra("x", 0);// 维度
-    final double longtitude = data.getDoubleExtra("y", 0);// 经度
+    final double latitude = data.getDoubleExtra("x", 0);// 缁村害
+    final double longtitude = data.getDoubleExtra("y", 0);// 缁忓害
     final String address = data.getStringExtra("address");
     if (address != null && !address.equals("")) {
       new SendMsgTask(ctx) {
@@ -592,7 +609,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
 
   public void scrollToLast() {
     Logger.d("scrollToLast");
-    xListView.setSelection(adapter.getCount()-1);
+    xListView.setSelection(adapter.getCount() - 1);
   }
 
   @Override

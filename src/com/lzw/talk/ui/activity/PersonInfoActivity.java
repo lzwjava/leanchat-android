@@ -133,12 +133,8 @@ public class PersonInfoActivity extends BaseActivity implements OnClickListener 
   }
 
   private void refreshAvatar(String avatar) {
-    if (avatar != null && !avatar.equals("")) {
-      ImageLoader.getInstance().displayImage(avatar, avatarView,
-          PhotoUtil.getImageLoaderOptions());
-    } else {
-      avatarView.setImageResource(R.drawable.default_avatar);
-    }
+    ImageLoader.getInstance().displayImage(avatar, avatarView,
+        PhotoUtil.getAvatarImageOptions());
   }
 
   @Override

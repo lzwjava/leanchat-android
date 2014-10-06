@@ -37,12 +37,7 @@ public class AddFriendAdapter extends BaseListAdapter<User> {
     ImageView avatarView = ViewHolder.findViewById(conView, R.id.avatar);
     Button addBtn = ViewHolder.findViewById(conView, R.id.add);
     String avatarUrl = contact.getAvatarUrl();
-    if (!TextUtils.isEmpty(avatarUrl)) {
-      ImageLoader.getInstance().displayImage(avatarUrl, avatarView, PhotoUtil.getImageLoaderOptions());
-    } else {
-      avatarView.setImageResource(R.drawable.default_avatar);
-    }
-
+    ImageLoader.getInstance().displayImage(avatarUrl, avatarView, PhotoUtil.getAvatarImageOptions());
     nameView.setText(contact.getUsername());
     addBtn.setText(R.string.add);
     addBtn.setOnClickListener(new OnClickListener() {

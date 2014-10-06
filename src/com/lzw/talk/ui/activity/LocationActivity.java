@@ -46,9 +46,9 @@ public class LocationActivity extends BaseActivity implements
     mapView = (MapView) findViewById(R.id.bmapView);
     headerLayout = (HeaderLayout) findViewById(R.id.headerLayout);
     baiduMap = mapView.getMap();
-    //ÉèÖÃËõ·Å¼¶±ğ
+    //è®¾ç½®ç¼©æ”¾çº§åˆ«
     baiduMap.setMaxAndMinZoomLevel(18, 13);
-    // ×¢²á SDK ¹ã²¥¼àÌıÕß
+    // æ³¨å†Œ SDK å¹¿æ’­ç›‘å¬è€…
     IntentFilter iFilter = new IntentFilter();
     iFilter.addAction(SDKInitializer.SDK_BROADTCAST_ACTION_STRING_PERMISSION_CHECK_ERROR);
     iFilter.addAction(SDKInitializer.SDK_BROADCAST_ACTION_STRING_NETWORK_ERROR);
@@ -57,7 +57,7 @@ public class LocationActivity extends BaseActivity implements
 
     Intent intent = getIntent();
     String type = intent.getStringExtra("type");
-    if (type.equals("select")) {// Ñ¡Ôñ·¢ËÍÎ»ÖÃ
+    if (type.equals("select")) {// é€‰æ‹©å‘é€ä½ç½®
       headerLayout.showTitle(R.string.position);
       headerLayout.showRightTextButton(R.string.send, new View.OnClickListener() {
         @Override
@@ -66,12 +66,12 @@ public class LocationActivity extends BaseActivity implements
         }
       });
       initLocClient();
-    } else {// ²é¿´µ±Ç°Î»ÖÃ
+    } else {// æŸ¥çœ‹å½“å‰ä½ç½®
       headerLayout.showTitle(R.string.position);
       Bundle b = intent.getExtras();
-      LatLng latlng = new LatLng(b.getDouble("latitude"), b.getDouble("longtitude"));//Î¬¶ÈÔÚÇ°£¬¾­¶ÈÔÚºó
+      LatLng latlng = new LatLng(b.getDouble("latitude"), b.getDouble("longtitude"));//ç»´åº¦åœ¨å‰ï¼Œç»åº¦åœ¨å
       baiduMap.setMapStatus(MapStatusUpdateFactory.newLatLng(latlng));
-      //ÏÔÊ¾µ±Ç°Î»ÖÃÍ¼±ê
+      //æ˜¾ç¤ºå½“å‰ä½ç½®å›¾æ ‡
       OverlayOptions ooA = new MarkerOptions().position(latlng).icon(descriptor).zIndex(9);
       baiduMap.addOverlay(ooA);
     }
@@ -82,7 +82,7 @@ public class LocationActivity extends BaseActivity implements
   }
 
   /**
-   * »Øµ½ÁÄÌì½çÃæ
+   * å›åˆ°èŠå¤©ç•Œé¢
    *
    * @param
    * @return void
@@ -93,8 +93,8 @@ public class LocationActivity extends BaseActivity implements
   private void gotoChatPage() {
     if (lastLocation != null) {
       Intent intent = new Intent();
-      intent.putExtra("y", lastLocation.getLongitude());// ¾­¶È
-      intent.putExtra("x", lastLocation.getLatitude());// Î¬¶È
+      intent.putExtra("y", lastLocation.getLongitude());// ç»åº¦
+      intent.putExtra("x", lastLocation.getLatitude());// ç»´åº¦
       intent.putExtra("address", lastLocation.getAddrStr());
       setResult(RESULT_OK, intent);
       this.finish();
@@ -104,11 +104,11 @@ public class LocationActivity extends BaseActivity implements
   }
 
   private void initLocClient() {
-//		 ¿ªÆô¶¨Î»Í¼²ã
+//		 å¼€å¯å®šä½å›¾å±‚
     baiduMap.setMyLocationEnabled(true);
     baiduMap.setMyLocationConfigeration(new MyLocationConfigeration(
         MyLocationConfigeration.LocationMode.NORMAL, true, null));
-    // ¶¨Î»³õÊ¼»¯
+    // å®šä½åˆå§‹åŒ–
     locClient = new LocationClient(this);
     locClient.registerLocationListener(myListener);
     LocationClientOption option = new LocationClientOption();
@@ -125,7 +125,7 @@ public class LocationActivity extends BaseActivity implements
       locClient.requestLocation();
 
     if (lastLocation != null) {
-      // ÏÔÊ¾ÔÚµØÍ¼ÉÏ
+      // æ˜¾ç¤ºåœ¨åœ°å›¾ä¸Š
       LatLng ll = new LatLng(lastLocation.getLatitude(),
           lastLocation.getLongitude());
       MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
@@ -134,13 +134,13 @@ public class LocationActivity extends BaseActivity implements
   }
 
   /**
-   * ¶¨Î»SDK¼àÌıº¯Êı
+   * å®šä½SDKç›‘å¬å‡½æ•°
    */
   public class MyLocationListener implements BDLocationListener {
 
     @Override
     public void onReceiveLocation(BDLocation location) {
-      // map view Ïú»Ùºó²»ÔÚ´¦ÀíĞÂ½ÓÊÕµÄÎ»ÖÃ
+      // map view é”€æ¯åä¸åœ¨å¤„ç†æ–°æ¥æ”¶çš„ä½ç½®
       if (location == null || mapView == null)
         return;
 
@@ -148,7 +148,7 @@ public class LocationActivity extends BaseActivity implements
         if (lastLocation.getLatitude() == location.getLatitude()
             && lastLocation.getLongitude() == location
             .getLongitude()) {
-          Logger.d(App.ctx.getString(R.string.geoIsSame));// ÈôÁ½´ÎÇëÇó»ñÈ¡µ½µÄµØÀíÎ»ÖÃ×ø±êÊÇÏàÍ¬µÄ£¬Ôò²»ÔÙ¶¨Î»
+          Logger.d(App.ctx.getString(R.string.geoIsSame));// è‹¥ä¸¤æ¬¡è¯·æ±‚è·å–åˆ°çš„åœ°ç†ä½ç½®åæ ‡æ˜¯ç›¸åŒçš„ï¼Œåˆ™ä¸å†å®šä½
           locClient.stop();
           return;
         }
@@ -161,7 +161,7 @@ public class LocationActivity extends BaseActivity implements
 
       MyLocationData locData = new MyLocationData.Builder()
           .accuracy(location.getRadius())
-              // ´Ë´¦ÉèÖÃ¿ª·¢Õß»ñÈ¡µ½µÄ·½ÏòĞÅÏ¢£¬Ë³Ê±Õë0-360
+              // æ­¤å¤„è®¾ç½®å¼€å‘è€…è·å–åˆ°çš„æ–¹å‘ä¿¡æ¯ï¼Œé¡ºæ—¶é’ˆ0-360
           .direction(100).latitude(location.getLatitude())
           .longitude(location.getLongitude()).build();
       baiduMap.setMyLocationData(locData);
@@ -171,18 +171,18 @@ public class LocationActivity extends BaseActivity implements
       if (address != null && !address.equals("")) {
         lastLocation.setAddrStr(address);
       } else {
-        // ·´GeoËÑË÷
+        // åGeoæœç´¢
         geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(ll));
       }
-      // ÏÔÊ¾ÔÚµØÍ¼ÉÏ
+      // æ˜¾ç¤ºåœ¨åœ°å›¾ä¸Š
       MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
       baiduMap.animateMapStatus(u);
-      //ÉèÖÃ°´Å¥¿Éµã»÷
+      //è®¾ç½®æŒ‰é’®å¯ç‚¹å‡»
     }
   }
 
   /**
-   * ¹¹Ôì¹ã²¥¼àÌıÀà£¬¼àÌı SDK key ÑéÖ¤ÒÔ¼°ÍøÂçÒì³£¹ã²¥
+   * æ„é€ å¹¿æ’­ç›‘å¬ç±»ï¼Œç›‘å¬ SDK key éªŒè¯ä»¥åŠç½‘ç»œå¼‚å¸¸å¹¿æ’­
    */
   public class BaiduReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
@@ -229,17 +229,17 @@ public class LocationActivity extends BaseActivity implements
   @Override
   protected void onDestroy() {
     if (locClient != null && locClient.isStarted()) {
-      // ÍË³öÊ±Ïú»Ù¶¨Î»
+      // é€€å‡ºæ—¶é”€æ¯å®šä½
       locClient.stop();
     }
-    // ¹Ø±Õ¶¨Î»Í¼²ã
+    // å…³é—­å®šä½å›¾å±‚
     baiduMap.setMyLocationEnabled(false);
     mapView.onDestroy();
     mapView = null;
-    // È¡Ïû¼àÌı SDK ¹ã²¥
+    // å–æ¶ˆç›‘å¬ SDK å¹¿æ’­
     unregisterReceiver(receiver);
     super.onDestroy();
-    // »ØÊÕ bitmap ×ÊÔ´
+    // å›æ”¶ bitmap èµ„æº
     descriptor.recycle();
   }
 
