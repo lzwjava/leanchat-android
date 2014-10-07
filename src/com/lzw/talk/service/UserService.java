@@ -10,6 +10,7 @@ import com.lzw.talk.util.PhotoUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -63,8 +64,19 @@ public class UserService {
     q.limit(C.PAGE_SIZE);
     q.skip(skip);
     User user = User.curUser();
-    q.whereNotEqualTo(C.OBJECT_ID, user.getObjectId());
+    List<String> friendIds = getFriendIds();
+    friendIds.add(user.getObjectId());
+    q.whereNotContainedIn(C.OBJECT_ID, friendIds);
     q.findInBackground(findCallback);
+  }
+
+  private static List<String> getFriendIds() {
+    List<User> friends = App.getInstance().getFriends();
+    List<String> ids = new ArrayList<String>();
+    for (User friend : friends) {
+      ids.add(friend.getObjectId());
+    }
+    return ids;
   }
 
   public static boolean isMyFriend(List<User> friends, String username) {
@@ -98,8 +110,8 @@ public class UserService {
     return q.find();
   }
 
-  public static void saveSex(boolean isMale,SaveCallback saveCallback) {
-    User user=User.curUser();
+  public static void saveSex(boolean isMale, SaveCallback saveCallback) {
+    User user = User.curUser();
     user.setSex(isMale);
     user.saveInBackground(saveCallback);
   }

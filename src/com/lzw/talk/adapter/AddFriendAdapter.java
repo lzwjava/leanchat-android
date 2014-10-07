@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.avos.avoscloud.AVException;
 import com.lzw.talk.R;
 import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
@@ -38,7 +39,7 @@ public class AddFriendAdapter extends BaseListAdapter<User> {
     ImageView avatarView = ViewHolder.findViewById(conView, R.id.avatar);
     Button addBtn = ViewHolder.findViewById(conView, R.id.add);
     String avatarUrl = contact.getAvatarUrl();
-    UserService.displayAvatar(avatarUrl,avatarView);
+    UserService.displayAvatar(avatarUrl, avatarView);
     nameView.setText(contact.getUsername());
     addBtn.setText(R.string.add);
     addBtn.setOnClickListener(new OnClickListener() {
@@ -61,7 +62,11 @@ public class AddFriendAdapter extends BaseListAdapter<User> {
       @Override
       protected void onPost(Exception e) {
         if (e != null) {
-          Utils.toast(App.ctx.getString(R.string.sendRequestFailed) + e.getMessage());
+          if (e instanceof AVException) {
+            Utils.toast(R.string.pleaseCheckNetwork);
+          } else {
+            Utils.toast(e.getMessage());
+          }
         } else {
           Utils.toast(R.string.sendRequestSucceed);
         }

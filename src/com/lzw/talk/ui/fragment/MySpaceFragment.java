@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +17,13 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.SaveCallback;
 import com.lzw.talk.R;
 import com.lzw.talk.avobject.User;
+import com.lzw.talk.base.App;
 import com.lzw.talk.service.UserService;
+import com.lzw.talk.ui.activity.NotifyPrefActivity;
 import com.lzw.talk.util.Logger;
 import com.lzw.talk.util.PathUtils;
 import com.lzw.talk.util.PhotoUtil;
+import com.lzw.talk.util.Utils;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -36,8 +38,9 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
   TextView usernameView, sexView;
   ImageView avatarView;
   View usernameLayout, avatarLayout, logoutLayout,
-      sexLayout;
-  String[] sexs = new String[]{"男", "女"};
+      sexLayout, notifyLayout;
+  String[] sexs = new String[]{App.ctx.getString(R.string.male),
+      App.ctx.getString(R.string.female)};
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -70,11 +73,13 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
     avatarLayout = ctx.findViewById(R.id.avatarLayout);
     logoutLayout = ctx.findViewById(R.id.logoutLayout);
     sexLayout = ctx.findViewById(R.id.sexLayout);
+    notifyLayout = ctx.findViewById(R.id.notifyLayout);
     sexView = (TextView) ctx.findViewById(R.id.sex);
 
     avatarLayout.setOnClickListener(this);
     logoutLayout.setOnClickListener(this);
     sexLayout.setOnClickListener(this);
+    notifyLayout.setOnClickListener(this);
   }
 
   @Override
@@ -89,6 +94,8 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
       getActivity().finish();
     } else if (id == R.id.sexLayout) {
       showSexChooseDialog();
+    } else if (id == R.id.notifyLayout) {
+      Utils.goActivity(ctx, NotifyPrefActivity.class);
     }
   }
 

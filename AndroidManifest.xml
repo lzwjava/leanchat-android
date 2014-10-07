@@ -111,6 +111,8 @@
 
         <activity android:name=".ui.activity.PersonInfoActivity" />
 
+        <activity android:name=".ui.activity.NotifyPrefActivity" />
+
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"

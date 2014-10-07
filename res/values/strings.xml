@@ -205,8 +205,8 @@
     <string name="searchError">搜索出错</string>
     <string name="addFailed">添加失败</string>
     <string name="add">添加</string>
-    <string name="sendRequestFailed">发送请求失败，请重新添加! </string>
-    <string name="sendRequestSucceed">发送请求成功，等待对方验证!</string>
+    <string name="sendRequestFailed">发送请求失败，请重新添加</string>
+    <string name="sendRequestSucceed">发送请求成功，等待对方验证</string>
     <string name="deleting">正在删除...</string>
     <string name="loadError">加载错误</string>
     <string name="personalInfo">个人资料</string>
@@ -230,4 +230,7 @@
     <string name="noNearbyPeople">暂无附近的人！</string>
     <string name="noResult">无相关结果</string>
     <string name="loadMessagesFinish">聊天记录加载完毕</string>
+    <string name="alreadyRequest">已经发出过请求了</string>
+    <string name="notifySetting">提醒设置</string>
+    <string name="notifyWhenNews">接收新消息通知</string>
 </resources>

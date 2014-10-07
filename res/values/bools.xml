@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <bool name="defaultNotifyWhenNews">true</bool>
+    <bool name="defaultVoiceNotify">true</bool>
+    <bool name="defaultVibrateNotify">true</bool>
+</resources>

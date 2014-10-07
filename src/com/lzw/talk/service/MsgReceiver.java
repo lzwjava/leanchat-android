@@ -10,6 +10,7 @@ import com.avos.avoscloud.AVMessage;
 import com.avos.avoscloud.AVMessageReceiver;
 import com.avos.avoscloud.Session;
 import com.lzw.talk.R;
+import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
 import com.lzw.talk.db.DBMsg;
 import com.lzw.talk.entity.Msg;
@@ -92,7 +93,12 @@ public class MsgReceiver extends AVMessageReceiver {
           DBMsg.insertMsg(msg);
           MessageListener listener = getMessageListener(messageListeners, msg);
           if (listener == null) {
-            notifyMsg(context, msg);
+            if (User.curUser() != null) {
+              PrefDao prefDao = PrefDao.getCurUserPrefDao(context);
+              if (prefDao.isNotifyWhenNews()) {
+                notifyMsg(context, msg);
+              }
+            }
           } else {
             listener.onMessage(msg);
           }
@@ -163,7 +169,15 @@ public class MsgReceiver extends AVMessageReceiver {
         .setContentText(notifyContent)
         .setAutoCancel(true);
     NotificationManager man = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-    man.notify(REPLY_NOTIFY_ID, builder.getNotification());
+    Notification notification = builder.getNotification();
+    PrefDao prefDao = PrefDao.getCurUserPrefDao(context);
+    if (prefDao.isVoiceNotify()) {
+      notification.defaults |= Notification.DEFAULT_SOUND;
+    }
+    if (prefDao.isVibrateNotify()) {
+      notification.defaults |= Notification.DEFAULT_VIBRATE;
+    }
+    man.notify(REPLY_NOTIFY_ID, notification);
   }
 
   @Override

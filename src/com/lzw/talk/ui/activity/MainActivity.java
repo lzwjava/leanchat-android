@@ -57,8 +57,13 @@ public class MainActivity extends BaseActivity {
     //contactBtn.performClick();
     messageBtn.performClick();
     //discoverBtn.performClick();
-    ChatService.openSession();
     initBaiduLocClient();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    ChatService.openSession();
   }
 
   private void initBaiduLocClient() {

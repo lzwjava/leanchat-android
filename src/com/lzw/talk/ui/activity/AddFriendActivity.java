@@ -68,7 +68,7 @@ public class AddFriendActivity extends BaseActivity implements OnClickListener, 
   @Override
   public void onClick(View view) {
     switch (view.getId()) {
-      case R.id.searchBtn://鎼滅储
+      case R.id.searchBtn:
         searchName = searchNameEdit.getText().toString();
         if (searchName != null) {
           adapter.clear();

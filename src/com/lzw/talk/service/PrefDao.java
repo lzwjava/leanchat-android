@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import com.avos.avoscloud.AVGeoPoint;
+import com.lzw.talk.R;
 import com.lzw.talk.avobject.User;
+import com.lzw.talk.base.App;
 import com.lzw.talk.util.Logger;
 
 /**
@@ -14,6 +16,10 @@ public class PrefDao {
   public static final String ADD_REQUEST_N = "addRequestN";
   public static final String LATITUDE = "latitude";
   public static final String LONGITUDE = "longitude";
+  public static final String NOTIFY_WHEN_NEWS = "notifyWhenNews";
+  public static final String VOICE_NOTIFY = "voiceNotify";
+  public static final String VIBRATE_NOTIFY = "vibrateNotify";
+
   Context cxt;
   SharedPreferences pref;
   SharedPreferences.Editor editor;
@@ -35,11 +41,7 @@ public class PrefDao {
   }
 
   public static PrefDao getCurUserPrefDao(Context ctx) {
-    User user = User.curUser();
-    if (user == null) {
-      throw new NullPointerException("user is null");
-    }
-    PrefDao prefDao = new PrefDao(ctx, user.getObjectId());
+    PrefDao prefDao = new PrefDao(ctx, User.curUserId());
     return prefDao;
   }
 
@@ -93,4 +95,36 @@ public class PrefDao {
     setLatitude(location.getLatitude() + "");
     setLongitude(location.getLongitude() + "");
   }
+
+  public boolean isNotifyWhenNews() {
+    return pref.getBoolean(NOTIFY_WHEN_NEWS,
+        App.ctx.getResources().getBoolean(R.bool.defaultNotifyWhenNews));
+  }
+
+  public void setNotifyWhenNews(boolean notifyWhenNews) {
+    editor.putBoolean(NOTIFY_WHEN_NEWS, notifyWhenNews).commit();
+  }
+
+  boolean getBooleanByResId(int resId) {
+    return App.ctx.getResources().getBoolean(resId);
+  }
+
+  public boolean isVoiceNotify() {
+    return pref.getBoolean(VOICE_NOTIFY,
+        getBooleanByResId(R.bool.defaultVoiceNotify));
+  }
+
+  public void setVoiceNotify(boolean voiceNotify) {
+    editor.putBoolean(VOICE_NOTIFY, voiceNotify).commit();
+  }
+
+  public boolean isVibrateNotify() {
+    return pref.getBoolean(VIBRATE_NOTIFY,
+        getBooleanByResId(R.bool.defaultVibrateNotify));
+  }
+
+  public void setVibrateNotify(boolean vibrateNotify) {
+    editor.putBoolean(VIBRATE_NOTIFY, vibrateNotify);
+  }
+
 }
