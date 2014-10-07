@@ -30,7 +30,6 @@
                 android:layout_marginLeft="@dimen/marginToUsername"
                 android:layout_width="wrap_content"
                 android:maxWidth="@dimen/chatContentMaxWidth"
-                android:padding="@dimen/chatContentPadding"
                 android:layout_height="wrap_content"
                 android:background="@drawable/chat_left_qp"
                 style="@style/chat_content_date_style">
@@ -39,6 +38,8 @@
                     android:id="@+id/locationView"
                     style="@style/chat_content_date_style"
                     android:layout_width="wrap_content"
+                    android:maxWidth="200dp"
+                    android:textSize="10sp"
                     android:layout_height="wrap_content"
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
