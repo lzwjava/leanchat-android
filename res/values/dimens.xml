@@ -30,7 +30,7 @@
     <dimen name="sendBtnSize">30dp</dimen>
 
     <dimen name="playBtnWidth">30dp</dimen>
-    <dimen name="chatBottomBtnWidth">30dp</dimen>
+    <dimen name="chatBottomBtnSize">25dp</dimen>
 
     <dimen name="message_top_height">70.0dip</dimen>
     <dimen name="base_line_width_1">1dip</dimen>

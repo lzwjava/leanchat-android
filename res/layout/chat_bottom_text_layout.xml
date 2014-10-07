@@ -28,18 +28,18 @@
 
         <Button
             android:id="@+id/sendBtn"
-            android:layout_height="@dimen/sendBtnSize"
+            android:layout_height="@dimen/chatBottomBtnSize"
             android:textColor="#000"
             android:background="@drawable/btn_chat_send_selector"
             android:text=""
             android:visibility="gone"
             android:gravity="center"
-            android:layout_width="@dimen/sendBtnSize" />
+            android:layout_width="@dimen/chatBottomBtnSize" />
 
         <Button
             android:id="@+id/turnToAudioBtn"
-            android:layout_width="@dimen/sendBtnSize"
-            android:layout_height="@dimen/sendBtnSize"
+            android:layout_width="@dimen/chatBottomBtnSize"
+            android:layout_height="@dimen/chatBottomBtnSize"
             android:visibility="visible"
             android:layout_gravity="center"
             android:background="@drawable/btn_chat_voice_selector"

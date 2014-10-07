@@ -17,12 +17,13 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import com.lzw.talk.R;
 import com.lzw.talk.base.App;
+
 import java.io.File;
 import java.io.IOException;
 
 public class RecordButton extends Button {
-  public static final int BACK_RECORDING = R.color.blue;
-  public static final int BACK_IDLE = R.color.white;
+  public static final int BACK_RECORDING = R.drawable.chat_voice_bg_pressed;
+  public static final int BACK_IDLE = R.drawable.chat_voice_bg;
 
   public RecordButton(Context context) {
     super(context);
@@ -120,7 +121,7 @@ public class RecordButton extends Button {
     }
 
     int sec = Math.round(intervalTime * 1.0f / 1000);
-    if (finishedListener != null){
+    if (finishedListener != null) {
       finishedListener.onFinishedRecord(mFileName, sec);
     }
   }
@@ -136,7 +137,7 @@ public class RecordButton extends Button {
   }
 
   private void startRecording() {
-    if(recorder==null){
+    if (recorder == null) {
       recorder = new MediaRecorder();
       recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
       recorder.setOutputFormat(MediaRecorder.OutputFormat.RAW_AMR);
@@ -147,7 +148,7 @@ public class RecordButton extends Button {
       } catch (IOException e) {
         e.printStackTrace();
       }
-    }else{
+    } else {
       recorder.setOutputFile(mFileName);
       recorder.reset();
     }
@@ -222,6 +223,7 @@ public class RecordButton extends Button {
 
   public interface RecordEventListener {
     public void onFinishedRecord(String audioPath, int secs);
+
     void onStartRecord();
   }
 }
