@@ -61,4 +61,5 @@
     <dimen name="score_item_height">100.0dip</dimen>
 
     <dimen name="margin_chat_top">5.0dip</dimen>
+    <dimen name="mySpaceRowHeight">80dp</dimen>
 </resources>

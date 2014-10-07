@@ -1,11 +1,15 @@
 package com.lzw.talk.util;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.*;
 import android.graphics.Bitmap.Config;
 import android.graphics.PorterDuff.Mode;
 import android.media.ExifInterface;
 import android.media.ThumbnailUtils;
+import android.net.Uri;
+import android.provider.MediaStore;
 import com.lzw.talk.R;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
@@ -354,7 +358,7 @@ public class PhotoUtil {
             // 。preProcessor(BitmapProcessor preProcessor)
         .resetViewBeforeLoading(true)// 设置图片在下载前是否重置，复位
             // .displayer(new RoundedBitmapDisplayer(20))//是否设置为圆角，弧度为多少
-        //.displayer(new FadeInBitmapDisplayer(100))// 淡入
+            //.displayer(new FadeInBitmapDisplayer(100))// 淡入
         .build();
     return options;
   }
@@ -373,4 +377,6 @@ public class PhotoUtil {
         .writeDebugLogs() // Remove for release app
         .build();
   }
+
+
 }

@@ -96,11 +96,8 @@ public class User extends AVUser {
   }
 
   public String getSexInfo() {
-    if (getSex()) {
-      return App.ctx.getString(R.string.male);
-    } else {
-      return App.ctx.getString(R.string.female);
-    }
+    return getSex() ? App.ctx.getString(R.string.male) :
+        App.ctx.getString(R.string.female);
   }
 
   public String getSortLetters() {

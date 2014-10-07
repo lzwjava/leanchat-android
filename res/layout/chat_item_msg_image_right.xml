@@ -33,7 +33,7 @@
                 android:maxHeight="@dimen/chatImageMaxWidth"
                 android:layout_height="wrap_content"
                 android:background="@drawable/chat_right_qp"
-                android:src="@drawable/xiaohei"
+                android:src="@null"
                 android:layout_marginRight="5dp"/>
 
             <ImageView

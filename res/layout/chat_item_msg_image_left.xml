@@ -7,8 +7,7 @@
 
     <include layout="@layout/chat_item_time_layout" />
 
-    <LinearLayout
-        style="@style/chat_item_layout">
+    <LinearLayout style="@style/chat_item_layout">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -31,7 +30,7 @@
                 android:maxWidth="@dimen/chatImageMaxWidth"
                 android:maxHeight="@dimen/chatImageMaxWidth"
                 android:padding="@dimen/chatContentPadding"
-                android:src="@drawable/xiaohei"
+                android:src="@null"
                 android:layout_height="wrap_content"
                 android:background="@drawable/chat_left_qp"
                 style="@style/chat_content_date_style" />

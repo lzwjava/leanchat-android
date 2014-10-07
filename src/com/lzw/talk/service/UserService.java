@@ -97,4 +97,10 @@ public class UserService {
     q.limit(C.PAGE_SIZE);
     return q.find();
   }
+
+  public static void saveSex(boolean isMale,SaveCallback saveCallback) {
+    User user=User.curUser();
+    user.setSex(isMale);
+    user.saveInBackground(saveCallback);
+  }
 }
