@@ -1,6 +1,6 @@
 package com.lzw.talk.util;
 
-import java.util.Calendar;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -8,21 +8,16 @@ import java.util.Date;
  */
 public class TimeUtils {
   public static String getDate(Date date) {
-    Calendar c = Calendar.getInstance();
-    c.setTime(date);
-
-    String month = String.valueOf(c.get(Calendar.MONTH));
-    String day = String.valueOf(c.get(Calendar.DAY_OF_MONTH) + 1);
-    String hour = String.valueOf(c.get(Calendar.HOUR_OF_DAY));
-    String mins = String.valueOf(c.get(Calendar.MINUTE));
-    String secs = String.valueOf(c.get(Calendar.SECOND));
-
-    StringBuffer sbBuffer = new StringBuffer();
-    sbBuffer.append(month + "-" + day + " " + hour + ":" + mins + ":" + secs);
-    return sbBuffer.toString();
+    SimpleDateFormat format = new SimpleDateFormat("MM-dd HH:mm");
+    return format.format(date);
   }
 
   public static String millisecs2DateString(long timestamp) {
     return getDate(new Date(timestamp));
+  }
+
+  public static boolean haveTimeGap(long lastTime, long time) {
+    int gap = 1000 * 60 * 10;
+    return time - lastTime > gap;
   }
 }

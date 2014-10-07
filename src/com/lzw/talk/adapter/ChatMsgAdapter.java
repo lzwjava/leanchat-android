@@ -101,7 +101,14 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
     PlayButton playBtn = ViewHolder.findViewById(conView, R.id.playBtn);
     TextView locationView = ViewHolder.findViewById(conView, R.id.locationView);
 
-    sendTimeView.setText(TimeUtils.millisecs2DateString(msg.getTimestamp()));
+    if (position == 0 || TimeUtils.haveTimeGap(datas.get(position - 1).getTimestamp(),
+        msg.getTimestamp())) {
+      sendTimeView.setVisibility(View.VISIBLE);
+      sendTimeView.setText(TimeUtils.millisecs2DateString(msg.getTimestamp()));
+    } else {
+      sendTimeView.setVisibility(View.GONE);
+    }
+
     String fromPeerId = msg.getFromPeerId();
     User user = App.lookupUser(fromPeerId);
     if (user == null) {
