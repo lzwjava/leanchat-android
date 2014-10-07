@@ -480,6 +480,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
   private void showAudioLayout() {
     chatTextLayout.setVisibility(View.GONE);
     chatAudioLayout.setVisibility(View.VISIBLE);
+    chatEmotionLayout.setVisibility(View.GONE);
     hideSoftInputView();
   }
 
