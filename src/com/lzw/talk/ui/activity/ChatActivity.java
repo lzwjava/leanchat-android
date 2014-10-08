@@ -1,7 +1,5 @@
 package com.lzw.talk.ui.activity;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -17,11 +15,17 @@ import android.text.*;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import com.avos.avoscloud.Group;
+import com.avos.avoscloud.Session;
 import com.lzw.talk.R;
 import com.lzw.talk.adapter.ChatMsgAdapter;
 import com.lzw.talk.adapter.EmotionGridAdapter;
 import com.lzw.talk.adapter.EmotionPagerAdapter;
+import com.lzw.talk.avobject.ChatGroup;
 import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
 import com.lzw.talk.db.DBHelper;
@@ -42,18 +46,17 @@ import java.util.regex.Pattern;
 
 public class ChatActivity extends BaseActivity implements OnClickListener, MessageListener,
     XListView.IXListViewListener {
-  public static final String CHAT_USER_ID = "chatUserId";
   private static final int IMAGE_REQUEST = 0;
   public static final int LOCATION_REQUEST = 1;
   private static final int TAKE_CAMERA_REQUEST = 2;
   public static final int PAGE_SIZE = 10;
+
   private ChatMsgAdapter adapter;
   private List<Msg> msgs = new ArrayList<Msg>();
   public static ChatActivity instance;
   User me;
   DBHelper dbHelper;
   private Activity ctx;
-  User chatUser;
 
   HeaderLayout headerLayout;
   View chatTextLayout, chatAudioLayout, chatAddLayout, chatEmotionLayout;
@@ -68,6 +71,14 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
   private View addCameraBtn;
   int msgSize = PAGE_SIZE;
   AnimService animService;
+
+  boolean singleChat;
+  public static final String CHAT_USER_ID = "chatUserId";
+  public static final String GROUP_ID = "groupId";
+  public static final String SINGLE_CHAT = "singleChat";
+  User chatUser;
+  Group group;
+  ChatGroup chatGroup;
 
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -84,6 +95,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
     initListView();
     setSoftInputMode();
     ChatService.withUserToWatch(chatUser, true);
+
     loadNewMsg();
   }
 
@@ -208,7 +220,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
     headerLayout = (HeaderLayout) findViewById(R.id.headerLayout);
     chatTextLayout = findViewById(R.id.chatTextLayout);
     chatAudioLayout = findViewById(R.id.chatRecordLayout);
-    chatBottomLayout= (LinearLayout) findViewById(R.id.bottomLayout);
+    chatBottomLayout = (LinearLayout) findViewById(R.id.bottomLayout);
     turnToAudioBtn = findViewById(R.id.turnToAudioBtn);
     turnToTextBtn = findViewById(R.id.turnToTextBtn);
     recordBtn = (RecordButton) findViewById(R.id.recordBtn);
@@ -236,22 +248,38 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
   @Override
   public void onResume() {
     super.onResume();
-    MsgReceiver.registerMessageListener(chatUser.getObjectId(), this);
+    if (singleChat) {
+      MsgReceiver.registerMessageListener(chatUser.getObjectId(), this);
+    } else {
+      GroupMsgReceiver.registerMessageListener(group.getGroupId(), this);
+    }
   }
 
   @Override
   public void onPause() {
     super.onPause();
-    MsgReceiver.unregisterMessageListener(chatUser.getObjectId());
+    if (singleChat) {
+      MsgReceiver.unregisterMessageListener(chatUser.getObjectId());
+    } else {
+      GroupMsgReceiver.registerMessageListener(group.getGroupId(), this);
+    }
   }
 
   public void initData() {
     me = User.curUser();
     dbHelper = new DBHelper(ctx, App.DB_NAME, App.DB_VER);
     Intent intent = getIntent();
-    String chatUserId = intent.getStringExtra(CHAT_USER_ID);
-    chatUser = App.lookupUser(chatUserId);
-    animService= AnimService.getInstance();
+    singleChat = intent.getBooleanExtra(SINGLE_CHAT, true);
+    if (singleChat) {
+      String chatUserId = intent.getStringExtra(CHAT_USER_ID);
+      chatUser = App.lookupUser(chatUserId);
+    } else {
+      String groupId = intent.getStringExtra(GROUP_ID);
+      Session session = ChatService.getSession();
+      group = session.getGroup(groupId);
+      chatGroup = App.lookupChatGroup(groupId);
+    }
+    animService = AnimService.getInstance();
   }
 
   @Override
@@ -355,8 +383,14 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
     @Override
     protected Void doInBackground(Void... params) {
       try {
-        msgs = DBMsg.getMsgs(dbHelper, ChatService.getPeerId(me),
-            ChatService.getPeerId(chatUser), msgSize);
+        String convid;
+        if(singleChat){
+          convid= AVOSUtils.convid(ChatService.getPeerId(me), ChatService.getPeerId(chatUser));
+        }else{
+          convid=group.getGroupId();
+        }
+        msgs = DBMsg.getMsgs(dbHelper, convid, msgSize);
+        ChatService.cacheUserFromMsgs(msgs);
         res = true;
       } catch (Exception e) {
         e.printStackTrace();
@@ -386,7 +420,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
       scrollToLast();
     } else {
       xListView.setSelection(newN - lastN - 1);
-      if(lastN==newN){
+      if (lastN == newN) {
         Utils.toast(R.string.loadMessagesFinish);
       }
     }
@@ -459,14 +493,14 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
     }
   }
 
-  private void hideAddLayout(){
-    if(chatAddLayout.getVisibility()==View.VISIBLE){
+  private void hideAddLayout() {
+    if (chatAddLayout.getVisibility() == View.VISIBLE) {
       animService.hideView(chatAddLayout);
     }
   }
 
   private void showAddLayout() {
-    if(chatAddLayout.getVisibility()==View.GONE){
+    if (chatAddLayout.getVisibility() == View.GONE) {
       chatAddLayout.setVisibility(View.VISIBLE);
       chatAddLayout.startAnimation(animService.popupFromBottomAnim);
     }
@@ -610,7 +644,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
 
   public void scrollToLast() {
     Logger.d("scrollToLast");
-    xListView.smoothScrollToPosition(xListView.getCount()-1);
+    xListView.smoothScrollToPosition(xListView.getCount() - 1);
   }
 
   @Override

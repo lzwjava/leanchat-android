@@ -89,8 +89,8 @@ public class ChatService {
     return msg;
   }
 
-  public static Msg sendTextMsg(User user, String content) {
-    String peerId = getPeerId(user);
+  public static Msg sendTextMsg(User toUser, String content) {
+    String peerId = getPeerId(toUser);
     int type = Msg.TYPE_TEXT;
     Msg msg = sendMessage(peerId, type, content);
     Log.i("lzw", "sendTextMsg fromId=" + msg.getFromPeerId() + " toId=" + msg.getToPeerIds());
@@ -162,12 +162,12 @@ public class ChatService {
   }
 
   public static void cacheUserFromMsgs(List<Msg> msgs) throws AVException {
-    List<String> uncachedId = new ArrayList<String>();
+    Set<String> uncachedId = new HashSet<String>();
     for (Msg msg : msgs) {
       String chatUserId = msg.getChatUserId();
       uncachedId.add(chatUserId);
     }
-    UserService.cacheUser(uncachedId);
+    UserService.cacheUser(new ArrayList<String>(uncachedId));
   }
 
   public static void closeSession() {

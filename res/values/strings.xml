@@ -102,7 +102,7 @@
     <string name="username">用户名</string>
     <string name="nickname">昵称</string>
     <string name="please_input_hint">请输入{0}</string>
-    <string name="change_title">修改{0}</string>
+    <string name="change_title">{0}</string>
     <string name="cannotFindImage">不能找到图片</string>
     <string name="sent">已发送</string>
     <string name="failed">失败</string>
@@ -233,4 +233,6 @@
     <string name="alreadyRequest">已经发出过请求了</string>
     <string name="notifySetting">提醒设置</string>
     <string name="notifyWhenNews">接收新消息通知</string>
+    <string name="group">群组</string>
+    <string name="groupName">群组名</string>
 </resources>

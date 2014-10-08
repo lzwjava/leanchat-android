@@ -22,6 +22,7 @@ import com.lzw.talk.service.CloudService;
 import com.lzw.talk.service.UserService;
 import com.lzw.talk.ui.activity.AddFriendActivity;
 import com.lzw.talk.ui.activity.ChatActivity;
+import com.lzw.talk.ui.activity.GroupActivity;
 import com.lzw.talk.ui.activity.NewFriendActivity;
 import com.lzw.talk.ui.view.ClearEditText;
 import com.lzw.talk.ui.view.EnLetterView;
@@ -42,7 +43,7 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
   List<User> friends = new ArrayList<User>();
   HeaderLayout headerLayout;
   ImageView msgTipsView;
-  LinearLayout newFriendLayout;
+  LinearLayout newFriendLayout, groupLayout;
 
   CharacterParser characterParser;
   PinyinComparator pinyinComparator;
@@ -58,8 +59,13 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
   public void onActivityCreated(Bundle savedInstanceState) {
     // TODO Auto-generated method stub
     super.onActivityCreated(savedInstanceState);
+    findView();
     init();
     refresh();
+  }
+
+  private void findView() {
+
   }
 
   private void init() {
@@ -142,7 +148,10 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
     RelativeLayout headView = (RelativeLayout) mInflater.inflate(R.layout.include_new_friend, null);
     msgTipsView = (ImageView) headView.findViewById(R.id.iv_msg_tips);
     newFriendLayout = (LinearLayout) headView.findViewById(R.id.layout_new);
+    groupLayout = (LinearLayout) headView.findViewById(R.id.layout_group);
+
     newFriendLayout.setOnClickListener(this);
+    groupLayout.setOnClickListener(this);
 
     friendsList.addHeaderView(headView);
     userAdapter = new UserFriendAdapter(getActivity(), friends);
@@ -180,6 +189,8 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
     int viewId = v.getId();
     if (viewId == R.id.layout_new) {
       Utils.goActivity(ctx, NewFriendActivity.class);
+    } else if (viewId == R.id.layout_group) {
+      Utils.goActivity(ctx, GroupActivity.class);
     }
   }
 

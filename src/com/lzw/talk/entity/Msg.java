@@ -140,22 +140,27 @@ public class Msg {
     return !fromPeerId.equals(ChatService.getSelfId());
   }
 
+  //group have not chatUserId
+  //TODO
+
+  public boolean isGroupMsg() {
+    return getToPeerIds() == null || getToPeerIds().isEmpty();
+  }
+
   public String getChatUserId() {
-    String fromPeerId = getFromPeerId();
-    String selfId = ChatService.getSelfId();
-    if (fromPeerId == null) {
-      Logger.v("fromPeerId=null");
-      fromPeerId = selfId;
-    }
-    if (fromPeerId.equals(selfId)) {
-      List<String> toPeerIds = getToPeerIds();
-      if (toPeerIds != null && toPeerIds.size() > 0) {
-        return toPeerIds.get(0);
-      } else {
-        throw new RuntimeException("toPeerIds is not set");
-      }
+    if (isGroupMsg()) {
+      return getFromPeerId();
     } else {
-      return fromPeerId;
+      String fromPeerId = getFromPeerId();
+      String selfId = ChatService.getSelfId();
+      if (fromPeerId == null || selfId == null) {
+        throw new NullPointerException("fromPeerId is null or selfId is null");
+      }
+      if (fromPeerId.equals(selfId)) {
+        return getToPeerIds().get(0);
+      } else {
+        return fromPeerId;
+      }
     }
   }
 
@@ -170,9 +175,9 @@ public class Msg {
       case TYPE_AUDIO:
         return App.ctx.getString(R.string.audio);
       case TYPE_TEXT:
-        if(EmotionService.haveEmotion(getContent())){
+        if (EmotionService.haveEmotion(getContent())) {
           return App.ctx.getString(R.string.emotion);
-        }else{
+        } else {
           return getContent();
         }
       case TYPE_IMAGE:

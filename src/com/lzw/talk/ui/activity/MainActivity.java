@@ -54,8 +54,8 @@ public class MainActivity extends BaseActivity {
     init();
 
     //mySpaceBtn.performClick();
-    //contactBtn.performClick();
-    messageBtn.performClick();
+    contactBtn.performClick();
+    //messageBtn.performClick();
     //discoverBtn.performClick();
     initBaiduLocClient();
   }

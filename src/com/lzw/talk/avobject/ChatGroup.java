@@ -1,4 +1,4 @@
-package com.lzw.talk.entity;
+package com.lzw.talk.avobject;
 
 import com.avos.avoscloud.AVClassName;
 import com.avos.avoscloud.AVObject;
@@ -9,7 +9,7 @@ import java.util.List;
  * Created by lzw on 14-10-8.
  */
 @AVClassName("AVOSRealtimeGroups")
-public class Group extends AVObject {
+public class ChatGroup extends AVObject {
   public static final String M = "m";
   public static final String NAME = "name";
   //String name;

@@ -83,6 +83,13 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name=".service.GroupMsgReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="com.avoscloud.group.action" />
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name=".ui.activity.MainActivity"
             android:launchMode="singleTask" />
@@ -112,6 +119,8 @@
         <activity android:name=".ui.activity.PersonInfoActivity" />
 
         <activity android:name=".ui.activity.NotifyPrefActivity" />
+
+        <activity android:name=".ui.activity.GroupActivity" />
 
         <service
             android:name="com.baidu.location.f"

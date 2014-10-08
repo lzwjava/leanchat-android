@@ -7,6 +7,7 @@ import com.avos.avoscloud.*;
 import com.baidu.mapapi.SDKInitializer;
 import com.lzw.talk.avobject.AddRequest;
 import com.lzw.talk.avobject.User;
+import com.lzw.talk.avobject.ChatGroup;
 import com.lzw.talk.service.UserService;
 import com.lzw.talk.ui.activity.LoginActivity;
 import com.lzw.talk.util.AVOSUtils;
@@ -33,6 +34,7 @@ public class App extends Application {
   public static App ctx;
   public static Session session;
   private static Map<String, User> usersCache = new HashMap<String, User>();
+  public static Map<String, ChatGroup> chatGroupsCache = new HashMap<String, ChatGroup>();
   List<User> friends = new ArrayList<User>();
 
   @Override
@@ -44,6 +46,7 @@ public class App extends Application {
         "057x24cfdzhffnl3dzk14jh9xo2rq6w1hy1fdzt5tv46ym78");
     User.registerSubclass(User.class);
     User.registerSubclass(AddRequest.class);
+    User.registerSubclass(ChatGroup.class);
     AVInstallation.getCurrentInstallation().saveInBackground();
     PushService.setDefaultPushCallback(ctx, LoginActivity.class);
     AVOSUtils.showInternalDebugLog();
@@ -54,7 +57,7 @@ public class App extends Application {
     }
     initImageLoader(ctx);
     initBaidu();
-    User user=User.curUser();
+    User user = User.curUser();
     openStrictMode();
   }
 
@@ -70,7 +73,7 @@ public class App extends Application {
           .detectLeakedSqlLiteObjects()
           .detectLeakedClosableObjects()
           .penaltyLog()
-          //.penaltyDeath()
+              //.penaltyDeath()
           .build());
     }
   }
@@ -109,6 +112,16 @@ public class App extends Application {
   public static void registerBatchUserCache(List<User> users) {
     for (User user : users) {
       registerUserCache(user);
+    }
+  }
+
+  public static ChatGroup lookupChatGroup(String groupId) {
+    return chatGroupsCache.get(groupId);
+  }
+
+  public static void registerChatGroupsCache(List<ChatGroup> chatGroups) {
+    for (ChatGroup chatGroup : chatGroups) {
+      chatGroupsCache.put(chatGroup.getObjectId(), chatGroup);
     }
   }
 

@@ -1,5 +1,6 @@
 package com.lzw.talk.ui.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -26,6 +27,16 @@ public class UpdateContentActivity extends BaseActivity {
     init();
   }
 
+  public static void goActivityForResult(Activity ctx, String fieldName, int requestCode) {
+    Intent intent = new Intent(ctx, UpdateContentActivity.class);
+    intent.putExtra(FIELD_NAME, fieldName);
+    ctx.startActivityForResult(intent, requestCode);
+  }
+
+  public static String getResultValue(Intent data) {
+    return data.getStringExtra(VALUE);
+  }
+
   private void init() {
     Intent intent = getIntent();
     String fieldName = intent.getStringExtra(FIELD_NAME);
@@ -43,16 +54,15 @@ public class UpdateContentActivity extends BaseActivity {
         finish();
       }
     });
-    headerLayout.showRightImageButton(R.drawable.base_action_bar_true_bg_selector,
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            Intent i = new Intent();
-            i.putExtra(VALUE, valueEdit.getText().toString());
-            setResult(RESULT_OK, i);
-            finish();
-          }
-        });
+    headerLayout.showRightTextButton(R.string.sure, new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        Intent i = new Intent();
+        i.putExtra(VALUE, valueEdit.getText().toString());
+        setResult(RESULT_OK, i);
+        finish();
+      }
+    });
   }
 
   private void findView() {

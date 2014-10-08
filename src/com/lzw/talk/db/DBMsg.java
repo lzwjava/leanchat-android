@@ -74,11 +74,10 @@ public class DBMsg {
     return n;
   }
 
-  public static List<Msg> getMsgs(DBHelper dbHelper, String me, String he, int size) {
+  public static List<Msg> getMsgs(DBHelper dbHelper, String convid, int size) {
     List<Msg> msgs = new ArrayList<Msg>();
     SQLiteDatabase db = dbHelper.getReadableDatabase();
     assert db != null;
-    String convid = AVOSUtils.convid(me, he);
     Cursor c = db.query(MESSAGES, columns,
         "convid=?",
         new String[]{convid}, null, null,
