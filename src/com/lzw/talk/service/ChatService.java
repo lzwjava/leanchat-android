@@ -1,15 +1,24 @@
 package com.lzw.talk.service;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
+import com.alibaba.fastjson.JSONException;
 import com.avos.avoscloud.*;
 import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
 import com.lzw.talk.db.DBMsg;
 import com.lzw.talk.entity.Msg;
 import com.lzw.talk.entity.RecentMsg;
+import com.lzw.talk.ui.activity.ChatActivity;
 import com.lzw.talk.util.Logger;
+import com.lzw.talk.util.NetAsyncTask;
 import com.lzw.talk.util.Utils;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -17,6 +26,7 @@ import java.util.*;
  * Created by lzw on 14-7-9.
  */
 public class ChatService {
+  private static final int REPLY_NOTIFY_ID = 1;
 
   public static List<User> findChatUsers() throws AVException {
     List<User> users = getAllUsers();
@@ -60,7 +70,7 @@ public class ChatService {
     return SessionManager.getInstance(getPeerId(User.curUser()));
   }
 
-  public static void sendResponseMessage(Msg msg) {
+  public static void sendResponseMessage(Msg msg, Group group) {
     Msg resMsg = new Msg();
     resMsg.setType(Msg.TYPE_RESPONSE);
     resMsg.setToPeerIds(Arrays.asList(msg.getFromPeerId()));
@@ -68,61 +78,65 @@ public class ChatService {
     resMsg.setContent(msg.getTimestamp() + "");
     resMsg.setObjectId(msg.getObjectId());
     Session session = getSession();
-    session.sendMessage(resMsg.toAVMessage());
+    AVMessage avMsg = resMsg.toAVMessage();
+    if(group==null){
+      session.sendMessage(avMsg);
+    }else{
+      group.sendMessage(avMsg);
+    }
   }
 
-  public static Msg sendAudioMsg(User user, String path, String msgId) throws IOException, AVException {
-    return sendFileMsg(user, msgId, Msg.TYPE_AUDIO, path);
+  public static Msg sendAudioMsg(User toUser, String path, String msgId, Group group) throws IOException, AVException {
+    return sendFileMsg(toUser, msgId, Msg.TYPE_AUDIO, path, group);
   }
 
-  public static Msg sendImageMsg(User user, String filePath, String msgId) throws IOException, AVException {
-    return sendFileMsg(user, msgId, Msg.TYPE_IMAGE, filePath);
+  public static Msg sendImageMsg(User user, String filePath, String msgId, Group group) throws IOException, AVException {
+    return sendFileMsg(user, msgId, Msg.TYPE_IMAGE, filePath, group);
   }
 
-  public static Msg sendFileMsg(User user, String objectId, int type, String filePath) throws IOException, AVException {
+  public static Msg sendFileMsg(User toUser, String objectId, int type, String filePath, Group group) throws IOException, AVException {
     AVFile file = AVFile.withAbsoluteLocalPath(objectId, filePath);
     file.save();
     String url = file.getUrl();
     String sendText = filePath + "&" + url;
-    Msg msg = sendMessage(ChatService.getPeerId(user), type, sendText, objectId);
-    DBMsg.insertMsg(msg);
+    Msg msg = sendMessage(toUser, type, sendText, objectId, group);
+    DBMsg.insertMsg(msg, group);
     return msg;
   }
 
-  public static Msg sendTextMsg(User toUser, String content) {
-    String peerId = getPeerId(toUser);
+  public static Msg sendTextMsg(User toUser, String content, Group group) {
     int type = Msg.TYPE_TEXT;
-    Msg msg = sendMessage(peerId, type, content);
+    Msg msg = sendMessage(toUser, type, content, group);
     Log.i("lzw", "sendTextMsg fromId=" + msg.getFromPeerId() + " toId=" + msg.getToPeerIds());
-    DBMsg.insertMsg(msg);
+    DBMsg.insertMsg(msg, group);
     return msg;
   }
 
-  public static Msg sendMessage(String peerId, int type, String content) {
+  public static Msg sendMessage(User toPeer, int type, String content, Group group) {
     String objectId = Utils.uuid();
-    return sendMessage(peerId, type, content, objectId);
+    return sendMessage(toPeer, type, content, objectId, group);
   }
 
-  public static Msg sendMessage(String toPeerId, int type, String content, String objectId) {
+  public static Msg sendMessage(User toPeer, int type, String content, String objectId, Group group) {
     Msg msg;
     msg = new Msg();
     msg.setStatus(Msg.STATUS_SEND_START);
     msg.setContent(content);
     msg.setTimestamp(System.currentTimeMillis());
     msg.setFromPeerId(getSelfId());
-    msg.setToPeerIds(Arrays.asList(toPeerId));
+    if (group == null) {
+      msg.setToPeerIds(Arrays.asList(ChatService.getPeerId(toPeer)));
+    }
     msg.setObjectId(objectId);
     msg.setType(type);
-    Log.i("lzw", "sendMsg fromPeerId=" + getSelfId() + " toPeerId=" + toPeerId);
 
     AVMessage avMsg = msg.toAVMessage();
     Session session = getSession();
-
-    boolean watching = session.isWatching(toPeerId);
-    if (!watching) {
-      Logger.d("not watch");
+    if (group == null) {
+      session.sendMessage(avMsg);
+    } else {
+      group.sendMessage(avMsg);
     }
-    session.sendMessage(avMsg);
     return msg;
   }
 
@@ -139,11 +153,11 @@ public class ChatService {
     return map;
   }
 
-  public static Msg sendLocationMessage(String peerId, String address, double latitude, double longtitude) {
+  public static Msg sendLocationMessage(User toPeer, String address, double latitude, double longtitude, Group group) {
     String content = address + "&" + latitude + "&" + longtitude;
     Logger.d("content=" + content);
-    Msg msg = sendMessage(peerId, Msg.TYPE_LOCATION, content);
-    DBMsg.insertMsg(msg);
+    Msg msg = sendMessage(toPeer, Msg.TYPE_LOCATION, content, group);
+    DBMsg.insertMsg(msg, group);
     return msg;
   }
 
@@ -173,5 +187,145 @@ public class ChatService {
   public static void closeSession() {
     Session session = ChatService.getSession();
     session.close();
+  }
+
+  public static Group getGroupById(String groupId) {
+    return getSession().getGroup(groupId);
+  }
+
+  public static void notifyMsg(Context context, Msg msg) throws JSONException {
+    int icon = context.getApplicationInfo().icon;
+    Intent intent = new Intent(context, ChatActivity.class);
+    intent.putExtra(ChatActivity.CHAT_USER_ID, msg.getFromPeerId());
+    PendingIntent pend = PendingIntent.getActivity(context, 0,
+        intent, 0);
+    Notification.Builder builder = new Notification.Builder(context);
+    CharSequence notifyContent = msg.getNotifyContent();
+    CharSequence username = msg.getFromName();
+    builder.setContentIntent(pend)
+        .setSmallIcon(icon)
+        .setWhen(System.currentTimeMillis())
+        .setTicker(username + "\n" + notifyContent)
+        .setContentTitle(username)
+        .setContentText(notifyContent)
+        .setAutoCancel(true);
+    NotificationManager man = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+    Notification notification = builder.getNotification();
+    PrefDao prefDao = PrefDao.getCurUserPrefDao(context);
+    if (prefDao.isVoiceNotify()) {
+      notification.defaults |= Notification.DEFAULT_SOUND;
+    }
+    if (prefDao.isVibrateNotify()) {
+      notification.defaults |= Notification.DEFAULT_VIBRATE;
+    }
+    man.notify(REPLY_NOTIFY_ID, notification);
+  }
+
+  public static void onMessage(Context context, AVMessage avMsg, MessageListeners listeners, Group group) {
+    final Msg msg = Msg.fromAVMessage(avMsg);
+    if (group == null) {
+      String selfId = getSelfId();
+      msg.setToPeerIds(Arrays.asList(selfId));
+    }
+    if (msg.getType() != Msg.TYPE_RESPONSE) {
+      responseAndReceiveMsg(context, msg, group);
+    } else {
+      DBMsg.updateStatusAndTimestamp(msg);
+      MessageListener messageListener;
+      messageListener = getMessageListener(listeners, msg, group);
+      if (messageListener != null) {
+        messageListener.onMessage(msg);
+      }
+    }
+  }
+
+  public static void responseAndReceiveMsg(final Context context, final Msg msg, final Group group) {
+    sendResponseMessage(msg, group);
+    new NetAsyncTask(context, false) {
+      @Override
+      protected void doInBack() throws Exception {
+        if (msg.getType() == Msg.TYPE_AUDIO) {
+          File file = new File(msg.getAudioPath());
+          String uri = msg.getContent();
+          Map<String, String> parts = parseUri(uri);
+          String url = parts.get("url");
+          Utils.downloadFileIfNotExists(url, file);
+        }
+        String fromId = msg.getFromPeerId();
+        App.cacheUserIfNot(fromId);
+      }
+
+      @Override
+      protected void onPost(Exception e) {
+        if (e != null) {
+          Utils.toast(context, com.lzw.talk.R.string.badNetwork);
+        } else {
+          DBMsg.insertMsg(msg, group);
+          MessageListener listener = getMessageListener(MsgReceiver.messageListeners, msg, group);
+          if (listener == null) {
+            if (User.curUser() != null) {
+              PrefDao prefDao = PrefDao.getCurUserPrefDao(context);
+              if (prefDao.isNotifyWhenNews()) {
+                notifyMsg(context, msg);
+              }
+            }
+          } else {
+            listener.onMessage(msg);
+          }
+        }
+      }
+
+
+    }.execute();
+  }
+
+  public static MessageListener getMessageListener(MessageListeners listeners, Msg msg, Group group) {
+    if (group == null) {
+      String chatUserId = msg.getChatUserId();
+      return listeners.get(chatUserId);
+    } else {
+      return listeners.get(group.getGroupId());
+    }
+  }
+
+  public static void onMessageSent(AVMessage avMsg, MessageListeners messageListeners, Group group) {
+    Msg msg = Msg.fromAVMessage(avMsg);
+    if (msg.getType() != Msg.TYPE_RESPONSE) {
+      msg.setStatus(Msg.STATUS_SEND_SUCCEED);
+      DBMsg.updateStatusToSendSucceed(msg);
+      String listenerId;
+      if (group == null) {
+        listenerId = avMsg.getToPeerIds().get(0);
+      } else {
+        listenerId = group.getGroupId();
+      }
+      MessageListener listener = messageListeners.get(listenerId);
+      if (listener != null) {
+        listener.onMessageSent(msg);
+      }
+    }
+  }
+
+  public static void updateStatusToFailed(AVMessage avMsg, MessageListeners listeners) {
+    Msg msg = Msg.fromAVMessage(avMsg);
+    if (msg.getType() != Msg.TYPE_RESPONSE) {
+      msg.setStatus(Msg.STATUS_SEND_FAILED);
+      DBMsg.updateStatusToSendFailed(msg);
+      for (Map.Entry<String, MessageListener> entry : listeners.messageListeners.entrySet()) {
+        MessageListener listener = entry.getValue();
+        if (listener != null) {
+          listener.onMessageFailure(msg);
+        }
+      }
+    }
+  }
+
+  public static void onMessageError(Throwable throwable, MessageListeners listeners) {
+    String errorMsg = throwable.getMessage();
+    Logger.d("error " + errorMsg);
+    if (errorMsg != null && errorMsg.startsWith("{")) {
+      AVMessage avMsg = new AVMessage(errorMsg);
+      updateStatusToFailed(avMsg, listeners);
+    }
   }
 }

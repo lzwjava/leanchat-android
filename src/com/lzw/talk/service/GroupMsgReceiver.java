@@ -7,17 +7,14 @@ import com.avos.avoscloud.Group;
 import com.avos.avoscloud.LogUtil;
 import com.lzw.talk.util.Logger;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by lzw on 14-10-8.
  */
 public class GroupMsgReceiver extends AVGroupMessageReceiver {
   public static GroupListener groupListener;
-  public static Map<String, MessageListener> messageListeners
-      = new HashMap<String, MessageListener>();
+  public static MessageListeners messageListeners = new MessageListeners();
 
   @Override
   public void onJoined(Context context, Group group) {
@@ -38,17 +35,19 @@ public class GroupMsgReceiver extends AVGroupMessageReceiver {
 
   @Override
   public void onMessageSent(Context context, Group group, AVMessage message) {
-    Logger.d(message.getMessage() + " sent");
+    Logger.d(message.getMessage() + " sent ");
+    ChatService.onMessageSent(message, messageListeners, group);
   }
 
   @Override
   public void onMessageFailure(Context context, Group group, AVMessage message) {
-    Logger.d(message.getMessage() + " failure");
+    Logger.d(message.getMessage() + " failure "+group);
   }
 
   @Override
   public void onMessage(Context context, Group group, AVMessage msg) {
     Logger.d(msg.getMessage() + " receiver");
+    ChatService.onMessage(context, msg, messageListeners, group);
   }
 
   @Override
@@ -74,6 +73,7 @@ public class GroupMsgReceiver extends AVGroupMessageReceiver {
   @Override
   public void onError(Context context, Group group, Throwable e) {
     LogUtil.log.e("", (Exception) e);
+    ChatService.onMessageError(e, messageListeners);
   }
 
   public static void registerGroupListener(GroupListener listener) {
@@ -82,13 +82,5 @@ public class GroupMsgReceiver extends AVGroupMessageReceiver {
 
   public static void unregisterGroupListener() {
     groupListener = null;
-  }
-
-  public static void registerMessageListener(String groupId, MessageListener listener) {
-    messageListeners.put(groupId, listener);
-  }
-
-  public static void unregisterMessageListener(String groupId) {
-    messageListeners.put(groupId, null);
   }
 }

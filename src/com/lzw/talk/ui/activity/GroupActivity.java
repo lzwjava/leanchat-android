@@ -3,6 +3,7 @@ package com.lzw.talk.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.Group;
@@ -18,6 +19,7 @@ import com.lzw.talk.service.GroupMsgReceiver;
 import com.lzw.talk.service.GroupService;
 import com.lzw.talk.ui.view.HeaderLayout;
 import com.lzw.talk.util.Logger;
+import com.lzw.talk.util.NetAsyncTask;
 import com.lzw.talk.util.SimpleNetTask;
 import com.lzw.talk.util.Utils;
 
@@ -28,7 +30,7 @@ import java.util.List;
 /**
  * Created by lzw on 14-10-7.
  */
-public class GroupActivity extends BaseActivity implements GroupListener {
+public class GroupActivity extends BaseActivity implements GroupListener, AdapterView.OnItemClickListener {
   public static final int GROUP_NAME_REQUEST = 0;
   ListView groupListView;
   List<ChatGroup> chatGroups = new ArrayList<ChatGroup>();
@@ -61,6 +63,7 @@ public class GroupActivity extends BaseActivity implements GroupListener {
   private void initList() {
     groupAdapter = new GroupAdapter(ctx, chatGroups);
     groupListView.setAdapter(groupAdapter);
+    groupListView.setOnItemClickListener(this);
   }
 
   private void refresh() {
@@ -112,7 +115,7 @@ public class GroupActivity extends BaseActivity implements GroupListener {
     }
     //new Group
     if (newGroupName != null) {
-      new SimpleNetTask(ctx) {
+      new NetAsyncTask(ctx) {
         @Override
         protected void doInBack() throws Exception {
           chatGroup.setName(newGroupName);
@@ -121,11 +124,15 @@ public class GroupActivity extends BaseActivity implements GroupListener {
         }
 
         @Override
-        protected void onSucceed() {
-          chatGroups.add(0, chatGroup);
-          App.registerChatGroupsCache(Arrays.asList(chatGroup));
-          groupAdapter.notifyDataSetChanged();
+        protected void onPost(Exception e) {
           newGroupName = null;
+          if (e != null) {
+            e.printStackTrace();
+          } else {
+            chatGroups.add(0, chatGroup);
+            App.registerChatGroupsCache(Arrays.asList(chatGroup));
+            groupAdapter.notifyDataSetChanged();
+          }
         }
       }.execute();
     } else {
@@ -134,6 +141,9 @@ public class GroupActivity extends BaseActivity implements GroupListener {
         throw new RuntimeException("chat group is null");
       }
       Intent intent = new Intent(ctx, ChatActivity.class);
+      intent.putExtra(ChatActivity.GROUP_ID, _chatGroup.getObjectId());
+      intent.putExtra(ChatActivity.SINGLE_CHAT, false);
+      startActivity(intent);
     }
   }
 
@@ -150,5 +160,12 @@ public class GroupActivity extends BaseActivity implements GroupListener {
   protected void onDestroy() {
     super.onDestroy();
     GroupMsgReceiver.unregisterGroupListener();
+  }
+
+  @Override
+  public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    ChatGroup chatGroup = (ChatGroup) parent.getAdapter().getItem(position);
+    Group group = ChatService.getGroupById(chatGroup.getObjectId());
+    group.join();
   }
 }

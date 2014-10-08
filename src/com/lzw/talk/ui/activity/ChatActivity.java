@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.avos.avoscloud.Group;
 import com.avos.avoscloud.Session;
+import com.baidu.platform.comapi.map.g;
 import com.lzw.talk.R;
 import com.lzw.talk.adapter.ChatMsgAdapter;
 import com.lzw.talk.adapter.EmotionGridAdapter;
@@ -94,8 +95,9 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
     //turnToAudioBtn.performClick();
     initListView();
     setSoftInputMode();
-    ChatService.withUserToWatch(chatUser, true);
-
+    if (singleChat) {
+      ChatService.withUserToWatch(chatUser, true);
+    }
     loadNewMsg();
   }
 
@@ -159,7 +161,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
         new SendMsgTask(ctx) {
           @Override
           Msg sendMsg() throws Exception {
-            return ChatService.sendAudioMsg(chatUser, audioPath, objectId);
+            return ChatService.sendAudioMsg(chatUser, audioPath, objectId, group);
           }
         }.execute();
         setNewRecordPath();
@@ -208,7 +210,11 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
   }
 
   private void initHeader() {
-    headerLayout.showTitle(chatUser.getUsername());
+    if (singleChat) {
+      headerLayout.showTitle(chatUser.getUsername());
+    } else {
+      headerLayout.showTitle(chatGroup.getName());
+    }
     headerLayout.showLeftBackButton(R.string.back, null);
   }
 
@@ -249,9 +255,9 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
   public void onResume() {
     super.onResume();
     if (singleChat) {
-      MsgReceiver.registerMessageListener(chatUser.getObjectId(), this);
+      MsgReceiver.messageListeners.register(chatUser.getObjectId(), this);
     } else {
-      GroupMsgReceiver.registerMessageListener(group.getGroupId(), this);
+      GroupMsgReceiver.messageListeners.register(group.getGroupId(), this);
     }
   }
 
@@ -259,9 +265,9 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
   public void onPause() {
     super.onPause();
     if (singleChat) {
-      MsgReceiver.unregisterMessageListener(chatUser.getObjectId());
+      MsgReceiver.messageListeners.unregister(chatUser.getObjectId());
     } else {
-      GroupMsgReceiver.registerMessageListener(group.getGroupId(), this);
+      GroupMsgReceiver.messageListeners.unregister(group.getGroupId());
     }
   }
 
@@ -384,10 +390,10 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
     protected Void doInBackground(Void... params) {
       try {
         String convid;
-        if(singleChat){
-          convid= AVOSUtils.convid(ChatService.getPeerId(me), ChatService.getPeerId(chatUser));
-        }else{
-          convid=group.getGroupId();
+        if (singleChat) {
+          convid = AVOSUtils.convid(ChatService.getPeerId(me), ChatService.getPeerId(chatUser));
+        } else {
+          convid = group.getGroupId();
         }
         msgs = DBMsg.getMsgs(dbHelper, convid, msgSize);
         ChatService.cacheUserFromMsgs(msgs);
@@ -544,7 +550,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
       new SendMsgTask(ctx) {
         @Override
         Msg sendMsg() throws Exception {
-          return ChatService.sendTextMsg(chatUser, contString);
+          return ChatService.sendTextMsg(chatUser, contString, group);
         }
       }.execute();
       contentEdit.setText("");
@@ -601,8 +607,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
       new SendMsgTask(ctx) {
         @Override
         Msg sendMsg() throws Exception {
-          return ChatService.sendLocationMessage(ChatService.getPeerId(chatUser),
-              address, latitude, longtitude);
+          return ChatService.sendLocationMessage(chatUser,
+              address, latitude, longtitude, group);
         }
       }.execute();
     } else {
@@ -637,7 +643,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
     new SendMsgTask(ctx) {
       @Override
       Msg sendMsg() throws Exception {
-        return ChatService.sendImageMsg(chatUser, newPath, objectId);
+        return ChatService.sendImageMsg(chatUser, newPath, objectId, group);
       }
     }.execute();
   }
@@ -649,7 +655,9 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
 
   @Override
   protected void onDestroy() {
-    ChatService.withUserToWatch(chatUser, false);
+    if (singleChat) {
+      ChatService.withUserToWatch(chatUser, false);
+    }
     super.onDestroy();
   }
 }

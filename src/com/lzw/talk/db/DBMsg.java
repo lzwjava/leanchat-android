@@ -4,9 +4,9 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import com.avos.avoscloud.Group;
 import com.lzw.talk.base.App;
 import com.lzw.talk.entity.Msg;
-import com.lzw.talk.util.AVOSUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,13 +35,13 @@ public class DBMsg {
         " status integer,type integer,timestamp varchar(63))");
   }
 
-  public static int insertMsg(Msg msg) {
+  public static int insertMsg(Msg msg, Group group) {
     List<Msg> msgs = new ArrayList<Msg>();
     msgs.add(msg);
-    return insertMsgs(msgs);
+    return insertMsgs(msgs, group);
   }
 
-  public static int insertMsgs(List<Msg> msgs) {
+  public static int insertMsgs(List<Msg> msgs, Group group) {
     DBHelper dbHelper = new DBHelper(App.ctx, App.DB_NAME, App.DB_VER);
     if (msgs == null || msgs.size() == 0) {
       return 0;
@@ -56,12 +56,16 @@ public class DBMsg {
         cv.put(TIMESTAMP, msg.getTimestamp() + "");
         cv.put(FROM_PEER_ID, msg.getFromPeerId());
         cv.put(STATUS, msg.getStatus());
-        cv.put(CONVID, msg.getConvid());
+        if(group==null){
+          cv.put(CONVID, msg.getConvid());
+          String toPeerId = msg.getToPeerIds().get(0);
+          Log.i("lzw", "toPeerId=" + toPeerId + " fromPeerId=" + msg.getFromPeerId());
+          assert !toPeerId.equals(msg.getFromPeerId());
+          cv.put(TO_PEER_ID, toPeerId);
+        }else{
+          cv.put(CONVID,group.getGroupId());
+        }
         cv.put(TYPE, msg.getType());
-        String toPeerId = msg.getToPeerIds().get(0);
-        Log.i("lzw", "toPeerId=" + toPeerId + " fromPeerId=" + msg.getFromPeerId());
-        assert !toPeerId.equals(msg.getFromPeerId());
-        cv.put(TO_PEER_ID, toPeerId);
         cv.put(CONTENT, msg.getContent());
         db.insert(MESSAGES, null, cv);
         n++;
@@ -100,9 +104,12 @@ public class DBMsg {
     msg.setStatus(c.getInt(c.getColumnIndex(STATUS)));
     msg.setConvid(c.getString(c.getColumnIndex(CONVID)));
     msg.setObjectId(c.getString(c.getColumnIndex(OBJECT_ID)));
-    List<String> toPeerIds = new ArrayList<String>();
-    toPeerIds.add(c.getString(c.getColumnIndex(TO_PEER_ID)));
-    msg.setToPeerIds(toPeerIds);
+    String toPeerId = c.getString(c.getColumnIndex(TO_PEER_ID));
+    if(toPeerId!=null){
+      List<String> toPeerIds = new ArrayList<String>();
+      toPeerIds.add(toPeerId);
+      msg.setToPeerIds(toPeerIds);
+    }
     msg.setTimestamp(Long.parseLong(c.getString(c.getColumnIndex(TIMESTAMP))));
     msg.setType(c.getInt(c.getColumnIndex(TYPE)));
     return msg;
