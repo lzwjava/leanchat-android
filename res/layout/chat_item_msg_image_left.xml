@@ -29,7 +29,6 @@
                 android:layout_width="wrap_content"
                 android:maxWidth="@dimen/chatImageMaxWidth"
                 android:maxHeight="@dimen/chatImageMaxWidth"
-                android:padding="@dimen/chatContentPadding"
                 android:src="@null"
                 android:layout_height="wrap_content"
                 android:background="@drawable/chat_left_qp"

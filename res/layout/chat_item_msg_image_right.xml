@@ -27,14 +27,13 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_marginLeft="@dimen/marginToUsername"
                 android:layout_width="wrap_content"
                 android:maxWidth="@dimen/chatImageMaxWidth"
                 android:maxHeight="@dimen/chatImageMaxWidth"
                 android:layout_height="wrap_content"
                 android:background="@drawable/chat_right_qp"
                 android:src="@null"
-                android:layout_marginRight="5dp"/>
+                android:layout_marginRight="5dp" />
 
             <ImageView
                 android:id="@+id/avatar"
