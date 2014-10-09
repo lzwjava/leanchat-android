@@ -79,9 +79,9 @@ public class ChatService {
     resMsg.setObjectId(msg.getObjectId());
     Session session = getSession();
     AVMessage avMsg = resMsg.toAVMessage();
-    if(group==null){
+    if (group == null) {
       session.sendMessage(avMsg);
-    }else{
+    } else {
       group.sendMessage(avMsg);
     }
   }
@@ -193,10 +193,15 @@ public class ChatService {
     return getSession().getGroup(groupId);
   }
 
-  public static void notifyMsg(Context context, Msg msg) throws JSONException {
+  public static void notifyMsg(Context context, Msg msg, Group group) throws JSONException {
     int icon = context.getApplicationInfo().icon;
     Intent intent = new Intent(context, ChatActivity.class);
-    intent.putExtra(ChatActivity.CHAT_USER_ID, msg.getFromPeerId());
+    if (group == null) {
+      intent.putExtra(ChatActivity.CHAT_USER_ID, msg.getFromPeerId());
+    } else {
+      intent.putExtra(ChatActivity.GROUP_ID, group.getGroupId());
+      intent.putExtra(ChatActivity.SINGLE_CHAT, false);
+    }
     PendingIntent pend = PendingIntent.getActivity(context, 0,
         intent, 0);
     Notification.Builder builder = new Notification.Builder(context);
@@ -266,7 +271,7 @@ public class ChatService {
             if (User.curUser() != null) {
               PrefDao prefDao = PrefDao.getCurUserPrefDao(context);
               if (prefDao.isNotifyWhenNews()) {
-                notifyMsg(context, msg);
+                notifyMsg(context, msg, group);
               }
             }
           } else {

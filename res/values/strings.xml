@@ -235,4 +235,6 @@
     <string name="notifyWhenNews">接收新消息通知</string>
     <string name="group">群组</string>
     <string name="groupName">群组名</string>
+    <string name="search">查找</string>
+    <string name="create">创建</string>
 </resources>

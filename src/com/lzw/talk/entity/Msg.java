@@ -149,6 +149,7 @@ public class Msg {
 
   public String getChatUserId() {
     if (isGroupMsg()) {
+      Logger.d("is group message");
       return getFromPeerId();
     } else {
       String fromPeerId = getFromPeerId();

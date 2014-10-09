@@ -21,7 +21,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.avos.avoscloud.Group;
 import com.avos.avoscloud.Session;
-import com.baidu.platform.comapi.map.g;
 import com.lzw.talk.R;
 import com.lzw.talk.adapter.ChatMsgAdapter;
 import com.lzw.talk.adapter.EmotionGridAdapter;

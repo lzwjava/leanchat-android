@@ -33,7 +33,7 @@
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
 
 
     <!--location-->
@@ -84,7 +84,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".service.GroupMsgReceiver" >
+        <receiver android:name=".service.GroupMsgReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="com.avoscloud.group.action" />
@@ -122,6 +122,10 @@
         <activity android:name=".ui.activity.NotifyPrefActivity" />
 
         <activity android:name=".ui.activity.GroupActivity" />
+
+        <activity
+            android:name=".ui.activity.GroupAddDialog"
+            android:theme="@style/MyDialogStyleTop" />
 
         <service
             android:name="com.baidu.location.f"

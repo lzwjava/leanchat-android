@@ -7,7 +7,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.Group;
-import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.Session;
 import com.lzw.talk.R;
 import com.lzw.talk.adapter.GroupAdapter;
@@ -21,7 +20,6 @@ import com.lzw.talk.ui.view.HeaderLayout;
 import com.lzw.talk.util.Logger;
 import com.lzw.talk.util.NetAsyncTask;
 import com.lzw.talk.util.SimpleNetTask;
-import com.lzw.talk.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,6 +30,7 @@ import java.util.List;
  */
 public class GroupActivity extends BaseActivity implements GroupListener, AdapterView.OnItemClickListener {
   public static final int GROUP_NAME_REQUEST = 0;
+  private static final int GROUP_ADD_DIALOG = 1;
   ListView groupListView;
   List<ChatGroup> chatGroups = new ArrayList<ChatGroup>();
   GroupAdapter groupAdapter;
@@ -55,7 +54,8 @@ public class GroupActivity extends BaseActivity implements GroupListener, Adapte
     headerLayout.showRightImageButton(R.drawable.base_action_bar_add_bg_selector, new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        UpdateContentActivity.goActivityForResult(ctx, App.ctx.getString(R.string.groupName), GROUP_NAME_REQUEST);
+        Intent intent = new Intent(ctx, GroupAddDialog.class);
+        startActivityForResult(intent, GROUP_ADD_DIALOG);
       }
     });
   }
@@ -99,6 +99,13 @@ public class GroupActivity extends BaseActivity implements GroupListener, Adapte
         Session session = ChatService.getSession();
         Group group = session.getGroup();
         group.join();
+      } else if (requestCode == GROUP_ADD_DIALOG) {
+        int action = data.getIntExtra(GroupAddDialog.ACTION, 0);
+        if (action == GroupAddDialog.SEARCH) {
+
+        } else if (action == GroupAddDialog.CREATE) {
+          UpdateContentActivity.goActivityForResult(ctx, App.ctx.getString(R.string.groupName), GROUP_NAME_REQUEST);
+        }
       }
     }
     super.onActivityResult(requestCode, resultCode, data);

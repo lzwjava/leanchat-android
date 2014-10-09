@@ -62,4 +62,7 @@
 
     <dimen name="margin_chat_top">5.0dip</dimen>
     <dimen name="mySpaceRowHeight">80dp</dimen>
+    <dimen name="group_dialog_text">18sp</dimen>
+    <dimen name="group_dialog_text_pad">6dp</dimen>
+    <dimen name="group_dialog_layout_pad">5dp</dimen>
 </resources>
