@@ -51,5 +51,6 @@
     <color name="guide_color">#898989</color>
 
     <color name="common_bg">#fcfcfc</color>
+    <color name="chatLeftText">#000</color>
 
 </resources>

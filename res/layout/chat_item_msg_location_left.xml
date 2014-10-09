@@ -20,11 +20,7 @@
 
             <ImageView
                 android:id="@+id/avatar"
-                android:layout_width="@dimen/userHead"
-                android:layout_height="@dimen/userHead"
-                android:clickable="true"
-                android:visibility="visible"
-                android:background="@drawable/top_background_default_thumb_blue" />
+                style="@style/ChatAvatar"/>
 
             <LinearLayout
                 android:layout_marginLeft="@dimen/marginToUsername"
