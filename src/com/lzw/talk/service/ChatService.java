@@ -228,7 +228,7 @@ public class ChatService {
       msg.setToPeerIds(Arrays.asList(selfId));
     }
     if (msg.getType() != Msg.TYPE_RESPONSE) {
-      responseAndReceiveMsg(context, msg, group);
+      responseAndReceiveMsg(context, msg, listeners, group);
     } else {
       DBMsg.updateStatusAndTimestamp(msg);
       MessageListener messageListener;
@@ -239,7 +239,7 @@ public class ChatService {
     }
   }
 
-  public static void responseAndReceiveMsg(final Context context, final Msg msg, final Group group) {
+  public static void responseAndReceiveMsg(final Context context, final Msg msg, final MessageListeners listeners, final Group group) {
     sendResponseMessage(msg, group);
     new NetAsyncTask(context, false) {
       @Override
@@ -261,7 +261,7 @@ public class ChatService {
           Utils.toast(context, com.lzw.talk.R.string.badNetwork);
         } else {
           DBMsg.insertMsg(msg, group);
-          MessageListener listener = getMessageListener(MsgReceiver.messageListeners, msg, group);
+          MessageListener listener = getMessageListener(listeners, msg, group);
           if (listener == null) {
             if (User.curUser() != null) {
               PrefDao prefDao = PrefDao.getCurUserPrefDao(context);

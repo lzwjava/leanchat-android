@@ -650,7 +650,9 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
 
   public void scrollToLast() {
     Logger.d("scrollToLast");
-    xListView.smoothScrollToPosition(xListView.getCount() - 1);
+    //xListView.smoothScrollToPosition(xListView.getCount() - 1);
+    //xListView.smoothScrollToPosition();
+    xListView.setSelection(xListView.getCount() - 1);
   }
 
   @Override

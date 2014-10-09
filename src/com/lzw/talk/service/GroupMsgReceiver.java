@@ -46,7 +46,7 @@ public class GroupMsgReceiver extends AVGroupMessageReceiver {
 
   @Override
   public void onMessage(Context context, Group group, AVMessage msg) {
-    Logger.d(msg.getMessage() + " receiver");
+    Logger.d(msg.getMessage() + " receiver "+group);
     ChatService.onMessage(context, msg, messageListeners, group);
   }
 
