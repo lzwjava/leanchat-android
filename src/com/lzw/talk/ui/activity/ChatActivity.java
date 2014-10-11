@@ -12,8 +12,7 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.view.ViewPager;
 import android.text.*;
-import android.view.LayoutInflater;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -33,7 +32,6 @@ import com.lzw.talk.db.DBMsg;
 import com.lzw.talk.entity.Msg;
 import com.lzw.talk.service.*;
 import com.lzw.talk.ui.view.EmotionEditText;
-import com.lzw.talk.ui.view.HeaderLayout;
 import com.lzw.talk.ui.view.RecordButton;
 import com.lzw.talk.ui.view.xlist.XListView;
 import com.lzw.talk.util.*;
@@ -58,7 +56,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
   DBHelper dbHelper;
   private Activity ctx;
 
-  HeaderLayout headerLayout;
   View chatTextLayout, chatAudioLayout, chatAddLayout, chatEmotionLayout;
   View turnToTextBtn, turnToAudioBtn, sendBtn, addImageBtn, showAddBtn, addLocationBtn, showEmotionBtn;
   LinearLayout chatBottomLayout;
@@ -87,7 +84,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
     setContentView(R.layout.chat_layout);
     findView();
     initData();
-    initHeader();
+    initActionBar();
     initEmotionPager();
     initRecordBtn();
     setEditTextChangeListener();
@@ -208,21 +205,22 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
     turnToAudioBtn.setVisibility(View.GONE);
   }
 
-  private void initHeader() {
+  void initActionBar() {
+    String title;
     if (singleChat) {
-      headerLayout.showTitle(chatUser.getUsername());
+      title = chatUser.getUsername();
     } else {
-      headerLayout.showTitle(chatGroup.getName());
+      title = chatGroup.getName();
     }
-    headerLayout.showLeftBackButton(R.string.back, null);
+    initActionBar(title);
   }
+
 
   private void findView() {
     xListView = (XListView) findViewById(R.id.listview);
     addImageBtn = findViewById(R.id.addImageBtn);
 
     contentEdit = (EmotionEditText) findViewById(R.id.textEdit);
-    headerLayout = (HeaderLayout) findViewById(R.id.headerLayout);
     chatTextLayout = findViewById(R.id.chatTextLayout);
     chatAudioLayout = findViewById(R.id.chatRecordLayout);
     chatBottomLayout = (LinearLayout) findViewById(R.id.bottomLayout);
@@ -285,6 +283,26 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
       chatGroup = App.lookupChatGroup(groupId);
     }
     animService = AnimService.getInstance();
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    MenuInflater inflater = getMenuInflater();
+    inflater.inflate(R.menu.chat_ativity_menu, menu);
+    return super.onCreateOptionsMenu(menu);
+  }
+
+  @Override
+  public boolean onMenuItemSelected(int featureId, MenuItem item) {
+    int menuId = item.getItemId();
+    if (menuId == R.id.people) {
+      if (singleChat) {
+        PersonInfoActivity.goPersonInfo(ctx, chatUser.getUsername());
+      } else {
+        GroupDetailActivity.goGroupDetail(ctx, chatGroup.getObjectId());
+      }
+    }
+    return super.onMenuItemSelected(featureId, item);
   }
 
   @Override

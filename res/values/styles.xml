@@ -269,4 +269,19 @@
         <item name="android:background">@drawable/top_background_default_thumb_blue</item>
     </style>
 
+    <style name="ActionBarTitleStyle">
+        <item name="android:textColor">#fff</item>
+    </style>
+
+    <style name="ActionBarStyle" parent="@android:style/Widget.Holo.ActionBar">
+        <item name="android:background">@color/common_blue</item>
+        <item name="android:titleTextStyle">@style/ActionBarTitleStyle</item>
+        <!--<item name="android:icon">@android:color/transparent</item>-->
+    </style>
+
+    <style name="MainTheme" parent="android:Theme.Holo.Light">
+        <item name="android:actionBarStyle">@style/ActionBarStyle</item>
+        <item name="android:homeAsUpIndicator">@drawable/back_btn</item>
+    </style>
+
 </resources>

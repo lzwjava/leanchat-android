@@ -52,10 +52,15 @@ public class UserService {
   }
 
   public static void cacheUser(List<String> uncachedIds) throws AVException {
+    List<User> users = findUsers(uncachedIds);
+  }
+
+  public static List<User> findUsers(List<String> uncachedIds) throws AVException {
     AVQuery<User> q = User.getQuery(User.class);
     q.whereContainedIn(C.OBJECT_ID, uncachedIds);
     List<User> users = q.find();
     App.registerBatchUserCache(users);
+    return users;
   }
 
   public static void searchUser(String searchName, int skip, FindCallback<User> findCallback) {

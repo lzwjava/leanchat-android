@@ -65,4 +65,5 @@
     <dimen name="group_dialog_text">18sp</dimen>
     <dimen name="group_dialog_text_pad">6dp</dimen>
     <dimen name="group_dialog_layout_pad">5dp</dimen>
+    <dimen name="group_detail_text_height">80dp</dimen>
 </resources>

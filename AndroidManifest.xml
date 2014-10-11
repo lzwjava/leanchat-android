@@ -67,7 +67,8 @@
 
         <activity
             android:name=".ui.activity.ChatActivity"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask"
+            android:theme="@style/MainTheme" />
 
         <service android:name="com.avos.avoscloud.PushService" />
 
@@ -121,7 +122,10 @@
 
         <activity android:name=".ui.activity.NotifyPrefActivity" />
 
-        <activity android:name=".ui.activity.GroupActivity" />
+        <activity android:name=".ui.activity.GroupListActivity" />
+
+        <activity android:name=".ui.activity.GroupDetailActivity"
+            android:theme="@style/MainTheme"/>
 
         <activity
             android:name=".ui.activity.GroupAddDialog"

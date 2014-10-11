@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.util.Log;
 import com.alibaba.fastjson.JSONException;
 import com.avos.avoscloud.*;
+import com.lzw.talk.avobject.ChatGroup;
 import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
 import com.lzw.talk.db.DBMsg;
@@ -333,4 +334,10 @@ public class ChatService {
       updateStatusToFailed(avMsg, listeners);
     }
   }
+
+  public static List<User> findGroupMembers(ChatGroup chatGroup) throws AVException {
+    List<String> members = chatGroup.getMembers();
+    return UserService.findUsers(members);
+  }
+
 }

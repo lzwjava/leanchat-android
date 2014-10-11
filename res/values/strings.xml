@@ -237,4 +237,7 @@
     <string name="groupName">群组名</string>
     <string name="search">查找</string>
     <string name="create">创建</string>
+    <string name="people">人</string>
+    <string name="groupMembers">群组成员</string>
+    <string name="add_members">邀请朋友</string>
 </resources>

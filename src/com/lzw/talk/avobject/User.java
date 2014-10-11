@@ -1,6 +1,7 @@
 package com.lzw.talk.avobject;
 
 import com.avos.avoscloud.*;
+import com.baidu.platform.comapi.map.g;
 import com.lzw.talk.R;
 import com.lzw.talk.base.App;
 
@@ -25,7 +26,7 @@ public class User extends AVUser {
   }
 
   public static User curUser() {
-    AVUser avUser = User.getCurrentUser(User.class);
+    AVUser avUser = getCurrentUser(User.class);
     User user = User.cast(avUser, User.class);
     return user;
   }
@@ -62,8 +63,12 @@ public class User extends AVUser {
       file.saveInBackground(new SaveCallback() {
         @Override
         public void done(AVException e) {
-          setAvatar(file);
-          saveInBackground();
+          if (e== null) {
+            setAvatar(file);
+            saveInBackground();
+          } else {
+            e.printStackTrace();
+          }
         }
       });
     } catch (IOException e) {

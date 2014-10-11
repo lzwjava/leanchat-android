@@ -12,7 +12,9 @@ import java.util.List;
 public class ChatGroup extends AVObject {
   public static final String M = "m";
   public static final String NAME = "name";
+  public static final String OWNER = "owner";
   //String name;
+  //User owner;
 
   public List<String> getMembers() {
     return getList(M);
@@ -28,5 +30,13 @@ public class ChatGroup extends AVObject {
 
   public void setName(String name) {
     put(NAME, name);
+  }
+
+  public User getOwner() {
+    return getAVUser(OWNER, User.class);
+  }
+
+  public void setOwner(User owner) {
+    put(OWNER, owner);
   }
 }

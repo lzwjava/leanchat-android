@@ -22,7 +22,7 @@ import com.lzw.talk.service.CloudService;
 import com.lzw.talk.service.UserService;
 import com.lzw.talk.ui.activity.AddFriendActivity;
 import com.lzw.talk.ui.activity.ChatActivity;
-import com.lzw.talk.ui.activity.GroupActivity;
+import com.lzw.talk.ui.activity.GroupListActivity;
 import com.lzw.talk.ui.activity.NewFriendActivity;
 import com.lzw.talk.ui.view.ClearEditText;
 import com.lzw.talk.ui.view.EnLetterView;
@@ -190,7 +190,7 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
     if (viewId == R.id.layout_new) {
       Utils.goActivity(ctx, NewFriendActivity.class);
     } else if (viewId == R.id.layout_group) {
-      Utils.goActivity(ctx, GroupActivity.class);
+      Utils.goActivity(ctx, GroupListActivity.class);
     }
   }
 

@@ -57,7 +57,6 @@ public class App extends Application {
     }
     initImageLoader(ctx);
     initBaidu();
-    User user = User.curUser();
     openStrictMode();
   }
 
@@ -116,7 +115,11 @@ public class App extends Application {
   }
 
   public static ChatGroup lookupChatGroup(String groupId) {
-    return chatGroupsCache.get(groupId);
+    ChatGroup chatGroup = chatGroupsCache.get(groupId);
+    if(chatGroup==null){
+      throw new NullPointerException("ChatGroup is null");
+    }
+    return chatGroup;
   }
 
   public static void registerChatGroupsCache(List<ChatGroup> chatGroups) {

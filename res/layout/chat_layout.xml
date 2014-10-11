@@ -4,8 +4,6 @@
     android:layout_height="fill_parent"
     android:background="#f9f9f9">
 
-    <include layout="@layout/header_layout" />
-
     <com.lzw.talk.ui.view.xlist.XListView
         android:id="@+id/listview"
         android:layout_width="fill_parent"

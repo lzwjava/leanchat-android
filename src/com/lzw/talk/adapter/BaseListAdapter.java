@@ -5,6 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+import com.lzw.talk.R;
+import com.lzw.talk.avobject.User;
+import com.lzw.talk.service.UserService;
+import com.lzw.talk.ui.view.ViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +39,11 @@ public class BaseListAdapter<T> extends BaseAdapter {
 
   public void setDatas(List<T> datas) {
     this.datas = datas;
+  }
+
+
+  public List<T> getDatas() {
+    return datas;
   }
 
   public void addAll(List<T> subDatas) {

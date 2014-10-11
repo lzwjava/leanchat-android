@@ -1,6 +1,7 @@
 package com.lzw.talk.ui.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -100,6 +101,13 @@ public class PersonInfoActivity extends BaseActivity implements OnClickListener 
     }
   }
 
+  public static void goPersonInfo(Context ctx, String username) {
+    Intent intent = new Intent(ctx, PersonInfoActivity.class);
+    intent.putExtra("from", "add");
+    intent.putExtra("username", username);
+    ctx.startActivity(intent);
+  }
+
   private void initMeData() {
     User user = User.curUser();
     initOtherData(user.getUsername());
@@ -133,7 +141,7 @@ public class PersonInfoActivity extends BaseActivity implements OnClickListener 
   }
 
   private void refreshAvatar(String avatar) {
-    UserService.displayAvatar(avatar,avatarView);
+    UserService.displayAvatar(avatar, avatarView);
     ImageLoader.getInstance().displayImage(avatar, avatarView,
         PhotoUtil.getAvatarImageOptions());
   }

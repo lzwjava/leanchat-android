@@ -1,5 +1,8 @@
 package com.lzw.talk.util;
 
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import com.avos.avoscloud.*;
 import com.lzw.talk.R;
 import com.lzw.talk.adapter.BaseListAdapter;
@@ -7,6 +10,8 @@ import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
 import com.lzw.talk.base.C;
 import com.lzw.talk.service.PrefDao;
+import com.lzw.talk.service.UserService;
+import com.lzw.talk.ui.view.ViewHolder;
 import com.lzw.talk.ui.view.xlist.XListView;
 
 import java.util.List;
@@ -76,5 +81,12 @@ public class ChatUtils {
     if (xListView.getPullRefreshing()) {
       xListView.stopRefresh();
     }
+  }
+
+  public static void setUserView(View conView, User user) {
+    ImageView avatarView = ViewHolder.findViewById(conView, R.id.avatar);
+    TextView nameView = ViewHolder.findViewById(conView, R.id.username);
+    UserService.displayAvatar(user.getAvatarUrl(), avatarView);
+    nameView.setText(user.getUsername());
   }
 }

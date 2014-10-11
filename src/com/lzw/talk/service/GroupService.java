@@ -16,6 +16,11 @@ public class GroupService {
     User user = User.curUser();
     AVQuery<ChatGroup> q = AVObject.getQuery(ChatGroup.class);
     q.whereEqualTo(ChatGroup.M, user.getObjectId());
+    q.include(ChatGroup.OWNER);
     return q.find();
+  }
+
+  public static boolean isGroupOwner(ChatGroup chatGroup, User user) {
+    return true;
   }
 }
