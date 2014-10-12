@@ -227,25 +227,21 @@ public class ChatService {
     man.notify(REPLY_NOTIFY_ID, notification);
   }
 
-  public static void onMessage(Context context, AVMessage avMsg, MessageListeners listeners, Group group) {
+  public static void onMessage(Context context, AVMessage avMsg, MsgListener listener, Group group) {
     final Msg msg = Msg.fromAVMessage(avMsg);
     if (group == null) {
       String selfId = getSelfId();
       msg.setToPeerIds(Arrays.asList(selfId));
     }
     if (msg.getType() != Msg.TYPE_RESPONSE) {
-      responseAndReceiveMsg(context, msg, listeners, group);
+      responseAndReceiveMsg(context, msg, listener, group);
     } else {
       DBMsg.updateStatusAndTimestamp(msg);
-      MessageListener messageListener;
-      messageListener = getMessageListener(listeners, msg, group);
-      if (messageListener != null) {
-        messageListener.onMessage(msg);
-      }
+
     }
   }
 
-  public static void responseAndReceiveMsg(final Context context, final Msg msg, final MessageListeners listeners, final Group group) {
+  public static void responseAndReceiveMsg(final Context context, final Msg msg, final MsgListener listener, final Group group) {
     sendResponseMessage(msg, group);
     new NetAsyncTask(context, false) {
       @Override
@@ -267,8 +263,8 @@ public class ChatService {
           Utils.toast(context, com.lzw.talk.R.string.badNetwork);
         } else {
           DBMsg.insertMsg(msg, group);
-          MessageListener listener = getMessageListener(listeners, msg, group);
-          if (listener == null) {
+          MsgListener _msgListener = filterMsgListener(listener, msg, group);
+          if (_msgListener == null) {
             if (User.curUser() != null) {
               PrefDao prefDao = PrefDao.getCurUserPrefDao(context);
               if (prefDao.isNotifyWhenNews()) {
@@ -285,53 +281,53 @@ public class ChatService {
     }.execute();
   }
 
-  public static MessageListener getMessageListener(MessageListeners listeners, Msg msg, Group group) {
-    if (group == null) {
-      String chatUserId = msg.getChatUserId();
-      return listeners.get(chatUserId);
-    } else {
-      return listeners.get(group.getGroupId());
+  public static MsgListener filterMsgListener(MsgListener msgListener, Msg msg, Group group) {
+    if (msgListener != null) {
+      String listenerId = msgListener.getListenerId();
+      if (group == null) {
+        String chatUserId = msg.getChatUserId();
+        if (chatUserId.equals(listenerId)) {
+          return msgListener;
+        }
+      } else {
+        if (group.getGroupId().equals(listenerId)) {
+          return msgListener;
+        }
+      }
     }
+    return null;
   }
 
-  public static void onMessageSent(AVMessage avMsg, MessageListeners messageListeners, Group group) {
+  public static void onMessageSent(AVMessage avMsg, MsgListener listener, Group group) {
     Msg msg = Msg.fromAVMessage(avMsg);
     if (msg.getType() != Msg.TYPE_RESPONSE) {
       msg.setStatus(Msg.STATUS_SEND_SUCCEED);
       DBMsg.updateStatusToSendSucceed(msg);
-      String listenerId;
-      if (group == null) {
-        listenerId = avMsg.getToPeerIds().get(0);
-      } else {
-        listenerId = group.getGroupId();
-      }
-      MessageListener listener = messageListeners.get(listenerId);
+      msg.setFromPeerId(User.curUserId());
+      MsgListener _listener = filterMsgListener(listener, msg, group);
       if (listener != null) {
         listener.onMessageSent(msg);
       }
     }
   }
 
-  public static void updateStatusToFailed(AVMessage avMsg, MessageListeners listeners) {
+  public static void updateStatusToFailed(AVMessage avMsg, MsgListener msgListener) {
     Msg msg = Msg.fromAVMessage(avMsg);
     if (msg.getType() != Msg.TYPE_RESPONSE) {
       msg.setStatus(Msg.STATUS_SEND_FAILED);
       DBMsg.updateStatusToSendFailed(msg);
-      for (Map.Entry<String, MessageListener> entry : listeners.messageListeners.entrySet()) {
-        MessageListener listener = entry.getValue();
-        if (listener != null) {
-          listener.onMessageFailure(msg);
-        }
+      if (msgListener != null) {
+        msgListener.onMessageFailure(msg);
       }
     }
   }
 
-  public static void onMessageError(Throwable throwable, MessageListeners listeners) {
+  public static void onMessageError(Throwable throwable, MsgListener msgListener) {
     String errorMsg = throwable.getMessage();
     Logger.d("error " + errorMsg);
     if (errorMsg != null && errorMsg.startsWith("{")) {
       AVMessage avMsg = new AVMessage(errorMsg);
-      updateStatusToFailed(avMsg, listeners);
+      updateStatusToFailed(avMsg, msgListener);
     }
   }
 

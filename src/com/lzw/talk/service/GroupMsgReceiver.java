@@ -7,19 +7,21 @@ import com.avos.avoscloud.Group;
 import com.avos.avoscloud.LogUtil;
 import com.lzw.talk.util.Logger;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by lzw on 14-10-8.
  */
 public class GroupMsgReceiver extends AVGroupMessageReceiver {
-  public static GroupListener groupListener;
-  public static MessageListeners messageListeners = new MessageListeners();
+  public static Set<GroupEventListener> listeners = new HashSet<GroupEventListener>();
+  public static MsgListener msgListener;
 
   @Override
   public void onJoined(Context context, Group group) {
-    if (groupListener != null) {
-      groupListener.onJoined(group);
+    for (GroupEventListener listener : listeners) {
+      listener.onJoined(group);
     }
   }
 
@@ -36,18 +38,18 @@ public class GroupMsgReceiver extends AVGroupMessageReceiver {
   @Override
   public void onMessageSent(Context context, Group group, AVMessage message) {
     Logger.d(message.getMessage() + " sent ");
-    ChatService.onMessageSent(message, messageListeners, group);
+    ChatService.onMessageSent(message, msgListener, group);
   }
 
   @Override
   public void onMessageFailure(Context context, Group group, AVMessage message) {
-    Logger.d(message.getMessage() + " failure "+group);
+    Logger.d(message.getMessage() + " failure " + group);
   }
 
   @Override
   public void onMessage(Context context, Group group, AVMessage msg) {
-    Logger.d(msg.getMessage() + " receiver "+group);
-    ChatService.onMessage(context, msg, messageListeners, group);
+    Logger.d(msg.getMessage() + " receiver " + group);
+    ChatService.onMessage(context, msg, msgListener, group);
   }
 
   @Override
@@ -62,25 +64,39 @@ public class GroupMsgReceiver extends AVGroupMessageReceiver {
 
   @Override
   public void onMemberJoin(Context context, Group group, List<String> joinedPeerIds) {
+    for (GroupEventListener listener : listeners) {
+      listener.onMemberJoin(group, joinedPeerIds);
+    }
     Logger.d(joinedPeerIds + " join " + group.getGroupId());
   }
 
   @Override
   public void onMemberLeft(Context context, Group group, List<String> leftPeerIds) {
+    for (GroupEventListener listener : listeners) {
+      listener.onMemberLeft(group, leftPeerIds);
+    }
     Logger.d(leftPeerIds + " left " + group.getGroupId());
   }
 
   @Override
   public void onError(Context context, Group group, Throwable e) {
     LogUtil.log.e("", (Exception) e);
-    ChatService.onMessageError(e, messageListeners);
+    ChatService.onMessageError(e, msgListener);
   }
 
-  public static void registerGroupListener(GroupListener listener) {
-    groupListener = listener;
+  public static void registerMsgListener(MsgListener listener) {
+    msgListener = listener;
   }
 
-  public static void unregisterGroupListener() {
-    groupListener = null;
+  public static void unregisterMsgListener() {
+    msgListener = null;
+  }
+
+  public static void addListener(GroupEventListener listener) {
+    listeners.add(listener);
+  }
+
+  public static void removeListener(GroupEventListener listener) {
+    listeners.remove(listener);
   }
 }

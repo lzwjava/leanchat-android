@@ -4,6 +4,7 @@ import android.content.Context;
 import com.avos.avoscloud.AVMessage;
 import com.avos.avoscloud.AVMessageReceiver;
 import com.avos.avoscloud.Session;
+import com.lzw.talk.entity.Msg;
 import com.lzw.talk.util.Logger;
 
 import java.util.*;
@@ -15,7 +16,7 @@ public class MsgReceiver extends AVMessageReceiver {
   private final Queue<String> failedMessage = new LinkedList<String>();
   public static StatusListener statusListener;
   public static Set<String> onlines = new HashSet<String>();
-  public static MessageListeners messageListeners = new MessageListeners();
+  public static MsgListener msgListener;
 
   @Override
   public void onSessionOpen(Context context, Session session) {
@@ -39,18 +40,18 @@ public class MsgReceiver extends AVMessageReceiver {
   @Override
   public void onMessage(final Context context, Session session, AVMessage avMsg) {
     Logger.d("onMessage");
-    ChatService.onMessage(context, avMsg, messageListeners, null);
+    ChatService.onMessage(context, avMsg, msgListener, null);
   }
 
   @Override
   public void onMessageSent(Context context, Session session, AVMessage avMsg) {
     Logger.d("onMessageSent " + avMsg.getToPeerIds());
-    ChatService.onMessageSent(avMsg, messageListeners, null);
+    ChatService.onMessageSent(avMsg, msgListener, null);
   }
 
   @Override
   public void onMessageFailure(Context context, Session session, AVMessage avMsg) {
-    ChatService.updateStatusToFailed(avMsg, messageListeners);
+    ChatService.updateStatusToFailed(avMsg, msgListener);
   }
 
   @Override
@@ -74,7 +75,7 @@ public class MsgReceiver extends AVMessageReceiver {
   @Override
   public void onError(Context context, Session session, Throwable throwable) {
     throwable.printStackTrace();
-    ChatService.onMessageError(throwable, messageListeners);
+    ChatService.onMessageError(throwable, msgListener);
   }
 
   public static void registerStatusListener(StatusListener listener) {
@@ -83,6 +84,14 @@ public class MsgReceiver extends AVMessageReceiver {
 
   public static void unregisterSatutsListener() {
     statusListener = null;
+  }
+
+  public static void registerMsgListener(MsgListener listener) {
+    msgListener = listener;
+  }
+
+  public static void unregisterMsgListener() {
+    msgListener = null;
   }
 
   public static List<String> getOnlines() {

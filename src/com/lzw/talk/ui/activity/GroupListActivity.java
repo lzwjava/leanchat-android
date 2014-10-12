@@ -15,7 +15,7 @@ import com.lzw.talk.avobject.ChatGroup;
 import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
 import com.lzw.talk.service.ChatService;
-import com.lzw.talk.service.GroupListener;
+import com.lzw.talk.service.GroupEventListener;
 import com.lzw.talk.service.GroupMsgReceiver;
 import com.lzw.talk.service.GroupService;
 import com.lzw.talk.ui.view.HeaderLayout;
@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * Created by lzw on 14-10-7.
  */
-public class GroupListActivity extends BaseActivity implements GroupListener, AdapterView.OnItemClickListener {
+public class GroupListActivity extends BaseActivity implements GroupEventListener, AdapterView.OnItemClickListener {
   public static final int GROUP_NAME_REQUEST = 0;
   private static final int GROUP_ADD_DIALOG = 1;
   ListView groupListView;
@@ -47,7 +47,7 @@ public class GroupListActivity extends BaseActivity implements GroupListener, Ad
     initHeader();
     initList();
     refresh();
-    GroupMsgReceiver.registerGroupListener(this);
+    GroupMsgReceiver.addListener(this);
   }
 
   private void initHeader() {
@@ -113,6 +113,7 @@ public class GroupListActivity extends BaseActivity implements GroupListener, Ad
     super.onActivityResult(requestCode, resultCode, data);
   }
 
+
   @Override
   public void onJoined(Group group) {
     final ChatGroup chatGroup;
@@ -164,6 +165,16 @@ public class GroupListActivity extends BaseActivity implements GroupListener, Ad
     }
   }
 
+  @Override
+  public void onMemberJoin(Group group, List<String> joinedPeerIds) {
+
+  }
+
+  @Override
+  public void onMemberLeft(Group group, List<String> leftPeerIds) {
+
+  }
+
   private ChatGroup findChatGroup(String groupId) {
     for (ChatGroup chatGroup : chatGroups) {
       if (chatGroup.getObjectId().equals(groupId)) {
@@ -176,7 +187,7 @@ public class GroupListActivity extends BaseActivity implements GroupListener, Ad
   @Override
   protected void onDestroy() {
     super.onDestroy();
-    GroupMsgReceiver.unregisterGroupListener();
+    GroupMsgReceiver.removeListener(this);
   }
 
   @Override

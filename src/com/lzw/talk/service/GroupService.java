@@ -7,6 +7,7 @@ import com.lzw.talk.avobject.ChatGroup;
 import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -27,17 +28,6 @@ public class GroupService {
     return chatGroup.getOwner().equals(user);
   }
 
-  public static void goChatGroupActivity(Context ctx, Class<?> clz, String groupId) {
-    Intent intent = new Intent(ctx, clz);
-    intent.putExtra(GROUP_ID, groupId);
-    ctx.startActivity(intent);
-  }
-
-  public static ChatGroup getGroupByIntent(Intent intent) {
-    String groupId = intent.getStringExtra(GROUP_ID);
-    return App.lookupChatGroup(groupId);
-  }
-
   public static void inviteMembers(ChatGroup chatGroup, List<User> users) {
     Group group = getGroup(chatGroup);
     List<String> userIds = UserService.transformIds(users);
@@ -49,9 +39,8 @@ public class GroupService {
     return session.getGroup(chatGroup.getObjectId());
   }
 
-  public static void kickMembers(ChatGroup chatGroup, List<User> members) {
+  public static void kickMember(ChatGroup chatGroup, User member) {
     Group group = getGroup(chatGroup);
-    List<String> ids = UserService.transformIds(members);
-    group.kickMember(ids);
+    group.kickMember(Arrays.asList(member.getObjectId()));
   }
 }

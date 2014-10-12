@@ -42,7 +42,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ChatActivity extends BaseActivity implements OnClickListener, MessageListener,
+public class ChatActivity extends BaseActivity implements OnClickListener, MsgListener,
     XListView.IXListViewListener {
   private static final int IMAGE_REQUEST = 0;
   public static final int LOCATION_REQUEST = 1;
@@ -252,19 +252,20 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
   public void onResume() {
     super.onResume();
     if (singleChat) {
-      MsgReceiver.messageListeners.register(chatUser.getObjectId(), this);
+      MsgReceiver.registerMsgListener(this);
     } else {
-      GroupMsgReceiver.messageListeners.register(group.getGroupId(), this);
+      GroupMsgReceiver.registerMsgListener(this);
     }
+
   }
 
   @Override
   public void onPause() {
     super.onPause();
     if (singleChat) {
-      MsgReceiver.messageListeners.unregister(chatUser.getObjectId());
+      MsgReceiver.unregisterMsgListener();
     } else {
-      GroupMsgReceiver.messageListeners.unregister(group.getGroupId());
+      GroupMsgReceiver.unregisterMsgListener();
     }
   }
 
@@ -299,7 +300,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
       if (singleChat) {
         PersonInfoActivity.goPersonInfo(ctx, chatUser.getUsername());
       } else {
-        GroupDetailActivity.goGroupDetail(ctx, chatGroup.getObjectId());
+        GroupDetailActivity.chatGroup = chatGroup;
+        Utils.goActivity(ctx, GroupDetailActivity.class);
       }
     }
     return super.onMenuItemSelected(featureId, item);
@@ -312,6 +314,16 @@ public class ChatActivity extends BaseActivity implements OnClickListener, Messa
       loadNewMsg();
     } else {
       addMsgAndScrollToLast(msg);
+    }
+  }
+
+
+  @Override
+  public String getListenerId() {
+    if (singleChat) {
+      return chatUser.getObjectId();
+    } else {
+      return chatGroup.getObjectId();
     }
   }
 

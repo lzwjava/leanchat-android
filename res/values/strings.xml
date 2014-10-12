@@ -245,4 +245,5 @@
     <string name="inviteSucceed">已发出邀请</string>
     <string name="inviteMembers">邀请群成员</string>
     <string name="kickTips">确认要踢走该成员吗</string>
+    <string name="invite">邀请</string>
 </resources>

@@ -42,11 +42,6 @@ public class GroupAddMembersActivity extends BaseActivity {
   private void initData() {
   }
 
-  public static void goGroupAddMembers(Context ctx, String groupId) {
-    GroupService.goChatGroupActivity(ctx, GroupAddMembersActivity.class,
-        groupId);
-  }
-
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     MenuItem add = menu.add(0, OK, 0, R.string.sure);
