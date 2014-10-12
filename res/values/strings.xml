@@ -240,4 +240,8 @@
     <string name="people">人</string>
     <string name="groupMembers">群组成员</string>
     <string name="add_members">邀请朋友</string>
+    <string name="addMembers">添加群成员</string>
+    <string name="addSucceed">添加成功</string>
+    <string name="inviteSucceed">已发出邀请</string>
+    <string name="inviteMembers">邀请群成员</string>
 </resources>

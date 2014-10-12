@@ -56,6 +56,9 @@ public class UserService {
   }
 
   public static List<User> findUsers(List<String> uncachedIds) throws AVException {
+    if (uncachedIds.size() <= 0) {
+      return new ArrayList<User>();
+    }
     AVQuery<User> q = User.getQuery(User.class);
     q.whereContainedIn(C.OBJECT_ID, uncachedIds);
     List<User> users = q.find();
@@ -119,5 +122,13 @@ public class UserService {
     User user = User.curUser();
     user.setSex(isMale);
     user.saveInBackground(saveCallback);
+  }
+
+  public static List<String> transformIds(List<? extends AVObject> objects) {
+    List<String> ids = new ArrayList<String>();
+    for (AVObject o : objects) {
+      ids.add(o.getObjectId());
+    }
+    return ids;
   }
 }

@@ -51,7 +51,6 @@ public class DiscoverFragment extends BaseFragment
     listView.setXListViewListener(this);
     adapter = new NearPeopleAdapter(ctx, nears);
     listView.setAdapter(adapter);
-
     onRefresh();
   }
 

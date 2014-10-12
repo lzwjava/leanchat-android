@@ -38,9 +38,15 @@ public class BaseActivity extends FragmentActivity {
     getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
   }
 
+  void initActionBar(){
+    initActionBar(null);
+  }
+
   void initActionBar(String title) {
     ActionBar actionBar = getActionBar();
-    actionBar.setTitle(title);
+    if(title!=null){
+      actionBar.setTitle(title);
+    }
     actionBar.setDisplayUseLogoEnabled(false);
     actionBar.setDisplayHomeAsUpEnabled(true);
   }

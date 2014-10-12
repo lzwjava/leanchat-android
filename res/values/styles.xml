@@ -282,6 +282,12 @@
     <style name="MainTheme" parent="android:Theme.Holo.Light">
         <item name="android:actionBarStyle">@style/ActionBarStyle</item>
         <item name="android:homeAsUpIndicator">@drawable/back_btn</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
+    </style>
+
+    <style name="Avatar">
+        <item name="android:layout_width">@dimen/avatarSize</item>
+        <item name="android:layout_height">@dimen/avatarSize</item>
     </style>
 
 </resources>

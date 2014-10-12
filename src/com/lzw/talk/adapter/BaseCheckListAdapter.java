@@ -3,17 +3,17 @@ package com.lzw.talk.adapter;
 import android.content.Context;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import com.lzw.talk.util.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by lzw on 14-10-11.
  */
 
 public class BaseCheckListAdapter<T> extends BaseListAdapter<T> {
-  List<Boolean> checkStates;
+  List<Boolean> checkStates=new ArrayList<Boolean>();
   boolean defaultState = false;
 
   public BaseCheckListAdapter(Context ctx, List<T> datas) {
@@ -28,14 +28,24 @@ public class BaseCheckListAdapter<T> extends BaseListAdapter<T> {
   }
 
   private void initCheckStates(List<T> datas) {
-    checkStates = new ArrayList<Boolean>(datas.size());
-    for (int i = 0; i < checkStates.size(); i++) {
-      checkStates.set(i, defaultState);
+    checkStates.clear();
+    for (int i = 0; i <datas.size(); i++) {
+      checkStates.add(defaultState);
     }
   }
 
   public List<Boolean> getCheckStates() {
     return checkStates;
+  }
+
+  public List<T> getCheckedDatas() {
+    List<T> checkedDatas = new ArrayList<T>();
+    for (int i = 0; i < checkStates.size(); i++) {
+      if (checkStates.get(i)) {
+        checkedDatas.add(datas.get(i));
+      }
+    }
+    return checkedDatas;
   }
 
   void checkItem(int position) {
@@ -64,7 +74,8 @@ public class BaseCheckListAdapter<T> extends BaseListAdapter<T> {
 
   void assertSize(int position) {
     if (position >= checkStates.size()) {
-      throw new IllegalArgumentException("position is bigger than size");
+      //throw new IllegalArgumentException("position is bigger than size");
+      Logger.d("illegal " +position+ checkStates.size());
     }
   }
 

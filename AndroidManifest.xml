@@ -124,8 +124,14 @@
 
         <activity android:name=".ui.activity.GroupListActivity" />
 
-        <activity android:name=".ui.activity.GroupDetailActivity"
-            android:theme="@style/MainTheme"/>
+        <activity
+            android:name=".ui.activity.GroupDetailActivity"
+            android:theme="@style/MainTheme" />
+
+        <activity
+            android:name=".ui.activity.GroupAddMembersActivity"
+            android:theme="@style/MainTheme"
+            android:label="@string/inviteMembers" />
 
         <activity
             android:name=".ui.activity.GroupAddDialog"

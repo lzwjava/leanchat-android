@@ -15,9 +15,9 @@ import java.util.List;
 /**
  * Created by lzw on 14-10-11.
  */
-public class GroupAddMemberAdapter extends BaseCheckListAdapter<User> {
+public class GroupAddMembersAdapter extends BaseCheckListAdapter<User> {
 
-  public GroupAddMemberAdapter(Context ctx, List<User> datas) {
+  public GroupAddMembersAdapter(Context ctx, List<User> datas) {
     super(ctx, datas);
   }
 
