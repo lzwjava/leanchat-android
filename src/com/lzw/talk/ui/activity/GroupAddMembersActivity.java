@@ -68,7 +68,7 @@ public class GroupAddMembersActivity extends BaseActivity {
     new SimpleNetTask(ctx) {
       @Override
       protected void doInBack() throws Exception {
-        GroupService.addMembers(chatGroup, checkedUsers);
+        GroupService.inviteMembers(chatGroup, checkedUsers);
       }
 
       @Override
@@ -77,7 +77,6 @@ public class GroupAddMembersActivity extends BaseActivity {
         finish();
       }
     }.execute();
-
   }
 
   private void initList() {

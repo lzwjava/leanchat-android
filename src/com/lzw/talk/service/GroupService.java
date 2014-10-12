@@ -24,7 +24,7 @@ public class GroupService {
   }
 
   public static boolean isGroupOwner(ChatGroup chatGroup, User user) {
-    return true;
+    return chatGroup.getOwner().equals(user);
   }
 
   public static void goChatGroupActivity(Context ctx, Class<?> clz, String groupId) {
@@ -38,10 +38,20 @@ public class GroupService {
     return App.lookupChatGroup(groupId);
   }
 
-  public static void addMembers(ChatGroup chatGroup, List<User> users) {
-    Session session = ChatService.getSession();
-    Group group = session.getGroup(chatGroup.getObjectId());
+  public static void inviteMembers(ChatGroup chatGroup, List<User> users) {
+    Group group = getGroup(chatGroup);
     List<String> userIds = UserService.transformIds(users);
     group.inviteMember(userIds);
+  }
+
+  public static Group getGroup(ChatGroup chatGroup) {
+    Session session = ChatService.getSession();
+    return session.getGroup(chatGroup.getObjectId());
+  }
+
+  public static void kickMembers(ChatGroup chatGroup, List<User> members) {
+    Group group = getGroup(chatGroup);
+    List<String> ids = UserService.transformIds(members);
+    group.kickMember(ids);
   }
 }
