@@ -3,6 +3,7 @@ package com.lzw.talk.avobject;
 import com.avos.avoscloud.AVClassName;
 import com.avos.avoscloud.AVObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,7 +18,11 @@ public class ChatGroup extends AVObject {
   //User owner;
 
   public List<String> getMembers() {
-    return getList(M);
+    List<String> list = getList(M);
+    if (list == null) {
+      list = new ArrayList<String>();
+    }
+    return list;
   }
 
   public void setMembers(List<String> members) {
@@ -42,13 +47,7 @@ public class ChatGroup extends AVObject {
 
   public String getTitle() {
     List<String> members = getMembers();
-    int len;
-    if (members == null) {
-      len = 0;
-    } else {
-      len = members.size();
-    }
-
+    int len = members.size();
     return getName() + " (" + len + ")";
   }
 }
