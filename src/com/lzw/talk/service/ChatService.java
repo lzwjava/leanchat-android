@@ -143,7 +143,9 @@ public class ChatService {
 
   public static void openSession() {
     Session session = getSession();
-    session.open(new LinkedList<String>());
+    if(session.isOpen()==false){
+      session.open(new LinkedList<String>());
+    }
   }
 
   public static HashMap<String, String> parseUri(String uri) {
@@ -237,7 +239,10 @@ public class ChatService {
       responseAndReceiveMsg(context, msg, listener, group);
     } else {
       DBMsg.updateStatusAndTimestamp(msg);
-
+      MsgListener _listener = filterMsgListener(listener, msg, group);
+      if (_listener != null) {
+        _listener.onMessage(msg);
+      }
     }
   }
 

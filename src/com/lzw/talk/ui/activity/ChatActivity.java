@@ -47,7 +47,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   private static final int IMAGE_REQUEST = 0;
   public static final int LOCATION_REQUEST = 1;
   private static final int TAKE_CAMERA_REQUEST = 2;
-  public static final int PAGE_SIZE = 10;
+  public static final int PAGE_SIZE = 20;
 
   private ChatMsgAdapter adapter;
   private List<Msg> msgs = new ArrayList<Msg>();
@@ -66,7 +66,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   List<String> emotions = EmotionService.emotionTexts;
   private String localCameraPath = PathUtils.getTmpPath();
   private View addCameraBtn;
-  int msgSize = PAGE_SIZE;
+  int msgSize;
   AnimService animService;
 
   boolean singleChat;
@@ -83,7 +83,11 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     instance = this;
     setContentView(R.layout.chat_layout);
     findView();
-    initData();
+    initByIntent(getIntent());
+  }
+
+  private void initByIntent(Intent intent) {
+    initData(intent);
     initActionBar();
     initEmotionPager();
     initRecordBtn();
@@ -95,6 +99,12 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
       ChatService.withUserToWatch(chatUser, true);
     }
     loadNewMsg();
+  }
+
+  @Override
+  protected void onNewIntent(Intent intent) {
+    super.onNewIntent(intent);
+    initByIntent(intent);
   }
 
   private void initListView() {
@@ -269,11 +279,11 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     }
   }
 
-  public void initData() {
+  public void initData(Intent intent) {
     me = User.curUser();
     dbHelper = new DBHelper(ctx, App.DB_NAME, App.DB_VER);
-    Intent intent = getIntent();
     singleChat = intent.getBooleanExtra(SINGLE_CHAT, true);
+    msgSize = PAGE_SIZE;
     if (singleChat) {
       String chatUserId = intent.getStringExtra(CHAT_USER_ID);
       chatUser = App.lookupUser(chatUserId);
@@ -316,7 +326,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
       addMsgAndScrollToLast(msg);
     }
   }
-
 
   @Override
   public String getListenerId() {
@@ -391,7 +400,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     new Handler().postDelayed(new Runnable() {
       @Override
       public void run() {
-        msgSize += 6;
+        msgSize += PAGE_SIZE;
         new GetDataTask(false).execute();
       }
     }, 1000);
