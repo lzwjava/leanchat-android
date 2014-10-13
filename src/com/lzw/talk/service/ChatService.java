@@ -127,9 +127,9 @@ public class ChatService {
     msg.setFromPeerId(getSelfId());
     if (group == null) {
       msg.setToPeerIds(Arrays.asList(ChatService.getPeerId(toPeer)));
-      msg.setSingleChat(false);
-    } else {
       msg.setSingleChat(true);
+    } else {
+      msg.setSingleChat(false);
     }
     msg.setObjectId(objectId);
     msg.setType(type);
@@ -265,7 +265,7 @@ public class ChatService {
   }
 
   public static void responseAndReceiveMsg(final Context context, final Msg msg, final MsgListener listener, final Group group) {
-    if (group == null) {
+    if (group==null) {
       sendResponseMessage(msg, group);
     }
     new NetAsyncTask(context, false) {

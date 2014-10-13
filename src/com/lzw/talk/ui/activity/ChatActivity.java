@@ -355,6 +355,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     if (msg != null) {
       msg.setStatus(Msg.STATUS_SEND_SUCCEED);
       adapter.notifyDataSetChanged();
+    }else{
+      Logger.d("cannot find message");
     }
   }
 
@@ -507,9 +509,13 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   }
 
   private void hideBottomLayoutAndScrollToLast() {
+    hideBottomLayout();
+    scrollToLast();
+  }
+
+  private void hideBottomLayout() {
     hideAddLayout();
     chatEmotionLayout.setVisibility(View.GONE);
-    scrollToLast();
   }
 
   private void selectLocationFromMap() {
@@ -620,6 +626,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
           break;
       }
     }
+    hideBottomLayout();
     super.onActivityResult(requestCode, resultCode, data);
   }
 

@@ -38,7 +38,7 @@ public class Msg {
   int status = STATUS_SEND_START;
   int type = TYPE_TEXT;
   String convid;
-  boolean singleChat =false;
+  boolean singleChat = true;
 
   public Msg() {
     internalMessage = new AVMessage();
@@ -90,8 +90,8 @@ public class Msg {
     return singleChat;
   }
 
-  public void setSingleChat(boolean isGroup) {
-    this.singleChat = isGroup;
+  public void setSingleChat(boolean singleChat) {
+    this.singleChat = singleChat;
   }
 
   public void setTimestamp(long timestamp) {
@@ -150,9 +150,8 @@ public class Msg {
   }
 
   public String getChatUserId() {
-    if (isSingleChat()==false) {
-      Logger.d("is group message");
-      return getFromPeerId();
+    if (isSingleChat() == false) {
+      throw new UnsupportedOperationException("unsupport for not singleChat");
     } else {
       String fromPeerId = getFromPeerId();
       String selfId = ChatService.getSelfId();
@@ -201,6 +200,7 @@ public class Msg {
       msg.setContent((String) params.get("content"));
       msg.setStatus((Integer) params.get("status"));
       msg.setType((Integer) params.get("type"));
+      msg.setSingleChat((Boolean) params.get("singleChat"));
     }
     return msg;
   }
@@ -211,6 +211,7 @@ public class Msg {
     params.put("content", content);
     params.put("status", status);
     params.put("type", type);
+    params.put("singleChat", singleChat);
     internalMessage.setMessage(JSON.toJSONString(params));
     return internalMessage;
   }
