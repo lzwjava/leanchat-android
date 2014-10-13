@@ -57,7 +57,7 @@ public class DBMsg {
         cv.put(FROM_PEER_ID, msg.getFromPeerId());
         cv.put(STATUS, msg.getStatus());
         if (group == null) {
-          cv.put(CONVID, msg.getSingleChatConvid());
+          cv.put(CONVID, msg.getConvid());
           cv.put(SINGLE_CHAT, 1);
           String toPeerId = msg.getToPeerId();
           cv.put(TO_PEER_ID, toPeerId);

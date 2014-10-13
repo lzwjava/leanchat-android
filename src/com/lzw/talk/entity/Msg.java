@@ -35,10 +35,12 @@ public class Msg {
   //List<String> toPeerIds;
   String content;
   String objectId;
+  String convid;
+  
   AVMessage internalMessage;
   int status = STATUS_SEND_START;
   int type = TYPE_TEXT;
-  String convid;
+
   boolean singleChat = true;
 
   public Msg() {
@@ -86,13 +88,7 @@ public class Msg {
     return internalMessage.getTimestamp();
   }
 
-  public String getSingleChatConvid() {
-    if (convid == null) {
-      List<String> convids = new ArrayList<String>();
-      convids.add(getToPeerId());
-      convids.add(getFromPeerId());
-      convid = AVOSUtils.convid(convids);
-    }
+  public String getConvid() {
     return convid;
   }
 
@@ -215,6 +211,7 @@ public class Msg {
       msg.setStatus((Integer) params.get("status"));
       msg.setType((Integer) params.get("type"));
       msg.setSingleChat((Boolean) params.get("singleChat"));
+      msg.setConvid((String) params.get("convid"));
     }
     return msg;
   }
@@ -226,6 +223,7 @@ public class Msg {
     params.put("status", status);
     params.put("type", type);
     params.put("singleChat", singleChat);
+    params.put("convid", convid);
     internalMessage.setMessage(JSON.toJSONString(params));
     return internalMessage;
   }

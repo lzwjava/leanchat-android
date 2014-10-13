@@ -15,6 +15,7 @@ import com.lzw.talk.db.DBMsg;
 import com.lzw.talk.entity.Msg;
 import com.lzw.talk.entity.RecentMsg;
 import com.lzw.talk.ui.activity.ChatActivity;
+import com.lzw.talk.util.AVOSUtils;
 import com.lzw.talk.util.Logger;
 import com.lzw.talk.util.NetAsyncTask;
 import com.lzw.talk.util.Utils;
@@ -71,7 +72,7 @@ public class ChatService {
     return SessionManager.getInstance(getPeerId(User.curUser()));
   }
 
-  public static void sendResponseMessage(Msg msg, Group group) {
+  public static void sendResponseMessage(Msg msg) {
     Msg resMsg = new Msg();
     resMsg.setType(Msg.TYPE_RESPONSE);
     resMsg.setToPeerId(msg.getFromPeerId());
@@ -80,11 +81,7 @@ public class ChatService {
     resMsg.setObjectId(msg.getObjectId());
     Session session = getSession();
     AVMessage avMsg = resMsg.toAVMessage();
-    if (group == null) {
-      session.sendMessage(avMsg);
-    } else {
-      group.sendMessage(avMsg);
-    }
+    session.sendMessage(avMsg);
   }
 
   public static Msg sendAudioMsg(User toUser, String path, String msgId, Group group) throws IOException, AVException {
@@ -125,13 +122,18 @@ public class ChatService {
     msg.setContent(content);
     msg.setTimestamp(System.currentTimeMillis());
     msg.setFromPeerId(getSelfId());
+    String convid;
     if (group == null) {
-      msg.setToPeerId(ChatService.getPeerId(toPeer));
+      String toPeerId = ChatService.getPeerId(toPeer);
+      msg.setToPeerId(toPeerId);
       msg.setSingleChat(true);
+      convid = AVOSUtils.convid(ChatService.getSelfId(), toPeerId);
     } else {
       msg.setSingleChat(false);
+      convid = group.getGroupId();
     }
     msg.setObjectId(objectId);
+    msg.setConvid(convid);
     msg.setType(type);
 
     AVMessage avMsg = msg.toAVMessage();
@@ -177,7 +179,7 @@ public class ChatService {
         String chatUserId = msg.getChatUserId();
         recentMsg.toUser = App.lookupUser(chatUserId);
       } else {
-        recentMsg.chatGroup = App.lookupChatGroup(msg.getSingleChatConvid());
+        recentMsg.chatGroup = App.lookupChatGroup(msg.getConvid());
       }
       recentMsg.msg = msg;
       recentMsgs.add(recentMsg);
@@ -195,7 +197,7 @@ public class ChatService {
           uncachedIds.add(chatUserId);
         }
       } else {
-        String groupId = msg.getSingleChatConvid();
+        String groupId = msg.getConvid();
         if (App.lookupChatGroup(groupId) == null) {
           uncachedChatGroupIds.add(groupId);
         }
@@ -266,7 +268,7 @@ public class ChatService {
 
   public static void responseAndReceiveMsg(final Context context, final Msg msg, final MsgListener listener, final Group group) {
     if (group == null) {
-      sendResponseMessage(msg, group);
+      sendResponseMessage(msg);
     }
     new NetAsyncTask(context, false) {
       @Override
