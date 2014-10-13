@@ -1,7 +1,6 @@
 package com.lzw.talk.ui.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,6 @@ import com.lzw.talk.adapter.RecentMessageAdapter;
 import com.lzw.talk.entity.RecentMsg;
 import com.lzw.talk.service.ChatService;
 import com.lzw.talk.ui.activity.ChatActivity;
-import com.lzw.talk.util.Logger;
 import com.lzw.talk.util.NetAsyncTask;
 import com.lzw.talk.util.Utils;
 
@@ -49,12 +47,11 @@ public class RecentMessageFragment extends BaseFragment implements AdapterView.O
   @Override
   public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
     // TODO Auto-generated method stub
-
     RecentMsg recent = (RecentMsg) adapter.getItem(position);
     if (recent.msg.isSingleChat()) {
-      ChatActivity.goUserChat(ctx,recent.toUser.getObjectId());
+      ChatActivity.goUserChat(ctx, recent.toUser.getObjectId());
     } else {
-      ChatActivity.goGroupChat(ctx,recent.chatGroup.getObjectId());
+      ChatActivity.goGroupChat(ctx, recent.chatGroup.getObjectId());
     }
   }
 
@@ -103,5 +100,4 @@ public class RecentMessageFragment extends BaseFragment implements AdapterView.O
       }
     }
   }
-
 }

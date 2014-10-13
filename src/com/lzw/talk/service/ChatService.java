@@ -265,7 +265,9 @@ public class ChatService {
   }
 
   public static void responseAndReceiveMsg(final Context context, final Msg msg, final MsgListener listener, final Group group) {
-    sendResponseMessage(msg, group);
+    if (group == null) {
+      sendResponseMessage(msg, group);
+    }
     new NetAsyncTask(context, false) {
       @Override
       protected void doInBack() throws Exception {
@@ -328,8 +330,8 @@ public class ChatService {
       DBMsg.updateStatusToSendSucceed(msg);
       msg.setFromPeerId(User.curUserId());
       MsgListener _listener = filterMsgListener(listener, msg, group);
-      if (listener != null) {
-        listener.onMessageSent(msg);
+      if (_listener != null) {
+        _listener.onMessageSent(msg);
       }
     }
   }

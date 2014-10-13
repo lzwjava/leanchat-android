@@ -67,7 +67,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   private String localCameraPath = PathUtils.getTmpPath();
   private View addCameraBtn;
   int msgSize;
-  AnimService animService;
 
   boolean singleChat;
   public static final String CHAT_USER_ID = "chatUserId";
@@ -180,7 +179,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   }
 
   public void setNewRecordPath() {
-    recordBtn.setSavePath(PathUtils.getRecordUuidPath());
+    recordBtn.setSavePath(PathUtils.getUUIDFilePath());
   }
 
   public void setEditTextChangeListener() {
@@ -292,7 +291,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
       group = session.getGroup(groupId);
       chatGroup = App.lookupChatGroup(groupId);
     }
-    animService = AnimService.getInstance();
   }
 
   @Override
@@ -467,6 +465,11 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
         Utils.toast(R.string.loadMessagesFinish);
       }
     }
+    if (newN < PAGE_SIZE) {
+      xListView.setPullRefreshEnable(false);
+    } else {
+      xListView.setPullRefreshEnable(true);
+    }
   }
 
   @Override
@@ -537,16 +540,11 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   }
 
   private void hideAddLayout() {
-    if (chatAddLayout.getVisibility() == View.VISIBLE) {
-      animService.hideView(chatAddLayout);
-    }
+    chatAddLayout.setVisibility(View.GONE);
   }
 
   private void showAddLayout() {
-    if (chatAddLayout.getVisibility() == View.GONE) {
-      chatAddLayout.setVisibility(View.VISIBLE);
-      chatAddLayout.startAnimation(animService.popupFromBottomAnim);
-    }
+    chatAddLayout.setVisibility(View.VISIBLE);
   }
 
   private void showTextLayout() {
@@ -563,13 +561,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
 
   public void selectImageFromLocal() {
     Intent intent;
-    if (Build.VERSION.SDK_INT < 19) {
-      intent = new Intent(Intent.ACTION_GET_CONTENT);
-      intent.setType("image/*");
-    } else {
-      intent = new Intent(Intent.ACTION_PICK,
-          MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-    }
+    intent = new Intent(Intent.ACTION_GET_CONTENT);
+    intent.setType("image/*");
     startActivityForResult(intent, IMAGE_REQUEST);
   }
 
@@ -607,10 +600,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
       int columnIndex = cursor.getColumnIndex("_data");
       localSelectPath = cursor.getString(columnIndex);
       cursor.close();
-      if (localSelectPath == null) {
-        Utils.toast(ctx, R.string.cannotFindImage);
-        return null;
-      }
     }
     return localSelectPath;
   }
@@ -621,9 +610,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
       switch (requestCode) {
         case IMAGE_REQUEST:
           String localSelectPath = parsePathByReturnData(data);
-          if (localSelectPath != null) {
-            sendImageByPath(localSelectPath);
-          }
+          sendImageByPath(localSelectPath);
           break;
         case TAKE_CAMERA_REQUEST:
           sendImageByPath(localCameraPath);
@@ -675,7 +662,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
 
   private void sendImageByPath(String localSelectPath) {
     final String objectId = Utils.uuid();
-    final String newPath = PathUtils.getImageDir() + objectId;
+    final String newPath = PathUtils.getChatFileDir() + objectId;
     PhotoUtil.compressImage(localSelectPath, newPath);
     new SendMsgTask(ctx) {
       @Override
@@ -688,7 +675,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   public void scrollToLast() {
     Logger.d("scrollToLast");
     //xListView.smoothScrollToPosition(xListView.getCount() - 1);
-    //xListView.smoothScrollToPosition();
     xListView.setSelection(xListView.getCount() - 1);
   }
 

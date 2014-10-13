@@ -149,14 +149,8 @@ public class Msg {
     return !fromPeerId.equals(ChatService.getSelfId());
   }
 
-  //group have not chatUserId
-  //TODO  the way is stupid
-  public boolean isGroupMsg() {
-    return getToPeerIds() == null || getToPeerIds().isEmpty();
-  }
-
   public String getChatUserId() {
-    if (isGroupMsg()) {
+    if (isSingleChat()==false) {
       Logger.d("is group message");
       return getFromPeerId();
     } else {
@@ -229,6 +223,6 @@ public class Msg {
   }
 
   public String getAudioPath() {
-    return PathUtils.getAudioDir() + getObjectId();
+    return PathUtils.getChatFileDir() + getObjectId();
   }
 }

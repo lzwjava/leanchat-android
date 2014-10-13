@@ -1,6 +1,5 @@
 package com.lzw.talk.entity;
 
-import com.avos.avoscloud.Group;
 import com.lzw.talk.avobject.ChatGroup;
 import com.lzw.talk.avobject.User;
 

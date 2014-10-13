@@ -14,9 +14,7 @@ public class PathUtils {
 
   public static String checkAndMkdirs(String dir) {
     File file = new File(dir);
-    if (file.exists() == false) {
-      file.mkdirs();
-    }
+    file.mkdirs();
     return dir;
   }
 
@@ -34,21 +32,17 @@ public class PathUtils {
     return getAvatarDir() + "tmp";
   }
 
-  public static String getImageDir() {
-    String dir = getAppPath() + "image/";
+  public static String getChatFileDir() {
+    String dir = getAppPath() + "chat_file/";
     return checkAndMkdirs(dir);
   }
 
   public static String getRecordTmpPath() {
-    return getAudioDir() + "tmp";
+    return getChatFileDir() + "tmp";
   }
 
-  public static String getAudioDir() {
-    return checkAndMkdirs(getAppPath() + "audio/");
-  }
-
-  public static String getRecordUuidPath() {
-    return getAudioDir() + Utils.uuid();
+  public static String getUUIDFilePath() {
+    return getChatFileDir() + Utils.uuid();
   }
 
   public static String getTmpPath() {
