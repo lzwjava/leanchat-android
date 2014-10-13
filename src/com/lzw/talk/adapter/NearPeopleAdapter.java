@@ -12,8 +12,7 @@ import com.lzw.talk.base.App;
 import com.lzw.talk.service.PrefDao;
 import com.lzw.talk.service.UserService;
 import com.lzw.talk.ui.view.ViewHolder;
-import com.lzw.talk.util.PhotoUtil;
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.lzw.talk.util.Utils;
 import org.ocpsoft.prettytime.PrettyTime;
 
 import java.util.Date;
@@ -28,7 +27,7 @@ public class NearPeopleAdapter extends BaseListAdapter<User> {
   }
 
   private void init() {
-    prettyTime=new PrettyTime();
+    prettyTime = new PrettyTime();
   }
 
   public NearPeopleAdapter(Context ctx, List<User> datas) {
@@ -44,11 +43,11 @@ public class NearPeopleAdapter extends BaseListAdapter<User> {
     final User user = datas.get(position);
     TextView nameView = ViewHolder.findViewById(convertView, R.id.name_text);
     TextView distanceView = ViewHolder.findViewById(convertView, R.id.distance_text);
-    TextView logintimView = ViewHolder.findViewById(convertView, R.id.login_time_text);
+    TextView loginTimeView = ViewHolder.findViewById(convertView, R.id.login_time_text);
     ImageView avatarView = ViewHolder.findViewById(convertView, R.id.avatar_view);
     String avatarUrl = user.getAvatarUrl();
 
-    UserService.displayAvatar(avatarUrl,avatarView);
+    UserService.displayAvatar(avatarUrl, avatarView);
 
     AVGeoPoint geoPoint = user.getLocation();
     PrefDao prefDao = PrefDao.getCurUserPrefDao(ctx);
@@ -58,14 +57,14 @@ public class NearPeopleAdapter extends BaseListAdapter<User> {
     if (geoPoint != null && !currentLat.equals("") && !currentLong.equals("")) {
       double distance = DistanceOfTwoPoints(Double.parseDouble(currentLat), Double.parseDouble(currentLong), user.getLocation().getLatitude(),
           user.getLocation().getLongitude());
-      distanceView.setText(String.valueOf(distance) + App.ctx.getString(R.string.metre));
+      distanceView.setText(Utils.getPrettyDistance(distance));
     } else {
       distanceView.setText(App.ctx.getString(R.string.unknown));
     }
     nameView.setText(user.getUsername());
     Date updatedAt = user.getUpdatedAt();
     String prettyTimeStr = this.prettyTime.format(updatedAt);
-    logintimView.setText(App.ctx.getString(R.string.recent_login_time) +prettyTimeStr);
+    loginTimeView.setText(App.ctx.getString(R.string.recent_login_time) + prettyTimeStr);
     return convertView;
   }
 

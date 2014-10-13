@@ -41,14 +41,14 @@ public class RecordButton extends Button {
   }
 
   public void setSavePath(String path) {
-    mFileName = path;
+    outputPath = path;
   }
 
   public void setOnFinishedRecordListener(RecordEventListener listener) {
     finishedListener = listener;
   }
 
-  private String mFileName = null;
+  private String outputPath = null;
 
   private RecordEventListener finishedListener;
 
@@ -72,7 +72,7 @@ public class RecordButton extends Button {
   @Override
   public boolean onTouchEvent(MotionEvent event) {
 
-    if (mFileName == null)
+    if (outputPath == null)
       return false;
     int action = event.getAction();
     switch (action) {
@@ -115,14 +115,14 @@ public class RecordButton extends Button {
     long intervalTime = System.currentTimeMillis() - startTime;
     if (intervalTime < MIN_INTERVAL_TIME) {
       Toast.makeText(getContext(), getContext().getString(R.string.pleaseSayMore), Toast.LENGTH_SHORT).show();
-      File file = new File(mFileName);
+      File file = new File(outputPath);
       file.delete();
       return;
     }
 
     int sec = Math.round(intervalTime * 1.0f / 1000);
     if (finishedListener != null) {
-      finishedListener.onFinishedRecord(mFileName, sec);
+      finishedListener.onFinishedRecord(outputPath, sec);
     }
   }
 
@@ -132,7 +132,7 @@ public class RecordButton extends Button {
 
     Toast.makeText(getContext(), App.ctx.getString(R.string.cancelRecord),
         Toast.LENGTH_SHORT).show();
-    File file = new File(mFileName);
+    File file = new File(outputPath);
     file.delete();
   }
 
@@ -142,14 +142,14 @@ public class RecordButton extends Button {
       recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
       recorder.setOutputFormat(MediaRecorder.OutputFormat.RAW_AMR);
       recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-      recorder.setOutputFile(mFileName);
+      recorder.setOutputFile(outputPath);
       try {
         recorder.prepare();
       } catch (IOException e) {
         e.printStackTrace();
       }
     } else {
-      recorder.setOutputFile(mFileName);
+      recorder.setOutputFile(outputPath);
       recorder.reset();
     }
     recorder.start();

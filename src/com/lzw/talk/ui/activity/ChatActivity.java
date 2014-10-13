@@ -91,7 +91,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     initEmotionPager();
     initRecordBtn();
     setEditTextChangeListener();
-    //turnToAudioBtn.performClick();
+
     initListView();
     setSoftInputMode();
     if (singleChat) {

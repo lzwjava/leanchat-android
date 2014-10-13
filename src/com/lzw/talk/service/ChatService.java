@@ -89,8 +89,7 @@ public class ChatService {
     AVFile file = AVFile.withAbsoluteLocalPath(objectId, filePath);
     file.save();
     String url = file.getUrl();
-    String sendText = filePath + "&" + url;
-    Msg msg = sendMessage(toUser, type, sendText, objectId, group);
+    Msg msg = sendMessage(toUser, type, url, objectId, group);
     DBMsg.insertMsg(msg, group);
     return msg;
   }
@@ -268,9 +267,7 @@ public class ChatService {
       protected void doInBack() throws Exception {
         if (msg.getType() == Msg.TYPE_AUDIO) {
           File file = new File(msg.getAudioPath());
-          String uri = msg.getContent();
-          Map<String, String> parts = parseUri(uri);
-          String url = parts.get("url");
+          String url = msg.getContent();
           Utils.downloadFileIfNotExists(url, file);
         }
         String fromId = msg.getFromPeerId();

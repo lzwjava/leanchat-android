@@ -10,23 +10,21 @@ import com.lzw.talk.R;
 import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
 import com.lzw.talk.entity.Msg;
-import com.lzw.talk.service.ChatService;
 import com.lzw.talk.service.EmotionService;
 import com.lzw.talk.service.UserService;
 import com.lzw.talk.ui.activity.ImageBrowerActivity;
 import com.lzw.talk.ui.activity.LocationActivity;
 import com.lzw.talk.ui.view.PlayButton;
 import com.lzw.talk.ui.view.ViewHolder;
+import com.lzw.talk.util.PathUtils;
 import com.lzw.talk.util.TimeUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.List;
 
 public class ChatMsgAdapter extends BaseListAdapter<Msg> {
   ImageLoader imageLoader;
-
   int msgViewTypes = 8;
 
   public static interface MsgViewType {
@@ -65,7 +63,6 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
   }
 
   public int getItemViewType(int position) {
-    // TODO Auto-generated method stub
     Msg entity = datas.get(position);
     boolean comeMsg = entity.isComeMessage();
     int type = entity.getType();
@@ -82,7 +79,6 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
   }
 
   public int getViewTypeCount() {
-    // TODO Auto-generated method stub
     return msgViewTypes;
   }
 
@@ -101,6 +97,7 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
     PlayButton playBtn = ViewHolder.findViewById(conView, R.id.playBtn);
     TextView locationView = ViewHolder.findViewById(conView, R.id.locationView);
 
+    // timestamp
     if (position == 0 || TimeUtils.haveTimeGap(datas.get(position - 1).getTimestamp(),
         msg.getTimestamp())) {
       sendTimeView.setVisibility(View.VISIBLE);
@@ -120,8 +117,10 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
     if (type == Msg.TYPE_TEXT) {
       contentView.setText(EmotionService.replace(ctx, msg.getContent()));
     } else if (type == Msg.TYPE_IMAGE) {
-      displayImage(msg, imageView);
-      setImageOnClickListener(msg.getContent(), imageView);
+      String localPath = PathUtils.getChatFileDir() + msg.getObjectId();
+      String url = msg.getContent();
+      displayImageByUri(imageView, localPath, url);
+      setImageOnClickListener(localPath, url, imageView);
     } else if (type == Msg.TYPE_AUDIO) {
       initPlayBtn(msg, playBtn);
     } else if (type == Msg.TYPE_LOCATION) {
@@ -138,18 +137,17 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
       String content = msg.getContent();
       if (content != null && !content.equals("")) {
         String address = content.split("&")[0];
-        final String latitude = content.split("&")[1];//缁村害
-        final String longtitude = content.split("&")[2];//缁忓害
+        final String latitude = content.split("&")[1];
+        final String longtitude = content.split("&")[2];
         locationView.setText(address);
         locationView.setOnClickListener(new View.OnClickListener() {
 
           @Override
           public void onClick(View arg0) {
-            // TODO Auto-generated method stub
             Intent intent = new Intent(ctx, LocationActivity.class);
             intent.putExtra("type", "scan");
-            intent.putExtra("latitude", Double.parseDouble(latitude));//缁村害
-            intent.putExtra("longtitude", Double.parseDouble(longtitude));//缁忓害
+            intent.putExtra("latitude", Double.parseDouble(latitude));
+            intent.putExtra("longtitude", Double.parseDouble(longtitude));
             ctx.startActivity(intent);
           }
         });
@@ -162,26 +160,20 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
     playBtn.setPath(msg.getAudioPath());
   }
 
-  private void setImageOnClickListener(final String uri, ImageView imageView) {
+  private void setImageOnClickListener(final String path, final String url, ImageView imageView) {
     imageView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
         Intent intent = new Intent(ctx, ImageBrowerActivity.class);
-        intent.putExtra("uri", uri);
+        intent.putExtra("path", path);
+        intent.putExtra("url", url);
         ctx.startActivity(intent);
       }
     });
   }
 
-  public static void displayImage(Msg msg, ImageView imageView) {
-    String content = msg.getContent();
-    displayImageByUri(imageView, content);
-  }
-
-  public static void displayImageByUri(ImageView imageView, String uri) {
-    HashMap<String, String> parts = ChatService.parseUri(uri);
-    String localPath = parts.get("path");
-    String url = parts.get("url");
+  public static void displayImageByUri(ImageView imageView,
+                                       String localPath, String url) {
     File file = new File(localPath);
     ImageLoader imageLoader = ImageLoader.getInstance();
     if (file.exists()) {
@@ -203,8 +195,7 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
         R.layout.chat_item_msg_audio_left,
         R.layout.chat_item_msg_audio_right,
         R.layout.chat_item_msg_location_left,
-        R.layout.chat_item_msg_location_right
-    };
+        R.layout.chat_item_msg_location_right};
     int i;
     for (i = 0; i < types.length; i++) {
       if (itemViewType == types[i]) {

@@ -605,7 +605,8 @@ public class Utils {
   }
 
   public static String uuid() {
-    return UUID.randomUUID().toString().substring(0, 24);
+    //return UUID.randomUUID().toString().substring(0, 24);
+    return myUUID();
   }
 
   public static String myUUID() {
@@ -616,10 +617,9 @@ public class Utils {
     appendChar(sb, 97, 123);
     String charSet = sb.toString();
     StringBuilder sb1 = new StringBuilder();
-    Random random = new Random();
     for (int i = 0; i < 24; i++) {
       int len = charSet.length();
-      int pos = random.nextInt(len);
+      int pos = new Random().nextInt(len);
       sb1.append(charSet.charAt(pos));
     }
     return sb1.toString();
@@ -703,5 +703,15 @@ public class Utils {
 
   public static boolean doubleEqual(double a, double b) {
     return Math.abs(a - b) < 1E-8;
+  }
+
+  public static String getPrettyDistance(double distance) {
+    if (distance < 1000) {
+      int metres = (int) distance;
+      return String.valueOf(metres) + App.ctx.getString(R.string.metres);
+    } else {
+      String num = String.format("%.1f", distance / 1000);
+      return num + App.ctx.getString(R.string.kilometres);
+    }
   }
 }

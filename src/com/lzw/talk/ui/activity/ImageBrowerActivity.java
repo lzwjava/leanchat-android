@@ -10,7 +10,8 @@ import com.lzw.talk.adapter.ChatMsgAdapter;
  * Created by lzw on 14-9-21.
  */
 public class ImageBrowerActivity extends BaseActivity {
-  String uri;
+  String url;
+  String path;
   ImageView imageView;
 
   @Override
@@ -19,7 +20,8 @@ public class ImageBrowerActivity extends BaseActivity {
     setContentView(R.layout.chat_image_brower_layout);
     imageView = (ImageView) findViewById(R.id.imageView);
     Intent intent = getIntent();
-    uri = intent.getStringExtra("uri");
-    ChatMsgAdapter.displayImageByUri(imageView, uri);
+    url = intent.getStringExtra("url");
+    path = intent.getStringExtra("path");
+    ChatMsgAdapter.displayImageByUri(imageView, path, url);
   }
 }

@@ -140,7 +140,7 @@
     <string name="not_have_account">还没有账号？</string>
     <string name="register_rightnow">立即注册 ></string>
     <string name="nearby_people">附近的人</string>
-    <string name="metre">米</string>
+    <string name="metres">米</string>
     <string name="unknown">未知</string>
     <string name="recent_login_time">最近登录时间:</string>
     <string name="none_neerby_people">暂无附近的人!</string>
@@ -246,4 +246,5 @@
     <string name="inviteMembers">邀请群成员</string>
     <string name="kickTips">确认要踢走该成员吗</string>
     <string name="invite">邀请</string>
+    <string name="kilometres">公里</string>
 </resources>
