@@ -49,6 +49,6 @@ public class ChatGroup extends AVObject {
       len = members.size();
     }
 
-    return getName() + "(" + len + ")";
+    return getName() + " (" + len + ")";
   }
 }
