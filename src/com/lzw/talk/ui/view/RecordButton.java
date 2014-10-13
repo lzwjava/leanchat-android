@@ -149,8 +149,8 @@ public class RecordButton extends Button {
         e.printStackTrace();
       }
     } else {
-      recorder.setOutputFile(outputPath);
       recorder.reset();
+      recorder.setOutputFile(outputPath);
     }
     recorder.start();
     thread = new ObtainDecibelThread();

@@ -355,7 +355,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     if (msg != null) {
       msg.setStatus(Msg.STATUS_SEND_SUCCEED);
       adapter.notifyDataSetChanged();
-    }else{
+    } else {
       Logger.d("cannot find message");
     }
   }
@@ -669,7 +669,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
 
   private void sendImageByPath(String localSelectPath) {
     final String objectId = Utils.uuid();
-    final String newPath = PathUtils.getChatFileDir() + objectId;
+    final String newPath = PathUtils.getChatFile(objectId);
+    //PhotoUtil.simpleCompressImage(localSelectPath,newPath);
     PhotoUtil.compressImage(localSelectPath, newPath);
     new SendMsgTask(ctx) {
       @Override

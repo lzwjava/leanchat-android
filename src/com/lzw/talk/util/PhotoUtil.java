@@ -294,6 +294,19 @@ public class PhotoUtil {
     return output;
   }
 
+  public static String simpleCompressImage(String path, String newPath) {
+    Bitmap bitmap = BitmapFactory.decodeFile(path);
+    FileOutputStream outputStream = null;
+    try {
+      outputStream = new FileOutputStream(newPath);
+      bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream);
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+    recycle(bitmap);
+    return newPath;
+  }
+
   public static String compressImage(String path, String newPath) {
     BitmapFactory.Options options = new BitmapFactory.Options();
     options.inJustDecodeBounds = true;

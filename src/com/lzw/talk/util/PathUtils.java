@@ -3,6 +3,7 @@ package com.lzw.talk.util;
 import android.os.Environment;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by lzw on 14-9-19.
@@ -14,7 +15,9 @@ public class PathUtils {
 
   public static String checkAndMkdirs(String dir) {
     File file = new File(dir);
-    file.mkdirs();
+    if (file.exists() == false) {
+      file.mkdirs();
+    }
     return dir;
   }
 
@@ -33,8 +36,14 @@ public class PathUtils {
   }
 
   public static String getChatFileDir() {
-    String dir = getAppPath() + "chat_file/";
+    String dir = getAppPath() + "files/";
     return checkAndMkdirs(dir);
+  }
+
+  public static String getChatFile(String id) {
+    String dir = getChatFileDir();
+    String path = dir + id;
+    return path;
   }
 
   public static String getRecordTmpPath() {
