@@ -13,6 +13,7 @@ import com.lzw.talk.util.Logger;
 import com.lzw.talk.util.PathUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -52,11 +53,24 @@ public class Msg {
     this.internalMessage = internalMessage;
   }
 
-  public List<String> getToPeerIds() {
+  public String getToPeerId() {
+    List<String> toPeerIds = internalMessage.getToPeerIds();
+    if (toPeerIds != null && toPeerIds.size() > 0) {
+      return toPeerIds.get(0);
+    } else {
+      return null;
+    }
+  }
+
+  private List<String> getToPeerIds() {
     return internalMessage.getToPeerIds();
   }
 
-  public void setToPeerIds(List<String> toPeerIds) {
+  public void setToPeerId(String toPeerId) {
+    setToPeerIds(Arrays.asList(toPeerId));
+  }
+
+  private void setToPeerIds(List<String> toPeerIds) {
     internalMessage.setToPeerIds(toPeerIds);
   }
 
@@ -72,10 +86,10 @@ public class Msg {
     return internalMessage.getTimestamp();
   }
 
-  public String getConvid() {
+  public String getSingleChatConvid() {
     if (convid == null) {
       List<String> convids = new ArrayList<String>();
-      convids.addAll(getToPeerIds());
+      convids.add(getToPeerId());
       convids.add(getFromPeerId());
       convid = AVOSUtils.convid(convids);
     }
@@ -159,7 +173,7 @@ public class Msg {
         throw new NullPointerException("fromPeerId is null or selfId is null");
       }
       if (fromPeerId.equals(selfId)) {
-        return getToPeerIds().get(0);
+        return getToPeerId();
       } else {
         return fromPeerId;
       }

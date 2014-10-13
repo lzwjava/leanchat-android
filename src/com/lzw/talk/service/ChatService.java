@@ -74,7 +74,7 @@ public class ChatService {
   public static void sendResponseMessage(Msg msg, Group group) {
     Msg resMsg = new Msg();
     resMsg.setType(Msg.TYPE_RESPONSE);
-    resMsg.setToPeerIds(Arrays.asList(msg.getFromPeerId()));
+    resMsg.setToPeerId(msg.getFromPeerId());
     resMsg.setFromPeerId(getSelfId());
     resMsg.setContent(msg.getTimestamp() + "");
     resMsg.setObjectId(msg.getObjectId());
@@ -108,7 +108,7 @@ public class ChatService {
   public static Msg sendTextMsg(User toUser, String content, Group group) {
     int type = Msg.TYPE_TEXT;
     Msg msg = sendMessage(toUser, type, content, group);
-    Log.i("lzw", "sendTextMsg fromId=" + msg.getFromPeerId() + " toId=" + msg.getToPeerIds());
+    Log.i("lzw", "sendTextMsg fromId=" + msg.getFromPeerId() + " toId=" + msg.getToPeerId());
     DBMsg.insertMsg(msg, group);
     return msg;
   }
@@ -126,7 +126,7 @@ public class ChatService {
     msg.setTimestamp(System.currentTimeMillis());
     msg.setFromPeerId(getSelfId());
     if (group == null) {
-      msg.setToPeerIds(Arrays.asList(ChatService.getPeerId(toPeer)));
+      msg.setToPeerId(ChatService.getPeerId(toPeer));
       msg.setSingleChat(true);
     } else {
       msg.setSingleChat(false);
@@ -177,7 +177,7 @@ public class ChatService {
         String chatUserId = msg.getChatUserId();
         recentMsg.toUser = App.lookupUser(chatUserId);
       } else {
-        recentMsg.chatGroup = App.lookupChatGroup(msg.getConvid());
+        recentMsg.chatGroup = App.lookupChatGroup(msg.getSingleChatConvid());
       }
       recentMsg.msg = msg;
       recentMsgs.add(recentMsg);
@@ -195,7 +195,7 @@ public class ChatService {
           uncachedIds.add(chatUserId);
         }
       } else {
-        String groupId = msg.getConvid();
+        String groupId = msg.getSingleChatConvid();
         if (App.lookupChatGroup(groupId) == null) {
           uncachedChatGroupIds.add(groupId);
         }
@@ -251,7 +251,7 @@ public class ChatService {
     final Msg msg = Msg.fromAVMessage(avMsg);
     if (group == null) {
       String selfId = getSelfId();
-      msg.setToPeerIds(Arrays.asList(selfId));
+      msg.setToPeerId(selfId);
     }
     if (msg.getType() != Msg.TYPE_RESPONSE) {
       responseAndReceiveMsg(context, msg, listener, group);
@@ -265,7 +265,7 @@ public class ChatService {
   }
 
   public static void responseAndReceiveMsg(final Context context, final Msg msg, final MsgListener listener, final Group group) {
-    if (group==null) {
+    if (group == null) {
       sendResponseMessage(msg, group);
     }
     new NetAsyncTask(context, false) {
