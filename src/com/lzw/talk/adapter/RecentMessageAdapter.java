@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.lzw.talk.R;
+import com.lzw.talk.avobject.ChatGroup;
 import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
 import com.lzw.talk.entity.Msg;
@@ -40,15 +41,21 @@ public class RecentMessageAdapter extends BaseListAdapter<RecentMsg> {
     TextView recentUnreadView = ViewHolder.findViewById(convertView, R.id.recent_unread);
 
     Msg msg = item.msg;
-    User user = item.toUser;
-    String avatar = user.getAvatarUrl();
-    if (avatar != null && !avatar.equals("")) {
-      ImageLoader.getInstance().displayImage(avatar, recentAvatarView);
+    if (msg.isSingleChat()) {
+      User user = item.toUser;
+      String avatar = user.getAvatarUrl();
+      if (avatar != null && !avatar.equals("")) {
+        ImageLoader.getInstance().displayImage(avatar, recentAvatarView);
+      } else {
+        recentAvatarView.setImageResource(R.drawable.default_user_avatar);
+      }
+      recentNameView.setText(user.getUsername());
     } else {
+      ChatGroup chatGroup = item.chatGroup;
+      recentNameView.setText(chatGroup.getTitle());
       recentAvatarView.setImageResource(R.drawable.default_user_avatar);
     }
 
-    recentNameView.setText(user.getUsername());
     //recentTimeView.setText(TimeUtils.getDate);
     int num = 0;//unread count
     if (msg.getType() == Msg.TYPE_TEXT) {

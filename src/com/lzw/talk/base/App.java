@@ -115,11 +115,7 @@ public class App extends Application {
   }
 
   public static ChatGroup lookupChatGroup(String groupId) {
-    ChatGroup chatGroup = chatGroupsCache.get(groupId);
-    if(chatGroup==null){
-      throw new NullPointerException("ChatGroup is null");
-    }
-    return chatGroup;
+    return chatGroupsCache.get(groupId);
   }
 
   public static void registerChatGroupsCache(List<ChatGroup> chatGroups) {

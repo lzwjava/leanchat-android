@@ -127,6 +127,9 @@ public class ChatService {
     msg.setFromPeerId(getSelfId());
     if (group == null) {
       msg.setToPeerIds(Arrays.asList(ChatService.getPeerId(toPeer)));
+      msg.setSingleChat(false);
+    } else {
+      msg.setSingleChat(true);
     }
     msg.setObjectId(objectId);
     msg.setType(type);
@@ -143,7 +146,7 @@ public class ChatService {
 
   public static void openSession() {
     Session session = getSession();
-    if(session.isOpen()==false){
+    if (session.isOpen() == false) {
       session.open(new LinkedList<String>());
     }
   }
@@ -166,25 +169,40 @@ public class ChatService {
 
   public static List<RecentMsg> getRecentMsgsAndCache() throws AVException {
     List<Msg> msgs = DBMsg.getRecentMsgs();
-    cacheUserFromMsgs(msgs);
+    cacheUserOrChatGroup(msgs);
     ArrayList<RecentMsg> recentMsgs = new ArrayList<RecentMsg>();
     for (Msg msg : msgs) {
       RecentMsg recentMsg = new RecentMsg();
-      String chatUserId = msg.getChatUserId();
-      recentMsg.toUser = App.lookupUser(chatUserId);
+      if (msg.isSingleChat()) {
+        String chatUserId = msg.getChatUserId();
+        recentMsg.toUser = App.lookupUser(chatUserId);
+      } else {
+        recentMsg.chatGroup = App.lookupChatGroup(msg.getConvid());
+      }
       recentMsg.msg = msg;
       recentMsgs.add(recentMsg);
     }
     return recentMsgs;
   }
 
-  public static void cacheUserFromMsgs(List<Msg> msgs) throws AVException {
-    Set<String> uncachedId = new HashSet<String>();
+  public static void cacheUserOrChatGroup(List<Msg> msgs) throws AVException {
+    Set<String> uncachedIds = new HashSet<String>();
+    Set<String> uncachedChatGroupIds = new HashSet<String>();
     for (Msg msg : msgs) {
-      String chatUserId = msg.getChatUserId();
-      uncachedId.add(chatUserId);
+      if (msg.isSingleChat()) {
+        String chatUserId = msg.getChatUserId();
+        if (App.lookupUser(chatUserId) == null) {
+          uncachedIds.add(chatUserId);
+        }
+      } else {
+        String groupId = msg.getConvid();
+        if (App.lookupChatGroup(groupId) == null) {
+          uncachedChatGroupIds.add(groupId);
+        }
+      }
     }
-    UserService.cacheUser(new ArrayList<String>(uncachedId));
+    UserService.cacheUser(new ArrayList<String>(uncachedIds));
+    GroupService.cacheChatGroups(new ArrayList<String>(uncachedChatGroupIds));
   }
 
   public static void closeSession() {

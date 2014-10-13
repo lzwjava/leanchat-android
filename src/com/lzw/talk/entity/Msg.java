@@ -38,6 +38,7 @@ public class Msg {
   int status = STATUS_SEND_START;
   int type = TYPE_TEXT;
   String convid;
+  boolean singleChat =false;
 
   public Msg() {
     internalMessage = new AVMessage();
@@ -83,6 +84,14 @@ public class Msg {
 
   public void setConvid(String convid) {
     this.convid = convid;
+  }
+
+  public boolean isSingleChat() {
+    return singleChat;
+  }
+
+  public void setSingleChat(boolean isGroup) {
+    this.singleChat = isGroup;
   }
 
   public void setTimestamp(long timestamp) {
@@ -141,8 +150,7 @@ public class Msg {
   }
 
   //group have not chatUserId
-  //TODO
-
+  //TODO  the way is stupid
   public boolean isGroupMsg() {
     return getToPeerIds() == null || getToPeerIds().isEmpty();
   }

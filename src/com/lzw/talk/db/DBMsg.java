@@ -3,7 +3,6 @@ package com.lzw.talk.db;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 import com.avos.avoscloud.Group;
 import com.lzw.talk.base.App;
 import com.lzw.talk.entity.Msg;
@@ -25,6 +24,7 @@ public class DBMsg {
   public static final String STATUS = "status";
   public static final String TYPE = "type";
   public static final String TO_PEER_ID = "toPeerId";
+  public static final String SINGLE_CHAT = "singleChat";
 
   public static String[] columns = {FROM_PEER_ID,
       CONVID, TO_PEER_ID, CONTENT, TIMESTAMP, OBJECT_ID, STATUS, TYPE};
@@ -32,7 +32,7 @@ public class DBMsg {
   public static void createTable(SQLiteDatabase db) {
     db.execSQL("create table if not exists messages (id integer primary key, objectId varchar(63) unique," +
         "fromPeerId varchar(255), convid varchar(255),toPeerId varchar(255), content varchar(1023)," +
-        " status integer,type integer,timestamp varchar(63))");
+        " status integer,type integer,singleChat integer,timestamp varchar(63))");
   }
 
   public static int insertMsg(Msg msg, Group group) {
@@ -56,14 +56,14 @@ public class DBMsg {
         cv.put(TIMESTAMP, msg.getTimestamp() + "");
         cv.put(FROM_PEER_ID, msg.getFromPeerId());
         cv.put(STATUS, msg.getStatus());
-        if(group==null){
+        if (group == null) {
           cv.put(CONVID, msg.getConvid());
+          cv.put(SINGLE_CHAT, 1);
           String toPeerId = msg.getToPeerIds().get(0);
-          Log.i("lzw", "toPeerId=" + toPeerId + " fromPeerId=" + msg.getFromPeerId());
-          assert !toPeerId.equals(msg.getFromPeerId());
           cv.put(TO_PEER_ID, toPeerId);
-        }else{
-          cv.put(CONVID,group.getGroupId());
+        } else {
+          cv.put(SINGLE_CHAT, 0);
+          cv.put(CONVID, group.getGroupId());
         }
         cv.put(TYPE, msg.getType());
         cv.put(CONTENT, msg.getContent());
@@ -82,7 +82,7 @@ public class DBMsg {
     List<Msg> msgs = new ArrayList<Msg>();
     SQLiteDatabase db = dbHelper.getReadableDatabase();
     assert db != null;
-    Cursor c = db.query(MESSAGES, columns,
+    Cursor c = db.query(MESSAGES, null,
         "convid=?",
         new String[]{convid}, null, null,
         TIMESTAMP + " desc",
@@ -104,8 +104,11 @@ public class DBMsg {
     msg.setStatus(c.getInt(c.getColumnIndex(STATUS)));
     msg.setConvid(c.getString(c.getColumnIndex(CONVID)));
     msg.setObjectId(c.getString(c.getColumnIndex(OBJECT_ID)));
-    String toPeerId = c.getString(c.getColumnIndex(TO_PEER_ID));
-    if(toPeerId!=null){
+    int singleChatInt = c.getInt(c.getColumnIndex(SINGLE_CHAT));
+    boolean singleChat = singleChatInt == 0 ? false : true;
+    msg.setSingleChat(singleChat);
+    if (singleChat) {
+      String toPeerId = c.getString(c.getColumnIndex(TO_PEER_ID));
       List<String> toPeerIds = new ArrayList<String>();
       toPeerIds.add(toPeerId);
       msg.setToPeerIds(toPeerIds);
@@ -118,7 +121,7 @@ public class DBMsg {
   public static List<Msg> getRecentMsgs() {
     DBHelper dbHelper = new DBHelper(App.ctx, App.DB_NAME, App.DB_VER);
     SQLiteDatabase db = dbHelper.getReadableDatabase();
-    Cursor c = db.query(true, MESSAGES, columns, null,
+    Cursor c = db.query(true, MESSAGES, null, null,
         null, CONVID, null, TIMESTAMP + " desc", null);
     List<Msg> msgs = new ArrayList<Msg>();
     while (c.moveToNext()) {

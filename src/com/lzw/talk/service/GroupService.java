@@ -1,11 +1,10 @@
 package com.lzw.talk.service;
 
-import android.content.Context;
-import android.content.Intent;
 import com.avos.avoscloud.*;
 import com.lzw.talk.avobject.ChatGroup;
 import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
+import com.lzw.talk.base.C;
 
 import java.util.Arrays;
 import java.util.List;
@@ -58,5 +57,18 @@ public class GroupService {
     chatGroup.setFetchWhenSave(true);
     chatGroup.save();
     return chatGroup;
+  }
+
+  public static void cacheChatGroups(List<String> ids) throws AVException {
+    findChatGroups(ids);
+  }
+
+  private static List<ChatGroup> findChatGroups(List<String> ids) throws AVException {
+    AVQuery<ChatGroup> q = AVObject.getQuery(ChatGroup.class);
+    q.whereContainedIn(C.OBJECT_ID, ids);
+    q.include(ChatGroup.OWNER);
+    List<ChatGroup> chatGroups = q.find();
+    App.registerChatGroupsCache(chatGroups);
+    return chatGroups;
   }
 }

@@ -433,7 +433,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
           convid = group.getGroupId();
         }
         msgs = DBMsg.getMsgs(dbHelper, convid, msgSize);
-        ChatService.cacheUserFromMsgs(msgs);
+        ChatService.cacheUserOrChatGroup(msgs);
         res = true;
       } catch (Exception e) {
         e.printStackTrace();
@@ -698,5 +698,19 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
       ChatService.withUserToWatch(chatUser, false);
     }
     super.onDestroy();
+  }
+
+  public static void goUserChat(Activity ctx, String userId) {
+    Intent intent = new Intent(ctx, ChatActivity.class);
+    intent.putExtra(CHAT_USER_ID, userId);
+    intent.putExtra(SINGLE_CHAT, true);
+    ctx.startActivity(intent);
+  }
+
+  public static void goGroupChat(Activity ctx, String groupId) {
+    Intent intent = new Intent(ctx, ChatActivity.class);
+    intent.putExtra(GROUP_ID, groupId);
+    intent.putExtra(SINGLE_CHAT, false);
+    ctx.startActivity(intent);
   }
 }

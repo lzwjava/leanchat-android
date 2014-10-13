@@ -43,7 +43,7 @@ public class MainActivity extends BaseActivity {
   private Activity ctx;
   View recentTips, contactTips;
   public LocationClient locClient;
-  public MyLocationListener mMyLocationListener;
+  public MyLocationListener locationListener;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +54,8 @@ public class MainActivity extends BaseActivity {
     init();
 
     //mySpaceBtn.performClick();
-    contactBtn.performClick();
-    //messageBtn.performClick();
+    //contactBtn.performClick();
+    messageBtn.performClick();
     //discoverBtn.performClick();
     initBaiduLocClient();
   }
@@ -77,8 +77,8 @@ public class MainActivity extends BaseActivity {
     option.setIsNeedAddress(true);
     locClient.setLocOption(option);
 
-    mMyLocationListener = new MyLocationListener();
-    locClient.registerLocationListener(mMyLocationListener);
+    locationListener = new MyLocationListener();
+    locClient.registerLocationListener(locationListener);
     locClient.start();
   }
 

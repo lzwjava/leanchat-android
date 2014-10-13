@@ -1,5 +1,7 @@
 package com.lzw.talk.entity;
 
+import com.avos.avoscloud.Group;
+import com.lzw.talk.avobject.ChatGroup;
 import com.lzw.talk.avobject.User;
 
 /**
@@ -8,4 +10,5 @@ import com.lzw.talk.avobject.User;
 public class RecentMsg {
   public Msg msg;
   public User toUser;
+  public ChatGroup chatGroup;
 }
