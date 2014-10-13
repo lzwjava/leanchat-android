@@ -266,7 +266,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     } else {
       GroupMsgReceiver.registerMsgListener(this);
     }
-
   }
 
   @Override
