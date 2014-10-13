@@ -36,12 +36,13 @@ public class Msg {
   String content;
   String objectId;
   String convid;
-  
+  boolean singleChat = true;
+
   AVMessage internalMessage;
   int status = STATUS_SEND_START;
   int type = TYPE_TEXT;
 
-  boolean singleChat = true;
+
 
   public Msg() {
     internalMessage = new AVMessage();

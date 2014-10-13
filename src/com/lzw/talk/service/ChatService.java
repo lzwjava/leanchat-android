@@ -30,13 +30,6 @@ import java.util.*;
 public class ChatService {
   private static final int REPLY_NOTIFY_ID = 1;
 
-  public static List<User> findChatUsers() throws AVException {
-    List<User> users = getAllUsers();
-    App.registerBatchUserCache(users);
-    users.remove(User.curUser());
-    return users;
-  }
-
   public static List<User> getAllUsers() throws AVException {
     AVQuery<User> q = AVUser.getQuery(User.class);
     return q.find();
@@ -362,5 +355,4 @@ public class ChatService {
     List<String> members = chatGroup.getMembers();
     return UserService.findUsers(members);
   }
-
 }

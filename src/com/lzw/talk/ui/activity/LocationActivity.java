@@ -46,9 +46,7 @@ public class LocationActivity extends BaseActivity implements
     mapView = (MapView) findViewById(R.id.bmapView);
     headerLayout = (HeaderLayout) findViewById(R.id.headerLayout);
     baiduMap = mapView.getMap();
-    //设置缩放级别
     baiduMap.setMaxAndMinZoomLevel(18, 13);
-    // 注册 SDK 广播监听者
     IntentFilter iFilter = new IntentFilter();
     iFilter.addAction(SDKInitializer.SDK_BROADTCAST_ACTION_STRING_PERMISSION_CHECK_ERROR);
     iFilter.addAction(SDKInitializer.SDK_BROADCAST_ACTION_STRING_NETWORK_ERROR);
