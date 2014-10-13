@@ -5,14 +5,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import com.avos.avoscloud.AVACL;
-import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.Group;
 import com.avos.avoscloud.Session;
 import com.lzw.talk.R;
 import com.lzw.talk.adapter.GroupAdapter;
 import com.lzw.talk.avobject.ChatGroup;
-import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
 import com.lzw.talk.service.ChatService;
 import com.lzw.talk.service.GroupEventListener;
@@ -115,30 +112,17 @@ public class GroupListActivity extends BaseActivity implements GroupEventListene
 
 
   @Override
-  public void onJoined(Group group) {
-    final ChatGroup chatGroup;
-    try {
-      chatGroup = ChatGroup.createWithoutData(ChatGroup.class, group.getGroupId());
-    } catch (AVException e) {
-      e.printStackTrace();
-      return;
-    }
+  public void onJoined(final Group group) {
+
+
     //new Group
     if (newGroupName != null) {
       new NetAsyncTask(ctx) {
+        ChatGroup chatGroup;
+
         @Override
         protected void doInBack() throws Exception {
-          User user = User.curUser();
-          chatGroup.setOwner(user);
-
-          AVACL acl = new AVACL();  // just owner can add member
-          acl.setPublicWriteAccess(false);
-          acl.setWriteAccess(user, true);
-          acl.setPublicReadAccess(true);
-          chatGroup.setACL(acl);
-          chatGroup.setName(newGroupName);
-          chatGroup.setFetchWhenSave(true);
-          chatGroup.save();
+          chatGroup = GroupService.setNewChatGroupData(group.getGroupId(), newGroupName);
         }
 
         @Override

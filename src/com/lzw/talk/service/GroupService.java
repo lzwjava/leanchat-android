@@ -43,4 +43,20 @@ public class GroupService {
     Group group = getGroup(chatGroup);
     group.kickMember(Arrays.asList(member.getObjectId()));
   }
+
+  public static ChatGroup setNewChatGroupData(String groupId, String newGroupName) throws AVException {
+    ChatGroup chatGroup = ChatGroup.createWithoutData(ChatGroup.class, groupId);
+    User user = User.curUser();
+    chatGroup.setOwner(user);
+
+    AVACL acl = new AVACL();  // just owner can add member
+    acl.setPublicWriteAccess(false);
+    acl.setWriteAccess(user, true);
+    acl.setPublicReadAccess(true);
+    chatGroup.setACL(acl);
+    chatGroup.setName(newGroupName);
+    chatGroup.setFetchWhenSave(true);
+    chatGroup.save();
+    return chatGroup;
+  }
 }

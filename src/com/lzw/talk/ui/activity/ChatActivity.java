@@ -220,7 +220,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     if (singleChat) {
       title = chatUser.getUsername();
     } else {
-      title = chatGroup.getName();
+      title = chatGroup.getTitle();
     }
     initActionBar(title);
   }

@@ -43,7 +43,7 @@ public class GroupDetailActivity extends BaseActivity implements AdapterView.OnI
     setContentView(R.layout.group_detail_activity);
     initData();
     findView();
-    initActionBar(chatGroup.getName());
+    initActionBar(chatGroup.getTitle());
     initGrid();
     refresh();
     GroupMsgReceiver.addListener(this);

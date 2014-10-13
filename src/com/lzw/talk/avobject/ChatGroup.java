@@ -39,4 +39,16 @@ public class ChatGroup extends AVObject {
   public void setOwner(User owner) {
     put(OWNER, owner);
   }
+
+  public String getTitle() {
+    List<String> members = getMembers();
+    int len;
+    if (members == null) {
+      len = 0;
+    } else {
+      len = members.size();
+    }
+
+    return getName() + "(" + len + ")";
+  }
 }
