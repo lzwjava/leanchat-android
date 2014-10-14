@@ -5,8 +5,6 @@
     android:background="@color/base_bg"
     android:orientation="vertical">
 
-    <include layout="@layout/header_layout" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,7 +30,7 @@
             android:layout_height="39dp"
             android:layout_margin="10dp"
             android:layout_marginRight="11dp"
-            android:background="@drawable/login_btn_selector"
+            android:background="@drawable/common_btn"
             android:text="@string/search"
             android:textSize="14sp" />
     </LinearLayout>

@@ -61,7 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/base_action_bar_height"
             android:layout_margin="@dimen/activity_vertical_margin"
-            android:background="@drawable/login_btn_selector"
+            android:background="@drawable/common_btn"
             android:gravity="center"
             android:text="@string/login"
             android:textColor="@color/base_color_text_white"

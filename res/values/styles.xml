@@ -210,7 +210,7 @@
     </style>
 
     <style name="My.Button.theme" parent="My.TextView._White">
-        <item name="android:background">@drawable/login_btn_selector</item>
+        <item name="android:background">@drawable/common_btn</item>
     </style>
 
     <style name="My.ImageView.Photo_Middle">

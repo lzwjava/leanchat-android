@@ -11,7 +11,6 @@ import com.lzw.talk.R;
 import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
 import com.lzw.talk.base.C;
-import com.lzw.talk.ui.view.HeaderLayout;
 import com.lzw.talk.util.ChatUtils;
 import com.lzw.talk.util.NetAsyncTask;
 import com.lzw.talk.util.Utils;
@@ -19,7 +18,6 @@ import com.lzw.talk.util.Utils;
 public class RegisterActivity extends BaseActivity {
   Button registerButton;
   EditText usernameEdit, passwordEdit, emailEdit;
-  HeaderLayout headerLayout;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -27,8 +25,7 @@ public class RegisterActivity extends BaseActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.register_activity);
     findView();
-    initHeader();
-    registerButton = (Button) findViewById(R.id.btn_register);
+    initActionBar(App.ctx.getString(R.string.register));
     registerButton.setOnClickListener(new OnClickListener() {
 
       @Override
@@ -43,12 +40,7 @@ public class RegisterActivity extends BaseActivity {
     usernameEdit = (EditText) findViewById(R.id.usernameEdit);
     passwordEdit = (EditText) findViewById(R.id.passwordEdit);
     emailEdit = (EditText) findViewById(R.id.ensurePasswordEdit);
-    headerLayout = (HeaderLayout) findViewById(R.id.headerLayout);
-  }
-
-  private void initHeader() {
-    headerLayout.showTitle(R.string.register);
-    headerLayout.showLeftBackButton(null);
+    registerButton = (Button) findViewById(R.id.btn_register);
   }
 
   private void register() {

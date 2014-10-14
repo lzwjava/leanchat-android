@@ -28,7 +28,6 @@ public class AddFriendActivity extends BaseActivity implements OnClickListener, 
   List<User> users = new ArrayList<User>();//change it first , then adapter
   XListView listView;
   AddFriendAdapter adapter;
-  HeaderLayout headerLayout;
   String searchName = "";
 
   @Override
@@ -41,11 +40,10 @@ public class AddFriendActivity extends BaseActivity implements OnClickListener, 
   }
 
   private void initView() {
-    headerLayout = (HeaderLayout) findViewById(R.id.headerLayout);
+    initActionBar(App.ctx.getString(R.string.findFriends));
     searchNameEdit = (EditText) findViewById(R.id.searchNameEdit);
     searchBtn = (Button) findViewById(R.id.searchBtn);
     searchBtn.setOnClickListener(this);
-    headerLayout.showTitle(App.ctx.getString(R.string.findFriends));
     initXListView();
   }
 

@@ -115,11 +115,15 @@
 
         <activity android:name=".ui.activity.LoginActivity" />
 
-        <activity android:name=".ui.activity.RegisterActivity" />
+        <activity
+            android:name=".ui.activity.RegisterActivity"
+            android:theme="@style/MainTheme" />
 
         <activity android:name=".ui.activity.NewFriendActivity" />
 
-        <activity android:name=".ui.activity.AddFriendActivity" />
+        <activity
+            android:name=".ui.activity.AddFriendActivity"
+            android:theme="@style/MainTheme" />
 
         <activity android:name=".ui.activity.PersonInfoActivity" />
 
