@@ -266,7 +266,7 @@
         <item name="android:clickable">true</item>
         <item name="android:visibility">visible</item>
         <item name="android:layout_gravity">bottom</item>
-        <item name="android:background">@drawable/top_background_default_thumb_blue</item>
+        <item name="android:src">@drawable/default_user_avatar</item>
     </style>
 
     <style name="ActionBarTitleStyle">

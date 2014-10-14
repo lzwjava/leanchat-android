@@ -41,9 +41,9 @@ public class PlayButton extends View implements View.OnClickListener {
       }
     }
     if (left) {
-      backResourceId = R.drawable.voice_right;
-    } else {
       backResourceId = R.drawable.voice_left;
+    } else {
+      backResourceId = R.drawable.voice_right;
     }
     init();
   }
@@ -56,8 +56,6 @@ public class PlayButton extends View implements View.OnClickListener {
   public void playAudio() {
     if (prepared == false) {
       try {
-        //Logger.d("path="+path);
-        Logger.d("mediaplayer" + mediaPlayer);
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setDataSource(path);
         mediaPlayer.prepare();
