@@ -38,12 +38,22 @@ public class UserService {
     return q;
   }
 
-  public static List<User> findFriends() throws AVException {
+  public static List<User> findFriends(boolean useCache) throws AVException {
     User curUser = User.curUser();
     AVRelation<User> relation = curUser.getRelation(User.FRIENDS);
-    List<User> users = relation.getQuery(User.class).find();
+    AVQuery<User> query = relation.getQuery(User.class);
+    if (useCache) {
+      query.setCachePolicy(AVQuery.CachePolicy.CACHE_ONLY);
+    }
+    List<User> users = query.find();
     App.registerBatchUserCache(users);
+    App app = App.getInstance();
+    app.setFriends(users);
     return users;
+  }
+
+  public static List<User> findFriends() throws AVException {
+    return findFriends(false);
   }
 
   public static void displayAvatar(String imageUrl, ImageView avatarView) {
@@ -85,21 +95,6 @@ public class UserService {
       ids.add(friend.getObjectId());
     }
     return ids;
-  }
-
-  public static boolean isMyFriend(List<User> friends, String username) {
-    for (User friend : friends) {
-      if (friend.getUsername().equals(username)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  public static void findUserInfo(String name, FindCallback<User> findCallback) {
-    AVQuery<User> q = User.getQuery(User.class);
-    q.whereEqualTo(User.USERNAME, name);
-    q.findInBackground(findCallback);
   }
 
   public static List<User> findNearbyPeople(int skip) throws AVException {

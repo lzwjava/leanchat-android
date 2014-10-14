@@ -105,7 +105,7 @@ public class GroupDetailActivity extends BaseActivity implements AdapterView.OnI
   @Override
   public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
     User user = (User) parent.getAdapter().getItem(position);
-    PersonInfoActivity.goPersonInfo(ctx, user.getUsername());
+    PersonInfoActivity.goPersonInfo(ctx, user.getObjectId());
   }
 
   @Override

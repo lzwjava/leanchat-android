@@ -1,6 +1,5 @@
 package com.lzw.talk.ui.activity;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -9,21 +8,20 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.*;
 import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.FindCallback;
+import com.avos.avoscloud.AVObject;
 import com.lzw.talk.R;
 import com.lzw.talk.adapter.AddFriendAdapter;
 import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
 import com.lzw.talk.service.UserService;
 import com.lzw.talk.ui.view.HeaderLayout;
-import com.lzw.talk.util.Logger;
 import com.lzw.talk.util.PhotoUtil;
-import com.lzw.talk.util.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
 
 public class PersonInfoActivity extends BaseActivity implements OnClickListener {
+  public static final String USER_ID = "userId";
   TextView usernameView, sexView;
   ImageView avatarView, avatarArrowView;
   LinearLayout allLayout;
@@ -31,8 +29,7 @@ public class PersonInfoActivity extends BaseActivity implements OnClickListener 
   RelativeLayout avatarLayout, nickLayout, sexLayout;
   HeaderLayout headerLayout;
 
-  String from = "";
-  String username = "";
+  String userId = "";
   User user;
 
   @Override
@@ -46,13 +43,17 @@ public class PersonInfoActivity extends BaseActivity implements OnClickListener 
           View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
     }
     setContentView(R.layout.activity_set_info);
-    from = getIntent().getStringExtra("from");//me add other
-    username = getIntent().getStringExtra("username");
+    initData();
+
     findView();
     initView();
   }
 
-  @SuppressLint("WrongViewCast")
+  private void initData() {
+    userId = getIntent().getStringExtra(USER_ID);
+    user = App.lookupUser(userId);
+  }
+
   private void findView() {
     allLayout = (LinearLayout) findViewById(R.id.all_layout);
     avatarView = (ImageView) findViewById(R.id.avatar_view);
@@ -68,9 +69,8 @@ public class PersonInfoActivity extends BaseActivity implements OnClickListener 
   }
 
   private void initView() {
-    addFriendBtn.setEnabled(false);
-    chatBtn.setEnabled(false);
-    if (from.equals("me")) {
+    User curUser = User.curUser();
+    if (curUser.equals(user)) {
       headerLayout.showTitle(R.string.personalInfo);
       headerLayout.showLeftBackButton();
       avatarLayout.setOnClickListener(this);
@@ -83,9 +83,10 @@ public class PersonInfoActivity extends BaseActivity implements OnClickListener 
       headerLayout.showTitle(R.string.detailInfo);
       headerLayout.showLeftBackButton();
       avatarArrowView.setVisibility(View.INVISIBLE);
-      if (from.equals("add")) {// 从附近的人列表添加好友--因为获取附近的人的方法里面有是否显示好友的情况，因此在这里需要判断下这个用户是否是自己的好友
-        App app = App.getInstance();
-        if (UserService.isMyFriend(app.getFriends(), username)) {// 是好友
+      try {
+        List<User> cacheFriends = UserService.findFriends(true);
+        boolean isFriend = cacheFriends.contains(user);
+        if (isFriend) {
           chatBtn.setVisibility(View.VISIBLE);
           chatBtn.setOnClickListener(this);
         } else {
@@ -93,66 +94,27 @@ public class PersonInfoActivity extends BaseActivity implements OnClickListener 
           addFriendBtn.setVisibility(View.VISIBLE);
           addFriendBtn.setOnClickListener(this);
         }
-      } else {// 查看他人
-        chatBtn.setVisibility(View.VISIBLE);
-        chatBtn.setOnClickListener(this);
+      } catch (AVException e) {
+        e.printStackTrace();
       }
-      initOtherData(username);
+
     }
+    updateView(user);
   }
 
-  public static void goPersonInfo(Context ctx, String username) {
+  public static void goPersonInfo(Context ctx, String userId) {
     Intent intent = new Intent(ctx, PersonInfoActivity.class);
-    intent.putExtra("from", "add");
-    intent.putExtra("username", username);
+    intent.putExtra(USER_ID, userId);
     ctx.startActivity(intent);
   }
 
-  private void initMeData() {
-    User user = User.curUser();
-    initOtherData(user.getUsername());
-  }
-
-  private void initOtherData(String name) {
-    FindCallback<User> findCallback = new FindCallback<User>() {
-      @Override
-      public void done(List<User> users, AVException e) {
-        if (e != null) {
-          Utils.toast(e.getMessage());
-        } else {
-          if (users != null && users.size() > 0) {
-            user = users.get(0);
-            chatBtn.setEnabled(true);
-            addFriendBtn.setEnabled(true);
-            updateUser(user);
-          } else {
-            Logger.i("onSuccess 查无此人");
-          }
-        }
-      }
-    };
-    UserService.findUserInfo(name, findCallback);
-  }
-
-  private void updateUser(User user) {
-    refreshAvatar(user.getAvatarUrl());
-    usernameView.setText(user.getUsername());
-    sexView.setText(user.getSex() == true ? R.string.male : R.string.female);
-  }
-
-  private void refreshAvatar(String avatar) {
+  private void updateView(User user) {
+    String avatar = user.getAvatarUrl();
     UserService.displayAvatar(avatar, avatarView);
     ImageLoader.getInstance().displayImage(avatar, avatarView,
         PhotoUtil.getAvatarImageOptions());
-  }
-
-  @Override
-  public void onResume() {
-    // TODO Auto-generated method stub
-    super.onResume();
-    if (from.equals("me")) {
-      initMeData();
-    }
+    usernameView.setText(user.getUsername());
+    sexView.setText(user.getSex() == true ? R.string.male : R.string.female);
   }
 
   @Override
@@ -160,20 +122,12 @@ public class PersonInfoActivity extends BaseActivity implements OnClickListener 
     // TODO Auto-generated method stub
     switch (v.getId()) {
       case R.id.chatBtn:// 发起聊天
-        Intent intent = new Intent(this, ChatActivity.class);
-        intent.putExtra(ChatActivity.CHAT_USER_ID, user.getObjectId());
-        startActivity(intent);
+        ChatActivity.goUserChat(ctx, user.getObjectId());
         finish();
         break;
       case R.id.addFriendBtn:// 添加好友
-        addFriend();
+        AddFriendAdapter.runAddFriendTask(ctx, user);
         break;
     }
   }
-
-  private void addFriend() {
-    AddFriendAdapter.runAddFriendTask(ctx, user);
-  }
-
-
 }

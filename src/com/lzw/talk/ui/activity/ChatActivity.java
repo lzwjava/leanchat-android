@@ -38,8 +38,6 @@ import com.lzw.talk.util.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ChatActivity extends BaseActivity implements OnClickListener, MsgListener,
     XListView.IXListViewListener {
@@ -74,6 +72,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   User chatUser;
   Group group;
   ChatGroup chatGroup;
+  String audioId;
 
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -99,6 +98,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     loadNewMsg();
   }
 
+  //
   @Override
   protected void onNewIntent(Intent intent) {
     super.onNewIntent(intent);
@@ -158,10 +158,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     recordBtn.setOnFinishedRecordListener(new RecordButton.RecordEventListener() {
       @Override
       public void onFinishedRecord(final String audioPath, int secs) {
-        Pattern pattern = Pattern.compile(".*/(.*)");
-        Matcher matcher = pattern.matcher(audioPath);
-        matcher.matches();
-        final String objectId = matcher.group(1);
+        final String objectId = audioId;
         new SendMsgTask(ctx) {
           @Override
           Msg sendMsg() throws Exception {
@@ -178,7 +175,9 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   }
 
   public void setNewRecordPath() {
-    recordBtn.setSavePath(PathUtils.getUUIDFilePath());
+    audioId = Utils.uuid();
+    String audioPath = PathUtils.getChatFile(audioId);
+    recordBtn.setSavePath(audioPath);
   }
 
   public void setEditTextChangeListener() {
@@ -304,7 +303,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     int menuId = item.getItemId();
     if (menuId == R.id.people) {
       if (singleChat) {
-        PersonInfoActivity.goPersonInfo(ctx, chatUser.getUsername());
+        PersonInfoActivity.goPersonInfo(ctx, chatUser.getObjectId());
       } else {
         GroupDetailActivity.chatGroup = chatGroup;
         Utils.goActivity(ctx, GroupDetailActivity.class);

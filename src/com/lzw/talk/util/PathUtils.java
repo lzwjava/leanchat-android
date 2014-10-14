@@ -51,7 +51,7 @@ public class PathUtils {
   }
 
   public static String getUUIDFilePath() {
-    return getChatFileDir() + Utils.uuid();
+    return getChatFile(Utils.uuid());
   }
 
   public static String getTmpPath() {

@@ -249,8 +249,7 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
 
       @Override
       public void onSucceed() {
-        App app = App.getInstance();
-        app.setFriends(friends);
+
         setAddRequestTipsAndListView(haveAddRequest, friends);
       }
 
