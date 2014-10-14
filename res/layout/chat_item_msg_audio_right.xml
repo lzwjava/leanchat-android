@@ -29,13 +29,10 @@
 
             <LinearLayout
                 android:id="@+id/contentLayout"
-                android:layout_marginLeft="@dimen/marginToUsername"
                 android:layout_width="wrap_content"
                 android:maxWidth="@dimen/chatContentMaxWidth"
                 android:layout_marginTop="5dp"
                 android:layout_height="wrap_content"
-                android:text="c"
-                android:paddingRight="10dp"
                 android:minWidth="@dimen/chatTextMinWidth"
                 android:gravity="center"
                 android:textColor="#fff"

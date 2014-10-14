@@ -2,6 +2,9 @@ package com.lzw.talk.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -29,11 +32,9 @@ import java.util.List;
  */
 public class GroupListActivity extends BaseActivity implements GroupEventListener, AdapterView.OnItemClickListener {
   public static final int GROUP_NAME_REQUEST = 0;
-  private static final int GROUP_ADD_DIALOG = 1;
   ListView groupListView;
   List<ChatGroup> chatGroups = new ArrayList<ChatGroup>();
   GroupAdapter groupAdapter;
-  HeaderLayout headerLayout;
   String newGroupName;
 
   @Override
@@ -41,22 +42,26 @@ public class GroupListActivity extends BaseActivity implements GroupEventListene
     super.onCreate(savedInstanceState);
     setContentView(R.layout.group_list_activity);
     findView();
-    initHeader();
     initList();
     refresh();
+    initActionBar(App.ctx.getString(R.string.group));
     GroupMsgReceiver.addListener(this);
   }
 
-  private void initHeader() {
-    headerLayout = (HeaderLayout) findViewById(R.id.headerLayout);
-    headerLayout.showTitle(R.string.group);
-    headerLayout.showRightImageButton(R.drawable.base_action_bar_add_bg_selector, new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        Intent intent = new Intent(ctx, GroupAddDialog.class);
-        startActivityForResult(intent, GROUP_ADD_DIALOG);
-      }
-    });
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    MenuInflater menuInflater = getMenuInflater();
+    menuInflater.inflate(R.menu.group_list_menu, menu);
+    return super.onCreateOptionsMenu(menu);
+  }
+
+  @Override
+  public boolean onMenuItemSelected(int featureId, MenuItem item) {
+    int id = item.getItemId();
+    if (id == R.id.create) {
+      UpdateContentActivity.goActivityForResult(ctx, App.ctx.getString(R.string.groupName), GROUP_NAME_REQUEST);
+    }
+    return super.onMenuItemSelected(featureId, item);
   }
 
   private void initList() {
@@ -93,18 +98,10 @@ public class GroupListActivity extends BaseActivity implements GroupEventListene
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (resultCode == RESULT_OK) {
       if (requestCode == GROUP_NAME_REQUEST) {
-        Logger.d("request code " + requestCode);
         newGroupName = UpdateContentActivity.getResultValue(data);
         Session session = ChatService.getSession();
         Group group = session.getGroup();
         group.join();
-      } else if (requestCode == GROUP_ADD_DIALOG) {
-        int action = data.getIntExtra(GroupAddDialog.ACTION, 0);
-        if (action == GroupAddDialog.SEARCH) {
-
-        } else if (action == GroupAddDialog.CREATE) {
-          UpdateContentActivity.goActivityForResult(ctx, App.ctx.getString(R.string.groupName), GROUP_NAME_REQUEST);
-        }
       }
     }
     super.onActivityResult(requestCode, resultCode, data);
@@ -113,8 +110,6 @@ public class GroupListActivity extends BaseActivity implements GroupEventListene
 
   @Override
   public void onJoined(final Group group) {
-
-
     //new Group
     if (newGroupName != null) {
       new NetAsyncTask(ctx) {

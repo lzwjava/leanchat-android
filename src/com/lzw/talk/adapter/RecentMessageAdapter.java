@@ -53,7 +53,7 @@ public class RecentMessageAdapter extends BaseListAdapter<RecentMsg> {
     } else {
       ChatGroup chatGroup = item.chatGroup;
       recentNameView.setText(chatGroup.getTitle());
-      recentAvatarView.setImageResource(R.drawable.default_user_avatar);
+      recentAvatarView.setImageResource(R.drawable.group_icon);
     }
 
     //recentTimeView.setText(TimeUtils.getDate);
@@ -81,5 +81,4 @@ public class RecentMessageAdapter extends BaseListAdapter<RecentMsg> {
     }
     return convertView;
   }
-
 }

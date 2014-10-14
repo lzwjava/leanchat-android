@@ -235,7 +235,6 @@
     <string name="notifyWhenNews">接收新消息通知</string>
     <string name="group">群组</string>
     <string name="groupName">群组名</string>
-    <string name="search">查找</string>
     <string name="create">创建</string>
     <string name="people">人</string>
     <string name="groupMembers">群组成员</string>
@@ -247,4 +246,5 @@
     <string name="kickTips">确认要踢走该成员吗</string>
     <string name="invite">邀请</string>
     <string name="kilometres">公里</string>
+    <string name="createGroup">创建群组</string>
 </resources>

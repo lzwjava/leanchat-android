@@ -96,7 +96,10 @@
             android:name=".ui.activity.MainActivity"
             android:launchMode="singleTask" />
 
-        <activity android:name=".ui.activity.UpdateContentActivity" />
+        <activity
+            android:name=".ui.activity.UpdateContentActivity"
+            android:theme="@style/MainTheme" />
+
         <activity
             android:name=".ui.activity.SplashActivity"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen">
@@ -122,7 +125,10 @@
 
         <activity android:name=".ui.activity.NotifyPrefActivity" />
 
-        <activity android:name=".ui.activity.GroupListActivity" />
+        <activity
+            android:name=".ui.activity.GroupListActivity"
+            android:label="@string/group"
+            android:theme="@style/MainTheme" />
 
         <activity
             android:name=".ui.activity.GroupDetailActivity"

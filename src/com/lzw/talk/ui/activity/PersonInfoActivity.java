@@ -26,7 +26,7 @@ public class PersonInfoActivity extends BaseActivity implements OnClickListener 
   ImageView avatarView, avatarArrowView;
   LinearLayout allLayout;
   Button chatBtn, addFriendBtn;
-  RelativeLayout avatarLayout, nickLayout, sexLayout;
+  RelativeLayout avatarLayout,  sexLayout;
   HeaderLayout headerLayout;
 
   String userId = "";
@@ -74,7 +74,6 @@ public class PersonInfoActivity extends BaseActivity implements OnClickListener 
       headerLayout.showTitle(R.string.personalInfo);
       headerLayout.showLeftBackButton();
       avatarLayout.setOnClickListener(this);
-      nickLayout.setOnClickListener(this);
       sexLayout.setOnClickListener(this);
       avatarArrowView.setVisibility(View.VISIBLE);
       chatBtn.setVisibility(View.GONE);
