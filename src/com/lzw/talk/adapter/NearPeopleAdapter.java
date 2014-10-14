@@ -38,7 +38,7 @@ public class NearPeopleAdapter extends BaseListAdapter<User> {
   @Override
   public View getView(int position, View convertView, ViewGroup parent) {
     if (convertView == null) {
-      convertView = inflater.inflate(R.layout.item_near_people, null);
+      convertView = inflater.inflate(R.layout.item_near_people, null,false);
     }
     final User user = datas.get(position);
     TextView nameView = ViewHolder.findViewById(convertView, R.id.name_text);

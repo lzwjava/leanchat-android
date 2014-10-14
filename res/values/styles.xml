@@ -132,6 +132,12 @@
         <item name="android:scaleType">fitXY</item>
     </style>
 
+    <style name="My.ImageView.Photo_Avatar">
+        <item name="android:layout_width">45dp</item>
+        <item name="android:layout_height">45dp</item>
+        <item name="android:scaleType">fitXY</item>
+    </style>
+
     <style name="My.Button.logout" parent="My.TextView._White">
         <item name="android:background">@drawable/btn_logout_selector</item>
     </style>

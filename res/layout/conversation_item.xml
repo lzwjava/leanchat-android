@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/message_top_height"
-    android:orientation="vertical">
+    android:layout_height="@dimen/common_list_item_height"
+    android:orientation="vertical"
+    android:layout_margin="5dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="65dp"
-        android:paddingBottom="5.0dip"
-        android:paddingTop="5.0dip">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/iv_recent_avatar"
-            style="@style/My.ImageView.Photo_Middle"
+            style="@style/My.ImageView.Photo_Avatar"
             android:layout_gravity="center_vertical"
             android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:src="@drawable/default_user_avatar" />
 

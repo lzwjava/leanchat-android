@@ -56,7 +56,6 @@ public class UpdateContentActivity extends BaseActivity {
     initActionBar(changeTitle);
   }
 
-
   public void updateContent() {
     Intent i = new Intent();
     i.putExtra(VALUE, valueEdit.getText().toString());

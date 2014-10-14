@@ -32,7 +32,8 @@
     <dimen name="playBtnWidth">30dp</dimen>
     <dimen name="chatBottomBtnSize">25dp</dimen>
 
-    <dimen name="message_top_height">70.0dip</dimen>
+    <dimen name="common_list_item_height">60dp</dimen>
+    <dimen name="message_top_height">60dip</dimen>
     <dimen name="base_line_width_1">1dip</dimen>
     <dimen name="base_action_bar_height">48.0dip</dimen>
     <dimen name="register_margin">10.0dp</dimen>
