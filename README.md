@@ -22,11 +22,18 @@
 
 
 
-## Install
+## 依赖
 
-用到的依赖包：
+用到的依赖包，都在[libs](https://github.com/avoscloud/Adventure/tree/master/libs)中：
 
 * [AVOS Cloud SDK](https://cn.avoscloud.com/docs/sdk_down.html)，基础模块和实时通信模块即可。
+* [AdventureCloud](https://github.com/avoscloud/AdventureCloud) ，相关的服务器代码
+
+## 搭建
+*  申请应用，替换App.java中的appId,appKey
+*  fork [AdventureCloud](https://github.com/avoscloud/AdventureCloud)，部署到自己的云代码中去
+*  建表`AddRequest`
+*  [申请百度地图key](http://developer.baidu.com/map)，替换掉AndroidMenifest.xml 中的baidu key
 
 ## Summary
 
