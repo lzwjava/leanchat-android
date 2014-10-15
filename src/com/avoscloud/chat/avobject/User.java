@@ -1,11 +1,11 @@
 package com.avoscloud.chat.avobject;
 
-import com.avos.avoscloud.*;
-import com.avoscloud.chat.base.App;
+import com.avos.avoscloud.AVClassName;
+import com.avos.avoscloud.AVFile;
+import com.avos.avoscloud.AVGeoPoint;
+import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import com.avoscloud.chat.base.App;
 
 /**
  * Created by lzw on 14-6-26.
@@ -26,9 +26,9 @@ public class User extends AVUser {
   }
 
   public static User curUser() {
-    User avUser = getCurrentUser(User.class);
-    //User user = User.cast(avUser, User.class);
-    return avUser;
+    AVUser avUser = getCurrentUser(User.class);
+    User user = User.cast(avUser, User.class);
+    return user;
   }
 
   public static String curUserId() {
