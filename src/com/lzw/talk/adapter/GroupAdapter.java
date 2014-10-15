@@ -26,7 +26,7 @@ public class GroupAdapter extends BaseListAdapter<ChatGroup> {
     }
     TextView nameView = ViewHolder.findViewById(conView, R.id.name);
     ChatGroup chatGroup = datas.get(position);
-    nameView.setText(chatGroup.getName());
+    nameView.setText(chatGroup.getTitle());
     return conView;
   }
 }
