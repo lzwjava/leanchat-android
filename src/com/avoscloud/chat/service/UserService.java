@@ -109,7 +109,9 @@ public class UserService {
     q.whereNear(User.LOCATION, geoPoint);
     q.skip(skip);
     q.limit(C.PAGE_SIZE);
-    return q.find();
+    List<User> users = q.find();
+    App.registerBatchUserCache(users);
+    return users;
   }
 
   public static void saveSex(boolean isMale, SaveCallback saveCallback) {

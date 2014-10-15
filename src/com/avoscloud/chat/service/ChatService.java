@@ -210,11 +210,11 @@ public class ChatService {
 
   public static void notifyMsg(Context context, Msg msg, Group group) throws JSONException {
     int icon = context.getApplicationInfo().icon;
-    Intent intent = new Intent(context, ChatActivity.class);
+    Intent intent;
     if (group == null) {
-      ChatActivity.goUserChat(context,msg.getFromPeerId());
+      intent=ChatActivity.getUserChatIntent(context,msg.getFromPeerId());
     } else {
-      ChatActivity.goGroupChat(context,group.getGroupId());
+      intent=ChatActivity.getGroupChatIntent(context,group.getGroupId());
     }
     PendingIntent pend = PendingIntent.getActivity(context, 0,
         intent, 0);
