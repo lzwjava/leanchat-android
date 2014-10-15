@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -19,16 +21,17 @@ import com.lzw.talk.R;
 import com.lzw.talk.base.App;
 import com.lzw.talk.ui.view.HeaderLayout;
 import com.lzw.talk.util.Logger;
+import com.lzw.talk.util.UIUtils;
 import com.lzw.talk.util.Utils;
 
 public class LocationActivity extends BaseActivity implements
     OnGetGeoCoderResultListener {
+  public static final int SEND = 0;
   LocationClient locClient;
   public MyLocationListener myListener = new MyLocationListener();
 
   MapView mapView;
   BaiduMap baiduMap;
-  HeaderLayout headerLayout;
   private BaiduReceiver receiver;
   GeoCoder geoCoder = null;
   static BDLocation lastLocation = null;
@@ -44,7 +47,6 @@ public class LocationActivity extends BaseActivity implements
 
   private void initBaiduMap() {
     mapView = (MapView) findViewById(R.id.bmapView);
-    headerLayout = (HeaderLayout) findViewById(R.id.headerLayout);
     baiduMap = mapView.getMap();
     baiduMap.setMaxAndMinZoomLevel(18, 13);
     IntentFilter iFilter = new IntentFilter();
@@ -55,17 +57,10 @@ public class LocationActivity extends BaseActivity implements
 
     Intent intent = getIntent();
     String type = intent.getStringExtra("type");
+    initActionBar(R.string.position);
     if (type.equals("select")) {// 选择发送位置
-      headerLayout.showTitle(R.string.position);
-      headerLayout.showRightTextButton(R.string.send, new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          gotoChatPage();
-        }
-      });
       initLocClient();
     } else {// 查看当前位置
-      headerLayout.showTitle(R.string.position);
       Bundle b = intent.getExtras();
       LatLng latlng = new LatLng(b.getDouble("latitude"), b.getDouble("longtitude"));//维度在前，经度在后
       baiduMap.setMapStatus(MapStatusUpdateFactory.newLatLng(latlng));
@@ -79,15 +74,22 @@ public class LocationActivity extends BaseActivity implements
 
   }
 
-  /**
-   * 回到聊天界面
-   *
-   * @param
-   * @return void
-   * @throws
-   * @Title: gotoChatPage
-   * @Description: TODO
-   */
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    MenuItem add = menu.add(0, SEND, 0, R.string.send);
+    UIUtils.alwaysShowMenuItem(add);
+    return super.onCreateOptionsMenu(menu);
+  }
+
+  @Override
+  public boolean onMenuItemSelected(int featureId, MenuItem item) {
+    int id = item.getItemId();
+    if (id == SEND) {
+      gotoChatPage();
+    }
+    return super.onMenuItemSelected(featureId, item);
+  }
+
   private void gotoChatPage() {
     if (lastLocation != null) {
       Intent intent = new Intent();

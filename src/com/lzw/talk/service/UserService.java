@@ -126,4 +126,12 @@ public class UserService {
     }
     return ids;
   }
+
+  public static void signUp(String name, boolean isMale, String password) throws AVException {
+    User user = new User();
+    user.setUsername(name);
+    user.setSex(isMale);
+    user.setPassword(password);
+    user.signUp();
+  }
 }

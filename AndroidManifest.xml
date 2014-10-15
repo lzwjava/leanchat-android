@@ -111,7 +111,9 @@
 
         <activity android:name=".ui.activity.ImageBrowerActivity" />
 
-        <activity android:name=".ui.activity.LocationActivity" />
+        <activity
+            android:name=".ui.activity.LocationActivity"
+            android:theme="@style/MainTheme" />
 
         <activity android:name=".ui.activity.LoginActivity" />
 
@@ -119,15 +121,21 @@
             android:name=".ui.activity.RegisterActivity"
             android:theme="@style/MainTheme" />
 
-        <activity android:name=".ui.activity.NewFriendActivity" />
+        <activity
+            android:name=".ui.activity.NewFriendActivity"
+            android:theme="@style/MainTheme" />
 
         <activity
             android:name=".ui.activity.AddFriendActivity"
             android:theme="@style/MainTheme" />
 
-        <activity android:name=".ui.activity.PersonInfoActivity" />
+        <activity
+            android:name=".ui.activity.PersonInfoActivity"
+            android:theme="@style/MainTheme" />
 
-        <activity android:name=".ui.activity.NotifyPrefActivity" />
+        <activity
+            android:name=".ui.activity.NotifyPrefActivity"
+            android:theme="@style/MainTheme" />
 
         <activity
             android:name=".ui.activity.GroupListActivity"

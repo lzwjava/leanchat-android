@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -30,6 +31,7 @@ import java.util.List;
 public class GroupDetailActivity extends BaseActivity implements AdapterView.OnItemClickListener,
     AdapterView.OnItemLongClickListener, GroupEventListener {
   public static final int ADD_MEMBERS = 0;
+  private static final int QUIT_GROUP = 1;
   public static ChatGroup chatGroup;
   public static List<User> members = new ArrayList<User>();
 
@@ -54,6 +56,9 @@ public class GroupDetailActivity extends BaseActivity implements AdapterView.OnI
     if (isOwner) {
       MenuItem invite = menu.add(0, ADD_MEMBERS, 0, R.string.invite);
       UIUtils.alwaysShowMenuItem(invite);
+    } else {
+      MenuItem quit = menu.add(0, QUIT_GROUP, 0, R.string.quitGroup);
+      UIUtils.alwaysShowMenuItem(quit);
     }
     return super.onCreateOptionsMenu(menu);
   }
@@ -65,6 +70,9 @@ public class GroupDetailActivity extends BaseActivity implements AdapterView.OnI
       GroupAddMembersActivity.chatGroup = chatGroup;
       GroupAddMembersActivity.members = members;
       Utils.goActivity(ctx, GroupAddMembersActivity.class);
+    } else if (menuId == QUIT_GROUP) {
+      Group group = GroupService.getGroup(chatGroup);
+      group.quit();
     }
     return super.onMenuItemSelected(featureId, item);
   }
@@ -145,6 +153,14 @@ public class GroupDetailActivity extends BaseActivity implements AdapterView.OnI
   public void onMemberLeft(Group group, List<String> leftPeerIds) {
     if (isCurGroup(group)) {
       refresh();
+    }
+  }
+
+  @Override
+  public void onQuit(Group group) {
+    if (group.getGroupId().equals(chatGroup.getObjectId())) {
+      finish();
+      ChatActivity.instance.finish();
     }
   }
 

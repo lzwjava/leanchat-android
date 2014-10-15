@@ -25,7 +25,6 @@ import java.util.List;
 public class NewFriendActivity extends BaseActivity implements OnItemLongClickListener {
   ListView listview;
   NewFriendAdapter adapter;
-  HeaderLayout headerLayout;
   List<AddRequest> addRequests = new ArrayList<AddRequest>();
 
   @Override
@@ -61,8 +60,7 @@ public class NewFriendActivity extends BaseActivity implements OnItemLongClickLi
   }
 
   private void initView() {
-    headerLayout = (HeaderLayout) findViewById(R.id.headerLayout);
-    headerLayout.showTitle(R.string.new_friends);
+    initActionBar(R.string.new_friends);
     listview = (ListView) findViewById(R.id.newfriendList);
     listview.setOnItemLongClickListener(this);
     adapter = new NewFriendAdapter(this, addRequests);

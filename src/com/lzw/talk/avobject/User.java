@@ -80,6 +80,7 @@ public class User extends AVUser {
     getRelation(FRIENDS).add(user);
   }
 
+
   public void removeFriend(User user) {
     getRelation(FRIENDS).remove(user);
   }

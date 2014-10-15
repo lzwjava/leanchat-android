@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.MenuItem;
 import android.view.WindowManager;
+import com.lzw.talk.base.App;
 import com.lzw.talk.util.Utils;
 
 /**
@@ -49,5 +50,9 @@ public class BaseActivity extends FragmentActivity {
     }
     actionBar.setDisplayUseLogoEnabled(false);
     actionBar.setDisplayHomeAsUpEnabled(true);
+  }
+
+  void initActionBar(int id){
+    initActionBar(App.ctx.getString(id));
   }
 }

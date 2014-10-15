@@ -692,14 +692,14 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     super.onDestroy();
   }
 
-  public static void goUserChat(Activity ctx, String userId) {
+  public static void goUserChat(Context ctx, String userId) {
     Intent intent = new Intent(ctx, ChatActivity.class);
     intent.putExtra(CHAT_USER_ID, userId);
     intent.putExtra(SINGLE_CHAT, true);
     ctx.startActivity(intent);
   }
 
-  public static void goGroupChat(Activity ctx, String groupId) {
+  public static void goGroupChat(Context ctx, String groupId) {
     Intent intent = new Intent(ctx, ChatActivity.class);
     intent.putExtra(GROUP_ID, groupId);
     intent.putExtra(SINGLE_CHAT, false);

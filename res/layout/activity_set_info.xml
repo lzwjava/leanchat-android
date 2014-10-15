@@ -6,8 +6,6 @@
     android:background="@color/theme_bg_color"
     android:orientation="vertical">
 
-    <include layout="@layout/header_layout" />
-
     <RelativeLayout
         android:id="@+id/head_layout"
         android:layout_width="match_parent"

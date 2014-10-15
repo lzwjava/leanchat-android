@@ -15,4 +15,6 @@ public interface GroupEventListener {
   void onMemberJoin(Group group, List<String> joinedPeerIds);
 
   void onMemberLeft(Group group, List<String> leftPeerIds);
+
+  void onQuit(Group group);
 }

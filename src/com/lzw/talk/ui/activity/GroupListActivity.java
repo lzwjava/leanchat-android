@@ -154,6 +154,11 @@ public class GroupListActivity extends BaseActivity implements GroupEventListene
 
   }
 
+  @Override
+  public void onQuit(Group group) {
+    refresh();
+  }
+
   private ChatGroup findChatGroup(String groupId) {
     for (ChatGroup chatGroup : chatGroups) {
       if (chatGroup.getObjectId().equals(groupId)) {

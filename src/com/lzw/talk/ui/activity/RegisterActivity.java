@@ -7,10 +7,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import com.lzw.talk.R;
-import com.lzw.talk.avobject.User;
 import com.lzw.talk.base.App;
 import com.lzw.talk.base.C;
+import com.lzw.talk.service.UserService;
 import com.lzw.talk.util.ChatUtils;
 import com.lzw.talk.util.NetAsyncTask;
 import com.lzw.talk.util.Utils;
@@ -18,6 +19,7 @@ import com.lzw.talk.util.Utils;
 public class RegisterActivity extends BaseActivity {
   Button registerButton;
   EditText usernameEdit, passwordEdit, emailEdit;
+  RadioGroup sexRadio;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,7 @@ public class RegisterActivity extends BaseActivity {
     passwordEdit = (EditText) findViewById(R.id.passwordEdit);
     emailEdit = (EditText) findViewById(R.id.ensurePasswordEdit);
     registerButton = (Button) findViewById(R.id.btn_register);
+    sexRadio = (RadioGroup) findViewById(R.id.sexRadio);
   }
 
   private void register() {
@@ -61,13 +64,18 @@ public class RegisterActivity extends BaseActivity {
       return;
     }
 
+    int checkedId = sexRadio.getCheckedRadioButtonId();
+    final boolean isMale;
+    if (checkedId == R.id.male) {
+      isMale = true;
+    } else {
+      isMale = false;
+    }
+
     new NetAsyncTask(ctx) {
       @Override
       protected void doInBack() throws Exception {
-        User user = new User();
-        user.setUsername(name);
-        user.setPassword(password);
-        user.signUp();
+        UserService.signUp(name, isMale, password);
       }
 
       @Override
@@ -85,4 +93,5 @@ public class RegisterActivity extends BaseActivity {
       }
     }.execute();
   }
+
 }

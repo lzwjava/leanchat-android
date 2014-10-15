@@ -54,6 +54,9 @@ public class GroupMsgReceiver extends AVGroupMessageReceiver {
 
   @Override
   public void onQuit(Context context, Group group) {
+    for (GroupEventListener listener : listeners) {
+      listener.onQuit(group);
+    }
     Logger.d(group.getGroupId() + " quit");
   }
 

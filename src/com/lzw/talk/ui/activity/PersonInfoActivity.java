@@ -27,7 +27,6 @@ public class PersonInfoActivity extends BaseActivity implements OnClickListener 
   LinearLayout allLayout;
   Button chatBtn, addFriendBtn;
   RelativeLayout avatarLayout,  sexLayout;
-  HeaderLayout headerLayout;
 
   String userId = "";
   User user;
@@ -65,22 +64,19 @@ public class PersonInfoActivity extends BaseActivity implements OnClickListener 
     sexView = (TextView) findViewById(R.id.sexView);
     chatBtn = (Button) findViewById(R.id.chatBtn);
     addFriendBtn = (Button) findViewById(R.id.addFriendBtn);
-    headerLayout = (HeaderLayout) findViewById(R.id.headerLayout);
   }
 
   private void initView() {
     User curUser = User.curUser();
     if (curUser.equals(user)) {
-      headerLayout.showTitle(R.string.personalInfo);
-      headerLayout.showLeftBackButton();
+      initActionBar(R.string.personalInfo);
       avatarLayout.setOnClickListener(this);
       sexLayout.setOnClickListener(this);
       avatarArrowView.setVisibility(View.VISIBLE);
       chatBtn.setVisibility(View.GONE);
       addFriendBtn.setVisibility(View.GONE);
     } else {
-      headerLayout.showTitle(R.string.detailInfo);
-      headerLayout.showLeftBackButton();
+      initActionBar(R.string.detailInfo);
       avatarArrowView.setVisibility(View.INVISIBLE);
       try {
         List<User> cacheFriends = UserService.findFriends(true);

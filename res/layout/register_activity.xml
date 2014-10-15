@@ -55,6 +55,41 @@
             android:hint="@string/ensurePasswordHint" />
     </LinearLayout>
 
+    <LinearLayout style="@style/Register_Input">
+
+        <TextView
+            style="@style/My.TextView._Black"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:text="@string/sex"
+            android:layout_width="@dimen/registerLeftWidth" />
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:id="@+id/sexRadio">
+
+            <RadioButton
+                android:id="@+id/male"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/male"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/female"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/female" />
+        </RadioGroup>
+
+
+    </LinearLayout>
+
+
     <Button
         android:id="@+id/btn_register"
         android:layout_width="fill_parent"

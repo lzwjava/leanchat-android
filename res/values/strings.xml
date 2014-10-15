@@ -247,4 +247,5 @@
     <string name="invite">邀请</string>
     <string name="kilometres">公里</string>
     <string name="createGroup">创建群组</string>
+    <string name="quitGroup">退群</string>
 </resources>

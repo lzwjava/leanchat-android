@@ -5,8 +5,6 @@
     android:background="@color/base_bg"
     android:orientation="vertical">
 
-    <include layout="@layout/header_layout" />
-
     <ListView
         android:id="@+id/newfriendList"
         android:layout_width="match_parent"
