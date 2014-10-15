@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.avoscloud.chat.R;
+import com.avoscloud.chat.service.ChatService;
 import com.avoscloud.chat.service.EmotionService;
 import com.avoscloud.chat.ui.activity.LocationActivity;
 import com.avoscloud.chat.ui.view.PlayButton;
@@ -131,6 +132,7 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
     }
     if (isComMsg == false) {
       hideStatusViews(statusSendStart, statusSendFailed, statusSendSucceed);
+      setSendFailedBtnListener(statusSendFailed, msg);
       switch (msg.getStatus()) {
         case Msg.STATUS_SEND_FAILED:
           statusSendFailed.setVisibility(View.VISIBLE);
@@ -144,6 +146,16 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
       }
     }
     return conView;
+  }
+
+  private void setSendFailedBtnListener(View statusSendFailed, final Msg msg) {
+    statusSendFailed.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        ChatService.resendMsg(msg);
+        notifyDataSetChanged();
+      }
+    });
   }
 
   private void hideStatusViews(View statusSendStart, View statusSendFailed, View statusSendSucceed) {

@@ -89,25 +89,25 @@ public class ChatService {
     AVFile file = AVFile.withAbsoluteLocalPath(objectId, filePath);
     file.save();
     String url = file.getUrl();
-    Msg msg = sendMessage(toUser, type, url, objectId, group);
+    Msg msg = createAndSendMsg(toUser, type, url, objectId, group);
     DBMsg.insertMsg(msg, group);
     return msg;
   }
 
   public static Msg sendTextMsg(User toUser, String content, Group group) {
     int type = Msg.TYPE_TEXT;
-    Msg msg = sendMessage(toUser, type, content, group);
+    Msg msg = createAndSendMsg(toUser, type, content, group);
     Log.i("lzw", "sendTextMsg fromId=" + msg.getFromPeerId() + " toId=" + msg.getToPeerId());
     DBMsg.insertMsg(msg, group);
     return msg;
   }
 
-  public static Msg sendMessage(User toPeer, int type, String content, Group group) {
+  public static Msg createAndSendMsg(User toPeer, int type, String content, Group group) {
     String objectId = Utils.uuid();
-    return sendMessage(toPeer, type, content, objectId, group);
+    return createAndSendMsg(toPeer, type, content, objectId, group);
   }
 
-  public static Msg sendMessage(User toPeer, int type, String content, String objectId, Group group) {
+  public static Msg createAndSendMsg(User toPeer, int type, String content, String objectId, Group group) {
     Msg msg;
     msg = new Msg();
     msg.setStatus(Msg.STATUS_SEND_START);
@@ -127,7 +127,10 @@ public class ChatService {
     msg.setObjectId(objectId);
     msg.setConvid(convid);
     msg.setType(type);
+    return sendMessage(group, msg);
+  }
 
+  public static Msg sendMessage(Group group, Msg msg) {
     AVMessage avMsg = msg.toAVMessage();
     Session session = getSession();
     if (group == null) {
@@ -156,7 +159,7 @@ public class ChatService {
   public static Msg sendLocationMessage(User toPeer, String address, double latitude, double longtitude, Group group) {
     String content = address + "&" + latitude + "&" + longtitude;
     Logger.d("content=" + content);
-    Msg msg = sendMessage(toPeer, Msg.TYPE_LOCATION, content, group);
+    Msg msg = createAndSendMsg(toPeer, Msg.TYPE_LOCATION, content, group);
     DBMsg.insertMsg(msg, group);
     return msg;
   }
@@ -318,7 +321,7 @@ public class ChatService {
     Msg msg = Msg.fromAVMessage(avMsg);
     if (msg.getType() != Msg.TYPE_RESPONSE) {
       msg.setStatus(Msg.STATUS_SEND_SUCCEED);
-      DBMsg.updateStatusToSendSucceed(msg);
+      DBMsg.updateStatus(msg, Msg.STATUS_SEND_SUCCEED);
       msg.setFromPeerId(User.curUserId());
       MsgListener _listener = filterMsgListener(listener, msg, group);
       if (_listener != null) {
@@ -331,7 +334,7 @@ public class ChatService {
     Msg msg = Msg.fromAVMessage(avMsg);
     if (msg.getType() != Msg.TYPE_RESPONSE) {
       msg.setStatus(Msg.STATUS_SEND_FAILED);
-      DBMsg.updateStatusToSendFailed(msg);
+      DBMsg.updateStatus(msg, Msg.STATUS_SEND_FAILED);
       if (msgListener != null) {
         msgListener.onMessageFailure(msg);
       }
@@ -350,5 +353,16 @@ public class ChatService {
   public static List<User> findGroupMembers(ChatGroup chatGroup) throws AVException {
     List<String> members = chatGroup.getMembers();
     return UserService.findUsers(members);
+  }
+
+  public static void resendMsg(Msg msg) {
+    Group group=null;
+    if(msg.isSingleChat()==false){
+      String groupId=msg.getConvid();
+      Session session=ChatService.getSession();
+      group=session.getGroup(groupId);
+    }
+    sendMessage(group,msg);
+    DBMsg.updateStatus(msg,Msg.STATUS_SEND_START);
   }
 }

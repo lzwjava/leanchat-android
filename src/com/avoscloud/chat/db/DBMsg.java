@@ -153,11 +153,4 @@ public class DBMsg {
     return updateMessage(msg.getObjectId(), cv);
   }
 
-  public static int updateStatusToSendSucceed(Msg msg) {
-    return updateStatus(msg, Msg.STATUS_SEND_SUCCEED);
-  }
-
-  public static int updateStatusToSendFailed(Msg msg) {
-    return updateStatus(msg, Msg.STATUS_SEND_FAILED);
-  }
 }
