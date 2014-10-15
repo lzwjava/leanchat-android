@@ -14,11 +14,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.SaveCallback;
+import com.avoscloud.chat.avobject.User;
+import com.avoscloud.chat.service.AvatarService;
 import com.avoscloud.chat.ui.activity.NotifyPrefActivity;
 import com.avoscloud.chat.util.*;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.service.UserService;
 
@@ -49,10 +51,7 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
     super.onActivityCreated(savedInstanceState);
     headerLayout.showTitle(R.string.me);
     findView();
-    User curUser = User.curUser();
-    usernameView.setText(curUser.getUsername());
-    sexView.setText(curUser.getSexInfo());
-    UserService.displayAvatar(curUser.getAvatarUrl(), avatarView);
+    refresh();
   }
 
   private void refresh() {

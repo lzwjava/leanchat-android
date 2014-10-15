@@ -29,6 +29,8 @@ public class User extends AVUser {
     AVUser avUser = getCurrentUser(User.class);
     User user = User.cast(avUser, User.class);
     return user;
+    //User user = getCurrentUser(User.class);
+    //return user;
   }
 
   public static String curUserId() {

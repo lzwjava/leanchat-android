@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import com.avos.avoscloud.AVGeoPoint;
+import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.util.Logger;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.App;
 
 /**

@@ -4,10 +4,10 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.ui.view.ViewHolder;
 import com.avoscloud.chat.util.ChatUtils;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.avobject.User;
 
 import java.util.List;
 

@@ -2,13 +2,14 @@ package com.avoscloud.chat.service;
 
 import android.widget.ImageView;
 import com.avos.avoscloud.*;
+import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.C;
 import com.avoscloud.chat.util.Logger;
 import com.avoscloud.chat.util.PhotoUtil;
-import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.App;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +42,7 @@ public class UserService {
   public static List<User> findFriends(boolean useCache) throws AVException {
     User curUser = User.curUser();
     AVRelation<User> relation = curUser.getRelation(User.FRIENDS);
+    relation.setTargetClass("_User");
     AVQuery<User> query = relation.getQuery(User.class);
     if (useCache) {
       query.setCachePolicy(AVQuery.CachePolicy.CACHE_ONLY);
@@ -129,11 +131,13 @@ public class UserService {
     return ids;
   }
 
-  public static void signUp(String name, boolean isMale, String password) throws AVException {
+  public static void signUp(String name, boolean isMale, String password) throws AVException, FileNotFoundException {
+    AVFile avatar = AvatarService.getRandomAvatarFile();
     User user = new User();
     user.setUsername(name);
     user.setSex(isMale);
     user.setPassword(password);
+    user.setAvatar(avatar);
     user.signUp();
   }
 

@@ -9,9 +9,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
+import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.ui.view.ViewHolder;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.service.UserService;
 
 import java.util.List;

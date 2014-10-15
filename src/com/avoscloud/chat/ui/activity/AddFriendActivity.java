@@ -10,11 +10,11 @@ import android.widget.EditText;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.FindCallback;
 import com.avoscloud.chat.adapter.AddFriendAdapter;
+import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.view.xlist.XListView;
 import com.avoscloud.chat.util.ChatUtils;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.util.Utils;
 
