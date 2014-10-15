@@ -16,14 +16,11 @@ import android.widget.TextView;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.SaveCallback;
 import com.avoscloud.chat.ui.activity.NotifyPrefActivity;
-import com.avoscloud.chat.util.Logger;
-import com.avoscloud.chat.util.PhotoUtil;
+import com.avoscloud.chat.util.*;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.service.UserService;
-import com.avoscloud.chat.util.PathUtils;
-import com.avoscloud.chat.util.Utils;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -52,10 +49,6 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
     super.onActivityCreated(savedInstanceState);
     headerLayout.showTitle(R.string.me);
     findView();
-    init();
-  }
-
-  private void init() {
     User curUser = User.curUser();
     usernameView.setText(curUser.getUsername());
     sexView.setText(curUser.getSexInfo());
@@ -63,7 +56,10 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
   }
 
   private void refresh() {
-    init();
+    User curUser = User.curUser();
+    usernameView.setText(curUser.getUsername());
+    sexView.setText(curUser.getSexInfo());
+    UserService.displayAvatar(curUser.getAvatarUrl(), avatarView);
   }
 
   private void findView() {
@@ -129,9 +125,19 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
         Uri uri = data.getData();
         startImageCrop(uri, 200, 200, CROP_REQUEST);
       } else if (requestCode == CROP_REQUEST) {
-        String path = saveCropAvatar(data);
-        User curUser = User.curUser();
-        curUser.saveAvatar(path);
+        final String path = saveCropAvatar(data);
+        new SimpleNetTask(ctx) {
+          @Override
+          protected void doInBack() throws Exception {
+            UserService.saveAvatar(path);
+          }
+
+          @Override
+          protected void onSucceed() {
+            refresh();
+          }
+        }.execute();
+
       }
     }
   }
@@ -165,7 +171,6 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
       Bitmap bitmap = extras.getParcelable("data");
       if (bitmap != null) {
         bitmap = PhotoUtil.toRoundCorner(bitmap, 10);
-        avatarView.setImageBitmap(bitmap);
         String filename = new SimpleDateFormat("yyMMddHHmmss")
             .format(new Date());
         path = PathUtils.getAvatarDir() + filename;

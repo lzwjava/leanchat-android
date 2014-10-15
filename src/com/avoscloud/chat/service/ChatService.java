@@ -212,9 +212,9 @@ public class ChatService {
     int icon = context.getApplicationInfo().icon;
     Intent intent;
     if (group == null) {
-      intent=ChatActivity.getUserChatIntent(context,msg.getFromPeerId());
+      intent = ChatActivity.getUserChatIntent(context, msg.getFromPeerId());
     } else {
-      intent=ChatActivity.getGroupChatIntent(context,group.getGroupId());
+      intent = ChatActivity.getGroupChatIntent(context, group.getGroupId());
     }
     PendingIntent pend = PendingIntent.getActivity(context, 0,
         intent, 0);

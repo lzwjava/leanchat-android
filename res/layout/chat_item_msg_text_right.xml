@@ -12,13 +12,7 @@
         android:layout_height="wrap_content"
         android:gravity="right">
 
-        <TextView
-            android:id="@+id/status"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="发送中"
-            android:textSize="12sp"
-            android:gravity="center_vertical" />
+        <include layout="@layout/chat_item_status_layout" />
 
         <LinearLayout
             android:layout_width="wrap_content"

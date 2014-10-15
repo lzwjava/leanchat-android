@@ -16,14 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/status"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginRight="10dp"
-                android:text="发送中"
-                android:textSize="12sp"
-                android:gravity="center_vertical" />
+            <include layout="@layout/chat_item_status_layout" />
 
             <ImageView
                 android:id="@+id/imageView"

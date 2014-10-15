@@ -91,11 +91,14 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
     }
     TextView sendTimeView = ViewHolder.findViewById(conView, R.id.sendTimeView);
     TextView contentView = ViewHolder.findViewById(conView, R.id.textContent);
-    TextView statusView = ViewHolder.findViewById(conView, R.id.status);
     ImageView imageView = ViewHolder.findViewById(conView, R.id.imageView);
     ImageView avatarView = ViewHolder.findViewById(conView, R.id.avatar);
     PlayButton playBtn = ViewHolder.findViewById(conView, R.id.playBtn);
     TextView locationView = ViewHolder.findViewById(conView, R.id.locationView);
+
+    View statusSendFailed = ViewHolder.findViewById(conView, R.id.status_send_failed);
+    View statusSendSucceed = ViewHolder.findViewById(conView, R.id.status_send_succeed);
+    View statusSendStart = ViewHolder.findViewById(conView, R.id.status_send_start);
 
     // timestamp
     if (position == 0 || TimeUtils.haveTimeGap(datas.get(position - 1).getTimestamp(),
@@ -127,9 +130,26 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
       setLocationView(msg, locationView);
     }
     if (isComMsg == false) {
-      statusView.setText(msg.getStatusDesc());
+      hideStatusViews(statusSendStart, statusSendFailed, statusSendSucceed);
+      switch (msg.getStatus()) {
+        case Msg.STATUS_SEND_FAILED:
+          statusSendFailed.setVisibility(View.VISIBLE);
+          break;
+        case Msg.STATUS_SEND_SUCCEED:
+          statusSendSucceed.setVisibility(View.VISIBLE);
+          break;
+        case Msg.STATUS_SEND_START:
+          statusSendStart.setVisibility(View.VISIBLE);
+          break;
+      }
     }
     return conView;
+  }
+
+  private void hideStatusViews(View statusSendStart, View statusSendFailed, View statusSendSucceed) {
+    statusSendFailed.setVisibility(View.GONE);
+    statusSendStart.setVisibility(View.GONE);
+    statusSendSucceed.setVisibility(View.GONE);
   }
 
   public void setLocationView(Msg msg, TextView locationView) {

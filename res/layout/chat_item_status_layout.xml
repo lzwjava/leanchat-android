@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/statusLayout"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+    <ProgressBar
+        android:id="@+id/status_send_start"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/status_send_succeed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="已发送"
+        android:textSize="12sp"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/status_send_failed"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:clickable="true"
+        android:scaleType="fitCenter"
+        android:src="@drawable/btn_chat_fail_resend"
+        android:visibility="gone" />
+</LinearLayout>
+

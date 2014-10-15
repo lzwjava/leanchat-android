@@ -4,6 +4,7 @@ import com.avos.avoscloud.*;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.R;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
@@ -25,9 +26,9 @@ public class User extends AVUser {
   }
 
   public static User curUser() {
-    AVUser avUser = getCurrentUser(User.class);
-    User user = User.cast(avUser, User.class);
-    return user;
+    User avUser = getCurrentUser(User.class);
+    //User user = User.cast(avUser, User.class);
+    return avUser;
   }
 
   public static String curUserId() {
@@ -53,25 +54,6 @@ public class User extends AVUser {
       return avatar.getUrl();
     } else {
       return null;
-    }
-  }
-
-  public void saveAvatar(String path) {
-    try {
-      final AVFile file = AVFile.withAbsoluteLocalPath(getUsername(), path);
-      file.saveInBackground(new SaveCallback() {
-        @Override
-        public void done(AVException e) {
-          if (e == null) {
-            setAvatar(file);
-            saveInBackground();
-          } else {
-            e.printStackTrace();
-          }
-        }
-      });
-    } catch (IOException e) {
-      e.printStackTrace();
     }
   }
 

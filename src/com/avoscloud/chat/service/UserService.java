@@ -9,6 +9,7 @@ import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.App;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -134,5 +135,16 @@ public class UserService {
     user.setSex(isMale);
     user.setPassword(password);
     user.signUp();
+  }
+
+  // bug
+  public static void saveAvatar(String path) throws IOException, AVException {
+    User user = User.curUser();
+    final AVFile file = AVFile.withAbsoluteLocalPath(user.getUsername(), path);
+    file.save();
+    user.setAvatar(file);
+    user.setFetchWhenSave(true);
+    Logger.d(user.getLocation() + " location");
+    user.save();
   }
 }
