@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:custom="http://schemas.android.com/apk/res/com.lzw.talk"
+    xmlns:custom="http://schemas.android.com/apk/res/com.avoscloud.chat"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -43,7 +43,7 @@
                 style="@style/chat_content_date_style"
                 android:gravity="center">
 
-                <com.lzw.talk.ui.view.PlayButton
+                <com.avoscloud.chat.ui.view.PlayButton
                     android:id="@+id/playBtn"
                     style="@style/play_btn"
                     custom:left="true" />

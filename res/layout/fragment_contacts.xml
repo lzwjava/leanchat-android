@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:background="@color/base_bg">
 
-        <com.lzw.talk.ui.view.ClearEditText
+        <com.avoscloud.chat.ui.view.ClearEditText
             android:id="@+id/et_msg_search"
             android:layout_width="match_parent"
             android:layout_height="@dimen/base_action_bar_height"
@@ -56,7 +56,7 @@
                 android:visibility="invisible" />
         </RelativeLayout>
 
-        <com.lzw.talk.ui.view.EnLetterView
+        <com.avoscloud.chat.ui.view.EnLetterView
             android:id="@+id/right_letter"
             android:layout_width="25dip"
             android:layout_height="match_parent"

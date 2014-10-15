@@ -7,7 +7,7 @@
     android:layout_height="@dimen/chatBottomHeight"
     android:gravity="center_vertical">
 
-    <com.lzw.talk.ui.view.EmotionEditText
+    <com.avoscloud.chat.ui.view.EmotionEditText
         android:id="@+id/textEdit"
         android:layout_width="0dp"
         android:layout_weight="1"

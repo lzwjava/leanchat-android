@@ -1,0 +1,72 @@
+package com.avoscloud.chat.adapter;
+
+import android.content.Context;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import com.avos.avoscloud.AVException;
+import com.avoscloud.chat.R;
+import com.avoscloud.chat.ui.view.ViewHolder;
+import com.avoscloud.chat.avobject.User;
+import com.avoscloud.chat.service.AddRequestService;
+import com.avoscloud.chat.service.UserService;
+import com.avoscloud.chat.util.NetAsyncTask;
+import com.avoscloud.chat.util.Utils;
+
+import java.util.List;
+
+public class AddFriendAdapter extends BaseListAdapter<User> {
+  public AddFriendAdapter(Context context, List<User> list) {
+    super(context, list);
+    // TODO Auto-generated constructor stub
+  }
+
+  @Override
+  public View getView(int position, View conView, ViewGroup parent) {
+    // TODO Auto-generated method stub
+    if (conView == null) {
+      conView = inflater.inflate(R.layout.item_add_friend, null);
+    }
+    final User contact = datas.get(position);
+    TextView nameView = ViewHolder.findViewById(conView, R.id.name);
+    ImageView avatarView = ViewHolder.findViewById(conView, R.id.avatar);
+    Button addBtn = ViewHolder.findViewById(conView, R.id.add);
+    String avatarUrl = contact.getAvatarUrl();
+    UserService.displayAvatar(avatarUrl, avatarView);
+    nameView.setText(contact.getUsername());
+    addBtn.setText(R.string.add);
+    addBtn.setOnClickListener(new OnClickListener() {
+
+      @Override
+      public void onClick(View v) {
+        runAddFriendTask(ctx, contact);
+      }
+    });
+    return conView;
+  }
+
+  public static void runAddFriendTask(Context ctx, final User friend) {
+    new NetAsyncTask(ctx) {
+      @Override
+      protected void doInBack() throws Exception {
+        AddRequestService.createAddRequest(friend);
+      }
+
+      @Override
+      protected void onPost(Exception e) {
+        if (e != null) {
+          if (e instanceof AVException) {
+            Utils.toast(R.string.pleaseCheckNetwork);
+          } else {
+            Utils.toast(e.getMessage());
+          }
+        } else {
+          Utils.toast(R.string.sendRequestSucceed);
+        }
+      }
+    }.execute();
+  }
+}
