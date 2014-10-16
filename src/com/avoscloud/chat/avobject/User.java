@@ -17,10 +17,11 @@ public class User extends AVUser {
   public static final String AVATAR = "avatar";
   public static final String FRIENDS = "friends";
   public static final String LOCATION = "location";
+  public static final String SEX = "sex";
   //AVFile avatar;
   //AVGeoPoint location;
   private String sortLetters;
-  private boolean sex;// true is male ; false is female
+  //private boolean sex;// true is male ; false is female
 
   public User() {
   }
@@ -77,11 +78,11 @@ public class User extends AVUser {
   }
 
   public boolean getSex() {
-    return sex;
+    return getBoolean(SEX);
   }
 
   public void setSex(boolean isMale) {
-    this.sex = isMale;
+    put(SEX, isMale);
   }
 
   public String getSexInfo() {

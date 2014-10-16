@@ -132,12 +132,9 @@ public class UserService {
   }
 
   public static void signUp(String name, boolean isMale, String password) throws AVException, FileNotFoundException {
-    AVFile avatar = AvatarService.getRandomAvatarFile();
     User user = new User();
     user.setUsername(name);
-    user.setSex(isMale);
     user.setPassword(password);
-    user.setAvatar(avatar);
     user.signUp();
   }
 
