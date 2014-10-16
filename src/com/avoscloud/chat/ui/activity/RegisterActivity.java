@@ -78,8 +78,7 @@ public class RegisterActivity extends BaseActivity {
     new NetAsyncTask(ctx) {
       @Override
       protected void doInBack() throws Exception {
-        UserService.signUp(name, isMale, password);
-        User user = User.curUser();
+        User user = UserService.signUp(name, isMale, password);
         AVFile avatar = AvatarService.getRandomAvatarFile();
         user.setSex(isMale);
         user.setAvatar(avatar);

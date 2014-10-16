@@ -252,6 +252,7 @@ public class ChatService {
     if (msg.getType() != Msg.TYPE_RESPONSE) {
       responseAndReceiveMsg(context, msg, listener, group);
     } else {
+      Logger.d("onResponseMessage "+msg.getContent());
       DBMsg.updateStatusAndTimestamp(msg);
       MsgListener _listener = filterMsgListener(listener, msg, group);
       if (_listener != null) {

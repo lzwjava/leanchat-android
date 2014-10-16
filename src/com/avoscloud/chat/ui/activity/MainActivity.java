@@ -7,8 +7,10 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVGeoPoint;
 import com.avoscloud.chat.avobject.User;
+import com.avoscloud.chat.service.AvatarService;
 import com.avoscloud.chat.service.ChatService;
 import com.avoscloud.chat.service.PrefDao;
 import com.avoscloud.chat.ui.fragment.DiscoverFragment;
@@ -58,6 +60,24 @@ public class MainActivity extends BaseActivity {
     //messageBtn.performClick();
     //discoverBtn.performClick();
     initBaiduLocClient();
+    testSavaAvatar();
+  }
+
+  private void testSavaAvatar() {
+    new Thread(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          AVFile f = AvatarService.getRandomAvatarFile();
+          User user = User.curUser();
+          user.setAvatar(f);
+          user.save();
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+
+      }
+    }).start();
   }
 
   @Override
@@ -185,11 +205,5 @@ public class MainActivity extends BaseActivity {
         transaction.hide(f);
       }
     }
-  }
-
-  @Override
-  protected void onDestroy() {
-    super.onDestroy();
-    ChatService.closeSession();
   }
 }

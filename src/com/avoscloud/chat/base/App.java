@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.StrictMode;
 import com.avos.avoscloud.*;
 import com.avoscloud.chat.avobject.AddRequest;
+import com.avoscloud.chat.avobject.Avatar;
 import com.avoscloud.chat.avobject.ChatGroup;
 import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.service.UserService;
@@ -47,6 +48,8 @@ public class App extends Application {
     User.registerSubclass(User.class);
     User.registerSubclass(AddRequest.class);
     User.registerSubclass(ChatGroup.class);
+    User.registerSubclass(Avatar.class);
+
     AVInstallation.getCurrentInstallation().saveInBackground();
     PushService.setDefaultPushCallback(ctx, LoginActivity.class);
     AVOSUtils.showInternalDebugLog();

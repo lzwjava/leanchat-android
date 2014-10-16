@@ -131,11 +131,12 @@ public class UserService {
     return ids;
   }
 
-  public static void signUp(String name, boolean isMale, String password) throws AVException, FileNotFoundException {
+  public static User signUp(String name, boolean isMale, String password) throws AVException, FileNotFoundException {
     User user = new User();
     user.setUsername(name);
     user.setPassword(password);
     user.signUp();
+    return user;
   }
 
   // bug
