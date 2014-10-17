@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Scroller;
 import com.avoscloud.chat.R;
+import com.avoscloud.chat.util.Logger;
 
 
 public class XListView extends ListView implements OnScrollListener {
@@ -225,6 +226,7 @@ public class XListView extends ListView implements OnScrollListener {
   }
 
   private void updateFooterHeight(float delta) {
+    Logger.d("updateFooterHeight");
     int height = mFooterView.getBottomMargin() + (int) delta;
     if (mEnablePullLoad && !mPullLoading) {
       if (height > PULL_LOAD_MORE_DELTA) { // height enough to invoke load

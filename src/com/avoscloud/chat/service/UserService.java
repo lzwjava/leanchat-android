@@ -63,7 +63,7 @@ public class UserService {
   }
 
   public static void displayAvatar(String imageUrl, ImageView avatarView) {
-    imageLoader.displayImage(imageUrl, avatarView, PhotoUtil.getAvatarImageOptions());
+    imageLoader.displayImage(imageUrl, avatarView, PhotoUtil.avatarImageOptions);
   }
 
   public static void cacheUser(List<String> uncachedIds) throws AVException {

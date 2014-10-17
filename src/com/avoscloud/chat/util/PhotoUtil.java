@@ -9,7 +9,6 @@ import android.media.ThumbnailUtils;
 import com.avoscloud.chat.R;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
-import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
@@ -347,29 +346,26 @@ public class PhotoUtil {
     return newPath;
   }
 
-  public static DisplayImageOptions getAvatarImageOptions() {
-    DisplayImageOptions options = new DisplayImageOptions.Builder()
-        .showImageOnLoading(R.drawable.default_user_avatar)
-        .showImageForEmptyUri(R.drawable.default_user_avatar)
-        .showImageOnFail(R.drawable.default_user_avatar)
-        .cacheInMemory(true)
-        .cacheOnDisc(true)
-        .considerExifParams(true)
-        .imageScaleType(ImageScaleType.EXACTLY)
-        .bitmapConfig(Config.RGB_565)
-            // .decodingOptions(android.graphics.BitmapFactory.Options
-            // decodingOptions)//设置图片的解码配置.considerExifParams(true)
-            // 设置图片下载前的延迟
-            // .delayBeforeLoading(int delayInMillis)//int
-            // delayInMillis为你设置的延迟时间
-            // 设置图片加入缓存前，对bitmap进行设置
-            // 。preProcessor(BitmapProcessor preProcessor)
-        .resetViewBeforeLoading(true)// 设置图片在下载前是否重置，复位
-            // .displayer(new RoundedBitmapDisplayer(20))//是否设置为圆角，弧度为多少
-            //.displayer(new FadeInBitmapDisplayer(100))// 淡入
-        .build();
-    return options;
-  }
+  public static DisplayImageOptions avatarImageOptions = new DisplayImageOptions.Builder()
+      .showImageOnLoading(R.drawable.default_user_avatar)
+      .showImageForEmptyUri(R.drawable.default_user_avatar)
+      .showImageOnFail(R.drawable.default_user_avatar)
+      .cacheInMemory(true)
+      .cacheOnDisc(true)
+      .considerExifParams(true)
+      .imageScaleType(ImageScaleType.EXACTLY)
+      .bitmapConfig(Config.RGB_565)
+          // .decodingOptions(android.graphics.BitmapFactory.Options
+          // decodingOptions)//设置图片的解码配置.considerExifParams(true)
+          // 设置图片下载前的延迟
+          // .delayBeforeLoading(int delayInMillis)//int
+          // delayInMillis为你设置的延迟时间
+          // 设置图片加入缓存前，对bitmap进行设置
+          // 。preProcessor(BitmapProcessor preProcessor)
+      .resetViewBeforeLoading(true)// 设置图片在下载前是否重置，复位
+          // .displayer(new RoundedBitmapDisplayer(20))//是否设置为圆角，弧度为多少
+          //.displayer(new FadeInBitmapDisplayer(100))// 淡入
+      .build();
 
   public static ImageLoaderConfiguration getImageLoaderConfig(Context context, File cacheDir) {
     return new ImageLoaderConfiguration.Builder(

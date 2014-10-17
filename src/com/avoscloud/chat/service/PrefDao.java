@@ -26,6 +26,7 @@ public class PrefDao {
   //int addRequestN;
   //String latitude;
   //String longitude;
+  public static PrefDao currentUserPrefDao;
 
   public PrefDao(Context cxt) {
     this.cxt = cxt;
@@ -41,8 +42,10 @@ public class PrefDao {
   }
 
   public static PrefDao getCurUserPrefDao(Context ctx) {
-    PrefDao prefDao = new PrefDao(ctx, User.curUserId());
-    return prefDao;
+    if (currentUserPrefDao == null) {
+      currentUserPrefDao = new PrefDao(ctx, User.curUserId());
+    }
+    return currentUserPrefDao;
   }
 
   public static PrefDao getMyPrefDao(Context ctx) {

@@ -18,6 +18,7 @@ import com.avoscloud.chat.entity.Msg;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.activity.ImageBrowerActivity;
 import com.avoscloud.chat.util.PathUtils;
+import com.avoscloud.chat.util.PhotoUtil;
 import com.avoscloud.chat.util.TimeUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -209,9 +210,9 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
     File file = new File(localPath);
     ImageLoader imageLoader = ImageLoader.getInstance();
     if (file.exists()) {
-      imageLoader.displayImage("file://" + localPath, imageView);
+      imageLoader.displayImage("file://" + localPath, imageView, PhotoUtil.avatarImageOptions);
     } else {
-      imageLoader.displayImage(url, imageView);
+      imageLoader.displayImage(url, imageView, PhotoUtil.avatarImageOptions);
     }
   }
 

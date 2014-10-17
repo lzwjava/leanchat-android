@@ -20,6 +20,7 @@ import java.util.List;
 
 public class NearPeopleAdapter extends BaseListAdapter<User> {
   PrettyTime prettyTime;
+  AVGeoPoint location;
 
   public NearPeopleAdapter(Context ctx) {
     super(ctx);
@@ -28,6 +29,8 @@ public class NearPeopleAdapter extends BaseListAdapter<User> {
 
   private void init() {
     prettyTime = new PrettyTime();
+    PrefDao prefDao = PrefDao.getCurUserPrefDao(ctx);
+    location = prefDao.getLocation();
   }
 
   public NearPeopleAdapter(Context ctx, List<User> datas) {
@@ -38,7 +41,7 @@ public class NearPeopleAdapter extends BaseListAdapter<User> {
   @Override
   public View getView(int position, View convertView, ViewGroup parent) {
     if (convertView == null) {
-      convertView = inflater.inflate(R.layout.item_near_people, null,false);
+      convertView = inflater.inflate(R.layout.item_near_people, null, false);
     }
     final User user = datas.get(position);
     TextView nameView = ViewHolder.findViewById(convertView, R.id.name_text);
@@ -50,12 +53,11 @@ public class NearPeopleAdapter extends BaseListAdapter<User> {
     UserService.displayAvatar(avatarUrl, avatarView);
 
     AVGeoPoint geoPoint = user.getLocation();
-    PrefDao prefDao = PrefDao.getCurUserPrefDao(ctx);
-    AVGeoPoint location = prefDao.getLocation();
     String currentLat = String.valueOf(location.getLatitude());
     String currentLong = String.valueOf(location.getLongitude());
     if (geoPoint != null && !currentLat.equals("") && !currentLong.equals("")) {
-      double distance = DistanceOfTwoPoints(Double.parseDouble(currentLat), Double.parseDouble(currentLong), user.getLocation().getLatitude(),
+      double distance = DistanceOfTwoPoints(Double.parseDouble(currentLat), Double.parseDouble(currentLong),
+          user.getLocation().getLatitude(),
           user.getLocation().getLongitude());
       distanceView.setText(Utils.getPrettyDistance(distance));
     } else {
