@@ -45,14 +45,13 @@ public class DiscoverFragment extends BaseFragment
   private void initXListView() {
     listView = (XListView) getView().findViewById(R.id.list_near);
     listView.setOnItemClickListener(this);
-    listView.setPullLoadEnable(false);
+    listView.setPullLoadEnable(true);
     listView.setPullRefreshEnable(true);
     listView.setXListViewListener(this);
     adapter = new NearPeopleAdapter(ctx, nears);
     listView.setAdapter(adapter);
-    boolean pauseOnScroll =true;
-    boolean pauseOnFling = true;
-    PauseOnScrollListener listener = new PauseOnScrollListener(UserService.imageLoader, pauseOnScroll, pauseOnFling);
+    PauseOnScrollListener listener = new PauseOnScrollListener(UserService.imageLoader,
+        true, true);
     listView.setOnScrollListener(listener);
     onRefresh();
   }

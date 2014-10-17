@@ -96,6 +96,7 @@ public class PlayButton extends View implements View.OnClickListener {
   public void onClick(View v) {
     if (mediaPlayer != null && mediaPlayer.isPlaying()) {
       mediaPlayer.pause();
+      setBackgroundResource(backResourceId);
     } else {
       playAudio();
     }

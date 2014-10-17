@@ -26,7 +26,6 @@ import java.io.File;
 import java.util.List;
 
 public class ChatMsgAdapter extends BaseListAdapter<Msg> {
-  ImageLoader imageLoader;
   int msgViewTypes = 8;
 
   public static interface MsgViewType {
@@ -42,7 +41,6 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
 
   public ChatMsgAdapter(Context ctx, List<Msg> datas) {
     super(ctx, datas);
-    imageLoader = ImageLoader.getInstance();
   }
 
   public int getItemPosById(String objectId) {
@@ -208,7 +206,7 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
   public static void displayImageByUri(ImageView imageView,
                                        String localPath, String url) {
     File file = new File(localPath);
-    ImageLoader imageLoader = ImageLoader.getInstance();
+    ImageLoader imageLoader = UserService.imageLoader;
     if (file.exists()) {
       imageLoader.displayImage("file://" + localPath, imageView, PhotoUtil.avatarImageOptions);
     } else {

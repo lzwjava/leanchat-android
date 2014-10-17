@@ -34,6 +34,7 @@ import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.entity.Msg;
 import com.avoscloud.chat.ui.view.EmotionEditText;
 import com.avoscloud.chat.ui.view.xlist.XListView;
+import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -112,6 +113,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     xListView.setPullRefreshEnable(true);
     xListView.setPullLoadEnable(false);
     xListView.setXListViewListener(this);
+    xListView.setOnScrollListener(
+        new PauseOnScrollListener(UserService.imageLoader,true,true));
   }
 
   private void initEmotionPager() {
