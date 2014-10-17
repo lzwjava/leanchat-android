@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    android:background="#fff">
 
     <com.avoscloud.chat.ui.view.xlist.XListView
         android:id="@+id/listview"
@@ -10,6 +11,7 @@
         android:layout_above="@+id/bottomLayout"
         android:cacheColorHint="#0000"
         android:divider="@null"
+        android:background="#fff"
         android:dividerHeight="5dp"
         android:layout_below="@+id/headerLayout"
         android:scrollbarStyle="outsideOverlay"

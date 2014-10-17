@@ -6,6 +6,7 @@ import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
+import com.avoscloud.chat.service.PrefDao;
 
 /**
  * Created by lzw on 14-6-26.
@@ -27,9 +28,15 @@ public class User extends AVUser {
   }
 
   public static User curUser() {
-    AVUser avUser = getCurrentUser(User.class);
-    User user = User.cast(avUser, User.class);
+    User user = getCurrentUser(User.class);
+    if (user != null && user.getLocation() == null) {//workaround
+      PrefDao prefDao = new PrefDao(App.ctx, user.getObjectId());
+      user.setLocation(prefDao.getLocation());
+    }
     return user;
+    /*AVUser avUser = getCurrentUser(User.class);
+    User user = User.cast(avUser, User.class);
+    return user;*/
     //User user = getCurrentUser(User.class);
     //return user;
   }

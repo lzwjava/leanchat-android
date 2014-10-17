@@ -14,15 +14,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.SaveCallback;
+import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.User;
-import com.avoscloud.chat.service.AvatarService;
+import com.avoscloud.chat.base.App;
+import com.avoscloud.chat.service.ChatService;
+import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.activity.NotifyPrefActivity;
 import com.avoscloud.chat.util.*;
-import com.avoscloud.chat.R;
-import com.avoscloud.chat.base.App;
-import com.avoscloud.chat.service.UserService;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -85,6 +84,7 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
       intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
       startActivityForResult(intent, IMAGE_PICK_REQUEST);
     } else if (id == R.id.logoutLayout) {
+      ChatService.closeSession();
       User.logOut();
       getActivity().finish();
     } else if (id == R.id.sexLayout) {

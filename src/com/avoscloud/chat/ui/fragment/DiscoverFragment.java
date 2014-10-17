@@ -15,6 +15,7 @@ import com.avoscloud.chat.ui.view.xlist.XListView;
 import com.avoscloud.chat.util.ChatUtils;
 import com.avoscloud.chat.util.NetAsyncTask;
 import com.avoscloud.chat.util.Utils;
+import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +50,10 @@ public class DiscoverFragment extends BaseFragment
     listView.setXListViewListener(this);
     adapter = new NearPeopleAdapter(ctx, nears);
     listView.setAdapter(adapter);
+    boolean pauseOnScroll =true;
+    boolean pauseOnFling = true;
+    PauseOnScrollListener listener = new PauseOnScrollListener(UserService.imageLoader, pauseOnScroll, pauseOnFling);
+    listView.setOnScrollListener(listener);
     onRefresh();
   }
 
@@ -79,10 +84,7 @@ public class DiscoverFragment extends BaseFragment
   public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
     // TODO Auto-generated method stub
     User user = (User) adapter.getItem(position - 1);
-    Intent intent = new Intent(ctx, PersonInfoActivity.class);
-    intent.putExtra("from", "add");
-    intent.putExtra("username", user.getUsername());
-    startActivity(intent);
+    PersonInfoActivity.goPersonInfo(ctx,user.getObjectId());
   }
 
   @Override

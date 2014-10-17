@@ -60,7 +60,7 @@ public class MainActivity extends BaseActivity {
     //messageBtn.performClick();
     //discoverBtn.performClick();
     initBaiduLocClient();
-    testSavaAvatar();
+    //testSavaAvatar();
   }
 
   private void testSavaAvatar() {
@@ -69,6 +69,7 @@ public class MainActivity extends BaseActivity {
       public void run() {
         try {
           AVFile f = AvatarService.getRandomAvatarFile();
+          Logger.d("f=" + f.getOriginalName());
           User user = User.curUser();
           user.setAvatar(f);
           user.save();

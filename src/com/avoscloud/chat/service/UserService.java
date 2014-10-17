@@ -18,6 +18,8 @@ import java.util.List;
  * Created by lzw on 14-9-15.
  */
 public class UserService {
+  public static ImageLoader imageLoader = ImageLoader.getInstance();
+
   public static AVUser getAVUser(String username) throws AVException {
     AVQuery<AVUser> q = getUserQuery(username);
     List<AVUser> users = q.find();
@@ -46,6 +48,8 @@ public class UserService {
     AVQuery<User> query = relation.getQuery(User.class);
     if (useCache) {
       query.setCachePolicy(AVQuery.CachePolicy.CACHE_ONLY);
+    } else {
+      query.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
     }
     List<User> users = query.find();
     App.registerBatchUserCache(users);
@@ -59,7 +63,6 @@ public class UserService {
   }
 
   public static void displayAvatar(String imageUrl, ImageView avatarView) {
-    ImageLoader imageLoader = ImageLoader.getInstance();
     imageLoader.displayImage(imageUrl, avatarView, PhotoUtil.getAvatarImageOptions());
   }
 
@@ -139,14 +142,14 @@ public class UserService {
     return user;
   }
 
-  // bug
   public static void saveAvatar(String path) throws IOException, AVException {
     User user = User.curUser();
     final AVFile file = AVFile.withAbsoluteLocalPath(user.getUsername(), path);
     file.save();
     user.setAvatar(file);
     user.setFetchWhenSave(true);
-    Logger.d(user.getLocation() + " location");
+    Logger.d("url =" + file.getUrl());
     user.save();
+    Logger.d("after url =" + user.getAvatarUrl());
   }
 }
