@@ -1,6 +1,6 @@
-#奇遇
+# LeanChat
 
-用 AVOS Cloud 实时通信 SDK做的企业内部沟通工具
+用 AVOS Cloud 实时通信 SDK做的沟通工具  Leanchat
 
 ![img](https://raw.githubusercontent.com/lzwjava/plan/master/im361.png)
 
@@ -17,8 +17,7 @@
 * 邀请群成员
 * 踢人
 * 建群
-
-
+* 退群
 
 
 
