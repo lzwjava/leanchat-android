@@ -208,9 +208,9 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
     File file = new File(localPath);
     ImageLoader imageLoader = UserService.imageLoader;
     if (file.exists()) {
-      imageLoader.displayImage("file://" + localPath, imageView, PhotoUtil.avatarImageOptions);
+      imageLoader.displayImage("file://" + localPath, imageView, PhotoUtil.normalImageOptions);
     } else {
-      imageLoader.displayImage(url, imageView, PhotoUtil.avatarImageOptions);
+      imageLoader.displayImage(url, imageView, PhotoUtil.normalImageOptions);
     }
   }
 

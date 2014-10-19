@@ -13,6 +13,8 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -355,24 +357,32 @@ public class PhotoUtil {
       .considerExifParams(true)
       .imageScaleType(ImageScaleType.EXACTLY)
       .bitmapConfig(Config.RGB_565)
-          // .decodingOptions(android.graphics.BitmapFactory.Options
-          // decodingOptions)//设置图片的解码配置.considerExifParams(true)
-          // 设置图片下载前的延迟
-          // .delayBeforeLoading(int delayInMillis)//int
-          // delayInMillis为你设置的延迟时间
-          // 设置图片加入缓存前，对bitmap进行设置
-          // 。preProcessor(BitmapProcessor preProcessor)
       .resetViewBeforeLoading(true)// 设置图片在下载前是否重置，复位
-          // .displayer(new RoundedBitmapDisplayer(20))//是否设置为圆角，弧度为多少
+      //.displayer(new RoundedBitmapDisplayer(20))
+      //.displayer(new FadeInBitmapDisplayer(100))// 淡入
+      .build();
+
+  public static DisplayImageOptions normalImageOptions = new DisplayImageOptions.Builder()
+      .showImageOnLoading(R.drawable.empty_photo)
+      .showImageForEmptyUri(R.drawable.empty_photo)
+      .showImageOnFail(R.drawable.image_load_fail)
+      .cacheInMemory(true)
+      .cacheOnDisc(true)
+      .considerExifParams(true)
+      .imageScaleType(ImageScaleType.EXACTLY)
+      .bitmapConfig(Config.RGB_565)
+      .resetViewBeforeLoading(true)// 设置图片在下载前是否重置，复位
+      //.displayer(new RoundedBitmapDisplayer(20))
           //.displayer(new FadeInBitmapDisplayer(100))// 淡入
       .build();
+
 
   public static ImageLoaderConfiguration getImageLoaderConfig(Context context, File cacheDir) {
     return new ImageLoaderConfiguration.Builder(
         context)
         .threadPoolSize(3).threadPriority(Thread.NORM_PRIORITY - 2)
-        //.memoryCache(new WeakMemoryCache())
-        .memoryCacheExtraOptions(480,800)
+            //.memoryCache(new WeakMemoryCache())
+        .memoryCacheExtraOptions(480, 800)
         .denyCacheImageMultipleSizesInMemory()
         .discCacheFileNameGenerator(new Md5FileNameGenerator())
             // 将保存的时候的URI名称用MD5 加密
