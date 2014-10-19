@@ -119,7 +119,7 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     Logger.d("on Activity result " + requestCode + " " + resultCode);
-    //super.onActivityResult(requestCode, resultCode, data);
+    super.onActivityResult(requestCode, resultCode, data);
     if (resultCode == Activity.RESULT_OK) {
       if (requestCode == IMAGE_PICK_REQUEST) {
         Uri uri = data.getData();
