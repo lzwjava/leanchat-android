@@ -23,17 +23,20 @@ public class User extends AVUser {
   //AVGeoPoint location;
   private String sortLetters;
   //private boolean sex;// true is male ; false is female
+  public static User curUser;
 
   public User() {
   }
 
   public static User curUser() {
-    User user = getCurrentUser(User.class);
-    if (user != null && user.getLocation() == null) {//workaround
-      PrefDao prefDao = new PrefDao(App.ctx, user.getObjectId());
-      user.setLocation(prefDao.getLocation());
+    if (curUser == null) {
+      curUser = getCurrentUser(User.class);
+      if (curUser != null && curUser.getLocation() == null) {//workaround
+        PrefDao prefDao = new PrefDao(App.ctx, curUser.getObjectId());
+        curUser.setLocation(prefDao.getLocation());
+      }
     }
-    return user;
+    return curUser;
     /*AVUser avUser = getCurrentUser(User.class);
     User user = User.cast(avUser, User.class);
     return user;*/

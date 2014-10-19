@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Debug;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.view.ViewPager;
@@ -82,6 +83,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     setContentView(R.layout.chat_layout);
     findView();
     initByIntent(getIntent());
+    Debug.startMethodTracing("chat");
   }
 
   private void initByIntent(Intent intent) {
@@ -692,6 +694,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     if (singleChat) {
       ChatService.withUserToWatch(chatUser, false);
     }
+    Debug.stopMethodTracing();
     super.onDestroy();
   }
 

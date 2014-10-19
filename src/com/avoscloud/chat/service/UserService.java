@@ -147,10 +147,8 @@ public class UserService {
     final AVFile file = AVFile.withAbsoluteLocalPath(user.getUsername(), path);
     file.save();
     user.setAvatar(file);
-    user.setFetchWhenSave(true);
-    Logger.d("url =" + file.getUrl());
     user.save();
-    Logger.d("after url =" + user.getAvatarUrl());
+    user.fetch();
   }
 
   public static void cacheUserIfNone(String userId) throws AVException {
