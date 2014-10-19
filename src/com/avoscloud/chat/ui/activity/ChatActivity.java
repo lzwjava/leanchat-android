@@ -66,7 +66,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   private View addCameraBtn;
   int msgSize;
 
-  boolean singleChat;
+  public static boolean singleChat;
   public static final String CHAT_USER_ID = "chatUserId";
   public static final String GROUP_ID = "groupId";
   public static final String SINGLE_CHAT = "singleChat";
@@ -93,7 +93,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
 
     initListView();
     setSoftInputMode();
-    loadNewMsg();
+    loadNewMsg(true);
   }
 
   @Override
@@ -316,7 +316,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   public void onMessage(Msg msg) {
     Logger.d("onMessage on ChatActivity " + msg.getContent());
     if (msg.getType() == Msg.TYPE_RESPONSE) {
-      loadNewMsg();
+      loadNewMsg(false);
     } else {
       addMsgAndScrollToLast(msg);
     }
@@ -388,8 +388,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
 
   }
 
-  public void loadNewMsg() {
-    new GetDataTask(ctx, true).execute();
+  public void loadNewMsg(boolean openDialog) {
+    new GetDataTask(ctx, openDialog, true).execute();
   }
 
   @Override
@@ -398,7 +398,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
       @Override
       public void run() {
         msgSize += PAGE_SIZE;
-        new GetDataTask(ctx, false).execute();
+        new GetDataTask(ctx, false, false).execute();
       }
     }, 1000);
   }
@@ -412,8 +412,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     List<Msg> msgs;
     boolean scrollToLast = true;
 
-    GetDataTask(Context cxt, boolean scrollToLast) {
-      super(cxt);
+    GetDataTask(Context cxt, boolean openDialog, boolean scrollToLast) {
+      super(cxt, openDialog);
       this.scrollToLast = scrollToLast;
     }
 

@@ -10,6 +10,7 @@ import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.service.ChatService;
 import com.avoscloud.chat.service.EmotionService;
+import com.avoscloud.chat.ui.activity.ChatActivity;
 import com.avoscloud.chat.ui.activity.LocationActivity;
 import com.avoscloud.chat.ui.view.PlayButton;
 import com.avoscloud.chat.ui.view.ViewHolder;
@@ -142,6 +143,9 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
         case Msg.STATUS_SEND_START:
           statusSendStart.setVisibility(View.VISIBLE);
           break;
+      }
+      if(ChatActivity.singleChat==false){
+        statusSendSucceed.setVisibility(View.GONE);
       }
     }
     return conView;
