@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Debug;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.view.ViewPager;
@@ -83,7 +82,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     setContentView(R.layout.chat_layout);
     findView();
     initByIntent(getIntent());
-    Debug.startMethodTracing("chat");
   }
 
   private void initByIntent(Intent intent) {
@@ -95,13 +93,9 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
 
     initListView();
     setSoftInputMode();
-    if (singleChat) {
-      ChatService.withUserToWatch(chatUser, true);
-    }
     loadNewMsg();
   }
 
-  //
   @Override
   protected void onNewIntent(Intent intent) {
     super.onNewIntent(intent);
@@ -116,7 +110,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     xListView.setPullLoadEnable(false);
     xListView.setXListViewListener(this);
     xListView.setOnScrollListener(
-        new PauseOnScrollListener(UserService.imageLoader,true,true));
+        new PauseOnScrollListener(UserService.imageLoader, true, true));
   }
 
   private void initEmotionPager() {
@@ -288,6 +282,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     if (singleChat) {
       String chatUserId = intent.getStringExtra(CHAT_USER_ID);
       chatUser = App.lookupUser(chatUserId);
+      ChatService.withUserToWatch(chatUser, true);
     } else {
       String groupId = intent.getStringExtra(GROUP_ID);
       Session session = ChatService.getSession();
@@ -394,7 +389,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   }
 
   public void loadNewMsg() {
-    new GetDataTask(true).execute();
+    new GetDataTask(ctx, true).execute();
   }
 
   @Override
@@ -403,7 +398,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
       @Override
       public void run() {
         msgSize += PAGE_SIZE;
-        new GetDataTask(false).execute();
+        new GetDataTask(ctx, false).execute();
       }
     }, 1000);
   }
@@ -412,46 +407,35 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   public void onLoadMore() {
   }
 
-  class GetDataTask extends AsyncTask<Void, Void, Void> {
+  class GetDataTask extends NetAsyncTask {
     boolean res;
     List<Msg> msgs;
     boolean scrollToLast = true;
 
-    GetDataTask(boolean scrollToLast) {
+    GetDataTask(Context cxt, boolean scrollToLast) {
+      super(cxt);
       this.scrollToLast = scrollToLast;
     }
 
     @Override
-    protected void onPreExecute() {
-      super.onPreExecute();
-    }
-
-    @Override
-    protected Void doInBackground(Void... params) {
-      try {
-        String convid;
-        if (singleChat) {
-          convid = AVOSUtils.convid(ChatService.getPeerId(me), ChatService.getPeerId(chatUser));
-        } else {
-          convid = group.getGroupId();
-        }
-        msgs = DBMsg.getMsgs(dbHelper, convid, msgSize);
-        ChatService.cacheUserOrChatGroup(msgs);
-        res = true;
-      } catch (Exception e) {
-        e.printStackTrace();
-        res = false;
+    protected void doInBack() throws Exception {
+      String convid;
+      if (singleChat) {
+        convid = AVOSUtils.convid(ChatService.getPeerId(me), ChatService.getPeerId(chatUser));
+      } else {
+        convid = group.getGroupId();
       }
-      return null;
+      msgs = DBMsg.getMsgs(dbHelper, convid, msgSize);
+      ChatService.cacheUserOrChatGroup(msgs);
     }
 
     @Override
-    protected void onPostExecute(Void aVoid) {
-      ChatUtils.stopRefresh(xListView);
-      if (res) {
+    protected void onPost(Exception e) {
+      if (e == null) {
+        ChatUtils.stopRefresh(xListView);
         addMsgsAndRefresh(msgs, scrollToLast);
       } else {
-        Utils.toast(ctx, R.string.failedToGetData);
+        Utils.toast(R.string.failedToGetData);
       }
     }
   }
@@ -694,7 +678,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     if (singleChat) {
       ChatService.withUserToWatch(chatUser, false);
     }
-    Debug.stopMethodTracing();
     super.onDestroy();
   }
 

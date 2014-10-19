@@ -13,8 +13,6 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -358,8 +356,8 @@ public class PhotoUtil {
       .imageScaleType(ImageScaleType.EXACTLY)
       .bitmapConfig(Config.RGB_565)
       .resetViewBeforeLoading(true)// 设置图片在下载前是否重置，复位
-      //.displayer(new RoundedBitmapDisplayer(20))
-      //.displayer(new FadeInBitmapDisplayer(100))// 淡入
+          //.displayer(new RoundedBitmapDisplayer(20))
+          //.displayer(new FadeInBitmapDisplayer(100))// 淡入
       .build();
 
   public static DisplayImageOptions normalImageOptions = new DisplayImageOptions.Builder()
@@ -372,10 +370,9 @@ public class PhotoUtil {
       .imageScaleType(ImageScaleType.EXACTLY)
       .bitmapConfig(Config.RGB_565)
       .resetViewBeforeLoading(true)// 设置图片在下载前是否重置，复位
-      //.displayer(new RoundedBitmapDisplayer(20))
+          //.displayer(new RoundedBitmapDisplayer(20))
           //.displayer(new FadeInBitmapDisplayer(100))// 淡入
       .build();
-
 
   public static ImageLoaderConfiguration getImageLoaderConfig(Context context, File cacheDir) {
     return new ImageLoaderConfiguration.Builder(
@@ -392,6 +389,4 @@ public class PhotoUtil {
         .writeDebugLogs() // Remove for release app
         .build();
   }
-
-
 }
