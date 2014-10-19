@@ -252,7 +252,7 @@ public class ChatService {
     if (msg.getType() != Msg.TYPE_RESPONSE) {
       responseAndReceiveMsg(context, msg, listener, group);
     } else {
-      Logger.d("onResponseMessage "+msg.getContent());
+      Logger.d("onResponseMessage " + msg.getContent());
       DBMsg.updateStatusAndTimestamp(msg);
       MsgListener _listener = filterMsgListener(listener, msg, group);
       if (_listener != null) {
@@ -273,8 +273,12 @@ public class ChatService {
           String url = msg.getContent();
           Utils.downloadFileIfNotExists(url, file);
         }
-        String fromId = msg.getFromPeerId();
-        App.cacheUserIfNot(fromId);
+        if (group != null) {
+          GroupService.cacheChatGroupIfNone(group.getGroupId());
+        } else {
+          String fromId = msg.getFromPeerId();
+          UserService.cacheUserIfNone(fromId);
+        }
       }
 
       @Override
@@ -357,13 +361,13 @@ public class ChatService {
   }
 
   public static void resendMsg(Msg msg) {
-    Group group=null;
-    if(msg.isSingleChat()==false){
-      String groupId=msg.getConvid();
-      Session session=ChatService.getSession();
-      group=session.getGroup(groupId);
+    Group group = null;
+    if (msg.isSingleChat() == false) {
+      String groupId = msg.getConvid();
+      Session session = ChatService.getSession();
+      group = session.getGroup(groupId);
     }
-    sendMessage(group,msg);
-    DBMsg.updateStatus(msg,Msg.STATUS_SEND_START);
+    sendMessage(group, msg);
+    DBMsg.updateStatus(msg, Msg.STATUS_SEND_START);
   }
 }

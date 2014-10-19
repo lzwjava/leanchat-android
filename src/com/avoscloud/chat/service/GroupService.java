@@ -71,4 +71,10 @@ public class GroupService {
     App.registerChatGroupsCache(chatGroups);
     return chatGroups;
   }
+
+  public static void cacheChatGroupIfNone(String groupId) throws AVException {
+    if(App.lookupChatGroup(groupId)==null){
+      cacheChatGroups(Arrays.asList(groupId));
+    }
+  }
 }

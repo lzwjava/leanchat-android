@@ -152,4 +152,10 @@ public class UserService {
     user.save();
     Logger.d("after url =" + user.getAvatarUrl());
   }
+
+  public static void cacheUserIfNone(String userId) throws AVException {
+    if (App.lookupUser(userId) == null) {
+      App.registerUserCache(findUser(userId));
+    }
+  }
 }

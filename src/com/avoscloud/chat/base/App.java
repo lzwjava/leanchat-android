@@ -8,6 +8,7 @@ import com.avoscloud.chat.avobject.AddRequest;
 import com.avoscloud.chat.avobject.Avatar;
 import com.avoscloud.chat.avobject.ChatGroup;
 import com.avoscloud.chat.avobject.User;
+import com.avoscloud.chat.service.GroupService;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.activity.LoginActivity;
 import com.avoscloud.chat.util.Logger;
@@ -20,10 +21,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by lzw on 14-5-29.
@@ -127,12 +125,6 @@ public class App extends Application {
     }
   }
 
-  public static void cacheUserIfNot(String userId) throws AVException {
-    if (lookupUser(userId) == null) {
-      registerUserCache(UserService.findUser(userId));
-    }
-  }
-
   public List<User> getFriends() {
     return friends;
   }
@@ -140,4 +132,5 @@ public class App extends Application {
   public void setFriends(List<User> friends) {
     this.friends = friends;
   }
+
 }

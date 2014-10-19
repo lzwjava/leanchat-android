@@ -8,9 +8,6 @@ import com.avoscloud.chat.util.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by lzw on 14-10-11.
- */
 
 public class BaseCheckListAdapter<T> extends BaseListAdapter<T> {
   List<Boolean> checkStates=new ArrayList<Boolean>();
