@@ -70,12 +70,12 @@ public class UserService {
     List<User> users = findUsers(uncachedIds);
   }
 
-  public static List<User> findUsers(List<String> uncachedIds) throws AVException {
-    if (uncachedIds.size() <= 0) {
+  public static List<User> findUsers(List<String> userIds) throws AVException {
+    if (userIds.size() <= 0) {
       return new ArrayList<User>();
     }
     AVQuery<User> q = User.getQuery(User.class);
-    q.whereContainedIn(C.OBJECT_ID, uncachedIds);
+    q.whereContainedIn(C.OBJECT_ID, userIds);
     List<User> users = q.find();
     App.registerBatchUserCache(users);
     return users;

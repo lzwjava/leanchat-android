@@ -165,7 +165,7 @@ public class ChatService {
   }
 
   public static List<RecentMsg> getRecentMsgsAndCache() throws AVException {
-    List<Msg> msgs = DBMsg.getRecentMsgs();
+    List<Msg> msgs = DBMsg.getRecentMsgs(User.curUserId());
     cacheUserOrChatGroup(msgs);
     ArrayList<RecentMsg> recentMsgs = new ArrayList<RecentMsg>();
     for (Msg msg : msgs) {

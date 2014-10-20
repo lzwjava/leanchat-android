@@ -4,8 +4,10 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.avos.avoscloud.Group;
+import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.entity.Msg;
+import com.avoscloud.chat.service.ChatService;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,13 +27,12 @@ public class DBMsg {
   public static final String TYPE = "type";
   public static final String TO_PEER_ID = "toPeerId";
   public static final String SINGLE_CHAT = "singleChat";
-
-  public static String[] columns = {FROM_PEER_ID,
-      CONVID, TO_PEER_ID, CONTENT, TIMESTAMP, OBJECT_ID, STATUS, TYPE};
+  public static final String OWNER_ID = "ownerId";
 
   public static void createTable(SQLiteDatabase db) {
     db.execSQL("create table if not exists messages (id integer primary key, objectId varchar(63) unique," +
-        "fromPeerId varchar(255), convid varchar(255),toPeerId varchar(255), content varchar(1023)," +
+        "ownerId varchar(255),fromPeerId varchar(255), convid varchar(255),toPeerId varchar(255), " +
+        "content varchar(1023)," +
         " status integer,type integer,singleChat integer,timestamp varchar(63))");
   }
 
@@ -65,6 +66,7 @@ public class DBMsg {
           cv.put(SINGLE_CHAT, 0);
           cv.put(CONVID, group.getGroupId());
         }
+        cv.put(OWNER_ID, User.curUserId());
         cv.put(TYPE, msg.getType());
         cv.put(CONTENT, msg.getContent());
         db.insert(MESSAGES, null, cv);
@@ -116,11 +118,11 @@ public class DBMsg {
     return msg;
   }
 
-  public static List<Msg> getRecentMsgs() {
+  public static List<Msg> getRecentMsgs(String ownerId) {
     DBHelper dbHelper = new DBHelper(App.ctx, App.DB_NAME, App.DB_VER);
     SQLiteDatabase db = dbHelper.getReadableDatabase();
-    Cursor c = db.query(true, MESSAGES, null, null,
-        null, CONVID, null, TIMESTAMP + " desc", null);
+    Cursor c = db.query(true, MESSAGES, null, "ownerId=?",
+        new String[]{ownerId}, CONVID, null, TIMESTAMP + " desc", null);
     List<Msg> msgs = new ArrayList<Msg>();
     while (c.moveToNext()) {
       Msg msg = createMsgByCursor(c);
@@ -152,5 +154,4 @@ public class DBMsg {
     cv.put(STATUS, status);
     return updateMessage(msg.getObjectId(), cv);
   }
-
 }

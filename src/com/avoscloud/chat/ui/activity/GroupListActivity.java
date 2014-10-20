@@ -69,7 +69,6 @@ public class GroupListActivity extends BaseActivity implements GroupEventListene
   }
 
   private void refresh() {
-
     new SimpleNetTask(ctx) {
       List<ChatGroup> subChatGroups;
 

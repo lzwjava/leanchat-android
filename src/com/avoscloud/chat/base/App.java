@@ -8,6 +8,7 @@ import com.avoscloud.chat.avobject.AddRequest;
 import com.avoscloud.chat.avobject.Avatar;
 import com.avoscloud.chat.avobject.ChatGroup;
 import com.avoscloud.chat.avobject.User;
+import com.avoscloud.chat.service.ChatService;
 import com.avoscloud.chat.service.GroupService;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.activity.LoginActivity;
@@ -132,5 +133,4 @@ public class App extends Application {
   public void setFriends(List<User> friends) {
     this.friends = friends;
   }
-
 }
