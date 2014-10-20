@@ -7,17 +7,17 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.avoscloud.chat.avobject.User;
+import com.avoscloud.chat.entity.Conversation;
 import com.avoscloud.chat.service.EmotionService;
 import com.avoscloud.chat.ui.view.ViewHolder;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.ChatGroup;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.entity.Msg;
-import com.avoscloud.chat.entity.RecentMsg;
 import com.avoscloud.chat.util.PhotoUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-public class RecentMessageAdapter extends BaseListAdapter<RecentMsg> {
+public class RecentMessageAdapter extends BaseListAdapter<Conversation> {
 
   private LayoutInflater inflater;
   private Context ctx;
@@ -31,7 +31,7 @@ public class RecentMessageAdapter extends BaseListAdapter<RecentMsg> {
   @Override
   public View getView(int position, View convertView, ViewGroup parent) {
     // TODO Auto-generated method stub
-    final RecentMsg item = datas.get(position);
+    final Conversation item = datas.get(position);
     if (convertView == null) {
       convertView = inflater.inflate(R.layout.conversation_item, parent, false);
     }

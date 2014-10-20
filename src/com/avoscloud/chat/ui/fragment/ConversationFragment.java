@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import com.avoscloud.chat.adapter.RecentMessageAdapter;
-import com.avoscloud.chat.entity.RecentMsg;
+import com.avoscloud.chat.entity.Conversation;
 import com.avoscloud.chat.service.ChatService;
 import com.avoscloud.chat.ui.activity.ChatActivity;
 import com.avoscloud.chat.util.NetAsyncTask;
@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Created by lzw on 14-9-17.
  */
-public class RecentMessageFragment extends BaseFragment implements AdapterView.OnItemClickListener {
+public class ConversationFragment extends BaseFragment implements AdapterView.OnItemClickListener {
   ListView listview;
   RecentMessageAdapter adapter;
 
@@ -47,7 +47,7 @@ public class RecentMessageFragment extends BaseFragment implements AdapterView.O
   @Override
   public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
     // TODO Auto-generated method stub
-    RecentMsg recent = (RecentMsg) adapter.getItem(position);
+    Conversation recent = (Conversation) adapter.getItem(position);
     if (recent.msg.isSingleChat()) {
       ChatActivity.goUserChat(ctx, recent.toUser.getObjectId());
     } else {
@@ -79,7 +79,7 @@ public class RecentMessageFragment extends BaseFragment implements AdapterView.O
   }
 
   class GetDataTask extends NetAsyncTask {
-    List<RecentMsg> recentMsgs;
+    List<Conversation> conversations;
 
     GetDataTask(Context cxt, boolean openDialog) {
       super(cxt, openDialog);
@@ -87,7 +87,7 @@ public class RecentMessageFragment extends BaseFragment implements AdapterView.O
 
     @Override
     protected void doInBack() throws Exception {
-      recentMsgs = ChatService.getRecentMsgsAndCache();
+      conversations = ChatService.getConversationsAndCache();
     }
 
     @Override
@@ -95,7 +95,7 @@ public class RecentMessageFragment extends BaseFragment implements AdapterView.O
       if (e != null) {
         Utils.toast(ctx, R.string.pleaseCheckNetwork);
       } else {
-        adapter.setDatas(recentMsgs);
+        adapter.setDatas(conversations);
         adapter.notifyDataSetChanged();
       }
     }

@@ -10,12 +10,12 @@ import com.alibaba.fastjson.JSONException;
 import com.avos.avoscloud.*;
 import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.db.DBMsg;
+import com.avoscloud.chat.entity.Conversation;
 import com.avoscloud.chat.ui.activity.ChatActivity;
 import com.avoscloud.chat.util.Logger;
 import com.avoscloud.chat.avobject.ChatGroup;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.entity.Msg;
-import com.avoscloud.chat.entity.RecentMsg;
 import com.avoscloud.chat.util.AVOSUtils;
 import com.avoscloud.chat.util.NetAsyncTask;
 import com.avoscloud.chat.util.Utils;
@@ -164,22 +164,22 @@ public class ChatService {
     return msg;
   }
 
-  public static List<RecentMsg> getRecentMsgsAndCache() throws AVException {
+  public static List<Conversation> getConversationsAndCache() throws AVException {
     List<Msg> msgs = DBMsg.getRecentMsgs(User.curUserId());
     cacheUserOrChatGroup(msgs);
-    ArrayList<RecentMsg> recentMsgs = new ArrayList<RecentMsg>();
+    ArrayList<Conversation> conversations = new ArrayList<Conversation>();
     for (Msg msg : msgs) {
-      RecentMsg recentMsg = new RecentMsg();
+      Conversation conversation = new Conversation();
       if (msg.isSingleChat()) {
         String chatUserId = msg.getChatUserId();
-        recentMsg.toUser = App.lookupUser(chatUserId);
+        conversation.toUser = App.lookupUser(chatUserId);
       } else {
-        recentMsg.chatGroup = App.lookupChatGroup(msg.getConvid());
+        conversation.chatGroup = App.lookupChatGroup(msg.getConvid());
       }
-      recentMsg.msg = msg;
-      recentMsgs.add(recentMsg);
+      conversation.msg = msg;
+      conversations.add(conversation);
     }
-    return recentMsgs;
+    return conversations;
   }
 
   public static void cacheUserOrChatGroup(List<Msg> msgs) throws AVException {

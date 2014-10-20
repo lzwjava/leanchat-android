@@ -13,6 +13,7 @@ import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.service.AvatarService;
 import com.avoscloud.chat.service.ChatService;
 import com.avoscloud.chat.service.PrefDao;
+import com.avoscloud.chat.ui.fragment.ConversationFragment;
 import com.avoscloud.chat.ui.fragment.DiscoverFragment;
 import com.avoscloud.chat.util.ChatUtils;
 import com.avoscloud.chat.util.Logger;
@@ -23,7 +24,6 @@ import com.baidu.location.LocationClientOption;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.ui.fragment.ContactFragment;
 import com.avoscloud.chat.ui.fragment.MySpaceFragment;
-import com.avoscloud.chat.ui.fragment.RecentMessageFragment;
 
 /**
  * Created by lzw on 14-9-17.
@@ -33,7 +33,7 @@ public class MainActivity extends BaseActivity {
   View fragmentContainer;
   ContactFragment contactFragment;
   DiscoverFragment discoverFragment;
-  RecentMessageFragment recentMessageFragment;
+  ConversationFragment conversationFragment;
   MySpaceFragment mySpaceFragment;
   public static final int FRAGMENT_N = 4;
   Button[] tabs;
@@ -151,11 +151,11 @@ public class MainActivity extends BaseActivity {
     hideFragments(transaction);
     setNormalBackgrounds();
     if (id == R.id.btn_message) {
-      if (recentMessageFragment == null) {
-        recentMessageFragment = new RecentMessageFragment();
-        transaction.add(R.id.fragment_container, recentMessageFragment);
+      if (conversationFragment == null) {
+        conversationFragment = new ConversationFragment();
+        transaction.add(R.id.fragment_container, conversationFragment);
       }
-      transaction.show(recentMessageFragment);
+      transaction.show(conversationFragment);
     } else if (id == R.id.btn_contact) {
       if (contactFragment == null) {
         contactFragment = new ContactFragment();
@@ -198,7 +198,7 @@ public class MainActivity extends BaseActivity {
 
   private void hideFragments(FragmentTransaction transaction) {
     Fragment[] fragments = new Fragment[]{
-        recentMessageFragment, contactFragment,
+        conversationFragment, contactFragment,
         discoverFragment, mySpaceFragment
     };
     for (Fragment f : fragments) {
