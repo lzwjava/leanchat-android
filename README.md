@@ -1,5 +1,7 @@
 # LeanChat
 
+##[下载](http://fir.im/leanchat)
+
 用 AVOS Cloud 实时通信 SDK做的沟通工具  Leanchat
 
 ![img](https://raw.githubusercontent.com/lzwjava/plan/master/im361.png)
