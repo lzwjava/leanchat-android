@@ -12,7 +12,6 @@ import java.util.*;
  * Created by lzw on 14-8-7.
  */
 public class MsgReceiver extends AVMessageReceiver {
-  private final Queue<String> failedMessage = new LinkedList<String>();
   public static StatusListener statusListener;
   public static Set<String> onlines = new HashSet<String>();
   public static MsgListener msgListener;
@@ -30,10 +29,6 @@ public class MsgReceiver extends AVMessageReceiver {
   @Override
   public void onSessionResumed(Context context, Session session) {
     Logger.d("onSessionResumed");
-    while (!failedMessage.isEmpty()) {
-      String msg = failedMessage.poll();
-      session.sendMessage(msg, session.getAllPeers(), false);
-    }
   }
 
   @Override
