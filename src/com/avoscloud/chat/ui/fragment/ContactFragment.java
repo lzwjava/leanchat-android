@@ -1,5 +1,6 @@
 package com.avoscloud.chat.ui.fragment;
 
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,18 +18,17 @@ import com.avoscloud.chat.R;
 import com.avoscloud.chat.adapter.UserFriendAdapter;
 import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.App;
+import com.avoscloud.chat.service.AddRequestService;
+import com.avoscloud.chat.service.CloudService;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.activity.AddFriendActivity;
 import com.avoscloud.chat.ui.activity.ChatActivity;
 import com.avoscloud.chat.ui.activity.GroupListActivity;
 import com.avoscloud.chat.ui.activity.NewFriendActivity;
 import com.avoscloud.chat.ui.view.ClearEditText;
-import com.avoscloud.chat.ui.view.HeaderLayout;
-import com.avoscloud.chat.ui.view.dialog.DialogTips;
-import com.avoscloud.chat.util.*;
-import com.avoscloud.chat.service.AddRequestService;
-import com.avoscloud.chat.service.CloudService;
 import com.avoscloud.chat.ui.view.EnLetterView;
+import com.avoscloud.chat.ui.view.HeaderLayout;
+import com.avoscloud.chat.util.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -275,16 +275,13 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
   }
 
   public void showDeleteDialog(final User user) {
-    DialogTips dialog = new DialogTips(getActivity(), user.getUsername(),
-        App.ctx.getString(R.string.deleteContact),
-        App.ctx.getString(R.string.sure), true, true);
-    dialog.SetOnSuccessListener(new DialogInterface.OnClickListener() {
-      public void onClick(DialogInterface dialogInterface, int userId) {
-        deleteFriend(user);
-      }
-    });
-    dialog.show();
-    dialog = null;
+    new AlertDialog.Builder(ctx).setMessage(R.string.deleteContact)
+        .setPositiveButton(R.string.sure, new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+            deleteFriend(user);
+          }
+        }).setNegativeButton(R.string.cancel, null).show();
   }
 
   private void deleteFriend(final User user) {

@@ -1,19 +1,18 @@
 package com.avoscloud.chat.ui.activity;
 
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
+import com.avoscloud.chat.R;
 import com.avoscloud.chat.adapter.NewFriendAdapter;
 import com.avoscloud.chat.avobject.AddRequest;
 import com.avoscloud.chat.avobject.User;
-import com.avoscloud.chat.service.PrefDao;
-import com.avoscloud.chat.ui.view.dialog.DialogTips;
-import com.avoscloud.chat.R;
-import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.service.AddRequestService;
+import com.avoscloud.chat.service.PrefDao;
 import com.avoscloud.chat.util.NetAsyncTask;
 import com.avoscloud.chat.util.SimpleNetTask;
 import com.avoscloud.chat.util.Utils;
@@ -76,14 +75,13 @@ public class NewFriendActivity extends BaseActivity implements OnItemLongClickLi
   }
 
   public void showDeleteDialog(final int position, final AddRequest addRequest) {
-    DialogTips dialog = new DialogTips(this, addRequest.getFromUser().getUsername(),
-        App.ctx.getString(R.string.deleteFriendRequest), App.ctx.getString(R.string.ok), true, true);
-    dialog.SetOnSuccessListener(new DialogInterface.OnClickListener() {
-      public void onClick(DialogInterface dialogInterface, int userId) {
-        deleteAddRequest(position, addRequest);
-      }
-    });
-    dialog.show();
+    new AlertDialog.Builder(ctx).setMessage(R.string.deleteFriendRequest)
+        .setPositiveButton(R.string.sure, new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+            deleteAddRequest(position, addRequest);
+          }
+        }).setNegativeButton(R.string.cancel, null).show();
   }
 
   private void deleteAddRequest(final int position, final AddRequest addRequest) {
