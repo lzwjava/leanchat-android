@@ -388,7 +388,6 @@ public class PhotoUtil {
         context)
         .threadPoolSize(3).threadPriority(Thread.NORM_PRIORITY - 2)
             //.memoryCache(new WeakMemoryCache())
-        .memoryCacheExtraOptions(480, 800)
         .denyCacheImageMultipleSizesInMemory()
         .discCacheFileNameGenerator(new Md5FileNameGenerator())
             // 将保存的时候的URI名称用MD5 加密
