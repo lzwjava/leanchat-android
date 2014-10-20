@@ -340,6 +340,15 @@ public class PhotoUtil {
       newBitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream);
     } catch (FileNotFoundException e) {
       e.printStackTrace();
+    } finally {
+      try {
+        if (outputStream != null) {
+          outputStream.close();
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+
     }
     recycle(newBitmap);
     recycle(bitmap);
