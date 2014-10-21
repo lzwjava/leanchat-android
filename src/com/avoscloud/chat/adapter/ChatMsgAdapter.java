@@ -144,7 +144,7 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
           statusSendStart.setVisibility(View.VISIBLE);
           break;
       }
-      if(ChatActivity.singleChat==false){
+      if (ChatActivity.singleChat == false) {
         statusSendSucceed.setVisibility(View.GONE);
       }
     }

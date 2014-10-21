@@ -22,6 +22,8 @@ public class Msg {
   public static final int STATUS_SEND_SUCCEED = 1;
   public static final int STATUS_SEND_RECEIVED = 2;
   public static final int STATUS_SEND_FAILED = 3;
+  public static final int STATUS_HAVE_READ = 4;
+
   public static final int TYPE_TEXT = 0;
   public static final int TYPE_RESPONSE = 1;
   public static final int TYPE_IMAGE = 2;
@@ -122,6 +124,8 @@ public class Msg {
       return App.ctx.getString(R.string.sent);
     } else if (status == STATUS_SEND_FAILED) {
       return App.ctx.getString(R.string.failed);
+    } else if (status == STATUS_HAVE_READ) {
+      return App.ctx.getString(R.string.haveRead);
     } else {
       throw new IllegalArgumentException("unknown status");
     }

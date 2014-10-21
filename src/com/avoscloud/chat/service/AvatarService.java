@@ -21,6 +21,7 @@ public class AvatarService {
     q.setLimit(1);
     q.orderByAscending("createdAt");
     q.skip(pos);
+    q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
     return q.getFirst().getFile();
   }
 }

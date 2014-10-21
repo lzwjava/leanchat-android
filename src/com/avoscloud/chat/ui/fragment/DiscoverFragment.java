@@ -1,6 +1,5 @@
 package com.avoscloud.chat.ui.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +30,7 @@ public class DiscoverFragment extends BaseFragment
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.discover_fragment, null);
+    return inflater.inflate(R.layout.discover_fragment, container,false);
   }
 
   @Override

@@ -20,25 +20,10 @@ import java.util.List;
 public class UserService {
   public static ImageLoader imageLoader = ImageLoader.getInstance();
 
-  public static AVUser getAVUser(String username) throws AVException {
-    AVQuery<AVUser> q = getUserQuery(username);
-    List<AVUser> users = q.find();
-    if (users != null && users.isEmpty() == false) {
-      return users.get(0);
-    }
-    return null;
-  }
-
   public static User findUser(String id) throws AVException {
     AVQuery<User> q = User.getQuery(User.class);
+    q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
     return q.get(id);
-  }
-
-  public static AVQuery<AVUser> getUserQuery(String username) {
-    AVQuery<AVUser> q = AVObject.getQuery(AVUser.class);
-    q.whereEqualTo(User.USERNAME, username);
-    q.setLimit(1);
-    return q;
   }
 
   public static List<User> findFriends(boolean useCache) throws AVException {
@@ -67,7 +52,10 @@ public class UserService {
   }
 
   public static void cacheUser(List<String> uncachedIds) throws AVException {
-    List<User> users = findUsers(uncachedIds);
+    if (uncachedIds.size() == 0) {
+      return;
+    }
+    findUsers(uncachedIds);
   }
 
   public static List<User> findUsers(List<String> userIds) throws AVException {
@@ -76,6 +64,7 @@ public class UserService {
     }
     AVQuery<User> q = User.getQuery(User.class);
     q.whereContainedIn(C.OBJECT_ID, userIds);
+    q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
     List<User> users = q.find();
     App.registerBatchUserCache(users);
     return users;
@@ -90,6 +79,7 @@ public class UserService {
     List<String> friendIds = getFriendIds();
     friendIds.add(user.getObjectId());
     q.whereNotContainedIn(C.OBJECT_ID, friendIds);
+    q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
     q.findInBackground(findCallback);
   }
 
@@ -114,6 +104,7 @@ public class UserService {
     q.whereNotEqualTo(C.OBJECT_ID, user.getObjectId());
     q.whereNear(User.LOCATION, geoPoint);
     q.skip(skip);
+    q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
     q.limit(C.PAGE_SIZE);
     List<User> users = q.find();
     App.registerBatchUserCache(users);
@@ -144,9 +135,14 @@ public class UserService {
 
   public static void saveAvatar(String path) throws IOException, AVException {
     User user = User.curUser();
+    if (user.getLocation() == null) {
+      PrefDao prefDao = new PrefDao(App.ctx, user.getObjectId());
+      user.setLocation(prefDao.getLocation());
+    }
     final AVFile file = AVFile.withAbsoluteLocalPath(user.getUsername(), path);
     file.save();
     user.setAvatar(file);
+
     user.save();
     user.fetch();
   }

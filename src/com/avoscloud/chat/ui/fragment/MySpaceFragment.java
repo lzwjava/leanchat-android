@@ -19,6 +19,7 @@ import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.service.ChatService;
+import com.avoscloud.chat.service.UpdateService;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.activity.NotifyPrefActivity;
 import com.avoscloud.chat.util.*;
@@ -36,13 +37,13 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
   TextView usernameView, sexView;
   ImageView avatarView;
   View usernameLayout, avatarLayout, logoutLayout,
-      sexLayout, notifyLayout;
+      sexLayout, notifyLayout, updateLayout;
   String[] sexs = new String[]{App.ctx.getString(R.string.male),
       App.ctx.getString(R.string.female)};
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.my_space_fragment, null);
+    return inflater.inflate(R.layout.my_space_fragment, container, false);
   }
 
   @Override
@@ -69,11 +70,13 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
     sexLayout = ctx.findViewById(R.id.sexLayout);
     notifyLayout = ctx.findViewById(R.id.notifyLayout);
     sexView = (TextView) ctx.findViewById(R.id.sex);
+    updateLayout = ctx.findViewById(R.id.updateLayout);
 
     avatarLayout.setOnClickListener(this);
     logoutLayout.setOnClickListener(this);
     sexLayout.setOnClickListener(this);
     notifyLayout.setOnClickListener(this);
+    updateLayout.setOnClickListener(this);
   }
 
   @Override
@@ -86,12 +89,15 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
     } else if (id == R.id.logoutLayout) {
       ChatService.closeSession();
       User.logOut();
-      User.curUser=null;
+      User.curUser = null;
       getActivity().finish();
     } else if (id == R.id.sexLayout) {
       showSexChooseDialog();
     } else if (id == R.id.notifyLayout) {
       Utils.goActivity(ctx, NotifyPrefActivity.class);
+    } else if (id == R.id.updateLayout) {
+      UpdateService updateService = UpdateService.getInstance(ctx);
+      updateService.showSureUpdateDialog();
     }
   }
 

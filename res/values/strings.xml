@@ -16,6 +16,7 @@
     <string name="updateLog">更新日志</string>
     <string name="installNewVersion">安装新版本</string>
     <string name="laterNotify">稍后提醒</string>
+    <string name="haveNewVersion">版本更新</string>
     <string name="retrievingData">获取数据中...</string>
     <string name="cancel">取消</string>
     <string name="uploadSucceedThankyou">上传成功，谢谢您</string>
@@ -251,4 +252,6 @@
     <string name="pull_to_refresh">下拉可以刷新</string>
     <string name="release_to_refresh">释放立即刷新</string>
     <string name="refreshing">正在刷新…</string>
+    <string name="checkUpdate">检查更新</string>
+    <string name="haveRead">已阅读</string>
 </resources>

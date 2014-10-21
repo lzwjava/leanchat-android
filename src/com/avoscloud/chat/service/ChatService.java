@@ -219,7 +219,9 @@ public class ChatService {
     } else {
       intent = ChatActivity.getGroupChatIntent(context, group.getGroupId());
     }
-    PendingIntent pend = PendingIntent.getActivity(context, 0,
+    //why Random().nextInt()
+    //http://stackoverflow.com/questions/13838313/android-onnewintent-always-receives-same-intent
+    PendingIntent pend = PendingIntent.getActivity(context, new Random().nextInt(),
         intent, 0);
     Notification.Builder builder = new Notification.Builder(context);
     CharSequence notifyContent = msg.getNotifyContent();
@@ -369,5 +371,10 @@ public class ChatService {
     }
     sendMessage(group, msg);
     DBMsg.updateStatus(msg, Msg.STATUS_SEND_START);
+    msg.setStatus(Msg.STATUS_SEND_START);
+  }
+
+  public static void cancelNotification(Context ctx) {
+    Utils.cancelNotification(ctx, REPLY_NOTIFY_ID);
   }
 }

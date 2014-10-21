@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -50,7 +49,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   private ChatMsgAdapter adapter;
   private List<Msg> msgs = new ArrayList<Msg>();
   public static ChatActivity instance;
-  User me;
+  User curUser;
   DBHelper dbHelper;
   private Activity ctx;
 
@@ -94,6 +93,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     initListView();
     setSoftInputMode();
     loadNewMsg(true);
+    ChatService.cancelNotification(ctx);
   }
 
   @Override
@@ -275,7 +275,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   }
 
   public void initData(Intent intent) {
-    me = User.curUser();
+    curUser = User.curUser();
     dbHelper = new DBHelper(ctx, App.DB_NAME, App.DB_VER);
     singleChat = intent.getBooleanExtra(SINGLE_CHAT, true);
     msgSize = PAGE_SIZE;
@@ -315,11 +315,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   @Override
   public void onMessage(Msg msg) {
     Logger.d("onMessage on ChatActivity " + msg.getContent());
-    if (msg.getType() == Msg.TYPE_RESPONSE) {
-      loadNewMsg(false);
-    } else {
-      addMsgAndScrollToLast(msg);
-    }
+    loadNewMsg(false);
   }
 
   @Override
@@ -339,23 +335,26 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   @Override
   public void onMessageFailure(Msg failMsg) {
     Logger.d("onMessageFailure on Chat Activity " + failMsg.getContent());
-    Msg msg = adapter.getItem(failMsg.getObjectId());
+    loadNewMsg(false);
+
+    /*Msg msg = adapter.getItem(failMsg.getObjectId());
     if (msg != null) {
       msg.setStatus(Msg.STATUS_SEND_FAILED);
       adapter.notifyDataSetChanged();
-    }
+    }*/
   }
 
   @Override
   public void onMessageSent(Msg sentMsg) {
     Logger.d("onMessageSent on ChatActivity " + sentMsg.getContent());
-    Msg msg = adapter.getItem(sentMsg.getObjectId());
+    loadNewMsg(false);
+    /*Msg msg = adapter.getItem(sentMsg.getObjectId());
     if (msg != null) {
       msg.setStatus(Msg.STATUS_SEND_SUCCEED);
       adapter.notifyDataSetChanged();
     } else {
       Logger.d("cannot find message");
-    }
+    }*/
   }
 
   public void setViewStatusByMsg(Msg msg) {
@@ -421,7 +420,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     protected void doInBack() throws Exception {
       String convid;
       if (singleChat) {
-        convid = AVOSUtils.convid(ChatService.getPeerId(me), ChatService.getPeerId(chatUser));
+        convid = AVOSUtils.convid(ChatService.getPeerId(curUser), ChatService.getPeerId(chatUser));
       } else {
         convid = group.getGroupId();
       }

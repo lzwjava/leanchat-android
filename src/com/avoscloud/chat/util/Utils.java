@@ -375,9 +375,9 @@ public class Utils {
     }
   }
 
-  public static AlertDialog.Builder getBaseDialogBuilder(Activity cxt) {
-    cxt = modifyDialogContext(cxt);
-    return new AlertDialog.Builder(cxt).setTitle(R.string.tips).setIcon(R.drawable.icon_info_2);
+  public static AlertDialog.Builder getBaseDialogBuilder(Activity ctx) {
+    ctx = modifyDialogContext(ctx);
+    return new AlertDialog.Builder(ctx).setTitle(R.string.tips).setIcon(R.drawable.icon_info_2);
   }
 
   public static String getStrByRawId(Context ctx, int id) throws UnsupportedEncodingException {
