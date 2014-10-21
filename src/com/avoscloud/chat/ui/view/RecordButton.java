@@ -10,10 +10,12 @@ import android.os.Message;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
@@ -24,6 +26,25 @@ import java.io.IOException;
 public class RecordButton extends Button {
   public static final int BACK_RECORDING = R.drawable.chat_voice_bg_pressed;
   public static final int BACK_IDLE = R.drawable.chat_voice_bg;
+  public static final int SLIDE_UP_TO_CANCEL = 0;
+  public static final int RELEASE_TO_CANCEL = 1;
+  private TextView textView;
+  private String outputPath = null;
+  private RecordEventListener finishedListener;
+  private static final int MIN_INTERVAL_TIME = 1000;// 2s
+  private long startTime;
+  private Dialog recordIndicator;
+  private static int[] recordImageIds = {R.drawable.chat_icon_voice0,
+      R.drawable.chat_icon_voice1, R.drawable.chat_icon_voice2,
+      R.drawable.chat_icon_voice3, R.drawable.chat_icon_voice4,
+      R.drawable.chat_icon_voice5};
+
+  private View view;
+  private MediaRecorder recorder;
+  private ObtainDecibelThread thread;
+  private Handler volumeHandler;
+  private ImageView imageView;
+  private int status;
 
   public RecordButton(Context context) {
     super(context);
@@ -48,63 +69,72 @@ public class RecordButton extends Button {
     finishedListener = listener;
   }
 
-  private String outputPath = null;
-
-  private RecordEventListener finishedListener;
-
-  private static final int MIN_INTERVAL_TIME = 1000;// 2s
-  private long startTime;
-
-  private Dialog recordIndicator;
-
-  private static int[] res = {R.drawable.mic_2, R.drawable.mic_3,
-      R.drawable.mic_4, R.drawable.mic_5};
-  private static ImageView view;
-  private MediaRecorder recorder;
-  private ObtainDecibelThread thread;
-  private Handler volumeHandler;
-
   private void init() {
     volumeHandler = new ShowVolumeHandler();
     setBackgroundResource(BACK_IDLE);
+    initRecordDialog();
   }
 
   @Override
   public boolean onTouchEvent(MotionEvent event) {
-
     if (outputPath == null)
       return false;
     int action = event.getAction();
     switch (action) {
       case MotionEvent.ACTION_DOWN:
-        initDialogAndStartRecord();
+        startRecord();
         break;
       case MotionEvent.ACTION_UP:
-        finishRecord();
+        if (status == RELEASE_TO_CANCEL) {
+          cancelRecord();
+        } else {
+          finishRecord();
+        }
         break;
-      case MotionEvent.ACTION_CANCEL:// 褰撴墜鎸囩Щ鍔ㄥ埌view澶栭潰锛屼細cancel
+      case MotionEvent.ACTION_MOVE:
+        if (event.getY() < 0) {
+          status = RELEASE_TO_CANCEL;
+        } else {
+          status = SLIDE_UP_TO_CANCEL;
+        }
+        setTextViewByStatus();
+        break;
+      case MotionEvent.ACTION_CANCEL:
         cancelRecord();
         break;
     }
     return true;
   }
 
-  private void initDialogAndStartRecord() {
+  private void setTextViewByStatus() {
+    if (status == RELEASE_TO_CANCEL) {
+      textView.setText(R.string.releaseToCancel);
+    } else if (status == SLIDE_UP_TO_CANCEL) {
+      textView.setText(R.string.slideUpToCancel);
+    }
+  }
 
+  private void startRecord() {
     startTime = System.currentTimeMillis();
+    setBackgroundResource(BACK_RECORDING);
+    startRecording();
+    recordIndicator.show();
+  }
+
+  private void initRecordDialog() {
     recordIndicator = new Dialog(getContext(),
         R.style.like_toast_dialog_style);
-    view = new ImageView(getContext());
-    view.setImageResource(R.drawable.mic_2);
+
+    view = inflate(getContext(), R.layout.record_layout, null);
+    imageView = (ImageView) view.findViewById(R.id.imageView);
+    textView = (TextView) view.findViewById(R.id.textView);
     recordIndicator.setContentView(view, new LayoutParams(
         ViewGroup.LayoutParams.MATCH_PARENT,
         ViewGroup.LayoutParams.MATCH_PARENT));
     recordIndicator.setOnDismissListener(onDismiss);
+
     LayoutParams lp = recordIndicator.getWindow().getAttributes();
     lp.gravity = Gravity.CENTER;
-    setBackgroundResource(BACK_RECORDING);
-    startRecording();
-    recordIndicator.show();
   }
 
   private void finishRecord() {
@@ -129,11 +159,12 @@ public class RecordButton extends Button {
   private void cancelRecord() {
     stopRecording();
     recordIndicator.dismiss();
-
     Toast.makeText(getContext(), App.ctx.getString(R.string.cancelRecord),
         Toast.LENGTH_SHORT).show();
     File file = new File(outputPath);
-    file.delete();
+    if (file.exists()) {
+      file.delete();
+    }
   }
 
   private void startRecording() {
@@ -171,7 +202,6 @@ public class RecordButton extends Button {
   }
 
   private class ObtainDecibelThread extends Thread {
-
     private volatile boolean running = true;
 
     public void exit() {
@@ -192,14 +222,10 @@ public class RecordButton extends Button {
         int x = recorder.getMaxAmplitude();
         if (x != 0) {
           int f = (int) (10 * Math.log(x) / Math.log(10));
-          if (f < 26)
-            volumeHandler.sendEmptyMessage(0);
-          else if (f < 32)
-            volumeHandler.sendEmptyMessage(1);
-          else if (f < 38)
-            volumeHandler.sendEmptyMessage(2);
-          else
-            volumeHandler.sendEmptyMessage(3);
+          int index = (f - 20) / 4;
+          if (index < 0) index = 0;
+          if (index > 5) index = 5;
+          volumeHandler.sendEmptyMessage(index);
         }
       }
     }
@@ -214,10 +240,11 @@ public class RecordButton extends Button {
     }
   };
 
-  static class ShowVolumeHandler extends Handler {
+  class ShowVolumeHandler extends Handler {
     @Override
     public void handleMessage(Message msg) {
-      view.setImageResource(res[msg.what]);
+      imageView.setImageResource(recordImageIds[msg.what]);
+      //imageView.setImageResource(recordImageIds[5]);
     }
   }
 

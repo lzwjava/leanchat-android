@@ -10,7 +10,7 @@ import android.os.AsyncTask;
  */
 public abstract class NetAsyncTask extends AsyncTask<Void, Void, Void> {
   ProgressDialog dialog;
-  public Context ctx;
+  protected Context ctx;
   boolean openDialog = true;
   Exception exception;
 

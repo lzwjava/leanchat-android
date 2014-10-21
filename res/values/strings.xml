@@ -254,4 +254,6 @@
     <string name="refreshing">正在刷新…</string>
     <string name="checkUpdate">检查更新</string>
     <string name="haveRead">已阅读</string>
+    <string name="slideUpToCancel">手指上滑，取消发送</string>
+    <string name="releaseToCancel">松开手指，取消录音</string>
 </resources>

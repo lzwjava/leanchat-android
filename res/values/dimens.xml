@@ -30,7 +30,7 @@
     <dimen name="sendBtnSize">30dp</dimen>
 
     <dimen name="playBtnWidth">30dp</dimen>
-    <dimen name="chatBottomBtnSize">25dp</dimen>
+    <dimen name="chatBottomBtnSize">30dp</dimen>
 
     <dimen name="common_list_item_height">60dp</dimen>
     <dimen name="message_top_height">60dip</dimen>
@@ -67,4 +67,5 @@
     <dimen name="group_dialog_text_pad">6dp</dimen>
     <dimen name="group_dialog_layout_pad">5dp</dimen>
     <dimen name="group_detail_text_height">80dp</dimen>
+    <dimen name="chatBottomBtnMargin">5dp</dimen>
 </resources>
