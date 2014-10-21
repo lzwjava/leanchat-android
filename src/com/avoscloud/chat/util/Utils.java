@@ -358,7 +358,6 @@ public class Utils {
   }
 
   public static void showInfoDialog(Activity cxt, String msg, String title) {
-    cxt = modifyDialogContext(cxt);
     AlertDialog.Builder builder = getBaseDialogBuilder(cxt);
     builder.setMessage(msg)
         .setPositiveButton(cxt.getString(R.string.right), null)
@@ -376,7 +375,6 @@ public class Utils {
   }
 
   public static AlertDialog.Builder getBaseDialogBuilder(Activity ctx) {
-    ctx = modifyDialogContext(ctx);
     return new AlertDialog.Builder(ctx).setTitle(R.string.tips).setIcon(R.drawable.icon_info_2);
   }
 
@@ -580,7 +578,7 @@ public class Utils {
   }
 
   public static ProgressDialog showSpinnerDialog(Activity activity) {
-    activity = modifyDialogContext(activity);
+    //activity = modifyDialogContext(activity);
     ProgressDialog dialog = new ProgressDialog(activity);
     dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
     dialog.setCancelable(true);
@@ -590,7 +588,7 @@ public class Utils {
   }
 
   public static ProgressDialog showHorizontalDialog(Activity activity) {
-    activity = modifyDialogContext(activity);
+    //activity = modifyDialogContext(activity);
     ProgressDialog dialog = new ProgressDialog(activity);
     dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
     dialog.setCancelable(true);
