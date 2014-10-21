@@ -253,4 +253,5 @@
     <string name="release_to_refresh">释放立即刷新</string>
     <string name="refreshing">正在刷新…</string>
     <string name="checkUpdate">检查更新</string>
+    <string name="haveRead">已阅读</string>
 </resources>

@@ -5,6 +5,7 @@ import com.avoscloud.chat.avobject.ChatGroup;
 import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.base.C;
+import com.avoscloud.chat.util.ChatUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,6 +21,7 @@ public class GroupService {
     AVQuery<ChatGroup> q = AVObject.getQuery(ChatGroup.class);
     q.whereEqualTo(ChatGroup.M, user.getObjectId());
     q.include(ChatGroup.OWNER);
+    q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
     return q.find();
   }
 
@@ -60,6 +62,9 @@ public class GroupService {
   }
 
   public static void cacheChatGroups(List<String> ids) throws AVException {
+    if (ids.size() == 0) {
+      return;
+    }
     findChatGroups(ids);
   }
 
@@ -67,13 +72,14 @@ public class GroupService {
     AVQuery<ChatGroup> q = AVObject.getQuery(ChatGroup.class);
     q.whereContainedIn(C.OBJECT_ID, ids);
     q.include(ChatGroup.OWNER);
+    q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
     List<ChatGroup> chatGroups = q.find();
     App.registerChatGroupsCache(chatGroups);
     return chatGroups;
   }
 
   public static void cacheChatGroupIfNone(String groupId) throws AVException {
-    if(App.lookupChatGroup(groupId)==null){
+    if (App.lookupChatGroup(groupId) == null) {
       cacheChatGroups(Arrays.asList(groupId));
     }
   }

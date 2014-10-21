@@ -31,11 +31,6 @@ public class User extends AVUser {
   public static User curUser() {
     if (curUser == null) {
       curUser = getCurrentUser(User.class);
-      //workaround
-      if (curUser != null && curUser.getLocation() == null) {
-        PrefDao prefDao = new PrefDao(App.ctx, curUser.getObjectId());
-        curUser.setLocation(prefDao.getLocation());
-      }
     }
     return curUser;
     /*AVUser avUser = getCurrentUser(User.class);

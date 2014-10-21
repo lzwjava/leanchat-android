@@ -34,11 +34,13 @@ public class AddRequestService {
     q.whereEqualTo(AddRequest.FROM_USER, fromUser);
     q.whereEqualTo(AddRequest.TO_USER, toUser);
     q.whereEqualTo(AddRequest.STATUS, AddRequest.STATUS_WAIT);
+    q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
     return q.count() > 0;
   }
 
   public static int countAddRequests() throws AVException {
     AVQuery<AddRequest> q = AVObject.getQuery(AddRequest.class);
+    q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
     q.whereEqualTo(AddRequest.TO_USER, User.curUser());
     return q.count();
   }
@@ -49,6 +51,7 @@ public class AddRequestService {
     q.include(AddRequest.FROM_USER);
     q.whereEqualTo(AddRequest.TO_USER, user);
     q.orderByDescending(C.CREATED_AT);
+    q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
     return q.find();
   }
 

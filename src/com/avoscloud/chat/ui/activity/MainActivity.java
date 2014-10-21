@@ -10,6 +10,7 @@ import android.widget.Button;
 import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVGeoPoint;
 import com.avoscloud.chat.avobject.User;
+import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.service.AvatarService;
 import com.avoscloud.chat.service.ChatService;
 import com.avoscloud.chat.service.PrefDao;
@@ -65,6 +66,7 @@ public class MainActivity extends BaseActivity {
     //UpdateService.createUpdateInfoInBackground();
     UpdateService updateService = UpdateService.getInstance(ctx);
     updateService.checkUpdate();
+    App.registerUserCache(User.curUser());
   }
 
   private void testSavaAvatar() {
