@@ -62,8 +62,7 @@
         android:label="@string/app_name"
         android:icon="@drawable/icon"
         android:theme="@android:style/Theme.Holo.Light.NoActionBar"
-        android:name=".base.App"
-        >
+        android:name=".base.App">
 
         <activity
             android:name=".ui.activity.ChatActivity"

@@ -20,7 +20,7 @@ public abstract class SimpleNetTask extends NetAsyncTask {
   protected void onPost(Exception e) {
     if (e != null) {
       e.printStackTrace();
-      Utils.toast(cxt, R.string.pleaseCheckNetwork);
+      Utils.toast(ctx, R.string.pleaseCheckNetwork);
     } else {
       onSucceed();
     }

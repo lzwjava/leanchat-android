@@ -10,16 +10,16 @@ import android.os.AsyncTask;
  */
 public abstract class NetAsyncTask extends AsyncTask<Void, Void, Void> {
   ProgressDialog dialog;
-  public Context cxt;
+  public Context ctx;
   boolean openDialog = true;
   Exception exception;
 
-  protected NetAsyncTask(Context cxt) {
-    this.cxt = cxt;
+  protected NetAsyncTask(Context ctx) {
+    this.ctx = ctx;
   }
 
-  protected NetAsyncTask(Context cxt, boolean openDialog) {
-    this.cxt = cxt;
+  protected NetAsyncTask(Context ctx, boolean openDialog) {
+    this.ctx = ctx;
     this.openDialog = openDialog;
   }
 
@@ -36,7 +36,7 @@ public abstract class NetAsyncTask extends AsyncTask<Void, Void, Void> {
   protected void onPreExecute() {
     super.onPreExecute();
     if (openDialog) {
-      dialog = Utils.showSpinnerDialog((Activity) cxt);
+      dialog = Utils.showSpinnerDialog((Activity) ctx);
     }
   }
 

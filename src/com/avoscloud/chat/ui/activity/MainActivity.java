@@ -13,6 +13,7 @@ import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.service.AvatarService;
 import com.avoscloud.chat.service.ChatService;
 import com.avoscloud.chat.service.PrefDao;
+import com.avoscloud.chat.service.UpdateService;
 import com.avoscloud.chat.ui.fragment.ConversationFragment;
 import com.avoscloud.chat.ui.fragment.DiscoverFragment;
 import com.avoscloud.chat.util.ChatUtils;
@@ -61,6 +62,9 @@ public class MainActivity extends BaseActivity {
     //discoverBtn.performClick();
     initBaiduLocClient();
     //testSavaAvatar();
+    //UpdateService.createUpdateInfoInBackground();
+    UpdateService updateService = UpdateService.getInstance(ctx);
+    updateService.checkUpdate();
   }
 
   private void testSavaAvatar() {
