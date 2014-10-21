@@ -26,7 +26,7 @@ public class ConversationFragment extends BaseFragment implements AdapterView.On
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.message_fragment, null);
+    return inflater.inflate(R.layout.message_fragment, container,false);
   }
 
   @Override
