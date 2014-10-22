@@ -46,6 +46,13 @@
 * 修复点击顶部栏通知进入错误的聊天室的bug
 * 可能修复fragment ui重叠的bug
 
+## 发布步骤
+* 将 AndroidManifest.xml 文件的 百度map key改为 生产环境的key
+* 改版本号、版本名字
+* 将App.java 中的debug设为false，打开发送崩溃日志的选项
+* 上传apk文件到fir.im/leanchat，以及后台数据库（用于自动更新）
+* 写更新日志
+
 ## Summary
 
 总的来说，四步加聊天功能：
