@@ -36,6 +36,16 @@
 *  建表`AddRequest`
 *  [申请百度地图key](http://developer.baidu.com/map)，替换掉AndroidMenifest.xml 中的baidu key
 
+## 更新日志
+
+###v1.1.2
+* 新的一套录音、音量显示UI
+* 增加检查更新功能
+* 限制了只能竖屏
+* 取消自定义的dialog
+* 修复点击顶部栏通知进入错误的聊天室的bug
+* 可能修复fragment ui重叠的bug
+
 ## Summary
 
 总的来说，四步加聊天功能：
