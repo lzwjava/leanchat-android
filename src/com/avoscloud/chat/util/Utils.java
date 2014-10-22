@@ -595,7 +595,9 @@ public class Utils {
     ProgressDialog dialog = new ProgressDialog(activity);
     dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
     dialog.setCancelable(true);
-    dialog.show();
+    if(activity.isFinishing()==false){
+      dialog.show();
+    }
     return dialog;
   }
 
