@@ -579,11 +579,14 @@ public class Utils {
 
   public static ProgressDialog showSpinnerDialog(Activity activity) {
     //activity = modifyDialogContext(activity);
+
     ProgressDialog dialog = new ProgressDialog(activity);
     dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
     dialog.setCancelable(true);
     dialog.setMessage(App.ctx.getString(R.string.hardLoading));
-    dialog.show();
+    if (activity.isFinishing()==false) {
+      dialog.show();
+    }
     return dialog;
   }
 

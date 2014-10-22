@@ -21,8 +21,6 @@
 * 建群
 * 退群
 
-
-
 ## 依赖
 
 用到的依赖包，都在[libs](https://github.com/avoscloud/Adventure/tree/master/libs)中：
