@@ -31,7 +31,7 @@ import com.avoscloud.chat.ui.fragment.MySpaceFragment;
  * Created by lzw on 14-9-17.
  */
 public class MainActivity extends BaseActivity {
-  Button messageBtn, contactBtn, discoverBtn, mySpaceBtn;
+  Button conversationBtn, contactBtn, discoverBtn, mySpaceBtn;
   View fragmentContainer;
   ContactFragment contactFragment;
   DiscoverFragment discoverFragment;
@@ -58,8 +58,8 @@ public class MainActivity extends BaseActivity {
     init();
 
     //mySpaceBtn.performClick();
-    contactBtn.performClick();
-    //messageBtn.performClick();
+    //contactBtn.performClick();
+    conversationBtn.performClick();
     //discoverBtn.performClick();
     initBaiduLocClient();
     //testSavaAvatar();
@@ -137,11 +137,11 @@ public class MainActivity extends BaseActivity {
   }
 
   private void init() {
-    tabs = new Button[]{messageBtn, contactBtn, discoverBtn, mySpaceBtn};
+    tabs = new Button[]{conversationBtn, contactBtn, discoverBtn, mySpaceBtn};
   }
 
   private void findView() {
-    messageBtn = (Button) findViewById(R.id.btn_message);
+    conversationBtn = (Button) findViewById(R.id.btn_message);
     contactBtn = (Button) findViewById(R.id.btn_contact);
     discoverBtn = (Button) findViewById(R.id.btn_discover);
     mySpaceBtn = (Button) findViewById(R.id.btn_my_space);

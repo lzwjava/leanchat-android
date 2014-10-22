@@ -159,14 +159,14 @@
             android:enabled="true"
             android:process=":remote" />
 
-        <meta-data
+        <!--<meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="fnWUFPMrQfBv9nzkzFOY8ILT" />
+            android:value="fnWUFPMrQfBv9nzkzFOY8ILT" />-->
 
 
         <!--prod-->
-        <!--<meta-data
+        <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="PUT3u7lIPY49Ck0bqceFA3ue" />-->
+            android:value="PUT3u7lIPY49Ck0bqceFA3ue" />
     </application>
 </manifest>

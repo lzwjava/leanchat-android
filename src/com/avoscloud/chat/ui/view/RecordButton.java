@@ -106,10 +106,16 @@ public class RecordButton extends Button {
     return true;
   }
 
+  public int getColor(int id) {
+    return getContext().getResources().getColor(id);
+  }
+
   private void setTextViewByStatus() {
     if (status == RELEASE_TO_CANCEL) {
+      textView.setTextColor(getColor(R.color.red));
       textView.setText(R.string.releaseToCancel);
     } else if (status == SLIDE_UP_TO_CANCEL) {
+      textView.setTextColor(getColor(R.color.white));
       textView.setText(R.string.slideUpToCancel);
     }
   }
@@ -129,8 +135,8 @@ public class RecordButton extends Button {
     imageView = (ImageView) view.findViewById(R.id.imageView);
     textView = (TextView) view.findViewById(R.id.textView);
     recordIndicator.setContentView(view, new LayoutParams(
-        ViewGroup.LayoutParams.MATCH_PARENT,
-        ViewGroup.LayoutParams.MATCH_PARENT));
+        ViewGroup.LayoutParams.WRAP_CONTENT,
+        ViewGroup.LayoutParams.WRAP_CONTENT));
     recordIndicator.setOnDismissListener(onDismiss);
 
     LayoutParams lp = recordIndicator.getWindow().getAttributes();
@@ -158,6 +164,7 @@ public class RecordButton extends Button {
 
   private void cancelRecord() {
     stopRecording();
+    setBackgroundResource(BACK_IDLE);
     recordIndicator.dismiss();
     Toast.makeText(getContext(), App.ctx.getString(R.string.cancelRecord),
         Toast.LENGTH_SHORT).show();
@@ -222,7 +229,7 @@ public class RecordButton extends Button {
         int x = recorder.getMaxAmplitude();
         if (x != 0) {
           int f = (int) (10 * Math.log(x) / Math.log(10));
-          int index = (f - 20) / 4;
+          int index = (f - 18) / 5;
           if (index < 0) index = 0;
           if (index > 5) index = 5;
           volumeHandler.sendEmptyMessage(index);

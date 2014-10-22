@@ -52,5 +52,6 @@
 
     <color name="common_bg">#fcfcfc</color>
     <color name="chatLeftText">#000</color>
+    <color name="red">#f00</color>
 
 </resources>
