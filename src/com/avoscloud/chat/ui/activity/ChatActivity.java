@@ -357,17 +357,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     }*/
   }
 
-  public void setViewStatusByMsg(Msg msg) {
-    View msgView;
-    msgView = getMsgViewByMsg(msg);
-    if (msgView != null) {
-      TextView contentView = (TextView) msgView.findViewById(R.id.textContent);
-      Logger.w("find view's content=" + contentView.getText().toString());
-      TextView statusView = (TextView) msgView.findViewById(R.id.status);
-      statusView.setText(msg.getStatusDesc());
-    }
-  }
-
   public View getMsgViewByMsg(Msg msg) {
     int msgPos = adapter.getItemPosById(msg.getObjectId());
     if (msgPos < 0) {

@@ -170,8 +170,6 @@ public class Msg {
     return content;
   }
 
-
-
   public String getStatusDesc() {
     if (status == Status.SendStart) {
       return App.ctx.getString(R.string.sending);
@@ -211,9 +209,6 @@ public class Msg {
     } else {
       String fromPeerId = getFromPeerId();
       String selfId = ChatService.getSelfId();
-      if (fromPeerId == null || selfId == null) {
-        throw new NullPointerException("fromPeerId is null or selfId is null");
-      }
       if (fromPeerId.equals(selfId)) {
         return getToPeerId();
       } else {
@@ -254,9 +249,12 @@ public class Msg {
       HashMap<String, Object> params = JSON.parseObject(avMsg.getMessage(), HashMap.class);
       msg.setObjectId((String) params.get("objectId"));
       msg.setContent((String) params.get("content"));
-      msg.setStatus(Status.values()[(Integer)params.get("status")]);
-      msg.setType(Type.values()[(Integer)params.get("type")]);
-      msg.setRoomType(RoomType.values()[(Integer)params.get("roomType")]);
+      Status status=Status.fromInt((Integer)params.get("status"));
+      msg.setStatus(status);
+      Type type=Type.fromInt((Integer)params.get("type"));
+      msg.setType(type);
+      RoomType roomType=RoomType.fromInt((Integer)params.get("roomType"));
+      msg.setRoomType(roomType);
       msg.setConvid((String) params.get("convid"));
     }
     return msg;

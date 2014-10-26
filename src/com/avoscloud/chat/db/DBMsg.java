@@ -39,13 +39,13 @@ public class DBMsg {
     db.execSQL("drop table if exists messages");
   }
 
-  public static int insertMsg(Msg msg, Group group) {
+  public static int insertMsg(Msg msg) {
     List<Msg> msgs = new ArrayList<Msg>();
     msgs.add(msg);
-    return insertMsgs(msgs, group);
+    return insertMsgs(msgs);
   }
 
-  public static int insertMsgs(List<Msg> msgs, Group group) {
+  public static int insertMsgs(List<Msg> msgs) {
     DBHelper dbHelper = new DBHelper(App.ctx, App.DB_NAME, App.DB_VER);
     if (msgs == null || msgs.size() == 0) {
       return 0;
@@ -61,13 +61,8 @@ public class DBMsg {
         cv.put(FROM_PEER_ID, msg.getFromPeerId());
         cv.put(STATUS, msg.getStatus().getValue());
         cv.put(ROOM_TYPE, msg.getRoomType().getValue());
-        if (group == null) {
-          cv.put(CONVID, msg.getConvid());
-          String toPeerId = msg.getToPeerId();
-          cv.put(TO_PEER_ID, toPeerId);
-        } else {
-          cv.put(CONVID, group.getGroupId());
-        }
+        cv.put(CONVID, msg.getConvid());
+        cv.put(TO_PEER_ID, msg.getToPeerId());
         cv.put(OWNER_ID, User.curUserId());
         cv.put(TYPE, msg.getType().getValue());
         cv.put(CONTENT, msg.getContent());
@@ -105,18 +100,17 @@ public class DBMsg {
     Msg msg = new Msg();
     msg.setFromPeerId(c.getString(c.getColumnIndex(FROM_PEER_ID)));
     msg.setContent(c.getString(c.getColumnIndex(CONTENT)));
-    msg.setStatus(Msg.Status.fromInt(c.getInt(c.getColumnIndex(STATUS))));
+    Msg.Status status = Msg.Status.fromInt(c.getInt(c.getColumnIndex(STATUS)));
+    msg.setStatus(status);
     msg.setConvid(c.getString(c.getColumnIndex(CONVID)));
     msg.setObjectId(c.getString(c.getColumnIndex(OBJECT_ID)));
     int roomTypeInt = c.getInt(c.getColumnIndex(ROOM_TYPE));
-    Msg.RoomType roomType= Msg.RoomType.fromInt(roomTypeInt);
+    Msg.RoomType roomType = Msg.RoomType.fromInt(roomTypeInt);
     msg.setRoomType(roomType);
-    if (roomType== Msg.RoomType.Single) {
-      String toPeerId = c.getString(c.getColumnIndex(TO_PEER_ID));
-      msg.setToPeerId(toPeerId);
-    }
+    String toPeerId = c.getString(c.getColumnIndex(TO_PEER_ID));
+    msg.setToPeerId(toPeerId);
     msg.setTimestamp(Long.parseLong(c.getString(c.getColumnIndex(TIMESTAMP))));
-    Msg.Type type= Msg.Type.fromInt(c.getInt(c.getColumnIndex(TYPE)));
+    Msg.Type type = Msg.Type.fromInt(c.getInt(c.getColumnIndex(TYPE)));
     msg.setType(type);
     return msg;
   }
@@ -152,9 +146,9 @@ public class DBMsg {
     return updateN;
   }
 
-  public static int updateStatus(Msg msg, Msg.Status status) {
+  public static int updateStatus(Msg msg) {
     ContentValues cv = new ContentValues();
-    cv.put(STATUS, status.getValue());
+    cv.put(STATUS, msg.getStatus().getValue());
     return updateMessage(msg.getObjectId(), cv);
   }
 }
