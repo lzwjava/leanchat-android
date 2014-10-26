@@ -18,28 +18,71 @@ import java.util.List;
  * Created by lzw on 14-8-7.
  */
 public class Msg {
-  public static final int STATUS_SEND_START = 0;
-  public static final int STATUS_SEND_SUCCEED = 1;
-  public static final int STATUS_SEND_RECEIVED = 2;
-  public static final int STATUS_SEND_FAILED = 3;
-  public static final int STATUS_HAVE_READ = 4;
+  public enum Status{
+    SendStart(0), SendSucceed(1), SendReceived(2),
+    SendFailed(3), HaveRead(4);
 
-  public static final int TYPE_TEXT = 0;
-  public static final int TYPE_RESPONSE = 1;
-  public static final int TYPE_IMAGE = 2;
-  public static final int TYPE_AUDIO = 3;
-  public static final int TYPE_LOCATION = 4;
+    int value;
+
+    Status(int value) {
+      this.value = value;
+    }
+
+    public int getValue() {
+      return value;
+    }
+
+    public static Status fromInt(int i){
+      return values()[i];
+    }
+  }
+
+
+  public enum Type{
+    Text(0), Response(1), Image(2), Audio(3), Location(4);
+    int value;
+
+    Type(int value) {
+      this.value = value;
+    }
+
+    public int getValue() {
+      return value;
+    }
+
+    public static Type fromInt(int i){
+      return values()[i];
+    }
+  }
+
+  public enum RoomType{
+    Single(0), Group(1);
+
+    int value;
+    private RoomType(int value){
+      this.value=value;
+    }
+
+    public int getValue(){
+      return value;
+    }
+
+    public static RoomType fromInt(int i){
+      return values()[i];
+    }
+  }
+
   //long timestamp;
   //String fromPeerId;
   //List<String> toPeerIds;
   String content;
   String objectId;
   String convid;
-  boolean singleChat = true;
-
   AVMessage internalMessage;
-  int status = STATUS_SEND_START;
-  int type = TYPE_TEXT;
+
+  RoomType roomType;
+  Status status = Status.SendStart;
+  Type type = Type.Text;
 
 
   public Msg() {
@@ -95,12 +138,28 @@ public class Msg {
     this.convid = convid;
   }
 
-  public boolean isSingleChat() {
-    return singleChat;
+  public RoomType getRoomType() {
+    return roomType;
   }
 
-  public void setSingleChat(boolean singleChat) {
-    this.singleChat = singleChat;
+  public void setRoomType(RoomType roomType) {
+    this.roomType = roomType;
+  }
+
+  public Status getStatus() {
+    return status;
+  }
+
+  public void setStatus(Status status) {
+    this.status = status;
+  }
+
+  public Type getType() {
+    return type;
+  }
+
+  public void setType(Type type) {
+    this.type = type;
   }
 
   public void setTimestamp(long timestamp) {
@@ -111,28 +170,22 @@ public class Msg {
     return content;
   }
 
-  public int getStatus() {
-    return status;
-  }
+
 
   public String getStatusDesc() {
-    if (status == STATUS_SEND_START) {
+    if (status == Status.SendStart) {
       return App.ctx.getString(R.string.sending);
-    } else if (status == STATUS_SEND_RECEIVED) {
+    } else if (status == Status.SendReceived) {
       return App.ctx.getString(R.string.received);
-    } else if (status == STATUS_SEND_SUCCEED) {
+    } else if (status == Status.SendSucceed) {
       return App.ctx.getString(R.string.sent);
-    } else if (status == STATUS_SEND_FAILED) {
+    } else if (status == Status.SendFailed) {
       return App.ctx.getString(R.string.failed);
-    } else if (status == STATUS_HAVE_READ) {
+    } else if (status == Status.HaveRead) {
       return App.ctx.getString(R.string.haveRead);
     } else {
       throw new IllegalArgumentException("unknown status");
     }
-  }
-
-  public void setStatus(int status) {
-    this.status = status;
   }
 
   public void setContent(String content) {
@@ -147,22 +200,14 @@ public class Msg {
     this.objectId = objectId;
   }
 
-  public int getType() {
-    return type;
-  }
-
-  public void setType(int type) {
-    this.type = type;
-  }
-
   public boolean isComeMessage() {
     String fromPeerId = getFromPeerId();
     return !fromPeerId.equals(ChatService.getSelfId());
   }
 
   public String getChatUserId() {
-    if (isSingleChat() == false) {
-      throw new UnsupportedOperationException("unsupport for not singleChat");
+    if (getRoomType()==RoomType.Group) {
+      return getToPeerId();
     } else {
       String fromPeerId = getFromPeerId();
       String selfId = ChatService.getSelfId();
@@ -185,17 +230,17 @@ public class Msg {
 
   public CharSequence getNotifyContent() {
     switch (type) {
-      case TYPE_AUDIO:
+      case Audio:
         return App.ctx.getString(R.string.audio);
-      case TYPE_TEXT:
+      case Text:
         if (EmotionService.haveEmotion(getContent())) {
           return App.ctx.getString(R.string.emotion);
         } else {
           return getContent();
         }
-      case TYPE_IMAGE:
+      case Image:
         return App.ctx.getString(R.string.image);
-      case TYPE_LOCATION:
+      case Location:
         return App.ctx.getString(R.string.position);
       default:
         return App.ctx.getString(R.string.newMessage);
@@ -209,9 +254,9 @@ public class Msg {
       HashMap<String, Object> params = JSON.parseObject(avMsg.getMessage(), HashMap.class);
       msg.setObjectId((String) params.get("objectId"));
       msg.setContent((String) params.get("content"));
-      msg.setStatus((Integer) params.get("status"));
-      msg.setType((Integer) params.get("type"));
-      msg.setSingleChat((Boolean) params.get("singleChat"));
+      msg.setStatus(Status.values()[(Integer)params.get("status")]);
+      msg.setType(Type.values()[(Integer)params.get("type")]);
+      msg.setRoomType(RoomType.values()[(Integer)params.get("roomType")]);
       msg.setConvid((String) params.get("convid"));
     }
     return msg;
@@ -221,9 +266,9 @@ public class Msg {
     HashMap<String, Object> params = new HashMap<String, Object>();
     params.put("objectId", objectId);
     params.put("content", content);
-    params.put("status", status);
-    params.put("type", type);
-    params.put("singleChat", singleChat);
+    params.put("status", status.getValue());
+    params.put("type", type.getValue());
+    params.put("roomType", roomType.getValue());
     params.put("convid", convid);
     internalMessage.setMessage(JSON.toJSONString(params));
     return internalMessage;

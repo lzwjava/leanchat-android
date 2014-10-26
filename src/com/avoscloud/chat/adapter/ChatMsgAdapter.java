@@ -66,17 +66,18 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
   public int getItemViewType(int position) {
     Msg entity = datas.get(position);
     boolean comeMsg = entity.isComeMessage();
-    int type = entity.getType();
-    if (type == Msg.TYPE_TEXT) {
-      return comeMsg ? MsgViewType.COME_TEXT : MsgViewType.TO_TEXT;
-    } else if (type == Msg.TYPE_IMAGE) {
-      return comeMsg ? MsgViewType.COME_IMAGE : MsgViewType.TO_IMAGE;
-    } else if (type == Msg.TYPE_AUDIO) {
-      return comeMsg ? MsgViewType.COME_AUDIO : MsgViewType.TO_AUDIO;
-    } else {
-      assert type == Msg.TYPE_LOCATION;
-      return comeMsg ? MsgViewType.COME_LOCATION : MsgViewType.TO_LOCATION;
+    Msg.Type type = entity.getType();
+    switch (type){
+      case Text:
+        return comeMsg ? MsgViewType.COME_TEXT : MsgViewType.TO_TEXT;
+      case Image:
+        return comeMsg ? MsgViewType.COME_IMAGE : MsgViewType.TO_IMAGE;
+      case Audio:
+        return comeMsg ? MsgViewType.COME_AUDIO : MsgViewType.TO_AUDIO;
+      case Location:
+        return comeMsg ? MsgViewType.COME_LOCATION : MsgViewType.TO_LOCATION;
     }
+    throw new IllegalStateException("position's type is wrong");
   }
 
   public int getViewTypeCount() {
@@ -117,30 +118,30 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
     }
     UserService.displayAvatar(user.getAvatarUrl(), avatarView);
 
-    int type = msg.getType();
-    if (type == Msg.TYPE_TEXT) {
+    Msg.Type type = msg.getType();
+    if (type == Msg.Type.Text) {
       contentView.setText(EmotionService.replace(ctx, msg.getContent()));
-    } else if (type == Msg.TYPE_IMAGE) {
+    } else if (type == Msg.Type.Image) {
       String localPath = PathUtils.getChatFileDir() + msg.getObjectId();
       String url = msg.getContent();
       displayImageByUri(imageView, localPath, url);
       setImageOnClickListener(localPath, url, imageView);
-    } else if (type == Msg.TYPE_AUDIO) {
+    } else if (type == Msg.Type.Audio) {
       initPlayBtn(msg, playBtn);
-    } else if (type == Msg.TYPE_LOCATION) {
+    } else if (type == Msg.Type.Location) {
       setLocationView(msg, locationView);
     }
     if (isComMsg == false) {
       hideStatusViews(statusSendStart, statusSendFailed, statusSendSucceed);
       setSendFailedBtnListener(statusSendFailed, msg);
       switch (msg.getStatus()) {
-        case Msg.STATUS_SEND_FAILED:
+        case SendFailed:
           statusSendFailed.setVisibility(View.VISIBLE);
           break;
-        case Msg.STATUS_SEND_SUCCEED:
+        case SendSucceed:
           statusSendSucceed.setVisibility(View.VISIBLE);
           break;
-        case Msg.STATUS_SEND_START:
+        case SendStart:
           statusSendStart.setVisibility(View.VISIBLE);
           break;
       }

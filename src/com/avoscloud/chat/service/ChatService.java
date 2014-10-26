@@ -67,25 +67,27 @@ public class ChatService {
 
   public static void sendResponseMessage(Msg msg) {
     Msg resMsg = new Msg();
-    resMsg.setType(Msg.TYPE_RESPONSE);
+    resMsg.setType(Msg.Type.Response);
     resMsg.setToPeerId(msg.getFromPeerId());
     resMsg.setFromPeerId(getSelfId());
     resMsg.setContent(msg.getTimestamp() + "");
     resMsg.setObjectId(msg.getObjectId());
+    resMsg.setRoomType(Msg.RoomType.Single);
     Session session = getSession();
     AVMessage avMsg = resMsg.toAVMessage();
     session.sendMessage(avMsg);
   }
 
   public static Msg sendAudioMsg(User toUser, String path, String msgId, Group group) throws IOException, AVException {
-    return sendFileMsg(toUser, msgId, Msg.TYPE_AUDIO, path, group);
+    return sendFileMsg(toUser, msgId, Msg.Type.Audio, path, group);
   }
 
   public static Msg sendImageMsg(User user, String filePath, String msgId, Group group) throws IOException, AVException {
-    return sendFileMsg(user, msgId, Msg.TYPE_IMAGE, filePath, group);
+    return sendFileMsg(user, msgId, Msg.Type.Image, filePath, group);
   }
 
-  public static Msg sendFileMsg(User toUser, String objectId, int type, String filePath, Group group) throws IOException, AVException {
+  public static Msg sendFileMsg(User toUser, String objectId, Msg.Type type, String filePath,
+                                Group group) throws IOException, AVException {
     AVFile file = AVFile.withAbsoluteLocalPath(objectId, filePath);
     file.save();
     String url = file.getUrl();
@@ -95,22 +97,22 @@ public class ChatService {
   }
 
   public static Msg sendTextMsg(User toUser, String content, Group group) {
-    int type = Msg.TYPE_TEXT;
+    Msg.Type type = Msg.Type.Text;
     Msg msg = createAndSendMsg(toUser, type, content, group);
     Log.i("lzw", "sendTextMsg fromId=" + msg.getFromPeerId() + " toId=" + msg.getToPeerId());
     DBMsg.insertMsg(msg, group);
     return msg;
   }
 
-  public static Msg createAndSendMsg(User toPeer, int type, String content, Group group) {
+  public static Msg createAndSendMsg(User toPeer, Msg.Type type, String content, Group group) {
     String objectId = Utils.uuid();
     return createAndSendMsg(toPeer, type, content, objectId, group);
   }
 
-  public static Msg createAndSendMsg(User toPeer, int type, String content, String objectId, Group group) {
+  public static Msg createAndSendMsg(User toPeer, Msg.Type type, String content, String objectId, Group group) {
     Msg msg;
     msg = new Msg();
-    msg.setStatus(Msg.STATUS_SEND_START);
+    msg.setStatus(Msg.Status.SendStart);
     msg.setContent(content);
     msg.setTimestamp(System.currentTimeMillis());
     msg.setFromPeerId(getSelfId());
@@ -118,10 +120,10 @@ public class ChatService {
     if (group == null) {
       String toPeerId = ChatService.getPeerId(toPeer);
       msg.setToPeerId(toPeerId);
-      msg.setSingleChat(true);
+      msg.setRoomType(Msg.RoomType.Single);
       convid = AVOSUtils.convid(ChatService.getSelfId(), toPeerId);
     } else {
-      msg.setSingleChat(false);
+      msg.setRoomType(Msg.RoomType.Group);
       convid = group.getGroupId();
     }
     msg.setObjectId(objectId);
@@ -159,7 +161,7 @@ public class ChatService {
   public static Msg sendLocationMessage(User toPeer, String address, double latitude, double longtitude, Group group) {
     String content = address + "&" + latitude + "&" + longtitude;
     Logger.d("content=" + content);
-    Msg msg = createAndSendMsg(toPeer, Msg.TYPE_LOCATION, content, group);
+    Msg msg = createAndSendMsg(toPeer, Msg.Type.Location, content, group);
     DBMsg.insertMsg(msg, group);
     return msg;
   }
@@ -170,7 +172,7 @@ public class ChatService {
     ArrayList<Conversation> conversations = new ArrayList<Conversation>();
     for (Msg msg : msgs) {
       Conversation conversation = new Conversation();
-      if (msg.isSingleChat()) {
+      if (msg.getRoomType()== Msg.RoomType.Single) {
         String chatUserId = msg.getChatUserId();
         conversation.toUser = App.lookupUser(chatUserId);
       } else {
@@ -186,7 +188,7 @@ public class ChatService {
     Set<String> uncachedIds = new HashSet<String>();
     Set<String> uncachedChatGroupIds = new HashSet<String>();
     for (Msg msg : msgs) {
-      if (msg.isSingleChat()) {
+      if (msg.getRoomType()==Msg.RoomType.Single) {
         String chatUserId = msg.getChatUserId();
         if (App.lookupUser(chatUserId) == null) {
           uncachedIds.add(chatUserId);
@@ -251,7 +253,7 @@ public class ChatService {
       String selfId = getSelfId();
       msg.setToPeerId(selfId);
     }
-    if (msg.getType() != Msg.TYPE_RESPONSE) {
+    if (msg.getType() != Msg.Type.Response) {
       responseAndReceiveMsg(context, msg, listener, group);
     } else {
       Logger.d("onResponseMessage " + msg.getContent());
@@ -270,7 +272,7 @@ public class ChatService {
     new NetAsyncTask(context, false) {
       @Override
       protected void doInBack() throws Exception {
-        if (msg.getType() == Msg.TYPE_AUDIO) {
+        if (msg.getType() == Msg.Type.Audio) {
           File file = new File(msg.getAudioPath());
           String url = msg.getContent();
           Utils.downloadFileIfNotExists(url, file);
@@ -326,9 +328,9 @@ public class ChatService {
 
   public static void onMessageSent(AVMessage avMsg, MsgListener listener, Group group) {
     Msg msg = Msg.fromAVMessage(avMsg);
-    if (msg.getType() != Msg.TYPE_RESPONSE) {
-      msg.setStatus(Msg.STATUS_SEND_SUCCEED);
-      DBMsg.updateStatus(msg, Msg.STATUS_SEND_SUCCEED);
+    if (msg.getType() != Msg.Type.Response) {
+      msg.setStatus(Msg.Status.SendSucceed);
+      DBMsg.updateStatus(msg, Msg.Status.SendSucceed);
       msg.setFromPeerId(User.curUserId());
       MsgListener _listener = filterMsgListener(listener, msg, group);
       if (_listener != null) {
@@ -339,9 +341,9 @@ public class ChatService {
 
   public static void updateStatusToFailed(AVMessage avMsg, MsgListener msgListener) {
     Msg msg = Msg.fromAVMessage(avMsg);
-    if (msg.getType() != Msg.TYPE_RESPONSE) {
-      msg.setStatus(Msg.STATUS_SEND_FAILED);
-      DBMsg.updateStatus(msg, Msg.STATUS_SEND_FAILED);
+    if (msg.getType() != Msg.Type.Response) {
+      msg.setStatus(Msg.Status.SendFailed);
+      DBMsg.updateStatus(msg, Msg.Status.SendFailed);
       if (msgListener != null) {
         msgListener.onMessageFailure(msg);
       }
@@ -364,14 +366,14 @@ public class ChatService {
 
   public static void resendMsg(Msg msg) {
     Group group = null;
-    if (msg.isSingleChat() == false) {
+    if (msg.getRoomType() == Msg.RoomType.Single) {
       String groupId = msg.getConvid();
       Session session = ChatService.getSession();
       group = session.getGroup(groupId);
     }
     sendMessage(group, msg);
-    DBMsg.updateStatus(msg, Msg.STATUS_SEND_START);
-    msg.setStatus(Msg.STATUS_SEND_START);
+    DBMsg.updateStatus(msg, Msg.Status.SendStart);
+    msg.setStatus(Msg.Status.SendStart);
   }
 
   public static void cancelNotification(Context ctx) {

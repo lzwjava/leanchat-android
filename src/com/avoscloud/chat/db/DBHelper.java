@@ -15,15 +15,22 @@ public class DBHelper extends SQLiteOpenHelper {
 
   @Override
   public void onCreate(SQLiteDatabase db) {
+    DBMsg.createTable(db);
   }
 
   @Override
   public void onOpen(SQLiteDatabase db) {
     super.onOpen(db);
-    DBMsg.createTable(db);
   }
 
   @Override
   public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    switch (newVersion){
+      case 2:
+        DBMsg.dropTable(db);
+        DBMsg.createTable(db);
+      case 1:
+        break;
+    }
   }
 }

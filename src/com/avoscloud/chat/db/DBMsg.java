@@ -7,7 +7,6 @@ import com.avos.avoscloud.Group;
 import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.entity.Msg;
-import com.avoscloud.chat.service.ChatService;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,14 +25,18 @@ public class DBMsg {
   public static final String STATUS = "status";
   public static final String TYPE = "type";
   public static final String TO_PEER_ID = "toPeerId";
-  public static final String SINGLE_CHAT = "singleChat";
+  public static final String ROOM_TYPE = "roomType";
   public static final String OWNER_ID = "ownerId";
 
   public static void createTable(SQLiteDatabase db) {
     db.execSQL("create table if not exists messages (id integer primary key, objectId varchar(63) unique," +
         "ownerId varchar(255),fromPeerId varchar(255), convid varchar(255),toPeerId varchar(255), " +
         "content varchar(1023)," +
-        " status integer,type integer,singleChat integer,timestamp varchar(63))");
+        " status integer,type integer,roomType integer,timestamp varchar(63))");
+  }
+
+  public static void dropTable(SQLiteDatabase db) {
+    db.execSQL("drop table if exists messages");
   }
 
   public static int insertMsg(Msg msg, Group group) {
@@ -56,18 +59,17 @@ public class DBMsg {
         cv.put(OBJECT_ID, msg.getObjectId());
         cv.put(TIMESTAMP, msg.getTimestamp() + "");
         cv.put(FROM_PEER_ID, msg.getFromPeerId());
-        cv.put(STATUS, msg.getStatus());
+        cv.put(STATUS, msg.getStatus().getValue());
+        cv.put(ROOM_TYPE, msg.getRoomType().getValue());
         if (group == null) {
           cv.put(CONVID, msg.getConvid());
-          cv.put(SINGLE_CHAT, 1);
           String toPeerId = msg.getToPeerId();
           cv.put(TO_PEER_ID, toPeerId);
         } else {
-          cv.put(SINGLE_CHAT, 0);
           cv.put(CONVID, group.getGroupId());
         }
         cv.put(OWNER_ID, User.curUserId());
-        cv.put(TYPE, msg.getType());
+        cv.put(TYPE, msg.getType().getValue());
         cv.put(CONTENT, msg.getContent());
         db.insert(MESSAGES, null, cv);
         n++;
@@ -103,18 +105,19 @@ public class DBMsg {
     Msg msg = new Msg();
     msg.setFromPeerId(c.getString(c.getColumnIndex(FROM_PEER_ID)));
     msg.setContent(c.getString(c.getColumnIndex(CONTENT)));
-    msg.setStatus(c.getInt(c.getColumnIndex(STATUS)));
+    msg.setStatus(Msg.Status.fromInt(c.getInt(c.getColumnIndex(STATUS))));
     msg.setConvid(c.getString(c.getColumnIndex(CONVID)));
     msg.setObjectId(c.getString(c.getColumnIndex(OBJECT_ID)));
-    int singleChatInt = c.getInt(c.getColumnIndex(SINGLE_CHAT));
-    boolean singleChat = singleChatInt == 0 ? false : true;
-    msg.setSingleChat(singleChat);
-    if (singleChat) {
+    int roomTypeInt = c.getInt(c.getColumnIndex(ROOM_TYPE));
+    Msg.RoomType roomType= Msg.RoomType.fromInt(roomTypeInt);
+    msg.setRoomType(roomType);
+    if (roomType== Msg.RoomType.Single) {
       String toPeerId = c.getString(c.getColumnIndex(TO_PEER_ID));
       msg.setToPeerId(toPeerId);
     }
     msg.setTimestamp(Long.parseLong(c.getString(c.getColumnIndex(TIMESTAMP))));
-    msg.setType(c.getInt(c.getColumnIndex(TYPE)));
+    Msg.Type type= Msg.Type.fromInt(c.getInt(c.getColumnIndex(TYPE)));
+    msg.setType(type);
     return msg;
   }
 
@@ -135,7 +138,7 @@ public class DBMsg {
 
   public static int updateStatusAndTimestamp(Msg msg) {
     ContentValues cv = new ContentValues();
-    cv.put(STATUS, Msg.STATUS_SEND_RECEIVED);
+    cv.put(STATUS, Msg.Status.SendReceived.getValue());
     cv.put(TIMESTAMP, msg.getContent());
     String objectId = msg.getObjectId();
     return updateMessage(objectId, cv);
@@ -149,9 +152,9 @@ public class DBMsg {
     return updateN;
   }
 
-  public static int updateStatus(Msg msg, int status) {
+  public static int updateStatus(Msg msg, Msg.Status status) {
     ContentValues cv = new ContentValues();
-    cv.put(STATUS, status);
+    cv.put(STATUS, status.getValue());
     return updateMessage(msg.getObjectId(), cv);
   }
 }

@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import com.avoscloud.chat.adapter.RecentMessageAdapter;
 import com.avoscloud.chat.entity.Conversation;
+import com.avoscloud.chat.entity.Msg;
 import com.avoscloud.chat.service.ChatService;
 import com.avoscloud.chat.ui.activity.ChatActivity;
 import com.avoscloud.chat.util.NetAsyncTask;
@@ -48,7 +49,7 @@ public class ConversationFragment extends BaseFragment implements AdapterView.On
   public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
     // TODO Auto-generated method stub
     Conversation recent = (Conversation) adapter.getItem(position);
-    if (recent.msg.isSingleChat()) {
+    if (recent.msg.getRoomType()== Msg.RoomType.Single) {
       ChatActivity.goUserChat(ctx, recent.toUser.getObjectId());
     } else {
       ChatActivity.goGroupChat(ctx, recent.chatGroup.getObjectId());

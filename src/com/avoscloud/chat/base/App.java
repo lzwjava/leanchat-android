@@ -26,8 +26,8 @@ import java.util.*;
  */
 public class App extends Application {
   public static final String DB_NAME = "chat.db3";
-  public static final int DB_VER = 1;
-  public static boolean debug = true;
+  public static final int DB_VER = 2;
+  public static boolean debug = false;
   public static App ctx;
   public static Session session;
   private static Map<String, User> usersCache = new HashMap<String, User>();

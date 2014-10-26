@@ -42,7 +42,7 @@ public class RecentMessageAdapter extends BaseListAdapter<Conversation> {
     TextView recentUnreadView = ViewHolder.findViewById(convertView, R.id.recent_unread);
 
     Msg msg = item.msg;
-    if (msg.isSingleChat()) {
+    if (msg.getRoomType()== Msg.RoomType.Single) {
       User user = item.toUser;
       String avatar = user.getAvatarUrl();
       if (avatar != null && !avatar.equals("")) {
@@ -59,18 +59,18 @@ public class RecentMessageAdapter extends BaseListAdapter<Conversation> {
 
     //recentTimeView.setText(TimeUtils.getDate);
     int num = 0;//unread count
-    if (msg.getType() == Msg.TYPE_TEXT) {
+    if (msg.getType() == Msg.Type.Text) {
       CharSequence spannableString = EmotionService.replace(ctx, msg.getContent());
       recentMsgView.setText(spannableString);
-    } else if (msg.getType() == Msg.TYPE_IMAGE) {
+    } else if (msg.getType() == Msg.Type.Image) {
       recentMsgView.setText("[" + App.ctx.getString(R.string.image) + "]");
-    } else if (msg.getType() == Msg.TYPE_LOCATION) {
+    } else if (msg.getType() == Msg.Type.Location) {
       String all = msg.getContent();
       if (all != null && !all.equals("")) {
         String address = all.split("&")[0];
         recentMsgView.setText("[" + App.ctx.getString(R.string.position) + "]" + address);
       }
-    } else if (msg.getType() == Msg.TYPE_AUDIO) {
+    } else if (msg.getType() == Msg.Type.Audio) {
       recentMsgView.setText("[" + App.ctx.getString(R.string.audio) + "]");
     }
 
