@@ -4,7 +4,11 @@
 
 用 AVOS Cloud 实时通信 SDK做的沟通工具  Leanchat
 
-![img](https://raw.githubusercontent.com/lzwjava/plan/master/im361.png)
+![img](./screenshot/im361.png)
+
+![img](./screenshot/im362.png)
+
+![img](./screenshot/im363.png)
 
 ##当前特性
 
