@@ -11,13 +11,10 @@ import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.db.DBMsg;
 import com.avoscloud.chat.entity.Conversation;
 import com.avoscloud.chat.ui.activity.ChatActivity;
-import com.avoscloud.chat.util.Logger;
+import com.avoscloud.chat.util.*;
 import com.avoscloud.chat.avobject.ChatGroup;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.entity.Msg;
-import com.avoscloud.chat.util.AVOSUtils;
-import com.avoscloud.chat.util.NetAsyncTask;
-import com.avoscloud.chat.util.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -67,6 +64,8 @@ public class ChatService {
     resMsg.setContent(msg.getTimestamp() + "");
     resMsg.setObjectId(msg.getObjectId());
     resMsg.setRoomType(Msg.RoomType.Single);
+    resMsg.setStatus(Msg.Status.SendStart);
+    resMsg.setConvid(AVOSUtils.convid(getSelfId(),msg.getFromPeerId()));
     Session session = getSession();
     AVMessage avMsg = resMsg.toAVMessage();
     session.sendMessage(avMsg);

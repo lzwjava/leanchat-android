@@ -80,7 +80,7 @@ public class Msg {
   String convid;
   AVMessage internalMessage;
 
-  RoomType roomType;
+  RoomType roomType=RoomType.Single;
   Status status = Status.SendStart;
   Type type = Type.Text;
 
@@ -247,20 +247,34 @@ public class Msg {
     msg.setInternalMessage(avMsg);
     if (!AVUtils.isBlankString(avMsg.getMessage())) {
       HashMap<String, Object> params = JSON.parseObject(avMsg.getMessage(), HashMap.class);
-      msg.setObjectId((String) params.get("objectId"));
-      msg.setContent((String) params.get("content"));
-      Status status=Status.fromInt((Integer)params.get("status"));
+      String objectId=(String) params.get("objectId");
+      String content=(String) params.get("content");
+      Integer statusInt = (Integer) params.get("status");
+      Integer typeInt = (Integer) params.get("type");
+      Integer roomTypeInt = (Integer) params.get("roomType");
+      String convid = (String) params.get("convid");
+      if(objectId==null || content==null || statusInt==null ||
+          typeInt==null || roomTypeInt==null || convid==null){
+        throwNullException();
+      }
+      msg.setObjectId(objectId);
+      msg.setContent(content);
+      Status status=Status.fromInt(statusInt);
       msg.setStatus(status);
-      Type type=Type.fromInt((Integer)params.get("type"));
+      Type type=Type.fromInt(typeInt);
       msg.setType(type);
-      RoomType roomType=RoomType.fromInt((Integer)params.get("roomType"));
+      RoomType roomType=RoomType.fromInt(roomTypeInt);
       msg.setRoomType(roomType);
-      msg.setConvid((String) params.get("convid"));
+      msg.setConvid(convid);
     }
     return msg;
   }
 
   public AVMessage toAVMessage() {
+    if(convid==null || content==null || objectId==null
+        || roomType==null || status==null || type==null){
+      throwNullException();
+    }
     HashMap<String, Object> params = new HashMap<String, Object>();
     params.put("objectId", objectId);
     params.put("content", content);
@@ -270,6 +284,10 @@ public class Msg {
     params.put("convid", convid);
     internalMessage.setMessage(JSON.toJSONString(params));
     return internalMessage;
+  }
+
+  public static void throwNullException() {
+    throw new NullPointerException("at least one of these is null: convid,content,objectId, roomType, status, type");
   }
 
   @Override

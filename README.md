@@ -44,6 +44,9 @@
 * 修复点击顶部栏通知进入错误的聊天室的bug
 * 可能修复fragment ui重叠的bug
 
+###v1.1.3
+* 使用新的聊天协议，以便和ios版互通
+
 ## 发布步骤
 * 将 AndroidManifest.xml 文件的 百度map key改为 生产环境的key
 * 改版本号、版本名字
