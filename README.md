@@ -1,6 +1,9 @@
-# LeanChat
-
 ##[下载](http://fir.im/leanchat)
+
+## Leanchat 项目构成
+* [Leanchat-android](https://github.com/leancloud/leanchat)
+* [Leanchat-ios](https://github.com/leancloud/leanchat-ios)
+* [Leanchat-cloud-code](https://github.com/leancloud/leanchat-cloudcode)，Leanchat 云代码后端
 
 用 LeanCloud 实时通信 SDK做的沟通工具  Leanchat
 
