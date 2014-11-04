@@ -12,7 +12,7 @@ import com.avoscloud.chat.base.App;
 /**
  * Created by lzw on 14-6-19.
  */
-public class PrefDao {
+public class PreferenceMap {
   public static final String ADD_REQUEST_N = "addRequestN";
   public static final String LATITUDE = "latitude";
   public static final String LONGITUDE = "longitude";
@@ -26,34 +26,34 @@ public class PrefDao {
   //int addRequestN;
   //String latitude;
   //String longitude;
-  public static PrefDao currentUserPrefDao;
+  public static PreferenceMap currentUserPreferenceMap;
 
-  public PrefDao(Context cxt) {
+  public PreferenceMap(Context cxt) {
     this.cxt = cxt;
     pref = PreferenceManager.getDefaultSharedPreferences(cxt);
     editor = pref.edit();
-    Logger.d("PrefDao init no specific user");
+    Logger.d("PreferenceMap init no specific user");
   }
 
-  public PrefDao(Context cxt, String prefName) {
+  public PreferenceMap(Context cxt, String prefName) {
     this.cxt = cxt;
     pref = cxt.getSharedPreferences(prefName, Context.MODE_PRIVATE);
     editor = pref.edit();
   }
 
-  public static PrefDao getCurUserPrefDao(Context ctx) {
-    if (currentUserPrefDao == null) {
-      currentUserPrefDao = new PrefDao(ctx, User.curUserId());
+  public static PreferenceMap getCurUserPrefDao(Context ctx) {
+    if (currentUserPreferenceMap == null) {
+      currentUserPreferenceMap = new PreferenceMap(ctx, User.curUserId());
     }
-    return currentUserPrefDao;
+    return currentUserPreferenceMap;
   }
 
-  public static PrefDao getMyPrefDao(Context ctx) {
+  public static PreferenceMap getMyPrefDao(Context ctx) {
     User user = User.curUser();
     if (user == null) {
       throw new RuntimeException("user is null");
     }
-    return new PrefDao(ctx, user.getObjectId());
+    return new PreferenceMap(ctx, user.getObjectId());
   }
 
   public int getAddRequestN() {

@@ -67,19 +67,16 @@ public class NewFriendAdapter extends BaseListAdapter<AddRequest> {
   }
 
   private void agreeAdd(final Button addBtn, final AddRequest addRequest) {
-    final User fromUser = addRequest.getFromUser();
     new NetAsyncTask(ctx) {
       @Override
       protected void doInBack() throws Exception {
-        CloudService.addFriendForBoth(User.curUser(), fromUser);
-        addRequest.setStatus(AddRequest.STATUS_DONE);
-        addRequest.save();
+        CloudService.agreeAddRequest(addRequest.getObjectId());
       }
 
       @Override
       protected void onPost(Exception e) {
         if (e != null) {
-          Utils.toast(App.ctx.getString(R.string.addFailed), e.getMessage());
+          Utils.toast(e.getMessage());
         } else {
           toAgreedTextView(addBtn);
         }

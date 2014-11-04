@@ -10,7 +10,6 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import com.avos.avoscloud.AVFile;
 import com.avoscloud.chat.avobject.User;
-import com.avoscloud.chat.base.C;
 import com.avoscloud.chat.service.AvatarService;
 import com.avoscloud.chat.util.ChatUtils;
 import com.avoscloud.chat.R;
@@ -78,7 +77,7 @@ public class RegisterActivity extends BaseActivity {
     new NetAsyncTask(ctx) {
       @Override
       protected void doInBack() throws Exception {
-        User user = UserService.signUp(name, isMale, password);
+        User user = UserService.signUp(name, password);
         AVFile avatar = AvatarService.getRandomAvatarFile();
         user.setSex(isMale);
         user.setAvatar(avatar);
@@ -93,10 +92,12 @@ public class RegisterActivity extends BaseActivity {
         } else {
           Utils.toast(R.string.registerSucceed);
           ChatUtils.updateUserLocation();
-          sendBroadcast(new Intent(C.ACTION_REGISTER_FINISH));
           Intent intent = new Intent(ctx, MainActivity.class);
           startActivity(intent);
           finish();
+          if (LoginActivity.instance != null) {
+            LoginActivity.instance.finish();
+          }
         }
       }
     }.execute();

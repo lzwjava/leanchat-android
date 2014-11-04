@@ -15,7 +15,6 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import com.avos.avoscloud.Group;
 import com.avos.avoscloud.Session;
 import com.avoscloud.chat.adapter.EmotionPagerAdapter;
@@ -23,6 +22,9 @@ import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.db.DBHelper;
 import com.avoscloud.chat.db.DBMsg;
 import com.avoscloud.chat.service.*;
+import com.avoscloud.chat.service.listener.MsgListener;
+import com.avoscloud.chat.service.receiver.GroupMsgReceiver;
+import com.avoscloud.chat.service.receiver.MsgReceiver;
 import com.avoscloud.chat.ui.view.RecordButton;
 import com.avoscloud.chat.util.*;
 import com.avoscloud.chat.R;
@@ -48,10 +50,9 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
 
   private ChatMsgAdapter adapter;
   private List<Msg> msgs = new ArrayList<Msg>();
-  public static ChatActivity instance;
   User curUser;
   DBHelper dbHelper;
-  private Activity ctx;
+  public static ChatActivity ctx;
 
   View chatTextLayout, chatAudioLayout, chatAddLayout, chatEmotionLayout;
   View turnToTextBtn, turnToAudioBtn, sendBtn, addImageBtn, showAddBtn, addLocationBtn, showEmotionBtn;
@@ -60,7 +61,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   private EmotionEditText contentEdit;
   private XListView xListView;
   RecordButton recordBtn;
-  List<String> emotions = EmotionService.emotionTexts;
+  List<String> emotions = EmotionUtils.emotionTexts;
   private String localCameraPath = PathUtils.getTmpPath();
   private View addCameraBtn;
   int msgSize;
@@ -77,7 +78,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     ctx = this;
-    instance = this;
     setContentView(R.layout.chat_layout);
     findView();
     initByIntent(getIntent());
@@ -666,6 +666,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     if (singleChat) {
       ChatService.withUserToWatch(chatUser, false);
     }
+    ctx=null;
     super.onDestroy();
   }
 

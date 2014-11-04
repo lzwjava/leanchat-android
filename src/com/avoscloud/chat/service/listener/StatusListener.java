@@ -1,4 +1,4 @@
-package com.avoscloud.chat.service;
+package com.avoscloud.chat.service.listener;
 
 import java.util.List;
 

@@ -49,7 +49,8 @@ public class App extends Application {
 
     AVInstallation.getCurrentInstallation().saveInBackground();
     PushService.setDefaultPushCallback(ctx, LoginActivity.class);
-    AVOSUtils.showInternalDebugLog();
+    //AVOSUtils.showInternalDebugLog();
+    AVOSCloud.setDebugLogEnabled(true);
     if (App.debug) {
       Logger.level = Logger.VERBOSE;
     } else {

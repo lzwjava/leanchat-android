@@ -10,6 +10,7 @@ import com.avos.avoscloud.*;
 import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.db.DBMsg;
 import com.avoscloud.chat.entity.Conversation;
+import com.avoscloud.chat.service.listener.MsgListener;
 import com.avoscloud.chat.ui.activity.ChatActivity;
 import com.avoscloud.chat.util.*;
 import com.avoscloud.chat.avobject.ChatGroup;
@@ -223,11 +224,11 @@ public class ChatService {
         .setAutoCancel(true);
     NotificationManager man = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     Notification notification = builder.getNotification();
-    PrefDao prefDao = PrefDao.getCurUserPrefDao(context);
-    if (prefDao.isVoiceNotify()) {
+    PreferenceMap preferenceMap = PreferenceMap.getCurUserPrefDao(context);
+    if (preferenceMap.isVoiceNotify()) {
       notification.defaults |= Notification.DEFAULT_SOUND;
     }
-    if (prefDao.isVibrateNotify()) {
+    if (preferenceMap.isVibrateNotify()) {
       notification.defaults |= Notification.DEFAULT_VIBRATE;
     }
     man.notify(REPLY_NOTIFY_ID, notification);
@@ -280,8 +281,8 @@ public class ChatService {
           MsgListener _msgListener = filterMsgListener(listener, msg, group);
           if (_msgListener == null) {
             if (User.curUser() != null) {
-              PrefDao prefDao = PrefDao.getCurUserPrefDao(context);
-              if (prefDao.isNotifyWhenNews()) {
+              PreferenceMap preferenceMap = PreferenceMap.getCurUserPrefDao(context);
+              if (preferenceMap.isNotifyWhenNews()) {
                 notifyMsg(context, msg, group);
               }
             }

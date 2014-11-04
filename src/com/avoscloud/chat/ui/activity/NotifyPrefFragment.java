@@ -5,7 +5,7 @@ import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.service.PrefDao;
+import com.avoscloud.chat.service.PreferenceMap;
 
 /**
  * Created by lzw on 14-9-24.
@@ -15,7 +15,7 @@ public class NotifyPrefFragment extends PreferenceFragment implements Preference
   public static final String VOICE_NOTIFY = "voiceNotify";
   public static final String VIBRATE_NOTIFY = "vibrateNotify";
 
-  PrefDao prefDao;
+  PreferenceMap preferenceMap;
   CheckBoxPreference notifyWhenNews, voiceNotify, vibrateNotify;
 
   @Override
@@ -27,7 +27,7 @@ public class NotifyPrefFragment extends PreferenceFragment implements Preference
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    prefDao = PrefDao.getCurUserPrefDao(getActivity());
+    preferenceMap = PreferenceMap.getCurUserPrefDao(getActivity());
     notifyWhenNews = (CheckBoxPreference) findPreference(NOTIFY_WHEN_NEWS);
     voiceNotify = (CheckBoxPreference) findPreference(VOICE_NOTIFY);
     vibrateNotify = (CheckBoxPreference) findPreference(VIBRATE_NOTIFY);
@@ -42,11 +42,11 @@ public class NotifyPrefFragment extends PreferenceFragment implements Preference
     String key = preference.getKey();
     boolean value = (Boolean) newValue;
     if (key.equals(NOTIFY_WHEN_NEWS)) {
-      prefDao.setNotifyWhenNews(value);
+      preferenceMap.setNotifyWhenNews(value);
     } else if (key.equals(VOICE_NOTIFY)) {
-      prefDao.setVoiceNotify(value);
+      preferenceMap.setVoiceNotify(value);
     } else if (key.equals(VIBRATE_NOTIFY)) {
-      prefDao.setVibrateNotify(value);
+      preferenceMap.setVibrateNotify(value);
     }
     return true;
   }

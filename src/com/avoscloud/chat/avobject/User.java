@@ -6,7 +6,6 @@ import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
-import com.avoscloud.chat.service.PrefDao;
 
 /**
  * Created by lzw on 14-6-26.
@@ -23,7 +22,7 @@ public class User extends AVUser {
   //AVGeoPoint location;
   private String sortLetters;
   //private boolean sex;// true is male ; false is female
-  public static User curUser;
+  private static User curUser;
 
   public User() {
   }
@@ -38,6 +37,10 @@ public class User extends AVUser {
     return user;*/
     //User user = getCurrentUser(User.class);
     //return user;
+  }
+
+  public static void setCurUser(User curUser) {
+    User.curUser = curUser;
   }
 
   public static String curUserId() {

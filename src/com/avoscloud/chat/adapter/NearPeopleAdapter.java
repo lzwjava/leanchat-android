@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.avos.avoscloud.AVGeoPoint;
 import com.avoscloud.chat.avobject.User;
-import com.avoscloud.chat.service.PrefDao;
+import com.avoscloud.chat.service.PreferenceMap;
 import com.avoscloud.chat.ui.view.ViewHolder;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
@@ -29,8 +29,8 @@ public class NearPeopleAdapter extends BaseListAdapter<User> {
 
   private void init() {
     prettyTime = new PrettyTime();
-    PrefDao prefDao = PrefDao.getCurUserPrefDao(ctx);
-    location = prefDao.getLocation();
+    PreferenceMap preferenceMap = PreferenceMap.getCurUserPrefDao(ctx);
+    location = preferenceMap.getLocation();
   }
 
   public NearPeopleAdapter(Context ctx, List<User> datas) {

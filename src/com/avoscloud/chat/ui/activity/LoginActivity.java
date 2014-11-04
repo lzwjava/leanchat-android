@@ -22,22 +22,15 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
   EditText usernameEdit, passwordEdit;
   Button loginBtn;
   TextView registerBtn;
-
-  private LoginBroadcastReceiver receiver = new LoginBroadcastReceiver();
+  public static LoginActivity instance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     // TODO Auto-generated method stub
     super.onCreate(savedInstanceState);
+    instance=this;
     setContentView(R.layout.activity_login);
     init();
-    registerReceiver();
-  }
-
-  private void registerReceiver() {
-    IntentFilter filter = new IntentFilter();
-    filter.addAction(C.ACTION_REGISTER_FINISH);
-    registerReceiver(receiver, filter);
   }
 
   private void init() {
@@ -107,6 +100,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
   protected void onDestroy() {
     // TODO Auto-generated method stub
     super.onDestroy();
-    unregisterReceiver(receiver);
+    instance=null;
   }
 }

@@ -13,13 +13,14 @@ import com.avos.avoscloud.Session;
 import com.avoscloud.chat.adapter.GroupAdapter;
 import com.avoscloud.chat.avobject.ChatGroup;
 import com.avoscloud.chat.service.ChatService;
-import com.avoscloud.chat.service.GroupEventListener;
+import com.avoscloud.chat.service.listener.GroupEventListener;
 import com.avoscloud.chat.util.SimpleNetTask;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
-import com.avoscloud.chat.service.GroupMsgReceiver;
+import com.avoscloud.chat.service.receiver.GroupMsgReceiver;
 import com.avoscloud.chat.service.GroupService;
 import com.avoscloud.chat.util.NetAsyncTask;
+import com.avoscloud.chat.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -121,7 +122,8 @@ public class GroupListActivity extends BaseActivity implements GroupEventListene
         protected void onPost(Exception e) {
           newGroupName = null;
           if (e != null) {
-            e.printStackTrace();
+            Utils.toast(e.getMessage());
+            Utils.printException(e);
           } else {
             chatGroups.add(0, chatGroup);
             App.registerChatGroupsCache(Arrays.asList(chatGroup));

@@ -46,18 +46,9 @@ public class GroupService {
   }
 
   public static ChatGroup setNewChatGroupData(String groupId, String newGroupName) throws AVException {
+    CloudService.saveChatGroup(groupId,User.curUser().getObjectId(),newGroupName);
     ChatGroup chatGroup = ChatGroup.createWithoutData(ChatGroup.class, groupId);
-    User user = User.curUser();
-    chatGroup.setOwner(user);
-
-    AVACL acl = new AVACL();  // just owner can add member
-    acl.setPublicWriteAccess(false);
-    acl.setWriteAccess(user, true);
-    acl.setPublicReadAccess(true);
-    chatGroup.setACL(acl);
-    chatGroup.setName(newGroupName);
-    chatGroup.setFetchWhenSave(true);
-    chatGroup.save();
+    chatGroup.fetch("owner");
     return chatGroup;
   }
 

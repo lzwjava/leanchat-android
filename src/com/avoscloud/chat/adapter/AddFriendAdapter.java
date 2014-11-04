@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.avos.avoscloud.AVException;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.User;
+import com.avoscloud.chat.service.CloudService;
 import com.avoscloud.chat.ui.view.ViewHolder;
 import com.avoscloud.chat.service.AddRequestService;
 import com.avoscloud.chat.service.UserService;
@@ -52,17 +53,13 @@ public class AddFriendAdapter extends BaseListAdapter<User> {
     new NetAsyncTask(ctx) {
       @Override
       protected void doInBack() throws Exception {
-        AddRequestService.createAddRequest(friend);
+        CloudService.tryCreateAddRequest(friend);
       }
 
       @Override
       protected void onPost(Exception e) {
         if (e != null) {
-          if (e instanceof AVException) {
-            Utils.toast(R.string.pleaseCheckNetwork);
-          } else {
-            Utils.toast(e.getMessage());
-          }
+          Utils.toast(e.getMessage());
         } else {
           Utils.toast(R.string.sendRequestSucceed);
         }

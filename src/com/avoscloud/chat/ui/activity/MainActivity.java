@@ -13,7 +13,7 @@ import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.service.AvatarService;
 import com.avoscloud.chat.service.ChatService;
-import com.avoscloud.chat.service.PrefDao;
+import com.avoscloud.chat.service.PreferenceMap;
 import com.avoscloud.chat.service.UpdateService;
 import com.avoscloud.chat.ui.fragment.ConversationFragment;
 import com.avoscloud.chat.ui.fragment.DiscoverFragment;
@@ -44,7 +44,6 @@ public class MainActivity extends BaseActivity {
   public static final int[] tabsActiveBackIds = new int[]{R.drawable.tabbar_chat_active,
       R.drawable.tabbar_contacts_active, R.drawable.tabbar_discover_active,
       R.drawable.tabbar_me_active};
-  private Activity ctx;
   View recentTips, contactTips;
   public LocationClient locClient;
   public MyLocationListener locationListener;
@@ -53,7 +52,6 @@ public class MainActivity extends BaseActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main_activity);
-    ctx = this;
     findView();
     init();
 
@@ -62,29 +60,11 @@ public class MainActivity extends BaseActivity {
     conversationBtn.performClick();
     //discoverBtn.performClick();
     initBaiduLocClient();
-    //testSavaAvatar();
+
     //UpdateService.createUpdateInfoInBackground();
     UpdateService updateService = UpdateService.getInstance(ctx);
     updateService.checkUpdate();
     App.registerUserCache(User.curUser());
-  }
-
-  private void testSavaAvatar() {
-    new Thread(new Runnable() {
-      @Override
-      public void run() {
-        try {
-          AVFile f = AvatarService.getRandomAvatarFile();
-          Logger.d("f=" + f.getOriginalName());
-          User user = User.curUser();
-          user.setAvatar(f);
-          user.save();
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-
-      }
-    }).start();
   }
 
   @Override
@@ -119,9 +99,9 @@ public class MainActivity extends BaseActivity {
       Logger.d("onReceiveLocation latitude=" + latitude + " longitude=" + longitude
           + " locType=" + locType + " address=" + location.getAddrStr());
       User user = User.curUser();
-      PrefDao prefDao = new PrefDao(ctx, user.getObjectId());
+      PreferenceMap preferenceMap = new PreferenceMap(ctx, user.getObjectId());
       if (user != null) {
-        AVGeoPoint avGeoPoint = prefDao.getLocation();
+        AVGeoPoint avGeoPoint = preferenceMap.getLocation();
         if (avGeoPoint != null && avGeoPoint.getLatitude() == location.getLatitude()
             && avGeoPoint.getLongitude() == location.getLongitude()) {
           ChatUtils.updateUserLocation();
@@ -132,7 +112,7 @@ public class MainActivity extends BaseActivity {
       }
       AVGeoPoint avGeoPoint = new AVGeoPoint(location.getLatitude(),
           location.getLongitude());
-      prefDao.setLocation(avGeoPoint);
+      preferenceMap.setLocation(avGeoPoint);
     }
   }
 

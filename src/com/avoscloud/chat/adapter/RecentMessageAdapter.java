@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.entity.Conversation;
-import com.avoscloud.chat.service.EmotionService;
+import com.avoscloud.chat.util.EmotionUtils;
 import com.avoscloud.chat.ui.view.ViewHolder;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.ChatGroup;
@@ -60,7 +60,7 @@ public class RecentMessageAdapter extends BaseListAdapter<Conversation> {
     //recentTimeView.setText(TimeUtils.getDate);
     int num = 0;//unread count
     if (msg.getType() == Msg.Type.Text) {
-      CharSequence spannableString = EmotionService.replace(ctx, msg.getContent());
+      CharSequence spannableString = EmotionUtils.replace(ctx, msg.getContent());
       recentMsgView.setText(spannableString);
     } else if (msg.getType() == Msg.Type.Image) {
       recentMsgView.setText("[" + App.ctx.getString(R.string.image) + "]");

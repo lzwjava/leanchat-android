@@ -14,8 +14,8 @@ import com.avoscloud.chat.adapter.GroupUsersAdapter;
 import com.avoscloud.chat.avobject.ChatGroup;
 import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.service.ChatService;
-import com.avoscloud.chat.service.GroupEventListener;
-import com.avoscloud.chat.service.GroupMsgReceiver;
+import com.avoscloud.chat.service.listener.GroupEventListener;
+import com.avoscloud.chat.service.receiver.GroupMsgReceiver;
 import com.avoscloud.chat.service.GroupService;
 import com.avoscloud.chat.util.SimpleNetTask;
 import com.avoscloud.chat.util.UIUtils;
@@ -159,7 +159,9 @@ public class GroupDetailActivity extends BaseActivity implements AdapterView.OnI
   public void onQuit(Group group) {
     if (group.getGroupId().equals(chatGroup.getObjectId())) {
       finish();
-      ChatActivity.instance.finish();
+      if(ChatActivity.ctx!=null){
+        ChatActivity.ctx.finish();
+      }
     }
   }
 

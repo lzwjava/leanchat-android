@@ -6,7 +6,7 @@ import android.widget.TextView;
 import com.avos.avoscloud.*;
 import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.C;
-import com.avoscloud.chat.service.PrefDao;
+import com.avoscloud.chat.service.PreferenceMap;
 import com.avoscloud.chat.ui.view.ViewHolder;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.adapter.BaseListAdapter;
@@ -55,8 +55,8 @@ public class ChatUtils {
   }
 
   public static void updateUserLocation() {
-    PrefDao prefDao = PrefDao.getCurUserPrefDao(App.ctx);
-    AVGeoPoint lastLocation = prefDao.getLocation();
+    PreferenceMap preferenceMap = PreferenceMap.getCurUserPrefDao(App.ctx);
+    AVGeoPoint lastLocation = preferenceMap.getLocation();
     if (lastLocation != null) {
       final User user = User.curUser();
       final AVGeoPoint location = user.getLocation();

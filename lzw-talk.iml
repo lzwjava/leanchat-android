@@ -30,7 +30,6 @@
     <orderEntry type="module" module-name="avospush" />
     <orderEntry type="module" module-name="avosstatistics" />
     <orderEntry type="library" name="android-support-v4" level="application" />
-    <orderEntry type="library" name="android-async-http-1.4.4-fix" level="application" />
     <orderEntry type="library" name="fastjson" level="application" />
     <orderEntry type="library" name="httpmime-4.2.4" level="application" />
     <orderEntry type="module-library">
@@ -42,6 +41,7 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="android-async-http-1.4.6" level="application" />
   </component>
 </module>
 

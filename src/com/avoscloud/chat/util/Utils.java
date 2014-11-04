@@ -717,4 +717,10 @@ public class Utils {
       return num + App.ctx.getString(R.string.kilometres);
     }
   }
+
+  public static void printException(Exception e){
+    if(App.debug){
+      e.printStackTrace();
+    }
+  }
 }

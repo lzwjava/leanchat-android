@@ -9,7 +9,7 @@ import android.widget.TextView;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.service.ChatService;
-import com.avoscloud.chat.service.EmotionService;
+import com.avoscloud.chat.util.EmotionUtils;
 import com.avoscloud.chat.ui.activity.ChatActivity;
 import com.avoscloud.chat.ui.activity.LocationActivity;
 import com.avoscloud.chat.ui.view.PlayButton;
@@ -120,7 +120,7 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
 
     Msg.Type type = msg.getType();
     if (type == Msg.Type.Text) {
-      contentView.setText(EmotionService.replace(ctx, msg.getContent()));
+      contentView.setText(EmotionUtils.replace(ctx, msg.getContent()));
     } else if (type == Msg.Type.Image) {
       String localPath = PathUtils.getChatFileDir() + msg.getObjectId();
       String url = msg.getContent();

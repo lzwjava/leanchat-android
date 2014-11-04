@@ -1,9 +1,12 @@
-package com.avoscloud.chat.service;
+package com.avoscloud.chat.service.receiver;
 
 import android.content.Context;
 import com.avos.avoscloud.AVMessage;
 import com.avos.avoscloud.AVMessageReceiver;
 import com.avos.avoscloud.Session;
+import com.avoscloud.chat.service.ChatService;
+import com.avoscloud.chat.service.listener.MsgListener;
+import com.avoscloud.chat.service.listener.StatusListener;
 import com.avoscloud.chat.util.Logger;
 
 import java.util.*;

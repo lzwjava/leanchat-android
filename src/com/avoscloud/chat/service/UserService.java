@@ -9,7 +9,6 @@ import com.avoscloud.chat.util.PhotoUtil;
 import com.avoscloud.chat.base.App;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -93,8 +92,8 @@ public class UserService {
   }
 
   public static List<User> findNearbyPeople(int skip) throws AVException {
-    PrefDao prefDao = PrefDao.getCurUserPrefDao(App.ctx);
-    AVGeoPoint geoPoint = prefDao.getLocation();
+    PreferenceMap preferenceMap = PreferenceMap.getCurUserPrefDao(App.ctx);
+    AVGeoPoint geoPoint = preferenceMap.getLocation();
     if (geoPoint == null) {
       Logger.i("geo point is null");
       return new ArrayList<User>();
@@ -125,7 +124,7 @@ public class UserService {
     return ids;
   }
 
-  public static User signUp(String name, boolean isMale, String password) throws AVException, FileNotFoundException {
+  public static User signUp(String name, String password) throws AVException {
     User user = new User();
     user.setUsername(name);
     user.setPassword(password);
@@ -136,8 +135,8 @@ public class UserService {
   public static void saveAvatar(String path) throws IOException, AVException {
     User user = User.curUser();
     if (user.getLocation() == null) {
-      PrefDao prefDao = new PrefDao(App.ctx, user.getObjectId());
-      user.setLocation(prefDao.getLocation());
+      PreferenceMap preferenceMap = new PreferenceMap(App.ctx, user.getObjectId());
+      user.setLocation(preferenceMap.getLocation());
     }
     final AVFile file = AVFile.withAbsoluteLocalPath(user.getUsername(), path);
     file.save();

@@ -89,7 +89,7 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
     } else if (id == R.id.logoutLayout) {
       ChatService.closeSession();
       User.logOut();
-      User.curUser = null;
+      User.setCurUser(null);
       getActivity().finish();
     } else if (id == R.id.sexLayout) {
       showSexChooseDialog();

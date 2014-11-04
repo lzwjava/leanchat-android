@@ -1,4 +1,4 @@
-package com.avoscloud.chat.service;
+package com.avoscloud.chat.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 /**
  * Created by lzw on 14-9-25.
  */
-public class EmotionService {
+public class EmotionUtils {
   public static List<String> emotionTexts = new ArrayList<String>();
 
   static {

@@ -1,4 +1,4 @@
-package com.avoscloud.chat.service;
+package com.avoscloud.chat.service.listener;
 
 import com.avoscloud.chat.entity.Msg;
 

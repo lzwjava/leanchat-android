@@ -7,7 +7,7 @@ import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.service.ChatService;
-import com.avoscloud.chat.service.EmotionService;
+import com.avoscloud.chat.util.EmotionUtils;
 import com.avoscloud.chat.util.PathUtils;
 
 import java.util.Arrays;
@@ -228,7 +228,7 @@ public class Msg {
       case Audio:
         return App.ctx.getString(R.string.audio);
       case Text:
-        if (EmotionService.haveEmotion(getContent())) {
+        if (EmotionUtils.haveEmotion(getContent())) {
           return App.ctx.getString(R.string.emotion);
         } else {
           return getContent();

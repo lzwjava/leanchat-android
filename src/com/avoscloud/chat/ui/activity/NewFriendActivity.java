@@ -12,7 +12,7 @@ import com.avoscloud.chat.adapter.NewFriendAdapter;
 import com.avoscloud.chat.avobject.AddRequest;
 import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.service.AddRequestService;
-import com.avoscloud.chat.service.PrefDao;
+import com.avoscloud.chat.service.PreferenceMap;
 import com.avoscloud.chat.util.NetAsyncTask;
 import com.avoscloud.chat.util.SimpleNetTask;
 import com.avoscloud.chat.util.Utils;
@@ -49,8 +49,8 @@ public class NewFriendActivity extends BaseActivity implements OnItemLongClickLi
           e.printStackTrace();
           Utils.toast(ctx, R.string.pleaseCheckNetwork);
         } else {
-          PrefDao prefDao = new PrefDao(ctx, User.curUserId());
-          prefDao.setAddRequestN(subAddRequests.size());
+          PreferenceMap preferenceMap = new PreferenceMap(ctx, User.curUserId());
+          preferenceMap.setAddRequestN(subAddRequests.size());
           adapter.addAll(subAddRequests);
         }
       }
