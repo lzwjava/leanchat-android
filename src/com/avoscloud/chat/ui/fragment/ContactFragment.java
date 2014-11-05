@@ -59,13 +59,8 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
   public void onActivityCreated(Bundle savedInstanceState) {
     // TODO Auto-generated method stub
     super.onActivityCreated(savedInstanceState);
-    findView();
     init();
     refresh();
-  }
-
-  private void findView() {
-
   }
 
   private void init() {
