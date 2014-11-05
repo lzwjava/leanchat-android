@@ -11,7 +11,6 @@ import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.service.GroupService;
 import com.avoscloud.chat.util.SimpleNetTask;
-import com.avoscloud.chat.util.UIUtils;
 import com.avoscloud.chat.util.Utils;
 
 import java.util.ArrayList;
@@ -44,7 +43,7 @@ public class GroupAddMembersActivity extends BaseActivity {
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     MenuItem add = menu.add(0, OK, 0, R.string.sure);
-    UIUtils.alwaysShowMenuItem(add);
+    Utils.alwaysShowMenuItem(add);
     return super.onCreateOptionsMenu(menu);
   }
 

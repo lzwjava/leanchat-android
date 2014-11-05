@@ -17,6 +17,7 @@ import android.provider.MediaStore;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -722,5 +723,10 @@ public class Utils {
     if(App.debug){
       e.printStackTrace();
     }
+  }
+
+  public static void alwaysShowMenuItem(MenuItem add) {
+    add.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS
+        | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
   }
 }

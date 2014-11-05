@@ -18,7 +18,6 @@ import com.avoscloud.chat.service.listener.GroupEventListener;
 import com.avoscloud.chat.service.receiver.GroupMsgReceiver;
 import com.avoscloud.chat.service.GroupService;
 import com.avoscloud.chat.util.SimpleNetTask;
-import com.avoscloud.chat.util.UIUtils;
 import com.avoscloud.chat.util.Utils;
 
 import java.util.ArrayList;
@@ -54,10 +53,10 @@ public class GroupDetailActivity extends BaseActivity implements AdapterView.OnI
   public boolean onCreateOptionsMenu(Menu menu) {
     if (isOwner) {
       MenuItem invite = menu.add(0, ADD_MEMBERS, 0, R.string.invite);
-      UIUtils.alwaysShowMenuItem(invite);
+      Utils.alwaysShowMenuItem(invite);
     } else {
       MenuItem quit = menu.add(0, QUIT_GROUP, 0, R.string.quitGroup);
-      UIUtils.alwaysShowMenuItem(quit);
+      Utils.alwaysShowMenuItem(quit);
     }
     return super.onCreateOptionsMenu(menu);
   }

@@ -19,7 +19,6 @@ import com.baidu.mapapi.search.core.SearchResult;
 import com.baidu.mapapi.search.geocode.*;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
-import com.avoscloud.chat.util.UIUtils;
 import com.avoscloud.chat.util.Utils;
 
 public class LocationActivity extends BaseActivity implements
@@ -75,7 +74,7 @@ public class LocationActivity extends BaseActivity implements
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     MenuItem add = menu.add(0, SEND, 0, R.string.send);
-    UIUtils.alwaysShowMenuItem(add);
+    Utils.alwaysShowMenuItem(add);
     return super.onCreateOptionsMenu(menu);
   }
 

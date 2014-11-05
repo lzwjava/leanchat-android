@@ -32,11 +32,6 @@ public class User extends AVUser {
       curUser = getCurrentUser(User.class);
     }
     return curUser;
-    /*AVUser avUser = getCurrentUser(User.class);
-    User user = User.cast(avUser, User.class);
-    return user;*/
-    //User user = getCurrentUser(User.class);
-    //return user;
   }
 
   public static void setCurUser(User curUser) {
