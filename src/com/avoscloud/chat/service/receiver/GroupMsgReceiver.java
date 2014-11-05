@@ -86,7 +86,6 @@ public class GroupMsgReceiver extends AVGroupMessageReceiver {
 
   @Override
   public void onError(Context context, Group group, Throwable e) {
-    LogUtil.log.e("", (Exception) e);
     Logger.d("on error " + e.getMessage());
     ChatService.onMessageError(e, msgListener);
   }
