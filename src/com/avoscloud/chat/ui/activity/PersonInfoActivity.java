@@ -104,8 +104,6 @@ public class PersonInfoActivity extends BaseActivity implements OnClickListener 
   private void updateView(User user) {
     String avatar = user.getAvatarUrl();
     UserService.displayAvatar(avatar, avatarView);
-    ImageLoader.getInstance().displayImage(avatar, avatarView,
-        PhotoUtil.avatarImageOptions);
     usernameView.setText(user.getUsername());
     sexView.setText(user.getSex() == true ? R.string.male : R.string.female);
   }

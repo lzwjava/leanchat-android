@@ -78,9 +78,7 @@ public class RegisterActivity extends BaseActivity {
       @Override
       protected void doInBack() throws Exception {
         User user = UserService.signUp(name, password);
-        AVFile avatar = AvatarService.getRandomAvatarFile();
         user.setSex(isMale);
-        user.setAvatar(avatar);
         user.setFetchWhenSave(true);
         user.save();
       }
