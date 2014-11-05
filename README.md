@@ -1,10 +1,17 @@
-# LeanChat
-
 ##[下载](http://fir.im/leanchat)
 
-用 AVOS Cloud 实时通信 SDK做的沟通工具  Leanchat
+## Leanchat 项目构成
+* [Leanchat-android](https://github.com/leancloud/leanchat)
+* [Leanchat-ios](https://github.com/leancloud/leanchat-ios)
+* [Leanchat-cloud-code](https://github.com/leancloud/leanchat-cloudcode)，Leanchat 云代码后端
 
-![img](https://raw.githubusercontent.com/lzwjava/plan/master/im361.png)
+用 LeanCloud 实时通信 SDK做的沟通工具  Leanchat
+
+![img](./screenshot/im361.png)
+
+![img](./screenshot/im362.png)
+
+![img](./screenshot/im363.png)
 
 ##当前特性
 
@@ -142,6 +149,6 @@ public class Receiver extends AVMessageReceiver {
 }
 ```
 
-###[Document](https://cn.avoscloud.com/docs/realtime.html)
+###[Document](http://leancloud.cn/docs/realtime.html)
 
-###[API](https://cn.avoscloud.com/docs/api/android/doc/index.html)
+###[API](http://leancloud.cn/docs/api/android/doc/index.html)
