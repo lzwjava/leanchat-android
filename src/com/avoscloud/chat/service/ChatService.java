@@ -62,7 +62,7 @@ public class ChatService {
     resMsg.setType(Msg.Type.Response);
     resMsg.setToPeerId(msg.getFromPeerId());
     resMsg.setFromPeerId(getSelfId());
-    resMsg.setContent(msg.getTimestamp() + "");
+    resMsg.setContent("");
     resMsg.setObjectId(msg.getObjectId());
     resMsg.setRoomType(Msg.RoomType.Single);
     resMsg.setStatus(Msg.Status.SendStart);
@@ -244,7 +244,8 @@ public class ChatService {
       responseAndReceiveMsg(context, msg, listener, group);
     } else {
       Logger.d("onResponseMessage " + msg.getContent());
-      DBMsg.updateStatusAndTimestamp(msg);
+      msg.setStatus(Msg.Status.SendReceived);
+      DBMsg.updateStatus(msg);
       MsgListener _listener = filterMsgListener(listener, msg, group);
       if (_listener != null) {
         _listener.onMessage(msg);
@@ -299,15 +300,9 @@ public class ChatService {
   public static MsgListener filterMsgListener(MsgListener msgListener, Msg msg, Group group) {
     if (msgListener != null) {
       String listenerId = msgListener.getListenerId();
-      if (group == null) {
-        String chatUserId = msg.getChatUserId();
-        if (chatUserId.equals(listenerId)) {
-          return msgListener;
-        }
-      } else {
-        if (group.getGroupId().equals(listenerId)) {
-          return msgListener;
-        }
+      String chatUserId= msg.getChatUserId();
+      if(chatUserId.equals(listenerId)){ //may be group
+        return msgListener;
       }
     }
     return null;
@@ -316,9 +311,9 @@ public class ChatService {
   public static void onMessageSent(AVMessage avMsg, MsgListener listener, Group group) {
     Msg msg = Msg.fromAVMessage(avMsg);
     if (msg.getType() != Msg.Type.Response) {
-      msg.setStatus(Msg.Status.SendSucceed);
-      DBMsg.updateStatus(msg);
       msg.setFromPeerId(User.curUserId());
+      msg.setStatus(Msg.Status.SendSucceed);
+      DBMsg.updateStatusAndTimestamp(msg);
       MsgListener _listener = filterMsgListener(listener, msg, group);
       if (_listener != null) {
         _listener.onMessageSent(msg);

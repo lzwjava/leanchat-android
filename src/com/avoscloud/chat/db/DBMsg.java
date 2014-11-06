@@ -132,8 +132,8 @@ public class DBMsg {
 
   public static int updateStatusAndTimestamp(Msg msg) {
     ContentValues cv = new ContentValues();
-    cv.put(STATUS, Msg.Status.SendReceived.getValue());
-    cv.put(TIMESTAMP, msg.getContent());
+    cv.put(STATUS, msg.getStatus().getValue());
+    cv.put(TIMESTAMP, msg.getTimestamp()+"");
     String objectId = msg.getObjectId();
     return updateMessage(objectId, cv);
   }
