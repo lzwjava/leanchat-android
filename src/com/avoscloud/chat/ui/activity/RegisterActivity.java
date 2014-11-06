@@ -8,13 +8,11 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
-import com.avos.avoscloud.AVFile;
-import com.avoscloud.chat.avobject.User;
-import com.avoscloud.chat.service.AvatarService;
-import com.avoscloud.chat.util.ChatUtils;
 import com.avoscloud.chat.R;
+import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.service.UserService;
+import com.avoscloud.chat.util.ChatUtils;
 import com.avoscloud.chat.util.NetAsyncTask;
 import com.avoscloud.chat.util.Utils;
 

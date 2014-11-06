@@ -26,9 +26,6 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="avoscloud" />
-    <orderEntry type="module" module-name="avospush" />
-    <orderEntry type="module" module-name="avosstatistics" />
     <orderEntry type="library" name="android-support-v4" level="application" />
     <orderEntry type="library" name="fastjson" level="application" />
     <orderEntry type="library" name="httpmime-4.2.4" level="application" />
@@ -42,6 +39,17 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="android-async-http-1.4.6" level="application" />
+    <orderEntry type="module-library">
+      <library name="libs">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/avoscloud-v2.6.7.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/avospush-v2.6.7.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/avosstatistics-v2.6.7.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
 

@@ -1,31 +1,28 @@
 package com.avoscloud.chat.ui.activity;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVGeoPoint;
+import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.App;
-import com.avoscloud.chat.service.AvatarService;
 import com.avoscloud.chat.service.ChatService;
 import com.avoscloud.chat.service.PreferenceMap;
 import com.avoscloud.chat.service.UpdateService;
+import com.avoscloud.chat.ui.fragment.ContactFragment;
 import com.avoscloud.chat.ui.fragment.ConversationFragment;
 import com.avoscloud.chat.ui.fragment.DiscoverFragment;
+import com.avoscloud.chat.ui.fragment.MySpaceFragment;
 import com.avoscloud.chat.util.ChatUtils;
 import com.avoscloud.chat.util.Logger;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
-import com.avoscloud.chat.R;
-import com.avoscloud.chat.ui.fragment.ContactFragment;
-import com.avoscloud.chat.ui.fragment.MySpaceFragment;
 
 /**
  * Created by lzw on 14-9-17.

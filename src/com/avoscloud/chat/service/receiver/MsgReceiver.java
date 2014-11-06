@@ -43,6 +43,7 @@ public class MsgReceiver extends AVMessageReceiver {
   @Override
   public void onMessageSent(Context context, Session session, AVMessage avMsg) {
     Logger.d("onMessageSent " + avMsg.getMessage());
+    Logger.d("timestamp"+avMsg.getTimestamp());
     ChatService.onMessageSent(avMsg, msgListener, null);
   }
 
