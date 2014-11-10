@@ -11,7 +11,6 @@
 
 ![img](./screenshot/im362.png)
 
-![img](./screenshot/im363.png)
 
 ##当前特性
 
