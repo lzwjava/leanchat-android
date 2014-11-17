@@ -18,7 +18,7 @@ import java.util.List;
  * Created by lzw on 14-8-7.
  */
 public class Msg {
-  public enum Status{
+  public static enum Status{
     SendStart(0), SendSucceed(1), SendReceived(2),
     SendFailed(3), HaveRead(4);
 
@@ -38,7 +38,7 @@ public class Msg {
   }
 
 
-  public enum Type{
+  public static enum Type{
     Text(0), Response(1), Image(2), Audio(3), Location(4);
     int value;
 
@@ -55,7 +55,7 @@ public class Msg {
     }
   }
 
-  public enum RoomType{
+  public static enum RoomType{
     Single(0), Group(1);
 
     int value;
