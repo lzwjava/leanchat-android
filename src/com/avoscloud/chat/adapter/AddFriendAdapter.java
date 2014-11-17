@@ -7,12 +7,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.avos.avoscloud.AVException;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.service.CloudService;
 import com.avoscloud.chat.ui.view.ViewHolder;
-import com.avoscloud.chat.service.AddRequestService;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.util.NetAsyncTask;
 import com.avoscloud.chat.util.Utils;
@@ -43,27 +41,24 @@ public class AddFriendAdapter extends BaseListAdapter<User> {
 
       @Override
       public void onClick(View v) {
-        runAddFriendTask(ctx, contact);
+        new NetAsyncTask(ctx) {
+          @Override
+          protected void doInBack() throws Exception {
+            CloudService.tryCreateAddRequest(contact);
+          }
+
+          @Override
+          protected void onPost(Exception e) {
+            if (e != null) {
+              Utils.toast(e.getMessage());
+            } else {
+              Utils.toast(R.string.sendRequestSucceed);
+            }
+          }
+        }.execute();
       }
     });
     return conView;
   }
 
-  public static void runAddFriendTask(Context ctx, final User friend) {
-    new NetAsyncTask(ctx) {
-      @Override
-      protected void doInBack() throws Exception {
-        CloudService.tryCreateAddRequest(friend);
-      }
-
-      @Override
-      protected void onPost(Exception e) {
-        if (e != null) {
-          Utils.toast(e.getMessage());
-        } else {
-          Utils.toast(R.string.sendRequestSucceed);
-        }
-      }
-    }.execute();
-  }
 }

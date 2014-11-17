@@ -8,13 +8,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.*;
 import com.avos.avoscloud.AVException;
-import com.avoscloud.chat.adapter.AddFriendAdapter;
+import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.App;
+import com.avoscloud.chat.service.CloudService;
 import com.avoscloud.chat.service.UserService;
-import com.avoscloud.chat.util.PhotoUtil;
-import com.avoscloud.chat.R;
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.avoscloud.chat.util.NetAsyncTask;
+import com.avoscloud.chat.util.Utils;
 
 import java.util.List;
 
@@ -117,7 +117,21 @@ public class PersonInfoActivity extends BaseActivity implements OnClickListener 
         finish();
         break;
       case R.id.addFriendBtn:// 添加好友
-        AddFriendAdapter.runAddFriendTask(ctx, user);
+        new NetAsyncTask(ctx) {
+          @Override
+          protected void doInBack() throws Exception {
+            CloudService.tryCreateAddRequest(user);
+          }
+
+          @Override
+          protected void onPost(Exception e) {
+            if (e != null) {
+              Utils.toast(e.getMessage());
+            } else {
+              Utils.toast(R.string.sendRequestSucceed);
+            }
+          }
+        }.execute();
         break;
     }
   }
