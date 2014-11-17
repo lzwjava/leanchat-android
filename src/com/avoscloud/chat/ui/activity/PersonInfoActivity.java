@@ -20,11 +20,11 @@ import java.util.List;
 
 public class PersonInfoActivity extends BaseActivity implements OnClickListener {
   public static final String USER_ID = "userId";
-  TextView usernameView, sexView;
+  TextView usernameView, genderView;
   ImageView avatarView, avatarArrowView;
   LinearLayout allLayout;
   Button chatBtn, addFriendBtn;
-  RelativeLayout avatarLayout,  sexLayout;
+  RelativeLayout avatarLayout,  genderLayout;
 
   String userId = "";
   User user;
@@ -57,9 +57,9 @@ public class PersonInfoActivity extends BaseActivity implements OnClickListener 
     avatarArrowView = (ImageView) findViewById(R.id.avatar_arrow);
     usernameView = (TextView) findViewById(R.id.username_view);
     avatarLayout = (RelativeLayout) findViewById(R.id.head_layout);
-    sexLayout = (RelativeLayout) findViewById(R.id.sex_layout);
+    genderLayout = (RelativeLayout) findViewById(R.id.sex_layout);
 
-    sexView = (TextView) findViewById(R.id.sexView);
+    genderView = (TextView) findViewById(R.id.sexView);
     chatBtn = (Button) findViewById(R.id.chatBtn);
     addFriendBtn = (Button) findViewById(R.id.addFriendBtn);
   }
@@ -69,7 +69,7 @@ public class PersonInfoActivity extends BaseActivity implements OnClickListener 
     if (curUser.equals(user)) {
       initActionBar(R.string.personalInfo);
       avatarLayout.setOnClickListener(this);
-      sexLayout.setOnClickListener(this);
+      genderLayout.setOnClickListener(this);
       avatarArrowView.setVisibility(View.VISIBLE);
       chatBtn.setVisibility(View.GONE);
       addFriendBtn.setVisibility(View.GONE);
@@ -105,7 +105,7 @@ public class PersonInfoActivity extends BaseActivity implements OnClickListener 
     String avatar = user.getAvatarUrl();
     UserService.displayAvatar(avatar, avatarView);
     usernameView.setText(user.getUsername());
-    sexView.setText(user.getGenderDesc());
+    genderView.setText(user.getGenderDesc());
   }
 
   @Override

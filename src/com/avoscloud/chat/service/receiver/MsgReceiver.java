@@ -36,7 +36,7 @@ public class MsgReceiver extends AVMessageReceiver {
 
   @Override
   public void onMessage(final Context context, Session session, AVMessage avMsg) {
-    Logger.d("onMessage");
+    Logger.d("onMessage "+avMsg.getMessage());
     ChatService.onMessage(context, avMsg, msgListener, null);
   }
 

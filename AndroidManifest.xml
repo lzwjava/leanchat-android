@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.avoscloud.chat"
-    android:versionCode="5"
-    android:versionName="1.1.3">
+    android:versionCode="6"
+    android:versionName="1.1.5">
 
     <uses-sdk android:minSdkVersion="15" />
 
@@ -156,14 +156,14 @@
             android:enabled="true"
             android:process=":remote" />
 
-        <meta-data
+        <!--<meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="fnWUFPMrQfBv9nzkzFOY8ILT" />
+            android:value="fnWUFPMrQfBv9nzkzFOY8ILT" />-->
 
 
         <!--prod-->
-        <!--<meta-data
+        <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="PUT3u7lIPY49Ck0bqceFA3ue" />-->
+            android:value="PUT3u7lIPY49Ck0bqceFA3ue" />
     </application>
 </manifest>

@@ -66,11 +66,7 @@ public class RegisterActivity extends BaseActivity {
 
     int checkedId = sexRadio.getCheckedRadioButtonId();
     final User.Gender gender;
-    if (checkedId == R.id.male) {
-      gender= User.Gender.Male;
-    } else {
-      gender=User.Gender.Female;
-    }
+    gender=checkedId==R.id.male? User.Gender.Male:User.Gender.Female;
 
     new NetAsyncTask(ctx) {
       @Override

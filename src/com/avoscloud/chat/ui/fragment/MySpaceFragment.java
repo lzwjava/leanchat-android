@@ -17,7 +17,6 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.SaveCallback;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.User;
-import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.service.ChatService;
 import com.avoscloud.chat.service.UpdateService;
 import com.avoscloud.chat.service.UserService;
@@ -34,12 +33,10 @@ import java.util.Date;
 public class MySpaceFragment extends BaseFragment implements View.OnClickListener {
   private static final int IMAGE_PICK_REQUEST = 1;
   private static final int CROP_REQUEST = 2;
-  TextView usernameView, sexView;
+  TextView usernameView, genderView;
   ImageView avatarView;
   View usernameLayout, avatarLayout, logoutLayout,
-      sexLayout, notifyLayout, updateLayout;
-  String[] sexs = new String[]{App.ctx.getString(R.string.male),
-      App.ctx.getString(R.string.female)};
+      genderLayout, notifyLayout, updateLayout;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,7 +54,7 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
   private void refresh() {
     User curUser = User.curUser();
     usernameView.setText(curUser.getUsername());
-    sexView.setText(curUser.getGenderDesc());
+    genderView.setText(curUser.getGenderDesc());
     UserService.displayAvatar(curUser.getAvatarUrl(), avatarView);
   }
 
@@ -68,14 +65,14 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
     usernameLayout = fragmentView.findViewById(R.id.usernameLayout);
     avatarLayout = fragmentView.findViewById(R.id.avatarLayout);
     logoutLayout = fragmentView.findViewById(R.id.logoutLayout);
-    sexLayout = fragmentView.findViewById(R.id.sexLayout);
+    genderLayout = fragmentView.findViewById(R.id.sexLayout);
     notifyLayout = fragmentView.findViewById(R.id.notifyLayout);
-    sexView = (TextView) fragmentView.findViewById(R.id.sex);
+    genderView = (TextView) fragmentView.findViewById(R.id.sex);
     updateLayout = fragmentView.findViewById(R.id.updateLayout);
 
     avatarLayout.setOnClickListener(this);
     logoutLayout.setOnClickListener(this);
-    sexLayout.setOnClickListener(this);
+    genderLayout.setOnClickListener(this);
     notifyLayout.setOnClickListener(this);
     updateLayout.setOnClickListener(this);
   }
@@ -113,7 +110,7 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
     User user = User.curUser();
     int checkItem = user.getGender()== User.Gender.Male ? 0 : 1;
     new AlertDialog.Builder(ctx).setTitle(R.string.sex)
-        .setSingleChoiceItems(sexs, checkItem, new DialogInterface.OnClickListener() {
+        .setSingleChoiceItems(User.genderStrings, checkItem, new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
             User.Gender gender;

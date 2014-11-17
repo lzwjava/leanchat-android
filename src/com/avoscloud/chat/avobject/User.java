@@ -19,6 +19,9 @@ public class User extends AVUser {
   public static final String LOCATION = "location";
   public static final String GENDER = "gender";
 
+  public static String[] genderStrings = new String[]{App.ctx.getString(R.string.male),
+      App.ctx.getString(R.string.female)};
+
   //AVFile avatar;
   //AVGeoPoint location;
   private String sortLetters;
@@ -42,8 +45,6 @@ public class User extends AVUser {
       return values()[index];
     }
   }
-
-
 
   public User() {
   }
@@ -113,11 +114,7 @@ public class User extends AVUser {
 
   public String getGenderDesc() {
     Gender gender = getGender();
-    switch (gender){
-      case Male: return App.ctx.getString(R.string.male);
-      case Female:return App.ctx.getString(R.string.female);
-    }
-    return null;
+    return genderStrings[gender.getValue()];
   }
 
   public String getSortLetters() {
