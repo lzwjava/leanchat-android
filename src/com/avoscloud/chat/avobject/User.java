@@ -17,12 +17,33 @@ public class User extends AVUser {
   public static final String AVATAR = "avatar";
   public static final String FRIENDS = "friends";
   public static final String LOCATION = "location";
-  public static final String SEX = "sex";
+  public static final String GENDER = "gender";
+
   //AVFile avatar;
   //AVGeoPoint location;
   private String sortLetters;
-  //private boolean sex;// true is male ; false is female
+  //Gender gender;
   private static User curUser;
+
+
+  public static enum Gender{
+    Male(0),Female(1);
+
+    int value;
+    Gender(int value){
+      this.value=value;
+    }
+
+    public int getValue(){
+      return value;
+    }
+
+    public static Gender fromInt(int index){
+      return values()[index];
+    }
+  }
+
+
 
   public User() {
   }
@@ -81,17 +102,22 @@ public class User extends AVUser {
     put(LOCATION, location);
   }
 
-  public boolean getSex() {
-    return getBoolean(SEX);
+  public Gender getGender() {
+    int genderInt=getInt(GENDER);
+    return Gender.fromInt(genderInt);
   }
 
-  public void setSex(boolean isMale) {
-    put(SEX, isMale);
+  public void setGender(Gender gender) {
+    put(GENDER,gender.getValue());
   }
 
-  public String getSexInfo() {
-    return getSex() ? App.ctx.getString(R.string.male) :
-        App.ctx.getString(R.string.female);
+  public String getGenderDesc() {
+    Gender gender = getGender();
+    switch (gender){
+      case Male: return App.ctx.getString(R.string.male);
+      case Female:return App.ctx.getString(R.string.female);
+    }
+    return null;
   }
 
   public String getSortLetters() {

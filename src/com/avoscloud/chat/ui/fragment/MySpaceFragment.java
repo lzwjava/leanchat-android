@@ -2,7 +2,6 @@ package com.avoscloud.chat.ui.fragment;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -58,7 +57,7 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
   private void refresh() {
     User curUser = User.curUser();
     usernameView.setText(curUser.getUsername());
-    sexView.setText(curUser.getSexInfo());
+    sexView.setText(curUser.getGenderDesc());
     UserService.displayAvatar(curUser.getAvatarUrl(), avatarView);
   }
 
@@ -112,13 +111,18 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
 
   private void showSexChooseDialog() {
     User user = User.curUser();
-    int checkItem = user.getSex() ? 0 : 1;
+    int checkItem = user.getGender()== User.Gender.Male ? 0 : 1;
     new AlertDialog.Builder(ctx).setTitle(R.string.sex)
         .setSingleChoiceItems(sexs, checkItem, new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
-            boolean isBoy = which == 0 ? true : false;
-            UserService.saveSex(isBoy, saveCallback);
+            User.Gender gender;
+            if(which==0){
+              gender= User.Gender.Male;
+            }else{
+              gender= User.Gender.Female;
+            }
+            UserService.saveSex(gender, saveCallback);
             dialog.dismiss();
           }
         }).setNegativeButton(R.string.cancel, null).show();

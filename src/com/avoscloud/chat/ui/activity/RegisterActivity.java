@@ -17,7 +17,7 @@ import com.avoscloud.chat.util.NetAsyncTask;
 import com.avoscloud.chat.util.Utils;
 
 public class RegisterActivity extends BaseActivity {
-  Button registerButton;
+  View registerButton;
   EditText usernameEdit, passwordEdit, emailEdit;
   RadioGroup sexRadio;
 
@@ -42,7 +42,7 @@ public class RegisterActivity extends BaseActivity {
     usernameEdit = (EditText) findViewById(R.id.usernameEdit);
     passwordEdit = (EditText) findViewById(R.id.passwordEdit);
     emailEdit = (EditText) findViewById(R.id.ensurePasswordEdit);
-    registerButton = (Button) findViewById(R.id.btn_register);
+    registerButton =  findViewById(R.id.btn_register);
     sexRadio = (RadioGroup) findViewById(R.id.sexRadio);
   }
 
@@ -65,18 +65,18 @@ public class RegisterActivity extends BaseActivity {
     }
 
     int checkedId = sexRadio.getCheckedRadioButtonId();
-    final boolean isMale;
+    final User.Gender gender;
     if (checkedId == R.id.male) {
-      isMale = true;
+      gender= User.Gender.Male;
     } else {
-      isMale = false;
+      gender=User.Gender.Female;
     }
 
     new NetAsyncTask(ctx) {
       @Override
       protected void doInBack() throws Exception {
         User user = UserService.signUp(name, password);
-        user.setSex(isMale);
+        user.setGender(gender);
         user.setFetchWhenSave(true);
         user.save();
       }

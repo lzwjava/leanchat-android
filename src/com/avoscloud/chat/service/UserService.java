@@ -110,9 +110,9 @@ public class UserService {
     return users;
   }
 
-  public static void saveSex(boolean isMale, SaveCallback saveCallback) {
+  public static void saveSex(User.Gender gender, SaveCallback saveCallback) {
     User user = User.curUser();
-    user.setSex(isMale);
+    user.setGender(gender);
     user.saveInBackground(saveCallback);
   }
 
