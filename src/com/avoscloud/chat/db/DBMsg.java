@@ -28,9 +28,9 @@ public class DBMsg {
   public static final String OWNER_ID = "ownerId";
 
   public static void createTable(SQLiteDatabase db) {
-    db.execSQL("create table if not exists messages (id integer primary key, objectId varchar(63) unique," +
-        "ownerId varchar(255),fromPeerId varchar(255), convid varchar(255),toPeerId varchar(255), " +
-        "content varchar(1023)," +
+    db.execSQL("create table if not exists messages (id integer primary key, objectId varchar(63) unique not null," +
+        "ownerId varchar(255) not null,fromPeerId varchar(255) not null, convid varchar(255) not null ," +
+        "toPeerId varchar(255), content varchar(1023)," +
         " status integer,type integer,roomType integer,timestamp varchar(63))");
   }
 
