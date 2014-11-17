@@ -151,10 +151,6 @@
             android:theme="@style/MainTheme"
             android:label="@string/inviteMembers" />
 
-        <activity
-            android:name=".ui.activity.GroupAddDialog"
-            android:theme="@style/MyDialogStyleTop" />
-
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"

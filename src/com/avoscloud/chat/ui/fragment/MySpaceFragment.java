@@ -2,6 +2,7 @@ package com.avoscloud.chat.ui.fragment;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -62,15 +63,16 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
   }
 
   private void findView() {
-    usernameView = (TextView) ctx.findViewById(R.id.username);
-    avatarView = (ImageView) ctx.findViewById(R.id.avatar);
-    usernameLayout = ctx.findViewById(R.id.usernameLayout);
-    avatarLayout = ctx.findViewById(R.id.avatarLayout);
-    logoutLayout = ctx.findViewById(R.id.logoutLayout);
-    sexLayout = ctx.findViewById(R.id.sexLayout);
-    notifyLayout = ctx.findViewById(R.id.notifyLayout);
-    sexView = (TextView) ctx.findViewById(R.id.sex);
-    updateLayout = ctx.findViewById(R.id.updateLayout);
+    View fragmentView=getView();
+    usernameView = (TextView) fragmentView.findViewById(R.id.username);
+    avatarView = (ImageView) fragmentView.findViewById(R.id.avatar);
+    usernameLayout = fragmentView.findViewById(R.id.usernameLayout);
+    avatarLayout = fragmentView.findViewById(R.id.avatarLayout);
+    logoutLayout = fragmentView.findViewById(R.id.logoutLayout);
+    sexLayout = fragmentView.findViewById(R.id.sexLayout);
+    notifyLayout = fragmentView.findViewById(R.id.notifyLayout);
+    sexView = (TextView) fragmentView.findViewById(R.id.sex);
+    updateLayout = fragmentView.findViewById(R.id.updateLayout);
 
     avatarLayout.setOnClickListener(this);
     logoutLayout.setOnClickListener(this);
@@ -96,7 +98,7 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
     } else if (id == R.id.notifyLayout) {
       Utils.goActivity(ctx, NotifyPrefActivity.class);
     } else if (id == R.id.updateLayout) {
-      UpdateService updateService = UpdateService.getInstance(ctx);
+      UpdateService updateService = UpdateService.getInstance(getActivity());
       updateService.showSureUpdateDialog();
     }
   }

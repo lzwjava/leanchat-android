@@ -58,7 +58,7 @@ public class GroupListActivity extends BaseActivity implements GroupEventListene
   public boolean onMenuItemSelected(int featureId, MenuItem item) {
     int id = item.getItemId();
     if (id == R.id.create) {
-      UpdateContentActivity.goActivityForResult(ctx, App.ctx.getString(R.string.groupName), GROUP_NAME_REQUEST);
+      UpdateContentActivity.goActivityForResult(this, App.ctx.getString(R.string.groupName), GROUP_NAME_REQUEST);
     }
     return super.onMenuItemSelected(featureId, item);
   }

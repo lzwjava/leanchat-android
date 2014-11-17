@@ -138,7 +138,7 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
   }
 
   private void initListView() {
-    friendsList = (ListView) ctx.findViewById(R.id.list_friends);
+    friendsList = (ListView) getView().findViewById(R.id.list_friends);
     LayoutInflater mInflater = LayoutInflater.from(ctx);
     RelativeLayout headView = (RelativeLayout) mInflater.inflate(R.layout.include_new_friend, null);
     msgTipsView = (ImageView) headView.findViewById(R.id.iv_msg_tips);
@@ -157,7 +157,7 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
 
       @Override
       public boolean onTouch(View v, MotionEvent event) {
-        Utils.hideSoftInputView(ctx);
+        Utils.hideSoftInputView(getActivity());
         return false;
       }
     });
@@ -173,8 +173,8 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
   }
 
   private void initRightLetterView() {
-    rightLetter = (EnLetterView) ctx.findViewById(R.id.right_letter);
-    dialog = (TextView) ctx.findViewById(R.id.dialog);
+    rightLetter = (EnLetterView) getView().findViewById(R.id.right_letter);
+    dialog = (TextView) getView().findViewById(R.id.dialog);
     rightLetter.setTextView(dialog);
     rightLetter.setOnTouchingLetterChangedListener(new LetterListViewListener());
   }

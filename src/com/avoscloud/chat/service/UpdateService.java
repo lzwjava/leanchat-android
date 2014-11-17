@@ -26,14 +26,14 @@ import java.util.List;
 public class UpdateService {
   private static final String LAST_VERSION = "lastVersion";
   private static final String PROMTED_UPDATE = "promtedUpdate";
-  Activity ctx;
+  Activity activity;
   static UpdateService updateService;
   SharedPreferences pref;
   SharedPreferences.Editor editor;
 
-  private UpdateService(Activity ctx) {
-    this.ctx = ctx;
-    pref = PreferenceManager.getDefaultSharedPreferences(ctx);
+  private UpdateService(Activity activity) {
+    this.activity = activity;
+    pref = PreferenceManager.getDefaultSharedPreferences(activity);
     editor = pref.edit();
   }
 
@@ -46,7 +46,7 @@ public class UpdateService {
 
   public void openUrlInBrowser(String url) {
     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-    ctx.startActivity(intent);
+    activity.startActivity(intent);
   }
 
   public static int getVersionCode(Context ctx) {
@@ -75,7 +75,7 @@ public class UpdateService {
 
   public void checkUpdate() {
     //setPromptedUpdate(false);
-    new UpdateTask(ctx, false, AVQuery.CachePolicy.NETWORK_ELSE_CACHE) {
+    new UpdateTask(activity, false, AVQuery.CachePolicy.NETWORK_ELSE_CACHE) {
       @Override
       public void done(final UpdateInfo info, Exception e) {
         if (e == null) {
@@ -85,7 +85,7 @@ public class UpdateService {
           if (curVer < ver) {
             if (isPromptedUpdate() == false) {
               setPromptedUpdate(true);
-              AlertDialog.Builder builder = new AlertDialog.Builder(UpdateService.this.ctx);
+              AlertDialog.Builder builder = new AlertDialog.Builder(UpdateService.this.activity);
               builder.setTitle(R.string.haveNewVersion)
                   .setMessage(info.getDesc())
                   .setPositiveButton(R.string.installNewVersion, new DialogInterface.OnClickListener() {
@@ -104,8 +104,8 @@ public class UpdateService {
                 setPromptedUpdate(false);
                 setLastVersion(curVer);
                 String msg = info.getDesc();
-                String title = UpdateService.this.ctx.getString(R.string.updateLog);
-                Utils.showInfoDialog(UpdateService.this.ctx, msg, title);
+                String title = UpdateService.this.activity.getString(R.string.updateLog);
+                Utils.showInfoDialog(UpdateService.this.activity, msg, title);
               }
             }
           }
@@ -131,7 +131,7 @@ public class UpdateService {
   }
 
   public void showSureUpdateDialog() {
-    new UpdateTask(ctx, true, AVQuery.CachePolicy.NETWORK_ELSE_CACHE) {
+    new UpdateTask(activity, true, AVQuery.CachePolicy.NETWORK_ELSE_CACHE) {
       @Override
       public void done(final UpdateInfo info, Exception e) {
         if (e == null) {

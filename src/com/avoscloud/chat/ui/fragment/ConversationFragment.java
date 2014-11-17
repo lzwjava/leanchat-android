@@ -50,9 +50,9 @@ public class ConversationFragment extends BaseFragment implements AdapterView.On
     // TODO Auto-generated method stub
     Conversation recent = (Conversation) adapter.getItem(position);
     if (recent.msg.getRoomType()== Msg.RoomType.Single) {
-      ChatActivity.goUserChat(ctx, recent.toUser.getObjectId());
+      ChatActivity.goUserChat(getActivity(), recent.toUser.getObjectId());
     } else {
-      ChatActivity.goGroupChat(ctx, recent.chatGroup.getObjectId());
+      ChatActivity.goGroupChat(getActivity(), recent.chatGroup.getObjectId());
     }
   }
 

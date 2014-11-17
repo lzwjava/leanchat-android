@@ -693,11 +693,11 @@ public class Utils {
     return App.ctx.getResources().getColor(resId);
   }
 
-  public static void hideSoftInputView(Activity ctx) {
-    if (ctx.getWindow().getAttributes().softInputMode !=
+  public static void hideSoftInputView(Activity activity) {
+    if (activity.getWindow().getAttributes().softInputMode !=
         WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN) {
-      InputMethodManager manager = (InputMethodManager) ctx.getSystemService(Context.INPUT_METHOD_SERVICE);
-      View currentFocus = ctx.getCurrentFocus();
+      InputMethodManager manager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+      View currentFocus = activity.getCurrentFocus();
       if (currentFocus != null) {
         manager.hideSoftInputFromWindow(currentFocus.getWindowToken(),
             InputMethodManager.HIDE_NOT_ALWAYS);

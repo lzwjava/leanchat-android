@@ -1,6 +1,7 @@
 package com.avoscloud.chat.ui.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -32,10 +33,10 @@ public class UpdateContentActivity extends BaseActivity {
     return super.onCreateOptionsMenu(menu);
   }
 
-  public static void goActivityForResult(Activity ctx, String fieldName, int requestCode) {
-    Intent intent = new Intent(ctx, UpdateContentActivity.class);
+  public static void goActivityForResult(Activity activity, String fieldName, int requestCode) {
+    Intent intent = new Intent(activity, UpdateContentActivity.class);
     intent.putExtra(FIELD_NAME, fieldName);
-    ctx.startActivityForResult(intent, requestCode);
+    activity.startActivityForResult(intent, requestCode);
   }
 
   public static String getResultValue(Intent data) {

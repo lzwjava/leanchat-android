@@ -113,7 +113,7 @@ public class PersonInfoActivity extends BaseActivity implements OnClickListener 
     // TODO Auto-generated method stub
     switch (v.getId()) {
       case R.id.chatBtn:// 发起聊天
-        ChatActivity.goUserChat(ctx, user.getObjectId());
+        ChatActivity.goUserChat(this, user.getObjectId());
         finish();
         break;
       case R.id.addFriendBtn:// 添加好友

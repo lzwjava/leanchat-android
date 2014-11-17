@@ -59,7 +59,7 @@ public class MainActivity extends BaseActivity {
     initBaiduLocClient();
 
     //UpdateService.createUpdateInfoInBackground();
-    UpdateService updateService = UpdateService.getInstance(ctx);
+    UpdateService updateService = UpdateService.getInstance(this);
     updateService.checkUpdate();
     App.registerUserCache(User.curUser());
   }

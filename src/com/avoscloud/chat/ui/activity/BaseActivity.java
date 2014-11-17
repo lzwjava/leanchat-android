@@ -2,6 +2,7 @@ package com.avoscloud.chat.ui.activity;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -14,7 +15,7 @@ import com.avoscloud.chat.util.Utils;
  * Created by lzw on 14-9-17.
  */
 public class BaseActivity extends FragmentActivity {
-  Activity ctx;
+  Context ctx;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
