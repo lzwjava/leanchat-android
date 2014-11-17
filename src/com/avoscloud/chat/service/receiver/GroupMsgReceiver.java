@@ -29,8 +29,13 @@ public class GroupMsgReceiver extends AVGroupMessageReceiver {
   }
 
   @Override
-  public void onInvited(Context context, Group group, String byPeerId) {
-    Logger.d("you're invited to " + group.getGroupId() + " by " + byPeerId);
+  public void onInviteToGroup(Context context, Group group, String byPeerId) {
+    Logger.d("onInviteToGroup"+byPeerId+" groupId="+group.getGroupId());
+  }
+
+  @Override
+  public void onInvited(Context context, Group group, List<String> invitedPeers) {
+    Logger.d("onInvited "+invitedPeers+" groupId="+group.getGroupId());
   }
 
   @Override

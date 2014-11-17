@@ -44,6 +44,8 @@ public class ChatService {
     Session session = SessionManager.getInstance(selfId);
     if (watch) {
       session.watchPeers(peerIds);
+    }else{
+      session.unwatchPeers(peerIds);
     }
   }
 
@@ -132,6 +134,7 @@ public class ChatService {
 
   public static Msg sendMessage(Group group, Msg msg) {
     AVMessage avMsg = msg.toAVMessage();
+    avMsg.setRequestReceipt(true);
     Session session = getSession();
     if (group == null) {
       session.sendMessage(avMsg);

@@ -29,9 +29,20 @@ public class MsgReceiver extends AVMessageReceiver {
     Logger.d("onSessionPaused");
   }
 
+
   @Override
   public void onSessionResumed(Context context, Session session) {
     Logger.d("onSessionResumed");
+  }
+
+  @Override
+  public void onPeersWatched(Context context, Session session, List<String> peerIds) {
+    Logger.d("watched "+peerIds);
+  }
+
+  @Override
+  public void onPeersUnwatched(Context context, Session session, List<String> peerIds) {
+    Logger.d("unwatch "+peerIds);
   }
 
   @Override
@@ -43,8 +54,12 @@ public class MsgReceiver extends AVMessageReceiver {
   @Override
   public void onMessageSent(Context context, Session session, AVMessage avMsg) {
     Logger.d("onMessageSent " + avMsg.getMessage());
-    Logger.d("timestamp "+avMsg.getTimestamp());
     ChatService.onMessageSent(avMsg, msgListener, null);
+  }
+
+  @Override
+  public void onMessageDelivered(Context context, Session session, AVMessage msg) {
+    Logger.d("onMessageDelivered "+msg.getMessage()+" fromPeerId="+msg.getFromPeerId());
   }
 
   @Override
