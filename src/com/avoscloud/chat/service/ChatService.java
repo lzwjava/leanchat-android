@@ -236,17 +236,24 @@ public class ChatService {
 
   public static void onMessage(Context context, AVMessage avMsg, MsgListener listener, Group group) {
     final Msg msg = Msg.fromAVMessage(avMsg);
+    String convid;
     if (group == null) {
       String selfId = getSelfId();
       msg.setToPeerId(selfId);
+      convid=AVOSUtils.convid(selfId,msg.getFromPeerId());
+      msg.setRoomType(Msg.RoomType.Single);
+    }else{
+      convid=group.getGroupId();
+      msg.setRoomType(Msg.RoomType.Group);
     }
+    msg.setStatus(Msg.Status.SendReceived);
+    msg.setConvid(convid);
+
     if (msg.getType() != Msg.Type.Response) {
       responseAndReceiveMsg(context, msg, listener, group);
     } else {
-      Logger.d("onResponseMessage " + msg.getContent());
-      msg.setStatus(Msg.Status.SendReceived);
-      DBMsg.updateStatus(msg);
-      MsgListener _listener = filterMsgListener(listener, msg, group);
+      DBMsg.updateStatus(msg.getObjectId(),Msg.Status.SendReceived);
+      MsgListener _listener = filterMsgListener(listener, msg.getFromPeerId(), group);
       if (_listener != null) {
         _listener.onMessage(msg);
       }
@@ -279,7 +286,7 @@ public class ChatService {
           Utils.toast(context, com.avoscloud.chat.R.string.badNetwork);
         } else {
           DBMsg.insertMsg(msg);
-          MsgListener _msgListener = filterMsgListener(listener, msg, group);
+          MsgListener _msgListener = filterMsgListener(listener, msg.getFromPeerId(), group);
           if (_msgListener == null) {
             if (User.curUser() != null) {
               PreferenceMap preferenceMap = PreferenceMap.getCurUserPrefDao(context);
@@ -297,12 +304,18 @@ public class ChatService {
     }.execute();
   }
 
-  public static MsgListener filterMsgListener(MsgListener msgListener, Msg msg, Group group) {
+  public static MsgListener filterMsgListener(MsgListener msgListener, String toPeerId, Group group) {
+    assert toPeerId!=null || group!=null;
     if (msgListener != null) {
       String listenerId = msgListener.getListenerId();
-      String chatUserId= msg.getChatUserId();
-      if(chatUserId.equals(listenerId)){ //may be group
-        return msgListener;
+      if(group!=null){
+        if(listenerId.equals(group.getGroupId())){
+          return msgListener;
+        }
+      }else{
+        if(listenerId.equals(toPeerId)){
+          return msgListener;
+        }
       }
     }
     return null;
@@ -311,10 +324,8 @@ public class ChatService {
   public static void onMessageSent(AVMessage avMsg, MsgListener listener, Group group) {
     Msg msg = Msg.fromAVMessage(avMsg);
     if (msg.getType() != Msg.Type.Response) {
-      msg.setFromPeerId(User.curUserId());
-      msg.setStatus(Msg.Status.SendSucceed);
-      DBMsg.updateStatusAndTimestamp(msg);
-      MsgListener _listener = filterMsgListener(listener, msg, group);
+      DBMsg.updateStatusAndTimestamp(msg.getObjectId(),Msg.Status.SendSucceed,msg.getTimestamp());
+      MsgListener _listener = filterMsgListener(listener, msg.getToPeerId(), group);
       if (_listener != null) {
         _listener.onMessageSent(msg);
       }
@@ -324,8 +335,7 @@ public class ChatService {
   public static void updateStatusToFailed(AVMessage avMsg, MsgListener msgListener) {
     Msg msg = Msg.fromAVMessage(avMsg);
     if (msg.getType() != Msg.Type.Response) {
-      msg.setStatus(Msg.Status.SendFailed);
-      DBMsg.updateStatus(msg);
+      DBMsg.updateStatus(msg.getObjectId(),Msg.Status.SendFailed);
       if (msgListener != null) {
         msgListener.onMessageFailure(msg);
       }
@@ -354,8 +364,7 @@ public class ChatService {
       group = session.getGroup(groupId);
     }
     sendMessage(group, msg);
-    msg.setStatus(Msg.Status.SendStart);
-    DBMsg.updateStatus(msg);
+    DBMsg.updateStatus(msg.getObjectId(), Msg.Status.SendStart);
   }
 
   public static void cancelNotification(Context ctx) {

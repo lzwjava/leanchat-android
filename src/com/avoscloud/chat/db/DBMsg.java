@@ -3,7 +3,6 @@ package com.avoscloud.chat.db;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import com.avos.avoscloud.Group;
 import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.entity.Msg;
@@ -130,11 +129,11 @@ public class DBMsg {
     return msgs;
   }
 
-  public static int updateStatusAndTimestamp(Msg msg) {
+  public static int updateStatusAndTimestamp(String objecctId,Msg.Status status,long timestamp) {
     ContentValues cv = new ContentValues();
-    cv.put(STATUS, msg.getStatus().getValue());
-    cv.put(TIMESTAMP, msg.getTimestamp()+"");
-    String objectId = msg.getObjectId();
+    cv.put(STATUS, status.getValue());
+    cv.put(TIMESTAMP, timestamp+"");
+    String objectId = objecctId;
     return updateMessage(objectId, cv);
   }
 
@@ -146,9 +145,9 @@ public class DBMsg {
     return updateN;
   }
 
-  public static int updateStatus(Msg msg) {
+  public static int updateStatus(String objectId, Msg.Status status) {
     ContentValues cv = new ContentValues();
-    cv.put(STATUS, msg.getStatus().getValue());
-    return updateMessage(msg.getObjectId(), cv);
+    cv.put(STATUS, status.getValue());
+    return updateMessage(objectId, cv);
   }
 }

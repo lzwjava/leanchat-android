@@ -249,23 +249,15 @@ public class Msg {
       HashMap<String, Object> params = JSON.parseObject(avMsg.getMessage(), HashMap.class);
       String objectId=(String) params.get("objectId");
       String content=(String) params.get("content");
-      Integer statusInt = (Integer) params.get("status");
       Integer typeInt = (Integer) params.get("type");
-      Integer roomTypeInt = (Integer) params.get("roomType");
-      String convid = (String) params.get("convid");
-      if(objectId==null || content==null || statusInt==null ||
-          typeInt==null || roomTypeInt==null || convid==null){
+      if(objectId==null || content==null ||
+          typeInt==null){
         throwNullException();
       }
       msg.setObjectId(objectId);
       msg.setContent(content);
-      Status status=Status.fromInt(statusInt);
-      msg.setStatus(status);
       Type type=Type.fromInt(typeInt);
       msg.setType(type);
-      RoomType roomType=RoomType.fromInt(roomTypeInt);
-      msg.setRoomType(roomType);
-      msg.setConvid(convid);
     }
     return msg;
   }
@@ -278,16 +270,13 @@ public class Msg {
     HashMap<String, Object> params = new HashMap<String, Object>();
     params.put("objectId", objectId);
     params.put("content", content);
-    params.put("status", status.getValue());
     params.put("type", type.getValue());
-    params.put("roomType", roomType.getValue());
-    params.put("convid", convid);
     internalMessage.setMessage(JSON.toJSONString(params));
     return internalMessage;
   }
 
   public static void throwNullException() {
-    throw new NullPointerException("at least one of these is null: convid,content,objectId, roomType, status, type");
+    throw new NullPointerException("at least one of these is null: content,objectId,type");
   }
 
   @Override
