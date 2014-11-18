@@ -44,3 +44,5 @@
 ###[Document](http://leancloud.cn/docs/realtime.html)
 
 ###[API](http://leancloud.cn/docs/api/android/doc/index.html)
+
+更多文档、源代码阅读指南、设计思路在 [wiki](https://github.com/leancloud/leanchat-android/wiki) 里面
