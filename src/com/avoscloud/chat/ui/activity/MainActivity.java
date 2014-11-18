@@ -63,12 +63,12 @@ public class MainActivity extends BaseActivity {
     UpdateService updateService = UpdateService.getInstance(this);
     updateService.checkUpdate();
     App.registerUserCache(User.curUser());
+    ChatService.openSession();
   }
 
   @Override
   protected void onResume() {
     super.onResume();
-    ChatService.openSession();
   }
 
   private void initBaiduLocClient() {
