@@ -4,7 +4,6 @@ import android.content.Context;
 import com.avos.avoscloud.AVGroupMessageReceiver;
 import com.avos.avoscloud.AVMessage;
 import com.avos.avoscloud.Group;
-import com.avos.avoscloud.LogUtil;
 import com.avoscloud.chat.service.ChatService;
 import com.avoscloud.chat.service.listener.GroupEventListener;
 import com.avoscloud.chat.service.listener.MsgListener;
@@ -18,24 +17,24 @@ import java.util.Set;
  * Created by lzw on 14-10-8.
  */
 public class GroupMsgReceiver extends AVGroupMessageReceiver {
-  public static Set<GroupEventListener> listeners = new HashSet<GroupEventListener>();
-  public static MsgListener msgListener;
+  public static Set<GroupEventListener> groupListeners = new HashSet<GroupEventListener>();
+  public static Set<MsgListener> msgListeners = new HashSet<MsgListener>();
 
   @Override
   public void onJoined(Context context, Group group) {
-    for (GroupEventListener listener : listeners) {
+    for (GroupEventListener listener : groupListeners) {
       listener.onJoined(group);
     }
   }
 
   @Override
   public void onInviteToGroup(Context context, Group group, String byPeerId) {
-    Logger.d("onInviteToGroup"+byPeerId+" groupId="+group.getGroupId());
+    Logger.d("onInviteToGroup" + byPeerId + " groupId=" + group.getGroupId());
   }
 
   @Override
   public void onInvited(Context context, Group group, List<String> invitedPeers) {
-    Logger.d("onInvited "+invitedPeers+" groupId="+group.getGroupId());
+    Logger.d("onInvited " + invitedPeers + " groupId=" + group.getGroupId());
   }
 
   @Override
@@ -46,7 +45,7 @@ public class GroupMsgReceiver extends AVGroupMessageReceiver {
   @Override
   public void onMessageSent(Context context, Group group, AVMessage message) {
     Logger.d(message.getMessage() + " sent " + message.getTimestamp());
-    ChatService.onMessageSent(message, msgListener, group);
+    ChatService.onMessageSent(message, msgListeners, group);
   }
 
   @Override
@@ -57,12 +56,12 @@ public class GroupMsgReceiver extends AVGroupMessageReceiver {
   @Override
   public void onMessage(Context context, Group group, AVMessage msg) {
     Logger.d(msg.getMessage() + " receiver " + group);
-    ChatService.onMessage(context, msg, msgListener, group);
+    ChatService.onMessage(context, msg, msgListeners, group);
   }
 
   @Override
   public void onQuit(Context context, Group group) {
-    for (GroupEventListener listener : listeners) {
+    for (GroupEventListener listener : groupListeners) {
       listener.onQuit(group);
     }
     Logger.d(group.getGroupId() + " quit");
@@ -75,7 +74,7 @@ public class GroupMsgReceiver extends AVGroupMessageReceiver {
 
   @Override
   public void onMemberJoin(Context context, Group group, List<String> joinedPeerIds) {
-    for (GroupEventListener listener : listeners) {
+    for (GroupEventListener listener : groupListeners) {
       listener.onMemberJoin(group, joinedPeerIds);
     }
     Logger.d(joinedPeerIds + " join " + group.getGroupId());
@@ -83,7 +82,7 @@ public class GroupMsgReceiver extends AVGroupMessageReceiver {
 
   @Override
   public void onMemberLeft(Context context, Group group, List<String> leftPeerIds) {
-    for (GroupEventListener listener : listeners) {
+    for (GroupEventListener listener : groupListeners) {
       listener.onMemberLeft(group, leftPeerIds);
     }
     Logger.d(leftPeerIds + " left " + group.getGroupId());
@@ -92,22 +91,22 @@ public class GroupMsgReceiver extends AVGroupMessageReceiver {
   @Override
   public void onError(Context context, Group group, Throwable e) {
     Logger.d("on error " + e.getMessage());
-    ChatService.onMessageError(e, msgListener);
+    ChatService.onMessageError(e, msgListeners);
   }
 
-  public static void registerMsgListener(MsgListener listener) {
-    msgListener = listener;
+  public static void addMsgListener(MsgListener listener) {
+    msgListeners.add(listener);
   }
 
-  public static void unregisterMsgListener() {
-    msgListener = null;
+  public static void removeMsgListener(MsgListener listener) {
+    msgListeners.remove(listener);
   }
 
   public static void addListener(GroupEventListener listener) {
-    listeners.add(listener);
+    groupListeners.add(listener);
   }
 
   public static void removeListener(GroupEventListener listener) {
-    listeners.remove(listener);
+    groupListeners.remove(listener);
   }
 }

@@ -163,7 +163,7 @@ public class ChatService {
     for (Msg msg : msgs) {
       Conversation conversation = new Conversation();
       if (msg.getRoomType() == Msg.RoomType.Single) {
-        String chatUserId = msg.getChatUserId();
+        String chatUserId = msg.getOtherId();
         conversation.toUser = App.lookupUser(chatUserId);
       } else {
         conversation.chatGroup = App.lookupChatGroup(msg.getConvid());
@@ -179,7 +179,7 @@ public class ChatService {
     Set<String> uncachedChatGroupIds = new HashSet<String>();
     for (Msg msg : msgs) {
       if (msg.getRoomType() == Msg.RoomType.Single) {
-        String chatUserId = msg.getChatUserId();
+        String chatUserId = msg.getOtherId();
         if (App.lookupUser(chatUserId) == null) {
           uncachedIds.add(chatUserId);
         }
@@ -237,7 +237,7 @@ public class ChatService {
     man.notify(REPLY_NOTIFY_ID, notification);
   }
 
-  public static void onMessage(Context context, AVMessage avMsg, MsgListener listener, Group group) {
+  public static void onMessage(Context context, AVMessage avMsg, Set<MsgListener> listeners, Group group) {
     final Msg msg = Msg.fromAVMessage(avMsg);
     String convid;
     if (group == null) {
@@ -253,17 +253,19 @@ public class ChatService {
     msg.setConvid(convid);
 
     if (msg.getType() != Msg.Type.Response) {
-      responseAndReceiveMsg(context, msg, listener, group);
+      responseAndReceiveMsg(context, msg, listeners, group);
     } else {
       DBMsg.updateStatus(msg.getObjectId(),Msg.Status.SendReceived);
-      MsgListener _listener = filterMsgListener(listener, msg.getFromPeerId(), group);
-      if (_listener != null) {
-        _listener.onMessage(msg);
+      String otherId=getOtherId(msg.getFromPeerId(),group);
+      for(MsgListener listener:listeners) {
+        if(listener.onMessageUpdate(otherId)){
+          break;
+        }
       }
     }
   }
 
-  public static void responseAndReceiveMsg(final Context context, final Msg msg, final MsgListener listener, final Group group) {
+  public static void responseAndReceiveMsg(final Context context, final Msg msg, final Set<MsgListener> listeners, final Group group) {
     if (group == null) {
       sendResponseMessage(msg);
     }
@@ -289,16 +291,21 @@ public class ChatService {
           Utils.toast(context, com.avoscloud.chat.R.string.badNetwork);
         } else {
           DBMsg.insertMsg(msg);
-          MsgListener _msgListener = filterMsgListener(listener, msg.getFromPeerId(), group);
-          if (_msgListener == null) {
+          String otherId=getOtherId(msg.getFromPeerId(),group);
+          boolean done=false;
+          for(MsgListener listener:listeners){
+            if(listener.onMessageUpdate(otherId)){
+              done=true;
+              break;
+            }
+          }
+          if(!done){
             if (User.curUser() != null) {
               PreferenceMap preferenceMap = PreferenceMap.getCurUserPrefDao(context);
               if (preferenceMap.isNotifyWhenNews()) {
                 notifyMsg(context, msg, group);
               }
             }
-          } else {
-            listener.onMessage(msg);
           }
         }
       }
@@ -307,50 +314,45 @@ public class ChatService {
     }.execute();
   }
 
-  public static MsgListener filterMsgListener(MsgListener msgListener, String toPeerId, Group group) {
-    assert toPeerId!=null || group!=null;
-    if (msgListener != null) {
-      String listenerId = msgListener.getListenerId();
-      if(group!=null){
-        if(listenerId.equals(group.getGroupId())){
-          return msgListener;
-        }
-      }else{
-        if(listenerId.equals(toPeerId)){
-          return msgListener;
-        }
-      }
+  private static String getOtherId(String otherId, Group group) {
+    assert otherId!=null || group!=null;
+    if(group!=null){
+      return group.getGroupId();
+    }else{
+      return otherId;
     }
-    return null;
   }
 
-  public static void onMessageSent(AVMessage avMsg, MsgListener listener, Group group) {
+  public static void onMessageSent(AVMessage avMsg, Set<MsgListener> listeners, Group group) {
     Msg msg = Msg.fromAVMessage(avMsg);
     if (msg.getType() != Msg.Type.Response) {
       DBMsg.updateStatusAndTimestamp(msg.getObjectId(),Msg.Status.SendSucceed,msg.getTimestamp());
-      MsgListener _listener = filterMsgListener(listener, msg.getToPeerId(), group);
-      if (_listener != null) {
-        _listener.onMessageSent(msg);
+      for(MsgListener msgListener:listeners){
+        if(msgListener.onMessageUpdate(msg.getToPeerId())){
+          break;
+        }
       }
     }
   }
 
-  public static void updateStatusToFailed(AVMessage avMsg, MsgListener msgListener) {
+  public static void updateStatusToFailed(AVMessage avMsg, Set<MsgListener> msgListeners) {
     Msg msg = Msg.fromAVMessage(avMsg);
     if (msg.getType() != Msg.Type.Response) {
       DBMsg.updateStatus(msg.getObjectId(),Msg.Status.SendFailed);
-      if (msgListener != null) {
-        msgListener.onMessageFailure(msg);
+      for(MsgListener msgListener:msgListeners){
+        if(msgListener.onMessageUpdate(null)){
+          break;
+        }
       }
     }
   }
 
-  public static void onMessageError(Throwable throwable, MsgListener msgListener) {
+  public static void onMessageError(Throwable throwable, Set<MsgListener> msgListeners) {
     String errorMsg = throwable.getMessage();
     Logger.d("error " + errorMsg);
     if (errorMsg != null && errorMsg.startsWith("{")) {
       AVMessage avMsg = new AVMessage(errorMsg);
-      updateStatusToFailed(avMsg, msgListener);
+      updateStatusToFailed(avMsg, msgListeners);
     }
   }
 

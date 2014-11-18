@@ -16,8 +16,8 @@ import java.util.*;
  */
 public class MsgReceiver extends AVMessageReceiver {
   public static StatusListener statusListener;
-  public static Set<String> onlines = new HashSet<String>();
-  public static MsgListener msgListener;
+  public static Set<String> onlineIds = new HashSet<String>();
+  public static Set<MsgListener> msgListeners = new HashSet<MsgListener>();
 
   @Override
   public void onSessionOpen(Context context, Session session) {
@@ -37,58 +37,58 @@ public class MsgReceiver extends AVMessageReceiver {
 
   @Override
   public void onPeersWatched(Context context, Session session, List<String> peerIds) {
-    Logger.d("watched "+peerIds);
+    Logger.d("watched " + peerIds);
   }
 
   @Override
   public void onPeersUnwatched(Context context, Session session, List<String> peerIds) {
-    Logger.d("unwatch "+peerIds);
+    Logger.d("unwatch " + peerIds);
   }
 
   @Override
   public void onMessage(final Context context, Session session, AVMessage avMsg) {
-    Logger.d("onMessage "+avMsg.getMessage());
-    ChatService.onMessage(context, avMsg, msgListener, null);
+    Logger.d("onMessage " + avMsg.getMessage());
+    ChatService.onMessage(context, avMsg, msgListeners, null);
   }
 
   @Override
   public void onMessageSent(Context context, Session session, AVMessage avMsg) {
     Logger.d("onMessageSent " + avMsg.getMessage());
-    ChatService.onMessageSent(avMsg, msgListener, null);
+    ChatService.onMessageSent(avMsg, msgListeners, null);
   }
 
   @Override
   public void onMessageDelivered(Context context, Session session, AVMessage msg) {
-    Logger.d("onMessageDelivered "+msg.getMessage()+" fromPeerId="+msg.getFromPeerId());
+    Logger.d("onMessageDelivered " + msg.getMessage() + " fromPeerId=" + msg.getFromPeerId());
   }
 
   @Override
   public void onMessageFailure(Context context, Session session, AVMessage avMsg) {
-    ChatService.updateStatusToFailed(avMsg, msgListener);
+    ChatService.updateStatusToFailed(avMsg, msgListeners);
   }
 
   @Override
   public void onStatusOnline(Context context, Session session, List<String> strings) {
     Logger.d("onStatusOnline " + strings);
-    onlines.addAll(strings);
+    onlineIds.addAll(strings);
     if (statusListener != null) {
-      statusListener.onStatusOnline(new ArrayList<String>(onlines));
+      statusListener.onStatusOnline(new ArrayList<String>(onlineIds));
     }
   }
 
   @Override
   public void onStatusOffline(Context context, Session session, List<String> strings) {
     Logger.d("onStatusOff " + strings);
-    onlines.removeAll(strings);
+    onlineIds.removeAll(strings);
     if (statusListener != null) {
-      statusListener.onStatusOnline(new ArrayList<String>(onlines));
+      statusListener.onStatusOnline(new ArrayList<String>(onlineIds));
     }
   }
 
   @Override
   public void onError(Context context, Session session, Throwable throwable) {
     throwable.printStackTrace();
-    ChatService.onMessageError(throwable, msgListener);
+    ChatService.onMessageError(throwable, msgListeners);
   }
 
   public static void registerStatusListener(StatusListener listener) {
@@ -99,15 +99,15 @@ public class MsgReceiver extends AVMessageReceiver {
     statusListener = null;
   }
 
-  public static void registerMsgListener(MsgListener listener) {
-    msgListener = listener;
+  public static void addMsgListener(MsgListener listener) {
+    msgListeners.add(listener);
   }
 
-  public static void unregisterMsgListener() {
-    msgListener = null;
+  public static void removeMsgListener(MsgListener listener) {
+    msgListeners.remove(listener);
   }
 
-  public static List<String> getOnlines() {
-    return new ArrayList<String>(onlines);
+  public static List<String> getOnlineIds() {
+    return new ArrayList<String>(onlineIds);
   }
 }

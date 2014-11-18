@@ -102,7 +102,7 @@ public class Msg {
     if (toPeerIds != null && toPeerIds.size() > 0) {
       return toPeerIds.get(0);
     } else {
-      return null;
+      return convid;
     }
   }
 
@@ -203,7 +203,7 @@ public class Msg {
     return !fromPeerId.equals(ChatService.getSelfId());
   }
 
-  public String getChatUserId() {
+  public String getOtherId() {
     if (getRoomType()==RoomType.Group) {
       return getToPeerId();
     } else {

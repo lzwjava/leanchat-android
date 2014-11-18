@@ -258,9 +258,9 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   public void onResume() {
     super.onResume();
     if (singleChat) {
-      MsgReceiver.registerMsgListener(this);
+      MsgReceiver.addMsgListener(this);
     } else {
-      GroupMsgReceiver.registerMsgListener(this);
+      GroupMsgReceiver.addMsgListener(this);
     }
   }
 
@@ -268,9 +268,9 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   public void onPause() {
     super.onPause();
     if (singleChat) {
-      MsgReceiver.unregisterMsgListener();
+      MsgReceiver.removeMsgListener(this);
     } else {
-      GroupMsgReceiver.unregisterMsgListener();
+      GroupMsgReceiver.removeMsgListener(this);
     }
   }
 
@@ -312,14 +312,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     return super.onMenuItemSelected(featureId, item);
   }
 
-  @Override
-  public void onMessage(Msg msg) {
-    Logger.d("onMessage on ChatActivity " + msg.getContent());
-    loadNewMsg(false);
-  }
-
-  @Override
-  public String getListenerId() {
+  public String getOtherId() {
     if (singleChat) {
       return chatUser.getObjectId();
     } else {
@@ -330,31 +323,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   public void addMsgAndScrollToLast(Msg msg) {
     adapter.add(msg);
     hideBottomLayoutAndScrollToLast();
-  }
-
-  @Override
-  public void onMessageFailure(Msg failMsg) {
-    Logger.d("onMessageFailure on Chat Activity " + failMsg.getContent());
-    loadNewMsg(false);
-
-    /*Msg msg = adapter.getItem(failMsg.getObjectId());
-    if (msg != null) {
-      msg.setStatus(Msg.STATUS_SEND_FAILED);
-      adapter.notifyDataSetChanged();
-    }*/
-  }
-
-  @Override
-  public void onMessageSent(Msg sentMsg) {
-    Logger.d("onMessageSent on ChatActivity " + sentMsg.getContent());
-    loadNewMsg(false);
-    /*Msg msg = adapter.getItem(sentMsg.getObjectId());
-    if (msg != null) {
-      msg.setStatus(Msg.STATUS_SEND_SUCCEED);
-      adapter.notifyDataSetChanged();
-    } else {
-      Logger.d("cannot find message");
-    }*/
   }
 
   public View getMsgViewByMsg(Msg msg) {
@@ -393,6 +361,15 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
 
   @Override
   public void onLoadMore() {
+  }
+
+  @Override
+  public boolean onMessageUpdate(String otherId) {
+    if(otherId.equals(getOtherId())){
+      loadNewMsg(false);
+      return true;
+    }
+    return false;
   }
 
   class GetDataTask extends NetAsyncTask {
