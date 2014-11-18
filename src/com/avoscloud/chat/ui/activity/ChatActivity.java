@@ -214,7 +214,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
 
   void initActionBar() {
     String title;
-    if (roomType== RoomType.Single) {
+    if (roomType == RoomType.Single) {
       title = chatUser.getUsername();
     } else {
       title = chatGroup.getTitle();
@@ -258,7 +258,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   @Override
   public void onResume() {
     super.onResume();
-    if (roomType==RoomType.Single) {
+    if (roomType == RoomType.Single) {
       MsgReceiver.addMsgListener(this);
     } else {
       GroupMsgReceiver.addMsgListener(this);
@@ -268,7 +268,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   @Override
   public void onPause() {
     super.onPause();
-    if (roomType==RoomType.Single) {
+    if (roomType == RoomType.Single) {
       MsgReceiver.removeMsgListener(this);
     } else {
       GroupMsgReceiver.removeMsgListener(this);
@@ -278,10 +278,10 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   public void initData(Intent intent) {
     curUser = User.curUser();
     dbHelper = new DBHelper(ctx, App.DB_NAME, App.DB_VER);
-    int roomTypeInt=intent.getIntExtra(ROOM_TYPE,RoomType.Single.getValue());
-    roomType=RoomType.fromInt(roomTypeInt);
+    int roomTypeInt = intent.getIntExtra(ROOM_TYPE, RoomType.Single.getValue());
+    roomType = RoomType.fromInt(roomTypeInt);
     msgSize = PAGE_SIZE;
-    if (roomType==RoomType.Single) {
+    if (roomType == RoomType.Single) {
       String chatUserId = intent.getStringExtra(CHAT_USER_ID);
       chatUser = App.lookupUser(chatUserId);
       ChatService.withUserToWatch(chatUser, true);
@@ -304,7 +304,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   public boolean onMenuItemSelected(int featureId, MenuItem item) {
     int menuId = item.getItemId();
     if (menuId == R.id.people) {
-      if (roomType==RoomType.Single) {
+      if (roomType == RoomType.Single) {
         PersonInfoActivity.goPersonInfo(ctx, chatUser.getObjectId());
       } else {
         GroupDetailActivity.chatGroup = chatGroup;
@@ -315,7 +315,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   }
 
   public String currentChatId() {
-    if (roomType==RoomType.Single) {
+    if (roomType == RoomType.Single) {
       return chatUser.getObjectId();
     } else {
       return chatGroup.getObjectId();
@@ -367,7 +367,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
 
   @Override
   public boolean onMessageUpdate(String otherId) {
-    if(otherId.equals(currentChatId())){
+    if (otherId.equals(currentChatId())) {
       loadNewMsg(false);
       return true;
     }
@@ -387,7 +387,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     @Override
     protected void doInBack() throws Exception {
       String convid;
-      if (roomType==RoomType.Single) {
+      if (roomType == RoomType.Single) {
         convid = AVOSUtils.convid(ChatService.getPeerId(curUser), ChatService.getPeerId(chatUser));
       } else {
         convid = group.getGroupId();
@@ -642,10 +642,10 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
 
   @Override
   protected void onDestroy() {
-    if (roomType==RoomType.Single) {
+    if (roomType == RoomType.Single) {
       ChatService.withUserToWatch(chatUser, false);
     }
-    ctx=null;
+    ctx = null;
     super.onDestroy();
   }
 

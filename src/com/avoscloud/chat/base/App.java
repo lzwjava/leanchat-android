@@ -41,11 +41,11 @@ public class App extends Application {
     Utils.fixAsyncTaskBug();
     AVOSCloud.initialize(this, "x3o016bxnkpyee7e9pa5pre6efx2dadyerdlcez0wbzhw25g",
         "057x24cfdzhffnl3dzk14jh9xo2rq6w1hy1fdzt5tv46ym78");
-    User.registerSubclass(User.class);
-    User.registerSubclass(AddRequest.class);
-    User.registerSubclass(ChatGroup.class);
-    User.registerSubclass(Avatar.class);
-    User.registerSubclass(UpdateInfo.class);
+    AVObject.registerSubclass(User.class);
+    AVObject.registerSubclass(AddRequest.class);
+    AVObject.registerSubclass(ChatGroup.class);
+    AVObject.registerSubclass(Avatar.class);
+    AVObject.registerSubclass(UpdateInfo.class);
 
     AVInstallation.getCurrentInstallation().saveInBackground();
     PushService.setDefaultPushCallback(ctx, LoginActivity.class);
