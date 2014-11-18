@@ -55,23 +55,6 @@ public class Msg {
     }
   }
 
-  public static enum RoomType{
-    Single(0), Group(1);
-
-    int value;
-    private RoomType(int value){
-      this.value=value;
-    }
-
-    public int getValue(){
-      return value;
-    }
-
-    public static RoomType fromInt(int i){
-      return values()[i];
-    }
-  }
-
   //long timestamp;
   //String fromPeerId;
   //List<String> toPeerIds;

@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.entity.Msg;
+import com.avoscloud.chat.entity.RoomType;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -104,7 +105,7 @@ public class DBMsg {
     msg.setConvid(c.getString(c.getColumnIndex(CONVID)));
     msg.setObjectId(c.getString(c.getColumnIndex(OBJECT_ID)));
     int roomTypeInt = c.getInt(c.getColumnIndex(ROOM_TYPE));
-    Msg.RoomType roomType = Msg.RoomType.fromInt(roomTypeInt);
+    RoomType roomType = RoomType.fromInt(roomTypeInt);
     msg.setRoomType(roomType);
     String toPeerId = c.getString(c.getColumnIndex(TO_PEER_ID));
     msg.setToPeerId(toPeerId);

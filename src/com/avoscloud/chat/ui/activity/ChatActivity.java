@@ -21,6 +21,7 @@ import com.avoscloud.chat.adapter.EmotionPagerAdapter;
 import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.db.DBHelper;
 import com.avoscloud.chat.db.DBMsg;
+import com.avoscloud.chat.entity.RoomType;
 import com.avoscloud.chat.service.*;
 import com.avoscloud.chat.service.listener.MsgListener;
 import com.avoscloud.chat.service.receiver.GroupMsgReceiver;
@@ -66,10 +67,10 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   private View addCameraBtn;
   int msgSize;
 
-  public static boolean singleChat;
+  public static RoomType roomType;
   public static final String CHAT_USER_ID = "chatUserId";
   public static final String GROUP_ID = "groupId";
-  public static final String SINGLE_CHAT = "singleChat";
+  public static final String ROOM_TYPE = "roomType";
   User chatUser;
   Group group;
   ChatGroup chatGroup;
@@ -213,7 +214,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
 
   void initActionBar() {
     String title;
-    if (singleChat) {
+    if (roomType== RoomType.Single) {
       title = chatUser.getUsername();
     } else {
       title = chatGroup.getTitle();
@@ -257,7 +258,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   @Override
   public void onResume() {
     super.onResume();
-    if (singleChat) {
+    if (roomType==RoomType.Single) {
       MsgReceiver.addMsgListener(this);
     } else {
       GroupMsgReceiver.addMsgListener(this);
@@ -267,7 +268,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   @Override
   public void onPause() {
     super.onPause();
-    if (singleChat) {
+    if (roomType==RoomType.Single) {
       MsgReceiver.removeMsgListener(this);
     } else {
       GroupMsgReceiver.removeMsgListener(this);
@@ -277,9 +278,10 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   public void initData(Intent intent) {
     curUser = User.curUser();
     dbHelper = new DBHelper(ctx, App.DB_NAME, App.DB_VER);
-    singleChat = intent.getBooleanExtra(SINGLE_CHAT, true);
+    int roomTypeInt=intent.getIntExtra(ROOM_TYPE,RoomType.Single.getValue());
+    roomType=RoomType.fromInt(roomTypeInt);
     msgSize = PAGE_SIZE;
-    if (singleChat) {
+    if (roomType==RoomType.Single) {
       String chatUserId = intent.getStringExtra(CHAT_USER_ID);
       chatUser = App.lookupUser(chatUserId);
       ChatService.withUserToWatch(chatUser, true);
@@ -302,7 +304,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   public boolean onMenuItemSelected(int featureId, MenuItem item) {
     int menuId = item.getItemId();
     if (menuId == R.id.people) {
-      if (singleChat) {
+      if (roomType==RoomType.Single) {
         PersonInfoActivity.goPersonInfo(ctx, chatUser.getObjectId());
       } else {
         GroupDetailActivity.chatGroup = chatGroup;
@@ -313,7 +315,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   }
 
   public String currentChatId() {
-    if (singleChat) {
+    if (roomType==RoomType.Single) {
       return chatUser.getObjectId();
     } else {
       return chatGroup.getObjectId();
@@ -385,7 +387,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     @Override
     protected void doInBack() throws Exception {
       String convid;
-      if (singleChat) {
+      if (roomType==RoomType.Single) {
         convid = AVOSUtils.convid(ChatService.getPeerId(curUser), ChatService.getPeerId(chatUser));
       } else {
         convid = group.getGroupId();
@@ -640,7 +642,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
 
   @Override
   protected void onDestroy() {
-    if (singleChat) {
+    if (roomType==RoomType.Single) {
       ChatService.withUserToWatch(chatUser, false);
     }
     ctx=null;
@@ -655,7 +657,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   public static Intent getUserChatIntent(Context ctx, String userId) {
     Intent intent = new Intent(ctx, ChatActivity.class);
     intent.putExtra(CHAT_USER_ID, userId);
-    intent.putExtra(SINGLE_CHAT, true);
+    intent.putExtra(ROOM_TYPE, RoomType.Single.getValue());
     return intent;
   }
 
@@ -667,7 +669,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   public static Intent getGroupChatIntent(Context ctx, String groupId) {
     Intent intent = new Intent(ctx, ChatActivity.class);
     intent.putExtra(GROUP_ID, groupId);
-    intent.putExtra(SINGLE_CHAT, false);
+    intent.putExtra(ROOM_TYPE, RoomType.Group.getValue());
     return intent;
   }
 }

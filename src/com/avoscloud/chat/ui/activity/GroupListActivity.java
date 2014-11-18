@@ -12,6 +12,7 @@ import com.avos.avoscloud.Group;
 import com.avos.avoscloud.Session;
 import com.avoscloud.chat.adapter.GroupAdapter;
 import com.avoscloud.chat.avobject.ChatGroup;
+import com.avoscloud.chat.entity.RoomType;
 import com.avoscloud.chat.service.ChatService;
 import com.avoscloud.chat.service.listener.GroupEventListener;
 import com.avoscloud.chat.util.SimpleNetTask;
@@ -136,10 +137,7 @@ public class GroupListActivity extends BaseActivity implements GroupEventListene
       if (_chatGroup == null) {
         throw new RuntimeException("chat group is null");
       }
-      Intent intent = new Intent(ctx, ChatActivity.class);
-      intent.putExtra(ChatActivity.GROUP_ID, _chatGroup.getObjectId());
-      intent.putExtra(ChatActivity.SINGLE_CHAT, false);
-      startActivity(intent);
+      ChatActivity.goGroupChat(this,_chatGroup.getObjectId());
     }
   }
 

@@ -10,6 +10,7 @@ import com.avos.avoscloud.*;
 import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.db.DBMsg;
 import com.avoscloud.chat.entity.Conversation;
+import com.avoscloud.chat.entity.RoomType;
 import com.avoscloud.chat.service.listener.MsgListener;
 import com.avoscloud.chat.ui.activity.ChatActivity;
 import com.avoscloud.chat.util.*;
@@ -66,7 +67,7 @@ public class ChatService {
     resMsg.setFromPeerId(getSelfId());
     resMsg.setContent("");
     resMsg.setObjectId(msg.getObjectId());
-    resMsg.setRoomType(Msg.RoomType.Single);
+    resMsg.setRoomType(RoomType.Single);
     resMsg.setStatus(Msg.Status.SendStart);
     resMsg.setConvid(AVOSUtils.convid(getSelfId(), msg.getFromPeerId()));
     Session session = getSession();
@@ -120,10 +121,10 @@ public class ChatService {
     if (group == null) {
       String toPeerId = ChatService.getPeerId(toPeer);
       msg.setToPeerId(toPeerId);
-      msg.setRoomType(Msg.RoomType.Single);
+      msg.setRoomType(RoomType.Single);
       convid = AVOSUtils.convid(ChatService.getSelfId(), toPeerId);
     } else {
-      msg.setRoomType(Msg.RoomType.Group);
+      msg.setRoomType(RoomType.Group);
       convid = group.getGroupId();
     }
     msg.setObjectId(objectId);
@@ -162,7 +163,7 @@ public class ChatService {
     ArrayList<Conversation> conversations = new ArrayList<Conversation>();
     for (Msg msg : msgs) {
       Conversation conversation = new Conversation();
-      if (msg.getRoomType() == Msg.RoomType.Single) {
+      if (msg.getRoomType() == RoomType.Single) {
         String chatUserId = msg.getOtherId();
         conversation.toUser = App.lookupUser(chatUserId);
       } else {
@@ -178,7 +179,7 @@ public class ChatService {
     Set<String> uncachedIds = new HashSet<String>();
     Set<String> uncachedChatGroupIds = new HashSet<String>();
     for (Msg msg : msgs) {
-      if (msg.getRoomType() == Msg.RoomType.Single) {
+      if (msg.getRoomType() == RoomType.Single) {
         String chatUserId = msg.getOtherId();
         if (App.lookupUser(chatUserId) == null) {
           uncachedIds.add(chatUserId);
@@ -244,10 +245,10 @@ public class ChatService {
       String selfId = getSelfId();
       msg.setToPeerId(selfId);
       convid = AVOSUtils.convid(selfId, msg.getFromPeerId());
-      msg.setRoomType(Msg.RoomType.Single);
+      msg.setRoomType(RoomType.Single);
     } else {
       convid = group.getGroupId();
-      msg.setRoomType(Msg.RoomType.Group);
+      msg.setRoomType(RoomType.Group);
     }
     msg.setStatus(Msg.Status.SendReceived);
     msg.setConvid(convid);
@@ -364,7 +365,7 @@ public class ChatService {
 
   public static void resendMsg(Msg msg) {
     Group group = null;
-    if (msg.getRoomType() == Msg.RoomType.Single) {
+    if (msg.getRoomType() == RoomType.Single) {
       String groupId = msg.getConvid();
       Session session = ChatService.getSession();
       group = session.getGroup(groupId);

@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.User;
+import com.avoscloud.chat.entity.RoomType;
 import com.avoscloud.chat.service.ChatService;
 import com.avoscloud.chat.util.EmotionUtils;
 import com.avoscloud.chat.ui.activity.ChatActivity;
@@ -145,7 +146,7 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
           statusSendStart.setVisibility(View.VISIBLE);
           break;
       }
-      if (ChatActivity.singleChat == false) {
+      if (ChatActivity.roomType == RoomType.Group) {
         statusSendSucceed.setVisibility(View.GONE);
       }
     }

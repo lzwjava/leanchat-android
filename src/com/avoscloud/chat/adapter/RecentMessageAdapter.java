@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.entity.Conversation;
+import com.avoscloud.chat.entity.RoomType;
 import com.avoscloud.chat.util.EmotionUtils;
 import com.avoscloud.chat.ui.view.ViewHolder;
 import com.avoscloud.chat.R;
@@ -42,7 +43,7 @@ public class RecentMessageAdapter extends BaseListAdapter<Conversation> {
     TextView recentUnreadView = ViewHolder.findViewById(convertView, R.id.recent_unread);
 
     Msg msg = item.msg;
-    if (msg.getRoomType()== Msg.RoomType.Single) {
+    if (msg.getRoomType()== RoomType.Single) {
       User user = item.toUser;
       String avatar = user.getAvatarUrl();
       if (avatar != null && !avatar.equals("")) {

@@ -254,9 +254,7 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
   public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
     // TODO Auto-generated method stub
     User user = (User) userAdapter.getItem(position - 1);
-    Intent intent = new Intent(getActivity(), ChatActivity.class);
-    intent.putExtra(ChatActivity.CHAT_USER_ID, user.getObjectId());
-    startActivity(intent);
+    ChatActivity.goUserChat(getActivity(),user.getObjectId());
   }
 
   @Override
