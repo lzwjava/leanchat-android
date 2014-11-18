@@ -8,10 +8,11 @@ import com.avos.avoscloud.AVObject;
  */
 @AVClassName("AddRequest")
 public class AddRequest extends AVObject {
-  public static final String FROM_USER = "fromUser";
-  public static final String TO_USER = "toUser";
   public static final int STATUS_WAIT = 0;
   public static final int STATUS_DONE = 1;
+
+  public static final String FROM_USER = "fromUser";
+  public static final String TO_USER = "toUser";
   public static final String STATUS = "status";
   //User fromUser;
   //User toUser;

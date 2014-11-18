@@ -44,7 +44,6 @@ public class App extends Application {
     AVObject.registerSubclass(User.class);
     AVObject.registerSubclass(AddRequest.class);
     AVObject.registerSubclass(ChatGroup.class);
-    AVObject.registerSubclass(Avatar.class);
     AVObject.registerSubclass(UpdateInfo.class);
 
     AVInstallation.getCurrentInstallation().saveInBackground();

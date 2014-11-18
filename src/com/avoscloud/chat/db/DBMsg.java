@@ -81,11 +81,7 @@ public class DBMsg {
     List<Msg> msgs = new ArrayList<Msg>();
     SQLiteDatabase db = dbHelper.getReadableDatabase();
     assert db != null;
-    Cursor c = db.query(MESSAGES, null,
-        "convid=?",
-        new String[]{convid}, null, null,
-        TIMESTAMP + " desc",
-        size + "");
+    Cursor c = db.query(MESSAGES, null,"convid=?",new String[]{convid}, null, null,TIMESTAMP + " desc",size + "");
     while (c.moveToNext()) {
       Msg msg = createMsgByCursor(c);
       msgs.add(msg);
