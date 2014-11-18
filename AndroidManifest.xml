@@ -134,7 +134,7 @@
             android:theme="@style/MainTheme" />
 
         <activity
-            android:name=".ui.activity.NotifyPrefActivity"
+            android:name=".ui.activity.NotifySettingActivity"
             android:theme="@style/MainTheme" />
 
         <activity

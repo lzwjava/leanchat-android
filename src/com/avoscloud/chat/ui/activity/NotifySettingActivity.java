@@ -6,12 +6,12 @@ import com.avoscloud.chat.R;
 /**
  * Created by lzw on 14-9-24.
  */
-public class NotifyPrefActivity extends BaseActivity {
+public class NotifySettingActivity extends BaseActivity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.notify_pref_layout);
+    setContentView(R.layout.notify_setting_layout);
     initActionBar(R.string.notifySetting);
   }
 }

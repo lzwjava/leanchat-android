@@ -20,7 +20,7 @@ import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.service.ChatService;
 import com.avoscloud.chat.service.UpdateService;
 import com.avoscloud.chat.service.UserService;
-import com.avoscloud.chat.ui.activity.NotifyPrefActivity;
+import com.avoscloud.chat.ui.activity.NotifySettingActivity;
 import com.avoscloud.chat.util.*;
 
 import java.io.File;
@@ -92,7 +92,7 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
     } else if (id == R.id.sexLayout) {
       showSexChooseDialog();
     } else if (id == R.id.notifyLayout) {
-      Utils.goActivity(ctx, NotifyPrefActivity.class);
+      Utils.goActivity(ctx, NotifySettingActivity.class);
     } else if (id == R.id.updateLayout) {
       UpdateService updateService = UpdateService.getInstance(getActivity());
       updateService.showSureUpdateDialog();

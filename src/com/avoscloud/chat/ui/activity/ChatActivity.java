@@ -312,7 +312,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     return super.onMenuItemSelected(featureId, item);
   }
 
-  public String getOtherId() {
+  public String currentChatId() {
     if (singleChat) {
       return chatUser.getObjectId();
     } else {
@@ -365,7 +365,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
 
   @Override
   public boolean onMessageUpdate(String otherId) {
-    if(otherId.equals(getOtherId())){
+    if(otherId.equals(currentChatId())){
       loadNewMsg(false);
       return true;
     }

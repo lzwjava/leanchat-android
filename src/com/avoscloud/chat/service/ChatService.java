@@ -44,7 +44,7 @@ public class ChatService {
     Session session = SessionManager.getInstance(selfId);
     if (watch) {
       session.watchPeers(peerIds);
-    }else{
+    } else {
       session.unwatchPeers(peerIds);
     }
   }
@@ -68,7 +68,7 @@ public class ChatService {
     resMsg.setObjectId(msg.getObjectId());
     resMsg.setRoomType(Msg.RoomType.Single);
     resMsg.setStatus(Msg.Status.SendStart);
-    resMsg.setConvid(AVOSUtils.convid(getSelfId(),msg.getFromPeerId()));
+    resMsg.setConvid(AVOSUtils.convid(getSelfId(), msg.getFromPeerId()));
     Session session = getSession();
     AVMessage avMsg = resMsg.toAVMessage();
     session.sendMessage(avMsg);
@@ -243,10 +243,10 @@ public class ChatService {
     if (group == null) {
       String selfId = getSelfId();
       msg.setToPeerId(selfId);
-      convid=AVOSUtils.convid(selfId,msg.getFromPeerId());
+      convid = AVOSUtils.convid(selfId, msg.getFromPeerId());
       msg.setRoomType(Msg.RoomType.Single);
-    }else{
-      convid=group.getGroupId();
+    } else {
+      convid = group.getGroupId();
       msg.setRoomType(Msg.RoomType.Group);
     }
     msg.setStatus(Msg.Status.SendReceived);
@@ -255,10 +255,10 @@ public class ChatService {
     if (msg.getType() != Msg.Type.Response) {
       responseAndReceiveMsg(context, msg, listeners, group);
     } else {
-      DBMsg.updateStatus(msg.getObjectId(),Msg.Status.SendReceived);
-      String otherId=getOtherId(msg.getFromPeerId(),group);
-      for(MsgListener listener:listeners) {
-        if(listener.onMessageUpdate(otherId)){
+      DBMsg.updateStatus(msg.getObjectId(), Msg.Status.SendReceived);
+      String otherId = getOtherId(msg.getFromPeerId(), group);
+      for (MsgListener listener : listeners) {
+        if (listener.onMessageUpdate(otherId)) {
           break;
         }
       }
@@ -291,15 +291,15 @@ public class ChatService {
           Utils.toast(context, com.avoscloud.chat.R.string.badNetwork);
         } else {
           DBMsg.insertMsg(msg);
-          String otherId=getOtherId(msg.getFromPeerId(),group);
-          boolean done=false;
-          for(MsgListener listener:listeners){
-            if(listener.onMessageUpdate(otherId)){
-              done=true;
+          String otherId = getOtherId(msg.getFromPeerId(), group);
+          boolean done = false;
+          for (MsgListener listener : listeners) {
+            if (listener.onMessageUpdate(otherId)) {
+              done = true;
               break;
             }
           }
-          if(!done){
+          if (!done) {
             if (User.curUser() != null) {
               PreferenceMap preferenceMap = PreferenceMap.getCurUserPrefDao(context);
               if (preferenceMap.isNotifyWhenNews()) {
@@ -315,10 +315,10 @@ public class ChatService {
   }
 
   private static String getOtherId(String otherId, Group group) {
-    assert otherId!=null || group!=null;
-    if(group!=null){
+    assert otherId != null || group != null;
+    if (group != null) {
       return group.getGroupId();
-    }else{
+    } else {
       return otherId;
     }
   }
@@ -326,9 +326,10 @@ public class ChatService {
   public static void onMessageSent(AVMessage avMsg, Set<MsgListener> listeners, Group group) {
     Msg msg = Msg.fromAVMessage(avMsg);
     if (msg.getType() != Msg.Type.Response) {
-      DBMsg.updateStatusAndTimestamp(msg.getObjectId(),Msg.Status.SendSucceed,msg.getTimestamp());
-      for(MsgListener msgListener:listeners){
-        if(msgListener.onMessageUpdate(msg.getToPeerId())){
+      DBMsg.updateStatusAndTimestamp(msg.getObjectId(), Msg.Status.SendSucceed, msg.getTimestamp());
+      String otherId=getOtherId(msg.getToPeerId(),group);
+      for (MsgListener msgListener : listeners) {
+        if (msgListener.onMessageUpdate(otherId)) {
           break;
         }
       }
@@ -338,9 +339,9 @@ public class ChatService {
   public static void updateStatusToFailed(AVMessage avMsg, Set<MsgListener> msgListeners) {
     Msg msg = Msg.fromAVMessage(avMsg);
     if (msg.getType() != Msg.Type.Response) {
-      DBMsg.updateStatus(msg.getObjectId(),Msg.Status.SendFailed);
-      for(MsgListener msgListener:msgListeners){
-        if(msgListener.onMessageUpdate(null)){
+      DBMsg.updateStatus(msg.getObjectId(), Msg.Status.SendFailed);
+      for (MsgListener msgListener : msgListeners) {
+        if (msgListener.onMessageUpdate(null)) {
           break;
         }
       }

@@ -10,7 +10,7 @@ import com.avoscloud.chat.service.PreferenceMap;
 /**
  * Created by lzw on 14-9-24.
  */
-public class NotifyPrefFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener {
+public class NotifySettingFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener {
   public static final String NOTIFY_WHEN_NEWS = "notifyWhenNews";
   public static final String VOICE_NOTIFY = "voiceNotify";
   public static final String VIBRATE_NOTIFY = "vibrateNotify";

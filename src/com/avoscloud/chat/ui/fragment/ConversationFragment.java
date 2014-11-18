@@ -7,10 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import com.avos.avoscloud.Group;
 import com.avoscloud.chat.adapter.RecentMessageAdapter;
 import com.avoscloud.chat.entity.Conversation;
 import com.avoscloud.chat.entity.Msg;
 import com.avoscloud.chat.service.ChatService;
+import com.avoscloud.chat.service.listener.MsgListener;
+import com.avoscloud.chat.service.receiver.GroupMsgReceiver;
+import com.avoscloud.chat.service.receiver.MsgReceiver;
 import com.avoscloud.chat.ui.activity.ChatActivity;
 import com.avoscloud.chat.util.NetAsyncTask;
 import com.avoscloud.chat.R;
@@ -21,7 +25,7 @@ import java.util.List;
 /**
  * Created by lzw on 14-9-17.
  */
-public class ConversationFragment extends BaseFragment implements AdapterView.OnItemClickListener {
+public class ConversationFragment extends BaseFragment implements AdapterView.OnItemClickListener ,MsgListener{
   ListView listview;
   RecentMessageAdapter adapter;
 
@@ -77,6 +81,21 @@ public class ConversationFragment extends BaseFragment implements AdapterView.On
     if (!hidden) {
       refresh();
     }
+    GroupMsgReceiver.addMsgListener(this);
+    MsgReceiver.addMsgListener(this);
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+    MsgReceiver.removeMsgListener(this);
+    GroupMsgReceiver.removeMsgListener(this);
+  }
+
+  @Override
+  public boolean onMessageUpdate(String otherId) {
+    refresh();
+    return false;
   }
 
   class GetDataTask extends NetAsyncTask {
