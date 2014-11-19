@@ -39,7 +39,7 @@ public class Msg {
 
 
   public static enum Type{
-    Text(0), Response(1), Image(2), Audio(3), Location(4);
+    Text(0), Image(2), Audio(3), Location(4);
     int value;
 
     Type(int value) {

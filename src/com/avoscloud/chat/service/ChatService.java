@@ -60,21 +60,6 @@ public class ChatService {
     return SessionManager.getInstance(getPeerId(User.curUser()));
   }
 
-  public static void sendResponseMessage(Msg msg) {
-    Msg resMsg = new Msg();
-    resMsg.setType(Msg.Type.Response);
-    resMsg.setToPeerId(msg.getFromPeerId());
-    resMsg.setFromPeerId(getSelfId());
-    resMsg.setContent("");
-    resMsg.setObjectId(msg.getObjectId());
-    resMsg.setRoomType(RoomType.Single);
-    resMsg.setStatus(Msg.Status.SendStart);
-    resMsg.setConvid(AVOSUtils.convid(getSelfId(), msg.getFromPeerId()));
-    Session session = getSession();
-    AVMessage avMsg = resMsg.toAVMessage();
-    session.sendMessage(avMsg);
-  }
-
   public static Msg sendAudioMsg(User toUser, String path, String msgId, Group group) throws IOException, AVException {
     return sendFileMsg(toUser, msgId, Msg.Type.Audio, path, group);
   }
@@ -252,24 +237,10 @@ public class ChatService {
     }
     msg.setStatus(Msg.Status.SendReceived);
     msg.setConvid(convid);
-
-    if (msg.getType() != Msg.Type.Response) {
-      responseAndReceiveMsg(context, msg, listeners, group);
-    } else {
-      DBMsg.updateStatus(msg.getObjectId(), Msg.Status.SendReceived);
-      String otherId = getOtherId(msg.getFromPeerId(), group);
-      for (MsgListener listener : listeners) {
-        if (listener.onMessageUpdate(otherId)) {
-          break;
-        }
-      }
-    }
+    handleReceivedMsg(context, msg, listeners, group);
   }
 
-  public static void responseAndReceiveMsg(final Context context, final Msg msg, final Set<MsgListener> listeners, final Group group) {
-    if (group == null) {
-      sendResponseMessage(msg);
-    }
+  public static void handleReceivedMsg(final Context context, final Msg msg, final Set<MsgListener> listeners, final Group group) {
     new NetAsyncTask(context, false) {
       @Override
       protected void doInBack() throws Exception {
@@ -310,8 +281,6 @@ public class ChatService {
           }
         }
       }
-
-
     }.execute();
   }
 
@@ -326,25 +295,21 @@ public class ChatService {
 
   public static void onMessageSent(AVMessage avMsg, Set<MsgListener> listeners, Group group) {
     Msg msg = Msg.fromAVMessage(avMsg);
-    if (msg.getType() != Msg.Type.Response) {
-      DBMsg.updateStatusAndTimestamp(msg.getObjectId(), Msg.Status.SendSucceed, msg.getTimestamp());
-      String otherId=getOtherId(msg.getToPeerId(),group);
-      for (MsgListener msgListener : listeners) {
-        if (msgListener.onMessageUpdate(otherId)) {
-          break;
-        }
+    DBMsg.updateStatusAndTimestamp(msg.getObjectId(), Msg.Status.SendSucceed, msg.getTimestamp());
+    String otherId = getOtherId(msg.getToPeerId(), group);
+    for (MsgListener msgListener : listeners) {
+      if (msgListener.onMessageUpdate(otherId)) {
+        break;
       }
     }
   }
 
   public static void updateStatusToFailed(AVMessage avMsg, Set<MsgListener> msgListeners) {
     Msg msg = Msg.fromAVMessage(avMsg);
-    if (msg.getType() != Msg.Type.Response) {
-      DBMsg.updateStatus(msg.getObjectId(), Msg.Status.SendFailed);
-      for (MsgListener msgListener : msgListeners) {
-        if (msgListener.onMessageUpdate(null)) {
-          break;
-        }
+    DBMsg.updateStatus(msg.getObjectId(), Msg.Status.SendFailed);
+    for (MsgListener msgListener : msgListeners) {
+      if (msgListener.onMessageUpdate(null)) {
+        break;
       }
     }
   }
@@ -376,5 +341,16 @@ public class ChatService {
 
   public static void cancelNotification(Context ctx) {
     Utils.cancelNotification(ctx, REPLY_NOTIFY_ID);
+  }
+
+  public static void onMessageDelivered(AVMessage avMsg, Set<MsgListener> listeners) {
+    Msg msg = Msg.fromAVMessage(avMsg);
+    DBMsg.updateStatus(msg.getObjectId(), Msg.Status.SendReceived);
+    String otherId = msg.getToPeerId();
+    for (MsgListener listener : listeners) {
+      if (listener.onMessageUpdate(otherId)) {
+        break;
+      }
+    }
   }
 }

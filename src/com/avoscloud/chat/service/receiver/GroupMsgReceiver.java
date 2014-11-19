@@ -29,7 +29,7 @@ public class GroupMsgReceiver extends AVGroupMessageReceiver {
 
   @Override
   public void onInviteToGroup(Context context, Group group, String byPeerId) {
-    Logger.d("onInviteToGroup" + byPeerId + " groupId=" + group.getGroupId());
+    Logger.d("onInviteToGroup " + byPeerId + " groupId=" + group.getGroupId());
   }
 
   @Override
@@ -38,8 +38,8 @@ public class GroupMsgReceiver extends AVGroupMessageReceiver {
   }
 
   @Override
-  public void onKicked(Context context, Group group, String byPeerId) {
-    Logger.d("you're kicked from " + group.getGroupId() + " by " + byPeerId);
+  public void onKicked(Context context, Group group, List<String> kickedPeers) {
+    Logger.d("kick " + group.getGroupId()  +" ids="+kickedPeers);
   }
 
   @Override

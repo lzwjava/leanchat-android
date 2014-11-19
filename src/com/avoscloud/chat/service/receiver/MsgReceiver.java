@@ -7,6 +7,7 @@ import com.avos.avoscloud.Session;
 import com.avoscloud.chat.service.ChatService;
 import com.avoscloud.chat.service.listener.MsgListener;
 import com.avoscloud.chat.service.listener.StatusListener;
+import com.avoscloud.chat.util.AVOSUtils;
 import com.avoscloud.chat.util.Logger;
 
 import java.util.*;
@@ -59,7 +60,8 @@ public class MsgReceiver extends AVMessageReceiver {
 
   @Override
   public void onMessageDelivered(Context context, Session session, AVMessage msg) {
-    Logger.d("onMessageDelivered " + msg.getMessage() + " fromPeerId=" + msg.getFromPeerId());
+    AVOSUtils.logAVMessage(msg);
+    ChatService.onMessageDelivered(msg, msgListeners);
   }
 
   @Override

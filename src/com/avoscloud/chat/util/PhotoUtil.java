@@ -394,7 +394,7 @@ public class PhotoUtil {
         .tasksProcessingOrder(QueueProcessingType.LIFO)
         .discCache(new UnlimitedDiscCache(cacheDir))// 自定义缓存路径
             // .defaultDisplayImageOptions(DisplayImageOptions.createSimple())
-        .writeDebugLogs() // Remove for release app
+        //.writeDebugLogs() // Remove for release app
         .build();
   }
 }
