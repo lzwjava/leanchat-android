@@ -26,9 +26,9 @@ public class DBHelper extends SQLiteOpenHelper {
   @Override
   public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     switch (newVersion){
+      case 3:
       case 2:
-        //lazy solution
-        DBMsg.dropTable(db);
+        DBMsg.dropTable(db);  //lazy solution
         DBMsg.createTable(db);
       case 1:
         break;

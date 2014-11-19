@@ -26,7 +26,7 @@ import java.util.*;
  */
 public class App extends Application {
   public static final String DB_NAME = "chat.db3";
-  public static final int DB_VER = 2;
+  public static final int DB_VER = 3;
   public static boolean debug = true;
   public static App ctx;
   public static Session session;

@@ -73,7 +73,7 @@ public class ChatService {
     AVFile file = AVFile.withAbsoluteLocalPath(objectId, filePath);
     file.save();
     String url = file.getUrl();
-    Msg msg = createAndSendMsg(toUser, type, url, objectId, group);
+    Msg msg = createAndSendMsgWithId(toUser, type, url, objectId, group);
     DBMsg.insertMsg(msg);
     return msg;
   }
@@ -85,8 +85,7 @@ public class ChatService {
   }
 
   public static Msg createAndSendMsg(User toPeer, Msg.Type type, String content, Group group) {
-    String objectId = Utils.uuid();
-    return createAndSendMsg(toPeer, type, content, objectId, group);
+    return createAndSendMsgWithId(toPeer, type, content, Utils.uuid(), group);
   }
 
   public static Msg sendMsgAndInsertDB(User toPeer, Msg.Type type, String content, Group group) {
@@ -95,7 +94,7 @@ public class ChatService {
     return msg;
   }
 
-  public static Msg createAndSendMsg(User toPeer, Msg.Type type, String content, String objectId, Group group) {
+  public static Msg createAndSendMsgWithId(User toPeer, Msg.Type type, String content, String objectId, Group group) {
     Msg msg;
     msg = new Msg();
     msg.setStatus(Msg.Status.SendStart);
@@ -108,6 +107,7 @@ public class ChatService {
       msg.setToPeerId(toPeerId);
       msg.setRoomType(RoomType.Single);
       convid = AVOSUtils.convid(ChatService.getSelfId(), toPeerId);
+      msg.setRequestReceipt(true);
     } else {
       msg.setRoomType(RoomType.Group);
       convid = group.getGroupId();
@@ -120,7 +120,6 @@ public class ChatService {
 
   public static Msg sendMessage(Group group, Msg msg) {
     AVMessage avMsg = msg.toAVMessage();
-    avMsg.setRequestReceipt(true);
     Session session = getSession();
     if (group == null) {
       session.sendMessage(avMsg);

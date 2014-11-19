@@ -11,17 +11,6 @@ import java.util.List;
  * Created by lzw on 14-9-15.
  */
 public class AVOSUtils {
-  public static void showInternalDebugLog() {
-    try {
-      Class<?> clz = Class.forName("com.avos.avoscloud.AVOSCloud");
-      Method startMethod = clz.getDeclaredMethod("showInternalDebugLog", Boolean.TYPE);
-      startMethod.setAccessible(true);
-      startMethod.invoke(null, true);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
-
   public static String convid(String myId, String otherId) {
     List<String> ids = new ArrayList<String>();
     ids.add(myId);
@@ -44,6 +33,6 @@ public class AVOSUtils {
   public static void logAVMessage(AVMessage avMsg) {
     Logger.d("avMsg message="+avMsg.getMessage()+" timestamp="+avMsg.getTimestamp()+" toPeerIds="+avMsg.getToPeerIds
         ()+" fromPeerId="+avMsg.getFromPeerId()+" receiptTs="+avMsg.getReceiptTimestamp()+" groupId="+avMsg.getGroupId
-        ());
+        ()+" isRequestReceipt="+avMsg.isRequestReceipt());
   }
 }

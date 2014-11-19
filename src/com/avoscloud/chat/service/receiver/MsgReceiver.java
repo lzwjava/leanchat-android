@@ -48,24 +48,29 @@ public class MsgReceiver extends AVMessageReceiver {
 
   @Override
   public void onMessage(final Context context, Session session, AVMessage avMsg) {
-    Logger.d("onMessage " + avMsg.getMessage());
+    Logger.d("onMessage");
+    AVOSUtils.logAVMessage(avMsg);
     ChatService.onMessage(context, avMsg, msgListeners, null);
   }
 
   @Override
   public void onMessageSent(Context context, Session session, AVMessage avMsg) {
-    Logger.d("onMessageSent " + avMsg.getMessage());
+    Logger.d("onMessageSent");
+    AVOSUtils.logAVMessage(avMsg);
     ChatService.onMessageSent(avMsg, msgListeners, null);
   }
 
   @Override
   public void onMessageDelivered(Context context, Session session, AVMessage msg) {
+    Logger.d("onMessageDelivered");
     AVOSUtils.logAVMessage(msg);
     ChatService.onMessageDelivered(msg, msgListeners);
   }
 
   @Override
   public void onMessageFailure(Context context, Session session, AVMessage avMsg) {
+    Logger.d("onMessageFailure");
+    AVOSUtils.logAVMessage(avMsg);
     ChatService.updateStatusToFailed(avMsg, msgListeners);
   }
 

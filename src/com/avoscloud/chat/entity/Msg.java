@@ -1,5 +1,6 @@
 package com.avoscloud.chat.entity;
 
+import android.location.Location;
 import com.alibaba.fastjson.JSON;
 import com.avos.avoscloud.AVMessage;
 import com.avos.avoscloud.AVUtils;
@@ -39,7 +40,7 @@ public class Msg {
 
 
   public static enum Type{
-    Text(0), Image(2), Audio(3), Location(4);
+    Text(0), Image(1), Audio(2), Location(3);
     int value;
 
     Type(int value) {
@@ -58,10 +59,12 @@ public class Msg {
   //long timestamp;
   //String fromPeerId;
   //List<String> toPeerIds;
+  //isRequestReceipt
+  AVMessage internalMessage;
   String content;
   String objectId;
   String convid;
-  AVMessage internalMessage;
+
 
   RoomType roomType=RoomType.Single;
   Status status = Status.SendStart;
@@ -111,6 +114,14 @@ public class Msg {
 
   public long getTimestamp() {
     return internalMessage.getTimestamp();
+  }
+
+  public boolean isRequestReceipt() {
+    return internalMessage.isRequestReceipt();
+  }
+
+  public void setRequestReceipt(boolean isRequestReceipt){
+    internalMessage.setRequestReceipt(isRequestReceipt);
   }
 
   public String getConvid() {
