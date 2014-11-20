@@ -1,4 +1,6 @@
-##[下载](http://fir.im/leanchat)
+##[应用下载](http://fir.im/leanchat)
+
+[LeanCloud 镜像项目下载地址](https://download.leancloud.cn/demo/)
 
 ## Leanchat 项目构成
 * [Leanchat-android](https://github.com/leancloud/leanchat)
