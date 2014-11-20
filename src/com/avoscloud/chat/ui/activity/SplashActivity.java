@@ -8,10 +8,10 @@ import com.avoscloud.chat.util.ChatUtils;
 import com.avoscloud.chat.util.Utils;
 import com.avoscloud.chat.R;
 
-public class SplashActivity extends BaseActivity {
+public class SplashActivity extends BaseEntryActivity {
   private static final int GO_MAIN_MSG = 1;
   private static final int GO_LOGIN_MSG = 2;
-  public static final int GO_NEXT_PERIOD = 2000;
+  public static final int SPLASH_DURATION = 2000;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -21,9 +21,9 @@ public class SplashActivity extends BaseActivity {
 
     if (User.curUser() != null) {
       ChatUtils.updateUserInfo();
-      handler.sendEmptyMessageDelayed(GO_MAIN_MSG, GO_NEXT_PERIOD);
+      handler.sendEmptyMessageDelayed(GO_MAIN_MSG, SPLASH_DURATION);
     } else {
-      handler.sendEmptyMessageDelayed(GO_LOGIN_MSG, 2000);
+      handler.sendEmptyMessageDelayed(GO_LOGIN_MSG, SPLASH_DURATION);
     }
   }
 
@@ -32,8 +32,7 @@ public class SplashActivity extends BaseActivity {
     public void handleMessage(Message msg) {
       switch (msg.what) {
         case GO_MAIN_MSG:
-          Utils.goActivity(ctx, MainActivity.class);
-          finish();
+          MainActivity.goMainActivity(SplashActivity.this);
           break;
         case GO_LOGIN_MSG:
           Utils.goActivity(ctx, LoginActivity.class);

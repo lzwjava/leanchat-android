@@ -1,9 +1,5 @@
 package com.avoscloud.chat.ui.activity;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -11,24 +7,22 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import com.avoscloud.chat.avobject.User;
-import com.avoscloud.chat.base.C;
-import com.avoscloud.chat.util.ChatUtils;
 import com.avoscloud.chat.R;
+import com.avoscloud.chat.avobject.User;
+import com.avoscloud.chat.service.receiver.FinishReceiver;
+import com.avoscloud.chat.util.ChatUtils;
 import com.avoscloud.chat.util.NetAsyncTask;
 import com.avoscloud.chat.util.Utils;
 
-public class LoginActivity extends BaseActivity implements OnClickListener {
+public class LoginActivity extends BaseEntryActivity implements OnClickListener {
   EditText usernameEdit, passwordEdit;
   Button loginBtn;
   TextView registerBtn;
-  public static LoginActivity instance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     // TODO Auto-generated method stub
     super.onCreate(savedInstanceState);
-    instance=this;
     setContentView(R.layout.activity_login);
     init();
   }
@@ -40,16 +34,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
     registerBtn = (TextView) findViewById(R.id.btn_register);
     loginBtn.setOnClickListener(this);
     registerBtn.setOnClickListener(this);
-  }
-
-  public class LoginBroadcastReceiver extends BroadcastReceiver {
-
-    @Override
-    public void onReceive(Context context, Intent intent) {
-      if (intent != null && C.ACTION_REGISTER_FINISH.equals(intent.getAction())) {
-        finish();
-      }
-    }
   }
 
   @Override
@@ -87,19 +71,11 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
           Utils.toast(e.getMessage());
         } else {
           ChatUtils.updateUserLocation();
-          Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-          startActivity(intent);
+          MainActivity.goMainActivity(LoginActivity.this);
           finish();
         }
       }
     }.execute();
 
-  }
-
-  @Override
-  protected void onDestroy() {
-    // TODO Auto-generated method stub
-    super.onDestroy();
-    instance=null;
   }
 }

@@ -1,11 +1,9 @@
 package com.avoscloud.chat.ui.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import com.avoscloud.chat.R;
@@ -16,7 +14,7 @@ import com.avoscloud.chat.util.ChatUtils;
 import com.avoscloud.chat.util.NetAsyncTask;
 import com.avoscloud.chat.util.Utils;
 
-public class RegisterActivity extends BaseActivity {
+public class RegisterActivity extends BaseEntryActivity {
   View registerButton;
   EditText usernameEdit, passwordEdit, emailEdit;
   RadioGroup sexRadio;
@@ -42,7 +40,7 @@ public class RegisterActivity extends BaseActivity {
     usernameEdit = (EditText) findViewById(R.id.usernameEdit);
     passwordEdit = (EditText) findViewById(R.id.passwordEdit);
     emailEdit = (EditText) findViewById(R.id.ensurePasswordEdit);
-    registerButton =  findViewById(R.id.btn_register);
+    registerButton = findViewById(R.id.btn_register);
     sexRadio = (RadioGroup) findViewById(R.id.sexRadio);
   }
 
@@ -66,7 +64,7 @@ public class RegisterActivity extends BaseActivity {
 
     int checkedId = sexRadio.getCheckedRadioButtonId();
     final User.Gender gender;
-    gender=checkedId==R.id.male? User.Gender.Male:User.Gender.Female;
+    gender = checkedId == R.id.male ? User.Gender.Male : User.Gender.Female;
 
     new NetAsyncTask(ctx) {
       @Override
@@ -84,15 +82,9 @@ public class RegisterActivity extends BaseActivity {
         } else {
           Utils.toast(R.string.registerSucceed);
           ChatUtils.updateUserLocation();
-          Intent intent = new Intent(ctx, MainActivity.class);
-          startActivity(intent);
-          finish();
-          if (LoginActivity.instance != null) {
-            LoginActivity.instance.finish();
-          }
+          MainActivity.goMainActivity(RegisterActivity.this);
         }
       }
     }.execute();
   }
-
 }

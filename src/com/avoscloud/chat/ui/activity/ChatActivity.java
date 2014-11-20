@@ -1,5 +1,6 @@
 package com.avoscloud.chat.ui.activity;
 
+import android.accounts.NetworkErrorException;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -93,7 +94,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
 
     initListView();
     setSoftInputMode();
-    loadNewMsg(true);
+    loadMsgsFromDB(true);
     ChatService.cancelNotification(ctx);
   }
 
@@ -346,8 +347,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
 
   }
 
-  public void loadNewMsg(boolean openDialog) {
-    new GetDataTask(ctx, openDialog, true).execute();
+  public void loadMsgsFromDB(boolean showDialog) {
+    new GetDataTask(ctx, showDialog, true).execute();
   }
 
   @Override
@@ -368,10 +369,19 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   @Override
   public boolean onMessageUpdate(String otherId) {
     if (otherId.equals(currentChatId())) {
-      loadNewMsg(false);
+      loadMsgsFromDB(false);
       return true;
     }
     return false;
+  }
+
+  public void resendMsg(final Msg resendMsg) {
+    new SendMsgTask(ctx) {
+      @Override
+      Msg sendMsg() throws Exception {
+        return ChatService.resendMsg(resendMsg);
+      }
+    }.execute();
   }
 
   class GetDataTask extends NetAsyncTask {
@@ -542,8 +552,13 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
         Msg sendMsg() throws Exception {
           return ChatService.sendTextMsg(chatUser, contString, group);
         }
+
+        @Override
+        public void onSucceed() {
+          super.onSucceed();
+          contentEdit.setText("");
+        }
       }.execute();
-      contentEdit.setText("");
     }
   }
 
@@ -610,12 +625,16 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
 
     @Override
     protected void doInBack() throws Exception {
-      msg = sendMsg();
+      if (Connectivity.isConnected(ctx)) {
+        msg = sendMsg();
+      } else {
+        throw new NetworkErrorException("network is not connected");
+      }
     }
 
     @Override
     public void onSucceed() {
-      addMsgAndScrollToLast(msg);
+      loadMsgsFromDB(false);
     }
 
     abstract Msg sendMsg() throws Exception;

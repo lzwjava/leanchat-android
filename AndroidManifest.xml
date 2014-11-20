@@ -34,7 +34,6 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    
 
     <!--location-->
     <!-- 这个权限用于进行网络定位-->

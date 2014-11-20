@@ -1,19 +1,21 @@
 package com.avoscloud.chat.ui.activity;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import com.avos.avoscloud.AVGeoPoint;
-import com.avos.avoscloud.AVMessage;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.service.ChatService;
 import com.avoscloud.chat.service.PreferenceMap;
 import com.avoscloud.chat.service.UpdateService;
+import com.avoscloud.chat.service.receiver.FinishReceiver;
 import com.avoscloud.chat.ui.fragment.ContactFragment;
 import com.avoscloud.chat.ui.fragment.ConversationFragment;
 import com.avoscloud.chat.ui.fragment.DiscoverFragment;
@@ -63,7 +65,13 @@ public class MainActivity extends BaseActivity {
     UpdateService updateService = UpdateService.getInstance(this);
     updateService.checkUpdate();
     App.registerUserCache(User.curUser());
-    ChatService.openSession();
+    FinishReceiver.broadcast(this);
+    ChatService.openSession(this);
+  }
+
+  public static void goMainActivity(Activity activity) {
+    Intent intent = new Intent(activity, MainActivity.class);
+    activity.startActivity(intent);
   }
 
   @Override

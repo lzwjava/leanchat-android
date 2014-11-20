@@ -21,13 +21,13 @@ public class XListView extends ListView implements OnScrollListener {
   private Scroller mScroller; // used for scroll back
   private OnScrollListener mScrollListener; // user's scroll listener
 
-  // the interface to trigger refresh and load more.
+  // the interface to trigger loadMsgsFromDB and load more.
   private IXListViewListener mListViewListener;
 
   // -- header view
   private XListViewHeader mHeaderView;
   // header view content, use it to calculate the Header's height. And hide it
-  // when disable pull refresh.
+  // when disable pull loadMsgsFromDB.
   private RelativeLayout mHeaderViewContent;
   private int mHeaderViewHeight; // header view's height
   private boolean mEnablePullRefresh = true;
@@ -114,7 +114,7 @@ public class XListView extends ListView implements OnScrollListener {
   }
 
   /**
-   * enable or disable pull down refresh feature.
+   * enable or disable pull down loadMsgsFromDB feature.
    *
    * @param enable
    */
@@ -159,7 +159,7 @@ public class XListView extends ListView implements OnScrollListener {
   }
 
   /**
-   * stop refresh, reset header view.
+   * stop loadMsgsFromDB, reset header view.
    */
   public void stopRefresh() {
     Time time = new Time();
@@ -286,7 +286,7 @@ public class XListView extends ListView implements OnScrollListener {
       default:
         mLastY = -1; // reset
         if (getFirstVisiblePosition() == 0) {
-          // invoke refresh
+          // invoke loadMsgsFromDB
           if (mEnablePullRefresh
               && mHeaderView.getVisiableHeight() > mHeaderViewHeight) {
             mPullRefreshing = true;
@@ -361,7 +361,7 @@ public class XListView extends ListView implements OnScrollListener {
   }
 
   /**
-   * implements this interface to get refresh/load more event.
+   * implements this interface to get loadMsgsFromDB/load more event.
    */
   public interface IXListViewListener {
     public void onRefresh();

@@ -1,5 +1,6 @@
 package com.avoscloud.chat.service;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -7,16 +8,21 @@ import android.content.Context;
 import android.content.Intent;
 import com.alibaba.fastjson.JSONException;
 import com.avos.avoscloud.*;
+import com.avoscloud.chat.avobject.ChatGroup;
 import com.avoscloud.chat.avobject.User;
+import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.db.DBMsg;
 import com.avoscloud.chat.entity.Conversation;
+import com.avoscloud.chat.entity.Msg;
 import com.avoscloud.chat.entity.RoomType;
 import com.avoscloud.chat.service.listener.MsgListener;
+import com.avoscloud.chat.service.receiver.MsgReceiver;
 import com.avoscloud.chat.ui.activity.ChatActivity;
-import com.avoscloud.chat.util.*;
-import com.avoscloud.chat.avobject.ChatGroup;
-import com.avoscloud.chat.base.App;
-import com.avoscloud.chat.entity.Msg;
+import com.avoscloud.chat.ui.activity.MainActivity;
+import com.avoscloud.chat.util.AVOSUtils;
+import com.avoscloud.chat.util.Logger;
+import com.avoscloud.chat.util.NetAsyncTask;
+import com.avoscloud.chat.util.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -115,10 +121,10 @@ public class ChatService {
     msg.setObjectId(objectId);
     msg.setConvid(convid);
     msg.setType(type);
-    return sendMessage(group, msg);
+    return sendMessage(msg, group);
   }
 
-  public static Msg sendMessage(Group group, Msg msg) {
+  public static Msg sendMessage(Msg msg, Group group) {
     AVMessage avMsg = msg.toAVMessage();
     Session session = getSession();
     if (group == null) {
@@ -129,15 +135,15 @@ public class ChatService {
     return msg;
   }
 
-  public static void openSession() {
+  public static void openSession(Activity activity) {
     Session session = getSession();
     if (session.isOpen() == false) {
       session.open(new LinkedList<String>());
     }
   }
 
-  public static Msg sendLocationMessage(User toPeer, String address, double latitude, double longtitude, Group group) {
-    String content = address + "&" + latitude + "&" + longtitude;
+  public static Msg sendLocationMessage(User toPeer, String address, double latitude, double longitude, Group group) {
+    String content = address + "&" + latitude + "&" + longitude;
     return sendMsgAndInsertDB(toPeer, Msg.Type.Location, content, group);
   }
 
@@ -303,11 +309,12 @@ public class ChatService {
     }
   }
 
-  public static void updateStatusToFailed(AVMessage avMsg, Set<MsgListener> msgListeners) {
+  public static void onMessageFailure(AVMessage avMsg, Set<MsgListener> msgListeners, Group group) {
     Msg msg = Msg.fromAVMessage(avMsg);
     DBMsg.updateStatus(msg.getObjectId(), Msg.Status.SendFailed);
+    String otherId = getOtherId(msg.getToPeerId(), group);
     for (MsgListener msgListener : msgListeners) {
-      if (msgListener.onMessageUpdate(null)) {
+      if (msgListener.onMessageUpdate(otherId)) {
         break;
       }
     }
@@ -318,7 +325,7 @@ public class ChatService {
     Logger.d("error " + errorMsg);
     if (errorMsg != null && errorMsg.startsWith("{")) {
       AVMessage avMsg = new AVMessage(errorMsg);
-      updateStatusToFailed(avMsg, msgListeners);
+      //onMessageFailure(avMsg, msgListeners, group);
     }
   }
 
@@ -327,15 +334,18 @@ public class ChatService {
     return UserService.findUsers(members);
   }
 
-  public static void resendMsg(Msg msg) {
+  public static Msg resendMsg(Msg msg) {
     Group group = null;
-    if (msg.getRoomType() == RoomType.Single) {
+    if (msg.getRoomType() == RoomType.Group) {
       String groupId = msg.getConvid();
       Session session = ChatService.getSession();
       group = session.getGroup(groupId);
+    } else {
+      msg.setRequestReceipt(true);
     }
-    sendMessage(group, msg);
+    sendMessage(msg, group);
     DBMsg.updateStatus(msg.getObjectId(), Msg.Status.SendStart);
+    return msg;
   }
 
   public static void cancelNotification(Context ctx) {

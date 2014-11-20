@@ -41,8 +41,11 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
     int TO_LOCATION = 7;
   }
 
-  public ChatMsgAdapter(Context ctx, List<Msg> datas) {
-    super(ctx, datas);
+  ChatActivity chatActivity;
+
+  public ChatMsgAdapter(ChatActivity chatActivity, List<Msg> datas) {
+    super(chatActivity, datas);
+    this.chatActivity = chatActivity;
   }
 
   public int getItemPosById(String objectId) {
@@ -68,7 +71,7 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
     Msg entity = datas.get(position);
     boolean comeMsg = entity.isComeMessage();
     Msg.Type type = entity.getType();
-    switch (type){
+    switch (type) {
       case Text:
         return comeMsg ? MsgViewType.COME_TEXT : MsgViewType.TO_TEXT;
       case Image:
@@ -157,8 +160,7 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
     statusSendFailed.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        ChatService.resendMsg(msg);
-        notifyDataSetChanged();
+        chatActivity.resendMsg(msg);
       }
     });
   }
@@ -173,9 +175,10 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
     try {
       String content = msg.getContent();
       if (content != null && !content.equals("")) {
-        String address = content.split("&")[0];
-        final String latitude = content.split("&")[1];
-        final String longtitude = content.split("&")[2];
+        String[] parts = content.split("&");
+        String address = parts[0];
+        final String latitude = parts[1];
+        final String longtitude = parts[2];
         locationView.setText(address);
         locationView.setOnClickListener(new View.OnClickListener() {
 

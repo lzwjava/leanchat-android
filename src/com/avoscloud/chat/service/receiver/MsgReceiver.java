@@ -1,16 +1,22 @@
 package com.avoscloud.chat.service.receiver;
 
 import android.content.Context;
+import android.content.Intent;
 import com.avos.avoscloud.AVMessage;
 import com.avos.avoscloud.AVMessageReceiver;
 import com.avos.avoscloud.Session;
 import com.avoscloud.chat.service.ChatService;
 import com.avoscloud.chat.service.listener.MsgListener;
 import com.avoscloud.chat.service.listener.StatusListener;
+import com.avoscloud.chat.ui.activity.MainActivity;
 import com.avoscloud.chat.util.AVOSUtils;
 import com.avoscloud.chat.util.Logger;
+import com.avoscloud.chat.util.Utils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by lzw on 14-8-7.
@@ -23,13 +29,15 @@ public class MsgReceiver extends AVMessageReceiver {
   @Override
   public void onSessionOpen(Context context, Session session) {
     Logger.d("onSessionOpen");
+    /*Intent intent = new Intent(context, MainActivity.class);
+    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    context.startActivity(intent);*/
   }
 
   @Override
   public void onSessionPaused(Context context, Session session) {
     Logger.d("onSessionPaused");
   }
-
 
   @Override
   public void onSessionResumed(Context context, Session session) {
@@ -38,6 +46,9 @@ public class MsgReceiver extends AVMessageReceiver {
 
   @Override
   public void onPeersWatched(Context context, Session session, List<String> peerIds) {
+    if (peerIds.size() != 1) {
+      throw new IllegalStateException("the size of watched peers isn't 1");
+    }
     Logger.d("watched " + peerIds);
   }
 
@@ -71,7 +82,7 @@ public class MsgReceiver extends AVMessageReceiver {
   public void onMessageFailure(Context context, Session session, AVMessage avMsg) {
     Logger.d("onMessageFailure");
     AVOSUtils.logAVMessage(avMsg);
-    ChatService.updateStatusToFailed(avMsg, msgListeners);
+    ChatService.onMessageFailure(avMsg, msgListeners, null);
   }
 
   @Override
@@ -94,8 +105,9 @@ public class MsgReceiver extends AVMessageReceiver {
 
   @Override
   public void onError(Context context, Session session, Throwable throwable) {
+    Utils.toast(context, throwable.getMessage());
     throwable.printStackTrace();
-    ChatService.onMessageError(throwable, msgListeners);
+    //ChatService.onMessageError(throwable, msgListeners);
   }
 
   public static void registerStatusListener(StatusListener listener) {

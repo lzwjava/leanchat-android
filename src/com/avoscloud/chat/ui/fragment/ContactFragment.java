@@ -167,7 +167,7 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
   public void setUserVisibleHint(boolean isVisibleToUser) {
     // TODO Auto-generated method stub
     if (isVisibleToUser) {
-      //refresh();
+      //loadMsgsFromDB();
     }
     super.setUserVisibleHint(isVisibleToUser);
   }

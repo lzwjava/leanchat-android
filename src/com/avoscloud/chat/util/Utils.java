@@ -9,6 +9,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
@@ -585,7 +587,7 @@ public class Utils {
     dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
     dialog.setCancelable(true);
     dialog.setMessage(App.ctx.getString(R.string.hardLoading));
-    if (activity.isFinishing()==false) {
+    if (activity.isFinishing() == false) {
       dialog.show();
     }
     return dialog;
@@ -596,7 +598,7 @@ public class Utils {
     ProgressDialog dialog = new ProgressDialog(activity);
     dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
     dialog.setCancelable(true);
-    if(activity.isFinishing()==false){
+    if (activity.isFinishing() == false) {
       dialog.show();
     }
     return dialog;
@@ -719,8 +721,8 @@ public class Utils {
     }
   }
 
-  public static void printException(Exception e){
-    if(App.debug){
+  public static void printException(Exception e) {
+    if (App.debug) {
       e.printStackTrace();
     }
   }
