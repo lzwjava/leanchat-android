@@ -10,8 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.AddRequest;
-import com.avoscloud.chat.avobject.User;
-import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.service.CloudService;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.view.ViewHolder;
@@ -32,7 +30,7 @@ public class NewFriendAdapter extends BaseListAdapter<AddRequest> {
     // TODO Auto-generated method stub
     if (conView == null) {
       LayoutInflater mInflater = LayoutInflater.from(ctx);
-      conView = mInflater.inflate(R.layout.item_add_friend, null);
+      conView = mInflater.inflate(R.layout.contact_add_friend_item, null);
     }
     final AddRequest addRequest = datas.get(position);
     TextView nameView = ViewHolder.findViewById(conView, R.id.name);

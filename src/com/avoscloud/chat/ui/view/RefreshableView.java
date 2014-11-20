@@ -36,7 +36,7 @@ public class RefreshableView extends LinearLayout implements View.OnTouchListene
   public RefreshableView(Context context, AttributeSet attrs) {
     super(context, attrs);
     touchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
-    header = inflate(getContext(), R.layout.pull_to_refresh, null);
+    header = inflate(getContext(), R.layout.pull_to_refresh_header, null);
     tipsView = (TextView) header.findViewById(R.id.tips);
     arrow = (ImageView) header.findViewById(R.id.arrow);
     progressBar = (ProgressBar) header.findViewById(R.id.progressBar);

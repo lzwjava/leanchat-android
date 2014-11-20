@@ -2,7 +2,6 @@ package com.avoscloud.chat.ui.fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -140,7 +139,7 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
   private void initListView() {
     friendsList = (ListView) getView().findViewById(R.id.list_friends);
     LayoutInflater mInflater = LayoutInflater.from(ctx);
-    RelativeLayout headView = (RelativeLayout) mInflater.inflate(R.layout.include_new_friend, null);
+    RelativeLayout headView = (RelativeLayout) mInflater.inflate(R.layout.contact_include_new_friend, null);
     msgTipsView = (ImageView) headView.findViewById(R.id.iv_msg_tips);
     newFriendLayout = (LinearLayout) headView.findViewById(R.id.layout_new);
     groupLayout = (LinearLayout) headView.findViewById(R.id.layout_group);

@@ -33,7 +33,7 @@ public class AddFriendActivity extends BaseActivity implements OnClickListener, 
   protected void onCreate(Bundle savedInstanceState) {
     // TODO Auto-generated method stub
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.add_friend_activity);
+    setContentView(R.layout.contact_add_friend_activity);
     initView();
     search(searchName);
   }

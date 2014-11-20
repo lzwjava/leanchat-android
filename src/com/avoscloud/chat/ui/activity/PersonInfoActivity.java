@@ -39,7 +39,7 @@ public class PersonInfoActivity extends BaseActivity implements OnClickListener 
       getWindow().getDecorView().setSystemUiVisibility(
           View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
     }
-    setContentView(R.layout.activity_set_info);
+    setContentView(R.layout.contact_person_info_activity);
     initData();
 
     findView();

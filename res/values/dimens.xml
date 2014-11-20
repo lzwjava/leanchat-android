@@ -68,4 +68,5 @@
     <dimen name="group_dialog_layout_pad">5dp</dimen>
     <dimen name="group_detail_text_height">80dp</dimen>
     <dimen name="chatBottomBtnMargin">5dp</dimen>
+    <dimen name="tip_icon_size">15dp</dimen>
 </resources>

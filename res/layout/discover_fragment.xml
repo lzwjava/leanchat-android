@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#f2f2f2">
 
-    <include layout="@layout/header_layout" />
+    <include layout="@layout/base_header_layout" />
 
     <FrameLayout
         android:layout_width="match_parent"

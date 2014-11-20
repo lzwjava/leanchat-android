@@ -39,13 +39,13 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginRight="30dp"
-                android:layout_marginTop="7dp"
+                android:layout_marginTop="3dp"
                 android:background="@drawable/msg_tips"
                 android:contentDescription="@string/action_settings"
                 android:gravity="center"
                 android:textColor="@android:color/white"
                 android:textSize="12sp"
-                android:visibility="gone" />
+                android:visibility="visible" />
         </RelativeLayout>
 
         <RelativeLayout

@@ -9,7 +9,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.User;
-import com.avoscloud.chat.service.receiver.FinishReceiver;
 import com.avoscloud.chat.util.ChatUtils;
 import com.avoscloud.chat.util.NetAsyncTask;
 import com.avoscloud.chat.util.Utils;
@@ -23,7 +22,7 @@ public class LoginActivity extends BaseEntryActivity implements OnClickListener 
   protected void onCreate(Bundle savedInstanceState) {
     // TODO Auto-generated method stub
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_login);
+    setContentView(R.layout.entry_login_activity);
     init();
   }
 

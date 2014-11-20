@@ -38,7 +38,7 @@ public class LocationActivity extends BaseActivity implements
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_location);
+    setContentView(R.layout.chat_location_activity);
     initBaiduMap();
   }
 

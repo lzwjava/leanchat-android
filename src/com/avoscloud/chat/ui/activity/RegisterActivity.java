@@ -23,7 +23,7 @@ public class RegisterActivity extends BaseEntryActivity {
   protected void onCreate(Bundle savedInstanceState) {
     // TODO Auto-generated method stub
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.register_activity);
+    setContentView(R.layout.entry_register_activity);
     findView();
     initActionBar(App.ctx.getString(R.string.register));
     registerButton.setOnClickListener(new OnClickListener() {

@@ -29,7 +29,7 @@ public class NewFriendActivity extends BaseActivity implements OnItemLongClickLi
   protected void onCreate(Bundle savedInstanceState) {
     // TODO Auto-generated method stub
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_new_friend);
+    setContentView(R.layout.contact_new_friend_activity);
     initView();
     refresh();
   }

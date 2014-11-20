@@ -17,7 +17,7 @@ public class SplashActivity extends BaseEntryActivity {
   protected void onCreate(Bundle savedInstanceState) {
     // TODO Auto-generated method stub
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.splash_layout);
+    setContentView(R.layout.entry_splash_layout);
 
     if (User.curUser() != null) {
       ChatUtils.updateUserInfo();

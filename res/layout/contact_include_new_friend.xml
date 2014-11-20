@@ -20,15 +20,6 @@
             android:layout_gravity="center_vertical">
 
             <ImageView
-                android:id="@+id/iv_msg_tips"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top|right"
-                android:visibility="gone"
-                android:contentDescription="@string/action_settings"
-                android:src="@drawable/msg_tips" />
-
-            <ImageView
                 android:layout_width="50.0dip"
                 android:layout_height="50.0dip"
                 android:layout_marginLeft="10dp"
@@ -36,6 +27,16 @@
                 android:contentDescription="@string/action_settings"
                 android:padding="5dp"
                 android:src="@drawable/new_friends_icon" />
+
+            <ImageView
+                android:id="@+id/iv_msg_tips"
+                android:layout_width="@dimen/tip_icon_size"
+                android:layout_height="@dimen/tip_icon_size"
+                android:layout_marginTop="5dp"
+                android:layout_gravity="top|right"
+                android:visibility="gone"
+                android:contentDescription="@string/action_settings"
+                android:src="@drawable/msg_tips" />
         </FrameLayout>
 
         <TextView

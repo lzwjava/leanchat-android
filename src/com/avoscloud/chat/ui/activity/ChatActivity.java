@@ -323,30 +323,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     }
   }
 
-  public void addMsgAndScrollToLast(Msg msg) {
-    adapter.add(msg);
-    hideBottomLayoutAndScrollToLast();
-  }
-
-  public View getMsgViewByMsg(Msg msg) {
-    int msgPos = adapter.getItemPosById(msg.getObjectId());
-    if (msgPos < 0) {
-      Logger.i("cannot find msg " + msg.getContent());
-      return null;
-    }
-    Logger.d("msgPos=" + msgPos);
-    int firstPos = xListView.getFirstVisiblePosition()
-        - xListView.getHeaderViewsCount();
-    int wantedChild = msgPos - firstPos;
-    Logger.d("wanted child pos=" + wantedChild);
-    if (wantedChild < 0 || wantedChild >= xListView.getChildCount()) {
-      Logger.d("Unable to get view for desired position");
-      return null;
-    }
-    return xListView.getChildAt(wantedChild);
-
-  }
-
   public void loadMsgsFromDB(boolean showDialog) {
     new GetDataTask(ctx, showDialog, true).execute();
   }
@@ -385,7 +361,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   }
 
   class GetDataTask extends NetAsyncTask {
-    boolean res;
     List<Msg> msgs;
     boolean scrollToLast = true;
 
@@ -600,15 +575,15 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   }
 
   private void sendLocationByReturnData(Intent data) {
-    final double latitude = data.getDoubleExtra("x", 0);// 缁村害
-    final double longtitude = data.getDoubleExtra("y", 0);// 缁忓害
+    final double latitude = data.getDoubleExtra("x", 0);
+    final double longitude = data.getDoubleExtra("y", 0);
     final String address = data.getStringExtra("address");
     if (address != null && !address.equals("")) {
       new SendMsgTask(ctx) {
         @Override
         Msg sendMsg() throws Exception {
           return ChatService.sendLocationMessage(chatUser,
-              address, latitude, longtitude, group);
+              address, latitude, longitude, group);
         }
       }.execute();
     } else {
