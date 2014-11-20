@@ -51,7 +51,7 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
     // TODO Auto-generated method stub
-    return inflater.inflate(R.layout.fragment_contacts, container, false);
+    return inflater.inflate(R.layout.contact_fragment, container, false);
   }
 
   @Override
