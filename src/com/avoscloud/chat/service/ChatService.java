@@ -137,6 +137,7 @@ public class ChatService {
 
   public static void openSession(Activity activity) {
     Session session = getSession();
+    session.setSignatureFactory(new SignatureFactory());
     if (session.isOpen() == false) {
       session.open(new LinkedList<String>());
     }

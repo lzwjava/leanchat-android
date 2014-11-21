@@ -19,7 +19,7 @@ import java.util.List;
  * Created by lzw on 14-8-7.
  */
 public class Msg {
-  public static enum Status{
+  public static enum Status {
     SendStart(0), SendSucceed(1), SendReceived(2),
     SendFailed(3), HaveRead(4);
 
@@ -33,13 +33,13 @@ public class Msg {
       return value;
     }
 
-    public static Status fromInt(int i){
+    public static Status fromInt(int i) {
       return values()[i];
     }
   }
 
 
-  public static enum Type{
+  public static enum Type {
     Text(0), Image(1), Audio(2), Location(3);
     int value;
 
@@ -51,7 +51,7 @@ public class Msg {
       return value;
     }
 
-    public static Type fromInt(int i){
+    public static Type fromInt(int i) {
       return values()[i];
     }
   }
@@ -66,7 +66,7 @@ public class Msg {
   String convid;
 
 
-  RoomType roomType=RoomType.Single;
+  RoomType roomType = RoomType.Single;
   Status status = Status.SendStart;
   Type type = Type.Text;
 
@@ -120,7 +120,7 @@ public class Msg {
     return internalMessage.isRequestReceipt();
   }
 
-  public void setRequestReceipt(boolean isRequestReceipt){
+  public void setRequestReceipt(boolean isRequestReceipt) {
     internalMessage.setRequestReceipt(isRequestReceipt);
   }
 
@@ -198,7 +198,7 @@ public class Msg {
   }
 
   public String getOtherId() {
-    if (getRoomType()==RoomType.Group) {
+    if (getRoomType() == RoomType.Group) {
       return getToPeerId();
     } else {
       String fromPeerId = getFromPeerId();
@@ -241,24 +241,24 @@ public class Msg {
     msg.setInternalMessage(avMsg);
     if (!AVUtils.isBlankString(avMsg.getMessage())) {
       HashMap<String, Object> params = JSON.parseObject(avMsg.getMessage(), HashMap.class);
-      String objectId=(String) params.get("objectId");
-      String content=(String) params.get("content");
+      String objectId = (String) params.get("objectId");
+      String content = (String) params.get("content");
       Integer typeInt = (Integer) params.get("type");
-      if(objectId==null || content==null ||
-          typeInt==null){
+      if (objectId == null || content == null ||
+          typeInt == null) {
         throwNullException();
       }
       msg.setObjectId(objectId);
       msg.setContent(content);
-      Type type=Type.fromInt(typeInt);
+      Type type = Type.fromInt(typeInt);
       msg.setType(type);
     }
     return msg;
   }
 
   public AVMessage toAVMessage() {
-    if(convid==null || content==null || objectId==null
-        || roomType==null || status==null || type==null){
+    if (convid == null || content == null || objectId == null
+        || roomType == null || status == null || type == null) {
       throwNullException();
     }
     HashMap<String, Object> params = new HashMap<String, Object>();

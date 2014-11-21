@@ -73,6 +73,7 @@ public class GroupMsgReceiver extends AVGroupMessageReceiver {
     Logger.d(group.getGroupId() + " quit");
   }
 
+  //签名被拒或聊天室满1000人被拒
   @Override
   public void onReject(Context context, Group group, String op, List<String> targetIds) {
     Logger.d(op + ":" + targetIds + " rejected");

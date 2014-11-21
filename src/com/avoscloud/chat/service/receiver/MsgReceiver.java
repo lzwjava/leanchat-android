@@ -1,14 +1,12 @@
 package com.avoscloud.chat.service.receiver;
 
 import android.content.Context;
-import android.content.Intent;
 import com.avos.avoscloud.AVMessage;
 import com.avos.avoscloud.AVMessageReceiver;
 import com.avos.avoscloud.Session;
 import com.avoscloud.chat.service.ChatService;
 import com.avoscloud.chat.service.listener.MsgListener;
 import com.avoscloud.chat.service.listener.StatusListener;
-import com.avoscloud.chat.ui.activity.MainActivity;
 import com.avoscloud.chat.util.AVOSUtils;
 import com.avoscloud.chat.util.Logger;
 import com.avoscloud.chat.util.Utils;
@@ -86,9 +84,9 @@ public class MsgReceiver extends AVMessageReceiver {
   }
 
   @Override
-  public void onStatusOnline(Context context, Session session, List<String> strings) {
-    Logger.d("onStatusOnline " + strings);
-    onlineIds.addAll(strings);
+  public void onStatusOnline(Context context, Session session, List<String> peerIds) {
+    Logger.d("onStatusOnline " + peerIds);
+    onlineIds.addAll(peerIds);
     if (statusListener != null) {
       statusListener.onStatusOnline(new ArrayList<String>(onlineIds));
     }
