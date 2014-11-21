@@ -13,43 +13,35 @@ import java.util.List;
 public class SignatureFactory implements com.avos.avoscloud.SignatureFactory {
   @Override
   public Signature createSignature(String peerId, List<String> watchIds) {
-    Signature s = new Signature();
     try {
-      HashMap<String, Object> map = (HashMap<String, Object>) CloudService.sign(peerId, watchIds);
-
-      List<String> watchIdsCopy = new ArrayList<String>();
-      watchIdsCopy.addAll(watchIds);
-      s.setSignedPeerIds(watchIdsCopy);
-      setFields(s, map);
+      HashMap<String, Object> map = CloudService.sign(peerId, watchIds);
+      return createSignature(map, watchIds);
     } catch (AVException e) {
       e.printStackTrace();
     }
-    return s;
+    return null;
   }
 
-  public void setFields(Signature s, HashMap<String, Object> map) {
-    int timestamp = (Integer) map.get("timestamp");
-    String nonce = (String) map.get("nonce");
-    String sig = (String) map.get("signature");
-    //sig=sig+"haha"; test wrong sinature
-    s.setTimestamp(timestamp);
-    s.setNonce(nonce);
-    s.setSignature(sig);
+  Signature createSignature(HashMap<String, Object> params, List<String> peerIds) {
+    Signature s = new Signature();
+    List<String> copyIds = new ArrayList<String>();
+    copyIds.addAll(peerIds);
+    s.setTimestamp((Integer) params.get("timestamp"));
+    s.setNonce((String) params.get("nonce"));
+    s.setSignature((String) params.get("signature"));
+    s.setSignedPeerIds(copyIds);
+    return s;
   }
 
   @Override
   public Signature createGroupSignature(String groupId, String peerId, List<String> targetPeerIds,
                                         String action) {
-    Signature s = new Signature();
-    List<String> watchIdsCopy = new ArrayList<String>();
-    watchIdsCopy.addAll(targetPeerIds);
     try {
-      HashMap<String, Object> map = (HashMap<String, Object>) CloudService.groupSign(peerId, groupId, targetPeerIds, action);
-      setFields(s, map);
-      s.setSignedPeerIds(watchIdsCopy);
+      HashMap<String, Object> map = CloudService.groupSign(peerId, groupId, targetPeerIds, action);
+      return createSignature(map, targetPeerIds);
     } catch (AVException e) {
       e.printStackTrace();
     }
-    return s;
+    return null;
   }
 }

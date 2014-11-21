@@ -50,19 +50,19 @@ public class CloudService {
     AVCloud.callFunction("saveChatGroup", map);
   }
 
-  public static Object sign(String selfId, List<String> watchIds) throws AVException {
+  public static HashMap<String, Object> sign(String selfId, List<String> watchIds) throws AVException {
     Map<String, Object> map = new HashMap<String, Object>();
     map.put("self_id", selfId);
     map.put("watch_ids", watchIds);
-    return AVCloud.callFunction("sign", map);
+    return (HashMap<String,Object>)AVCloud.callFunction("sign", map);
   }
 
-  public static Object groupSign(String selfId, String groupId, List<String> peerIds, String action) throws AVException {
+  public static HashMap<String, Object> groupSign(String selfId, String groupId, List<String> peerIds, String action) throws AVException {
     Map<String, Object> map = new HashMap<String, Object>();
     map.put("self_id", selfId);
     map.put("group_id", groupId);
     map.put("group_peer_ids", peerIds);
     map.put("action", action);
-    return AVCloud.callFunction("group_sign", map);
+    return (HashMap<String,Object>)AVCloud.callFunction("group_sign", map);
   }
 }
