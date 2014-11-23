@@ -1,8 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
     <dimen name="radius">5dp</dimen>
-    <dimen name="little_radius">3dp</dimen>
-
     <dimen name="chatBottomHeight">50dp</dimen>
     <dimen name="userHead">45dp</dimen>
     <dimen name="chatItemMarginTop">3dp</dimen>
