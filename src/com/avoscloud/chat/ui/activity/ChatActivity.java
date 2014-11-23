@@ -22,6 +22,7 @@ import com.avoscloud.chat.adapter.EmotionPagerAdapter;
 import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.db.DBHelper;
 import com.avoscloud.chat.db.DBMsg;
+import com.avoscloud.chat.entity.MsgBuilder;
 import com.avoscloud.chat.entity.RoomType;
 import com.avoscloud.chat.service.*;
 import com.avoscloud.chat.service.listener.MsgListener;
@@ -76,6 +77,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   Group group;
   ChatGroup chatGroup;
   String audioId;
+  MsgAgent msgAgent;
 
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -163,7 +165,12 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
         new SendMsgTask(ctx) {
           @Override
           Msg sendMsg() throws Exception {
-            return ChatService.sendAudioMsg(chatUser, audioPath, objectId, group);
+            return msgAgent.createAndSendMsg(new MsgAgent.MsgBuilderHelper() {
+              @Override
+              public void specifyType(MsgBuilder msgBuilder) {
+                msgBuilder.audio(objectId);
+              }
+            });
           }
         }.execute();
         setNewRecordPath();
@@ -177,7 +184,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
 
   public void setNewRecordPath() {
     audioId = Utils.uuid();
-    String audioPath = PathUtils.getChatFile(audioId);
+    String audioPath = PathUtils.getChatFilePath(audioId);
     recordBtn.setSavePath(audioPath);
   }
 
@@ -286,11 +293,13 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
       String chatUserId = intent.getStringExtra(CHAT_USER_ID);
       chatUser = App.lookupUser(chatUserId);
       ChatService.withUserToWatch(chatUser, true);
+      msgAgent = new MsgAgent(roomType, chatUser.getObjectId());
     } else {
       String groupId = intent.getStringExtra(GROUP_ID);
       Session session = ChatService.getSession();
       group = session.getGroup(groupId);
       chatGroup = App.lookupChatGroup(groupId);
+      msgAgent = new MsgAgent(roomType, groupId);
     }
   }
 
@@ -520,18 +529,25 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   }
 
   private void sendText() {
-    final String contString = contentEdit.getText().toString();
-    if (TextUtils.isEmpty(contString) == false) {
+    final String content = contentEdit.getText().toString();
+    if (TextUtils.isEmpty(content) == false) {
       new SendMsgTask(ctx) {
         @Override
         Msg sendMsg() throws Exception {
-          return ChatService.sendTextMsg(chatUser, contString, group);
+          return msgAgent.createAndSendMsg(new MsgAgent.MsgBuilderHelper() {
+            @Override
+            public void specifyType(MsgBuilder msgBuilder) {
+              msgBuilder.text(content);
+            }
+          });
         }
 
         @Override
-        public void onSucceed() {
-          super.onSucceed();
-          contentEdit.setText("");
+        protected void onPost(Exception e) {
+          super.onPost(e);
+          if (e == null) {
+            contentEdit.setText("");
+          }
         }
       }.execute();
     }
@@ -582,8 +598,12 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
       new SendMsgTask(ctx) {
         @Override
         Msg sendMsg() throws Exception {
-          return ChatService.sendLocationMessage(chatUser,
-              address, latitude, longitude, group);
+          return msgAgent.createAndSendMsg(new MsgAgent.MsgBuilderHelper() {
+            @Override
+            public void specifyType(MsgBuilder msgBuilder) {
+              msgBuilder.location(address, latitude, longitude);
+            }
+          });
         }
       }.execute();
     } else {
@@ -591,7 +611,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     }
   }
 
-  public abstract class SendMsgTask extends SimpleNetTask {
+  public abstract class SendMsgTask extends NetAsyncTask {
     Msg msg;
 
     protected SendMsgTask(Context cxt) {
@@ -600,30 +620,50 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
 
     @Override
     protected void doInBack() throws Exception {
-      if (Connectivity.isConnected(ctx)) {
-        msg = sendMsg();
+      if (Connectivity.isConnected(ctx) == false) {
+        throw new NetworkErrorException(App.ctx.getString(R.string.pleaseCheckNetwork));
+      } else if (ChatService.isSessionPaused()) {
+        throw new NetworkErrorException(App.ctx.getString(R.string.sessionPausedTips));
       } else {
-        throw new NetworkErrorException("network is not connected");
+        msg = sendMsg();
       }
     }
 
     @Override
-    public void onSucceed() {
-      loadMsgsFromDB(false);
+    protected void onPost(Exception e) {
+      if (e != null) {
+        e.printStackTrace();
+        Utils.toast(e.getMessage());
+      } else {
+        loadMsgsFromDB(false);
+      }
     }
 
     abstract Msg sendMsg() throws Exception;
   }
 
+  public String getOtherId() {
+    if (roomType == RoomType.Single) {
+      return chatUser.getObjectId();
+    } else {
+      return group.getGroupId();
+    }
+  }
+
   private void sendImageByPath(String localSelectPath) {
     final String objectId = Utils.uuid();
-    final String newPath = PathUtils.getChatFile(objectId);
+    final String newPath = PathUtils.getChatFilePath(objectId);
     //PhotoUtil.simpleCompressImage(localSelectPath,newPath);
     PhotoUtil.compressImage(localSelectPath, newPath);
     new SendMsgTask(ctx) {
       @Override
       Msg sendMsg() throws Exception {
-        return ChatService.sendImageMsg(chatUser, newPath, objectId, group);
+        return msgAgent.createAndSendMsg(new MsgAgent.MsgBuilderHelper() {
+          @Override
+          public void specifyType(MsgBuilder msgBuilder) {
+            msgBuilder.image(objectId);
+          }
+        });
       }
     }.execute();
   }

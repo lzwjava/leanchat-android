@@ -32,7 +32,7 @@
     <string name="action_settings">Settings</string>
     <string name="me">我</string>
     <string name="discover">发现</string>
-    <string name="emptyStr"/>
+    <string name="emptyStr" />
     <string name="avatar">头像</string>
     <string name="username">用户名</string>
     <string name="nickname">昵称</string>
@@ -126,4 +126,5 @@
     <string name="haveRead">已阅读</string>
     <string name="slideUpToCancel">手指上滑，取消发送</string>
     <string name="releaseToCancel">松开手指，取消录音</string>
+    <string name="sessionPausedTips">会话暂停，等网络良好</string>
 </resources>

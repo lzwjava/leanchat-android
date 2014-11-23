@@ -39,7 +39,7 @@ public class PathUtils {
     return checkAndMkdirs(dir);
   }
 
-  public static String getChatFile(String id) {
+  public static String getChatFilePath(String id) {
     String dir = getChatFileDir();
     String path = dir + id;
     return path;
@@ -50,7 +50,7 @@ public class PathUtils {
   }
 
   public static String getUUIDFilePath() {
-    return getChatFile(Utils.uuid());
+    return getChatFilePath(Utils.uuid());
   }
 
   public static String getTmpPath() {

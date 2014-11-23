@@ -19,10 +19,12 @@ import java.util.Set;
 /**
  * Created by lzw on 14-8-7.
  */
+
 public class MsgReceiver extends AVMessageReceiver {
   public static StatusListener statusListener;
   public static Set<String> onlineIds = new HashSet<String>();
   public static Set<MsgListener> msgListeners = new HashSet<MsgListener>();
+  private static boolean sessionPaused = true;
 
   @Override
   public void onSessionOpen(Context context, Session session) {
@@ -30,16 +32,26 @@ public class MsgReceiver extends AVMessageReceiver {
     /*Intent intent = new Intent(context, MainActivity.class);
     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     context.startActivity(intent);*/
+    sessionPaused = false;
   }
 
   @Override
   public void onSessionPaused(Context context, Session session) {
-    Logger.d("onSessionPaused");
+    sessionPaused = true;
   }
 
   @Override
   public void onSessionResumed(Context context, Session session) {
-    Logger.d("onSessionResumed");
+    sessionPaused = false;
+  }
+
+
+  public static boolean isSessionPaused() {
+    return sessionPaused;
+  }
+
+  public static void setSessionPaused(boolean sessionPaused) {
+    MsgReceiver.sessionPaused = sessionPaused;
   }
 
   @Override

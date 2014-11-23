@@ -18,14 +18,12 @@ import com.avoscloud.chat.entity.RoomType;
 import com.avoscloud.chat.service.listener.MsgListener;
 import com.avoscloud.chat.service.receiver.MsgReceiver;
 import com.avoscloud.chat.ui.activity.ChatActivity;
-import com.avoscloud.chat.ui.activity.MainActivity;
 import com.avoscloud.chat.util.AVOSUtils;
 import com.avoscloud.chat.util.Logger;
 import com.avoscloud.chat.util.NetAsyncTask;
 import com.avoscloud.chat.util.Utils;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -66,86 +64,12 @@ public class ChatService {
     return SessionManager.getInstance(getPeerId(User.curUser()));
   }
 
-  public static Msg sendAudioMsg(User toUser, String path, String msgId, Group group) throws IOException, AVException {
-    return sendFileMsg(toUser, msgId, Msg.Type.Audio, path, group);
-  }
-
-  public static Msg sendImageMsg(User user, String filePath, String msgId, Group group) throws IOException, AVException {
-    return sendFileMsg(user, msgId, Msg.Type.Image, filePath, group);
-  }
-
-  public static Msg sendFileMsg(User toUser, String objectId, Msg.Type type, String filePath,
-                                Group group) throws IOException, AVException {
-    AVFile file = AVFile.withAbsoluteLocalPath(objectId, filePath);
-    file.save();
-    String url = file.getUrl();
-    Msg msg = createAndSendMsgWithId(toUser, type, url, objectId, group);
-    DBMsg.insertMsg(msg);
-    return msg;
-  }
-
-  public static Msg sendTextMsg(User toUser, String content, Group group) {
-    Msg.Type type = Msg.Type.Text;
-    Msg msg = sendMsgAndInsertDB(toUser, type, content, group);
-    return msg;
-  }
-
-  public static Msg createAndSendMsg(User toPeer, Msg.Type type, String content, Group group) {
-    return createAndSendMsgWithId(toPeer, type, content, Utils.uuid(), group);
-  }
-
-  public static Msg sendMsgAndInsertDB(User toPeer, Msg.Type type, String content, Group group) {
-    Msg msg = createAndSendMsg(toPeer, type, content, group);
-    DBMsg.insertMsg(msg);
-    return msg;
-  }
-
-  public static Msg createAndSendMsgWithId(User toPeer, Msg.Type type, String content, String objectId, Group group) {
-    Msg msg;
-    msg = new Msg();
-    msg.setStatus(Msg.Status.SendStart);
-    msg.setContent(content);
-    msg.setTimestamp(System.currentTimeMillis());
-    msg.setFromPeerId(getSelfId());
-    String convid;
-    if (group == null) {
-      String toPeerId = ChatService.getPeerId(toPeer);
-      msg.setToPeerId(toPeerId);
-      msg.setRoomType(RoomType.Single);
-      convid = AVOSUtils.convid(ChatService.getSelfId(), toPeerId);
-      msg.setRequestReceipt(true);
-    } else {
-      msg.setRoomType(RoomType.Group);
-      convid = group.getGroupId();
-    }
-    msg.setObjectId(objectId);
-    msg.setConvid(convid);
-    msg.setType(type);
-    return sendMessage(msg, group);
-  }
-
-  public static Msg sendMessage(Msg msg, Group group) {
-    AVMessage avMsg = msg.toAVMessage();
-    Session session = getSession();
-    if (group == null) {
-      session.sendMessage(avMsg);
-    } else {
-      group.sendMessage(avMsg);
-    }
-    return msg;
-  }
-
   public static void openSession(Activity activity) {
     Session session = getSession();
     session.setSignatureFactory(new SignatureFactory());
     if (session.isOpen() == false) {
       session.open(new LinkedList<String>());
     }
-  }
-
-  public static Msg sendLocationMessage(User toPeer, String address, double latitude, double longitude, Group group) {
-    String content = address + "&" + latitude + "&" + longitude;
-    return sendMsgAndInsertDB(toPeer, Msg.Type.Location, content, group);
   }
 
   public static List<Conversation> getConversationsAndCache() throws AVException {
@@ -336,15 +260,16 @@ public class ChatService {
   }
 
   public static Msg resendMsg(Msg msg) {
-    Group group = null;
+    String toId;
     if (msg.getRoomType() == RoomType.Group) {
       String groupId = msg.getConvid();
-      Session session = ChatService.getSession();
-      group = session.getGroup(groupId);
+      toId = groupId;
     } else {
+      toId = msg.getToPeerId();
       msg.setRequestReceipt(true);
     }
-    sendMessage(msg, group);
+    MsgAgent msgAgent = new MsgAgent(msg.getRoomType(), toId);
+    msgAgent.sendMsg(msg);
     DBMsg.updateStatus(msg.getObjectId(), Msg.Status.SendStart);
     return msg;
   }
@@ -362,5 +287,9 @@ public class ChatService {
         break;
       }
     }
+  }
+
+  public static boolean isSessionPaused() {
+    return MsgReceiver.isSessionPaused();
   }
 }
