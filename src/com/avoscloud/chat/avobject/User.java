@@ -28,20 +28,20 @@ public class User extends AVUser {
   //Gender gender;
   private static User curUser;
 
-
-  public static enum Gender{
-    Male(0),Female(1);
+  public static enum Gender {
+    Male(0), Female(1);
 
     int value;
-    Gender(int value){
-      this.value=value;
+
+    Gender(int value) {
+      this.value = value;
     }
 
-    public int getValue(){
+    public int getValue() {
       return value;
     }
 
-    public static Gender fromInt(int index){
+    public static Gender fromInt(int index) {
       return values()[index];
     }
   }
@@ -104,12 +104,12 @@ public class User extends AVUser {
   }
 
   public Gender getGender() {
-    int genderInt=getInt(GENDER);
+    int genderInt = getInt(GENDER);
     return Gender.fromInt(genderInt);
   }
 
   public void setGender(Gender gender) {
-    put(GENDER,gender.getValue());
+    put(GENDER, gender.getValue());
   }
 
   public String getGenderDesc() {

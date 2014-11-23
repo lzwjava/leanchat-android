@@ -81,7 +81,7 @@ public class DBMsg {
     List<Msg> msgs = new ArrayList<Msg>();
     SQLiteDatabase db = dbHelper.getReadableDatabase();
     assert db != null;
-    Cursor c = db.query(MESSAGES, null,"convid=?",new String[]{convid}, null, null,TIMESTAMP + " desc",size + "");
+    Cursor c = db.query(MESSAGES, null, "convid=?", new String[]{convid}, null, null, TIMESTAMP + " desc", size + "");
     while (c.moveToNext()) {
       Msg msg = createMsgByCursor(c);
       msgs.add(msg);
@@ -126,10 +126,10 @@ public class DBMsg {
     return msgs;
   }
 
-  public static int updateStatusAndTimestamp(String objecctId,Msg.Status status,long timestamp) {
+  public static int updateStatusAndTimestamp(String objecctId, Msg.Status status, long timestamp) {
     ContentValues cv = new ContentValues();
     cv.put(STATUS, status.getValue());
-    cv.put(TIMESTAMP, timestamp+"");
+    cv.put(TIMESTAMP, timestamp + "");
     String objectId = objecctId;
     return updateMessage(objectId, cv);
   }

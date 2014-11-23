@@ -1,90 +1,27 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <resources>
     <string name="app_name">LeanChat</string>
     <string name="tips">提示</string>
     <string name="please_choose">请选择</string>
     <string name="share">分享</string>
     <string name="right">好的</string>
-    <string name="cannotFindGiveStarShop">未找到可评分的商店应用</string>
     <string name="hardLoading">努力加载中...</string>
     <string name="badNetwork">网络差</string>
 
     <string name="versionIsAlreadyNew">已经是最新版本了</string>
-    <string name="updatingInBackground">正在后台更新中...</string>
-    <string name="versionUpdate">版本更新</string>
     <string name="sureToUpdate">确定更新版本吗</string>
     <string name="updateLog">更新日志</string>
     <string name="installNewVersion">安装新版本</string>
     <string name="laterNotify">稍后提醒</string>
     <string name="haveNewVersion">版本更新</string>
-    <string name="retrievingData">获取数据中...</string>
     <string name="cancel">取消</string>
-    <string name="uploadSucceedThankyou">上传成功，谢谢您</string>
-    <string name="logOut">注销</string>
-    <string name="uploading">上传中...</string>
-    <string name="noMore">已无更多</string>
-    <string name="open">开启</string>
-    <string name="start">开始</string>
-    <string name="ok">ok</string>
-    <string name="two">两个</string>
-    <string name="newComment">新的回复</string>
     <string name="voice">语音</string>
     <string name="pressToRecord">按住录音</string>
     <string name="pleaseSayMore">说多点吧～</string>
     <string name="failedToGetData">获取数据失败</string>
-    <string name="dearNetIsBad">亲，网络有点不给力</string>
-    <string name="retry">重试</string>
-    <string name="wait">等等</string>
-    <string name="continueIt">继续</string>
-    <string name="unavailbleNet">未联网</string>
-    <string name="teachingSystemLogin">教务系统登录</string>
-    <string name="continueSession">继续会话</string>
-    <string name="studentId">学号</string>
     <string name="password">密码</string>
     <string name="login">登录</string>
-    <string name="wrongStudentIdOrNoNet">学号密码错误或未联网</string>
-    <string name="bjfuStudentId">北林学号</string>
-    <string name="wrongStudentIdOrPassword">学号或密码错误</string>
-    <string name="student_id_or_password_save_locally">帐号密码信息只保存在本地\n仅作为自动登录使用</string>
-    <string name="password_might_be_six">可能为身份证前6位</string>
-    <string name="welcome_to_login_in_bjfu_system">欢迎使用北京林业大学教务管理系统</string>
-    <string name="no_net">未联网</string>
-    <string name="systemLogin">教务系统登录</string>
-    <string name="pair">配对</string>
-    <string name="pair_to_pass">配对过关</string>
-    <string name="click_to_find_schoolmate">点击配对，碰上同一时刻按住按钮的校友</string>
-    <string name="is_pairing">正在配对...</string>
-    <string name="cannot_pair_succeed">未配对成功</string>
-    <string name="pair_succeed">配对成功！</string>
-    <string name="pair_failed">配对不成功</string>
-    <string name="pairedUser_not_respond_or_no_net">对方未应答或未联网</string>
-    <string name="pair_to_schoolmate_to_talk">和校友配对聊天</string>
-
-    <string name="campaus_pair_to_talk">校园配对聊天</string>
-    <string name="person_info">个人信息</string>
-    <string name="student_num">学号</string>
-    <string name="student_name">姓名</string>
-    <string name="filter">筛选</string>
     <string name="sex">性别</string>
-    <string name="class1">班级</string>
-    <string name="department">学院</string>
-    <string name="hometown">家乡</string>
-    <string name="logout">注销</string>
-
-    <string name="please_input_your_nickname">请输入你的昵称</string>
-    <string name="set_nickname">设置昵称</string>
-    <string name="change_succeed">修改成功</string>
-    <string name="nickname_is_token">昵称已存在</string>
-    <string name="anonymous">匿名</string>
-    <string name="sorry_here_just_can_be_looked">抱歉，这里只能看</string>
-    <string name="please_click_to_let_authour_rich">多多点击，1000次可请作者吃一顿饭^</string>
-    <string name="open_chat">开启聊天</string>
-    <string name="are_you_open_chatting_now">是否开启聊天？意味着别人将能看见您的真实名字，发送消息给您，可在主页设置中关闭。</string>
-    <string name="no">不了</string>
-    <string name="close_chat_in_setting">在设置中可关闭</string>
-    <string name="green_indicates_online">绿色表明在线</string>
-    <string name="please_input_name_to_start">请输入用户名就开始</string>
-    <string name="username_is_token_or_bad_net">用户名已使用或网络差</string>
     <string name="status_online">[在线]</string>
     <string name="status_offline">[离线请留言]</string>
     <string name="sending">发送中</string>
@@ -92,19 +29,15 @@
 
     <string name="messages">会话</string>
     <string name="contact">联系人</string>
-    <string name="mian_tab_set">设置</string>
-
     <string name="action_settings">Settings</string>
     <string name="me">我</string>
     <string name="discover">发现</string>
-    <string name="emptyStr"></string>
-    <string name="back">返回</string>
+    <string name="emptyStr"/>
     <string name="avatar">头像</string>
     <string name="username">用户名</string>
     <string name="nickname">昵称</string>
     <string name="please_input_hint">请输入{0}</string>
     <string name="change_title">{0}</string>
-    <string name="cannotFindImage">不能找到图片</string>
     <string name="sent">已发送</string>
     <string name="failed">失败</string>
     <string name="newMessage">新的消息</string>
@@ -134,120 +67,57 @@
     <string name="password_can_not_null">密码不能为空</string>
     <string name="username_cannot_null">用户名不能为空</string>
     <string name="password_not_consistent">输入的两次密码不一致</string>
-    <string name="registering">正在注册中...</string>
     <string name="registerSucceed">注册成功</string>
     <string name="registerFailed">注册失败。</string>
 
     <string name="not_have_account">还没有账号？</string>
-    <string name="register_rightnow">立即注册 ></string>
-    <string name="nearby_people">附近的人</string>
+    <string name="register_rightnow">立即注册 &gt;</string>
     <string name="metres">米</string>
     <string name="unknown">未知</string>
     <string name="recent_login_time">最近登录时间:</string>
-    <string name="none_neerby_people">暂无附近的人!</string>
-
-    <string name="password_input_hint">请在此输入密码</string>
     <string name="account">账号 </string>
-    <string name="ensure_password">确认密码 </string>
     <string name="search">搜索</string>
-
-    <string name="conversation">会话</string>
 
     <string name="xlistview_header_hint_normal">下拉刷新</string>
     <string name="xlistview_header_hint_ready">松开刷新数据</string>
-    <string name="xlistview_header_hint_loading">正在加载&#8230;</string>
+    <string name="xlistview_header_hint_loading">正在加载…</string>
     <string name="xlistview_header_last_time">上次更新时间：</string>
     <string name="xlistview_footer_hint_normal">查看更多</string>
     <string name="xlistview_footer_hint_ready">松开载入更多</string>
 
-    <string name="nickname_input_hint">请输入昵称&#8230;</string>
-
-    <string name="receive_notify">接收新消息通知</string>
-    <string name="myinfo">个人资料</string>
-    <string name="blacklist">黑名单</string>
     <string name="vibrate">震动</string>
-
-    <string name="take_photo">拍照</string>
-    <string name="choose_photo">从手机相册选中</string>
-    <string name="network_tips">当前网络不可用,请检查您的网络!</string>
 
     <string name="chat">发起会话</string>
     <string name="add_friend">添加好友</string>
 
-    <string name="send_state">已读</string>
-
-    <string name="longclick_speak">长按说话</string>
-
-    <string name="black_tips">已添加至黑名单，你将不再收到对方的消息!</string>
-
-
     <string name="new_friends">新朋友</string>
 
-    <string name="near_people">附近的人</string>
-
-    <string name="voice_up_tips">手指上滑,取消发送</string>
-    <string name="voice_cancel_tips">松开手指，取消发送</string>
-
-    <string name="voice_seconds_tips">还可以说%1$s秒</string>
-
-    <string name="voice_short_tips">录音时间太短</string>
     <string name="deleteFriendRequest">删除好友请求</string>
     <string name="agreed">已同意</string>
     <string name="deleteContact">删除联系人</string>
     <string name="sure">确定</string>
     <string name="deleteSucceed">删除成功</string>
-    <string name="deleteFailed">删除失败</string>
-    <string name="userNotExist">用户不存在</string>
     <string name="findFriends">查找好友</string>
-    <string name="searching">正在搜索...</string>
-    <string name="searchFinish">用户搜索完成!</string>
-    <string name="pleaseInputUsername">请输入用户名</string>
     <string name="dataLoadFinish">数据加载完成</string>
-    <string name="searchError">搜索出错</string>
-    <string name="addFailed">添加失败</string>
     <string name="add">添加</string>
-    <string name="sendRequestFailed">发送请求失败，请重新添加</string>
     <string name="sendRequestSucceed">发送请求成功，等待对方验证</string>
-    <string name="deleting">正在删除...</string>
-    <string name="loadError">加载错误</string>
     <string name="personalInfo">个人资料</string>
     <string name="detailInfo">详细资料</string>
     <string name="male">男</string>
     <string name="female">女</string>
-    <string name="singleChoose">单选框</string>
-    <string name="changeSucceed">修改成功</string>
-    <string name="changeFailed">修改失败.</string>
-    <string name="addToBlackList">加入黑名单</string>
-    <string name="addToBlackListTips">加入黑名单，你将不再收到对方的消息，确定要继续吗？</string>
-    <string name="addToBlackListSucceed">黑名单添加成功!</string>
-    <string name="sdcardNotVailable">SD不可用</string>
-    <string name="failToGetPhoto">照片获取失败</string>
-    <string name="avatarUploadFailed">头像上传失败。</string>
-    <string name="avatarUpdateFailed">头像更新失败。</string>
-    <string name="avatarUpdateSucceed">头像更新成功！</string>
-    <string name="findingNearbyPeople">正在查询附近的人...</string>
-    <string name="cannotFindUser">无相关用户</string>
-    <string name="nearbyPeopleSearchFinish">附近的人搜索完成！</string>
-    <string name="noNearbyPeople">暂无附近的人！</string>
     <string name="noResult">无相关结果</string>
     <string name="loadMessagesFinish">聊天记录加载完毕</string>
-    <string name="alreadyRequest">已经发出过请求了</string>
     <string name="notifySetting">提醒设置</string>
     <string name="notifyWhenNews">接收新消息通知</string>
     <string name="group">群组</string>
     <string name="groupName">群组名</string>
     <string name="create">创建</string>
-    <string name="people">人</string>
     <string name="groupMembers">群组成员</string>
-    <string name="add_members">邀请朋友</string>
-    <string name="addMembers">添加群成员</string>
-    <string name="addSucceed">添加成功</string>
     <string name="inviteSucceed">已发出邀请</string>
     <string name="inviteMembers">邀请群成员</string>
     <string name="kickTips">确认要踢走该成员吗</string>
     <string name="invite">邀请</string>
     <string name="kilometres">公里</string>
-    <string name="createGroup">创建群组</string>
     <string name="quitGroup">退群</string>
     <string name="pull_to_refresh">下拉可以刷新</string>
     <string name="release_to_refresh">释放立即刷新</string>

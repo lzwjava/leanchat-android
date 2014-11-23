@@ -1,6 +1,5 @@
 package com.avoscloud.chat.entity;
 
-import android.location.Location;
 import com.alibaba.fastjson.JSON;
 import com.avos.avoscloud.AVMessage;
 import com.avos.avoscloud.AVUtils;
@@ -37,7 +36,6 @@ public class Msg {
       return values()[i];
     }
   }
-
 
   public static enum Type {
     Text(0), Image(1), Audio(2), Location(3);

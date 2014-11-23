@@ -10,7 +10,7 @@ import java.util.List;
 
 
 public class BaseCheckListAdapter<T> extends BaseListAdapter<T> {
-  List<Boolean> checkStates=new ArrayList<Boolean>();
+  List<Boolean> checkStates = new ArrayList<Boolean>();
   boolean defaultState = false;
 
   public BaseCheckListAdapter(Context ctx, List<T> datas) {
@@ -26,7 +26,7 @@ public class BaseCheckListAdapter<T> extends BaseListAdapter<T> {
 
   private void initCheckStates(List<T> datas) {
     checkStates.clear();
-    for (int i = 0; i <datas.size(); i++) {
+    for (int i = 0; i < datas.size(); i++) {
       checkStates.add(defaultState);
     }
   }
