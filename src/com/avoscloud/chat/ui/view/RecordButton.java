@@ -177,9 +177,9 @@ public class RecordButton extends Button {
   private void startRecording() {
     if (recorder == null) {
       recorder = new MediaRecorder();
-      recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-      recorder.setOutputFormat(MediaRecorder.OutputFormat.RAW_AMR);
-      recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+      recorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
+      recorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
+      recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
       recorder.setOutputFile(outputPath);
       try {
         recorder.prepare();
