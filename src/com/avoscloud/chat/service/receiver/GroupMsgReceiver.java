@@ -97,7 +97,7 @@ public class GroupMsgReceiver extends AVGroupMessageReceiver {
 
   @Override
   public void onError(Context context, Group group, Throwable e) {
-    Utils.toast(context, e.getMessage());
+    //Utils.toast(context, e.getMessage());
     e.printStackTrace();
     //ChatService.onMessageError(e, msgListeners);
   }

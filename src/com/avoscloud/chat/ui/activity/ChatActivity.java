@@ -29,6 +29,7 @@ import com.avoscloud.chat.service.listener.MsgListener;
 import com.avoscloud.chat.service.receiver.GroupMsgReceiver;
 import com.avoscloud.chat.service.receiver.MsgReceiver;
 import com.avoscloud.chat.ui.view.RecordButton;
+import com.avoscloud.chat.ui.view.xlist.XListView;
 import com.avoscloud.chat.util.*;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.adapter.ChatMsgAdapter;
@@ -37,7 +38,6 @@ import com.avoscloud.chat.avobject.ChatGroup;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.entity.Msg;
 import com.avoscloud.chat.ui.view.EmotionEditText;
-import com.avoscloud.chat.ui.view.xlist.XListView;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 
 import java.io.File;
@@ -64,7 +64,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   private EmotionEditText contentEdit;
   private XListView xListView;
   RecordButton recordBtn;
-  List<String> emotions = EmotionUtils.emotionTexts;
   private String localCameraPath = PathUtils.getTmpPath();
   private View addCameraBtn;
   int msgSize;
@@ -98,6 +97,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     setSoftInputMode();
     loadMsgsFromDB(true);
     ChatService.cancelNotification(ctx);
+    Logger.d(EmotionUtils.emotionCodes.length + " len");
   }
 
   @Override
@@ -130,12 +130,12 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     LayoutInflater inflater = LayoutInflater.from(ctx);
     View emotionView = inflater.inflate(R.layout.chat_emotion_gridview, null);
     GridView gridView = (GridView) emotionView.findViewById(R.id.gridview);
-    EmotionGridAdapter emotionGridAdapter = new EmotionGridAdapter(ctx);
+    final EmotionGridAdapter emotionGridAdapter = new EmotionGridAdapter(ctx);
     List<String> pageEmotions;
     if (pos == 0) {
-      pageEmotions = emotions.subList(0, 20);
+      pageEmotions = EmotionUtils.emotions1;
     } else {
-      pageEmotions = emotions.subList(20, emotions.size());
+      pageEmotions = EmotionUtils.emotions2;
     }
     emotionGridAdapter.setDatas(pageEmotions);
     gridView.setAdapter(emotionGridAdapter);
@@ -144,8 +144,9 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         String emotionText = (String) parent.getAdapter().getItem(position);
         int start = contentEdit.getSelectionStart();
-        CharSequence content = contentEdit.getText().insert(start, emotionText);
-        contentEdit.setText(content);
+        StringBuffer sb = new StringBuffer(contentEdit.getText());
+        sb.replace(contentEdit.getSelectionStart(), contentEdit.getSelectionEnd(), emotionText);
+        contentEdit.setText(sb.toString());
         CharSequence info = contentEdit.getText();
         if (info instanceof Spannable) {
           Spannable spannable = (Spannable) info;
@@ -189,23 +190,18 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   }
 
   public void setEditTextChangeListener() {
-    contentEdit.addTextChangedListener(new TextWatcher() {
-      @Override
-      public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-      }
+    contentEdit.addTextChangedListener(new SimpleTextWatcher(){
 
       @Override
       public void onTextChanged(CharSequence s, int start, int before, int count) {
         if (s.length() > 0) {
+          sendBtn.setBackgroundResource(R.drawable.chat_send_pressed);
           showSendBtn();
         } else {
+          sendBtn.setBackgroundResource(R.drawable.chat_send_normal);
           showTurnToRecordBtn();
         }
-      }
-
-      @Override
-      public void afterTextChanged(Editable s) {
+        super.onTextChanged(s, start, before, count);
       }
     });
   }

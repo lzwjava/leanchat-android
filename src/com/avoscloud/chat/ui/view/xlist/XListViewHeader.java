@@ -1,7 +1,6 @@
 package com.avoscloud.chat.ui.view.xlist;
 
 import android.content.Context;
-import android.text.format.Time;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -11,16 +10,12 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import com.avoscloud.chat.R;
 
 public class XListViewHeader extends LinearLayout {
   private LinearLayout mContainer;
   private ImageView mArrowImageView;
   private ProgressBar mProgressBar;
-  private TextView mHintTextView;
-  private TextView mHeaderTimeView;
-  private TextView mHeaderTimeLabel;
   private int mState = STATE_NORMAL;
 
   private Animation mRotateUpAnim;
@@ -37,10 +32,6 @@ public class XListViewHeader extends LinearLayout {
     initView(context);
   }
 
-  /**
-   * @param context
-   * @param attrs
-   */
   public XListViewHeader(Context context, AttributeSet attrs) {
     super(context, attrs);
     initView(context);
@@ -56,10 +47,7 @@ public class XListViewHeader extends LinearLayout {
     setGravity(Gravity.BOTTOM);
 
     mArrowImageView = (ImageView) findViewById(R.id.xlistview_header_arrow);
-    mHintTextView = (TextView) findViewById(R.id.xlistview_header_hint_textview);
     mProgressBar = (ProgressBar) findViewById(R.id.xlistview_header_progressbar);
-    mHeaderTimeView = (TextView) findViewById(R.id.xlistview_header_time);
-    mHeaderTimeLabel = (TextView) findViewById(R.id.xlistview_header_time_label);
 
     mRotateUpAnim = new RotateAnimation(0.0f, -180.0f,
         Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
@@ -93,20 +81,14 @@ public class XListViewHeader extends LinearLayout {
         if (mState == STATE_REFRESHING) {
           mArrowImageView.clearAnimation();
         }
-        mHintTextView.setText(R.string.xlistview_header_hint_normal);
         break;
       case STATE_READY:
         if (mState != STATE_READY) {
           mArrowImageView.clearAnimation();
           mArrowImageView.startAnimation(mRotateUpAnim);
-          mHintTextView.setText(R.string.xlistview_header_hint_ready);
         }
         break;
       case STATE_REFRESHING:
-        mHintTextView.setText(R.string.xlistview_header_hint_loading);
-        Time time = new Time();
-        time.setToNow();
-        setRefreshTime(time.format("%Y-%m-%d %T"));
         break;
       default:
     }
@@ -127,8 +109,4 @@ public class XListViewHeader extends LinearLayout {
     return mContainer.getHeight();
   }
 
-  public void setRefreshTime(String time) {
-    mHeaderTimeLabel.setVisibility(View.VISIBLE);
-    mHeaderTimeView.setText(time);
-  }
 }

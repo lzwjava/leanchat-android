@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import com.avoscloud.chat.ui.view.ViewHolder;
 import com.avoscloud.chat.R;
 
@@ -24,12 +25,9 @@ public class EmotionGridAdapter extends BaseListAdapter<String> {
       LayoutInflater inflater = LayoutInflater.from(ctx);
       conView = inflater.inflate(R.layout.chat_emotion_item, null);
     }
-    ImageView emotionImageView = ViewHolder.findViewById(conView, R.id.emotionImageView);
-    String pkgName = ctx.getPackageName();
+    TextView emotionView = ViewHolder.findViewById(conView, R.id.emotinoView);
     String emotion = (String) getItem(position);
-    emotion = emotion.substring(1);
-    Drawable drawable = ctx.getResources().getDrawable(ctx.getResources().getIdentifier(emotion, "drawable", pkgName));
-    emotionImageView.setImageDrawable(drawable);
+    emotionView.setText(emotion);
     return conView;
   }
 }

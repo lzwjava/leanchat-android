@@ -30,7 +30,7 @@
                 android:text="c"
                 android:paddingRight="10dp"
                 android:minWidth="@dimen/chatTextMinWidth"
-                android:gravity="center"
+                android:gravity="left|center_vertical"
                 android:textColor="#fff"
                 android:background="@drawable/chat_right_qp"
                 android:layout_marginRight="5dp"

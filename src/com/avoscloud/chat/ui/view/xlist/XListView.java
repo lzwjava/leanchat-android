@@ -164,7 +164,6 @@ public class XListView extends ListView implements OnScrollListener {
   public void stopRefresh() {
     Time time = new Time();
     time.setToNow();
-    mHeaderView.setRefreshTime(time.format("%Y-%m-%d %T"));
     if (mPullRefreshing == true) {
       mPullRefreshing = false;
       resetHeaderHeight();

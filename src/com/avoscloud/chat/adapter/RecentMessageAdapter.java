@@ -61,7 +61,7 @@ public class RecentMessageAdapter extends BaseListAdapter<Conversation> {
     //recentTimeView.setText(TimeUtils.getDate);
     int num = 0;//unread count
     if (msg.getType() == Msg.Type.Text) {
-      CharSequence spannableString = EmotionUtils.replace(ctx, msg.getContent());
+      CharSequence spannableString = EmotionUtils.scaleEmotions(msg.getContent());
       recentMsgView.setText(spannableString);
     } else if (msg.getType() == Msg.Type.Image) {
       recentMsgView.setText("[" + App.ctx.getString(R.string.image) + "]");

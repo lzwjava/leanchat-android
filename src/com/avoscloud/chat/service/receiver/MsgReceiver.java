@@ -115,7 +115,7 @@ public class MsgReceiver extends AVMessageReceiver {
 
   @Override
   public void onError(Context context, Session session, Throwable throwable) {
-    Utils.toast(context, throwable.getMessage());
+    //Utils.toast(context, throwable.getMessage());
     throwable.printStackTrace();
     //ChatService.onMessageError(throwable, msgListeners);
   }

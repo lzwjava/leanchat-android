@@ -3,11 +3,11 @@
     android:layout_height="wrap_content"
     android:padding="3dp">
 
-    <ImageView
-        android:id="@+id/emotionImageView"
-        android:layout_centerInParent="true"
+    <TextView
+        android:id="@+id/emotinoView"
         android:layout_width="wrap_content"
-        android:contentDescription="@string/emotion"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textSize="25sp"
+        android:layout_centerInParent="true"/>
 
 </RelativeLayout>
