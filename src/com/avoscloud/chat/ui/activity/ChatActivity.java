@@ -195,10 +195,10 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
       @Override
       public void onTextChanged(CharSequence s, int start, int before, int count) {
         if (s.length() > 0) {
-          sendBtn.setBackgroundResource(R.drawable.chat_send_pressed);
+          sendBtn.setEnabled(true);
           showSendBtn();
         } else {
-          sendBtn.setBackgroundResource(R.drawable.chat_send_normal);
+          sendBtn.setEnabled(false);
           showTurnToRecordBtn();
         }
         super.onTextChanged(s, start, before, count);
