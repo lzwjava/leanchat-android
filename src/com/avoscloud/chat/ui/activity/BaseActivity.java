@@ -20,7 +20,7 @@ public class BaseActivity extends FragmentActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     ctx = this;
   }
 
@@ -42,20 +42,20 @@ public class BaseActivity extends FragmentActivity {
     getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
   }
 
-  void initActionBar(){
+  void initActionBar() {
     initActionBar(null);
   }
 
   void initActionBar(String title) {
     ActionBar actionBar = getActionBar();
-    if(title!=null){
+    if (title != null) {
       actionBar.setTitle(title);
     }
     actionBar.setDisplayUseLogoEnabled(false);
     actionBar.setDisplayHomeAsUpEnabled(true);
   }
 
-  void initActionBar(int id){
+  void initActionBar(int id) {
     initActionBar(App.ctx.getString(id));
   }
 }
