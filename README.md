@@ -33,7 +33,7 @@
 
 用到的依赖包，都在[libs](https://github.com/avoscloud/Adventure/tree/master/libs)中：
 
-* [AVOS Cloud SDK](https://cn.avoscloud.com/docs/sdk_down.html)，基础模块和实时通信模块即可。
+* [AVOS Cloud SDK](https://cn.avoscloud.com/docs/sdk_down.html)，选择基础模块、实时通信模块和统计模块即可。
 * [AdventureCloud](https://github.com/avoscloud/AdventureCloud) ，相关的服务器代码
 
 ## 搭建
