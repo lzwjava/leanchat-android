@@ -9,7 +9,6 @@ import com.avoscloud.chat.service.listener.MsgListener;
 import com.avoscloud.chat.service.listener.StatusListener;
 import com.avoscloud.chat.util.AVOSUtils;
 import com.avoscloud.chat.util.Logger;
-import com.avoscloud.chat.util.Utils;
 
 import java.util.ArrayList;
 import java.util.HashSet;

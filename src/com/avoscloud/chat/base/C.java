@@ -15,5 +15,6 @@ public class C {
   public static final String ACTION_REGISTER_FINISH = "com.avoscloud.chat.register";
   public static final int PAGE_SIZE = 10;
   public static final String CREATED_AT = "createdAt";
+  public static final String UPDATED_AT = "updatedAt";
   public static String FROM_NAME = "fromName";
 }

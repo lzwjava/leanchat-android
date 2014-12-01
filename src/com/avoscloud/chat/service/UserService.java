@@ -78,6 +78,7 @@ public class UserService {
     List<String> friendIds = getFriendIds();
     friendIds.add(user.getObjectId());
     q.whereNotContainedIn(C.OBJECT_ID, friendIds);
+    q.orderByDescending(C.UPDATED_AT);
     q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
     q.findInBackground(findCallback);
   }

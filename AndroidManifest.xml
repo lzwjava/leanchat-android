@@ -155,6 +155,15 @@
             android:enabled="true"
             android:process=":remote" />
 
+        <!-- Don't forgot InitActivity -->
+        <!-- vitamio -->
+        <activity
+            android:name="io.vov.vitamio.activity.InitActivity"
+            android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+
         <!--<meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="fnWUFPMrQfBv9nzkzFOY8ILT" />-->

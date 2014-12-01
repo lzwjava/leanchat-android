@@ -36,7 +36,6 @@ public class SplashActivity extends BaseEntryActivity {
           break;
         case GO_LOGIN_MSG:
           Utils.goActivity(ctx, LoginActivity.class);
-          finish();
           break;
       }
     }
