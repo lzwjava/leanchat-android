@@ -27,14 +27,17 @@ public class EmotionUtils {
       0x1F60D, 0x1F60F, 0x1F612, 0x1F613, 0x1F614, 0x1F616, 0x1F618, 0x1F61A, 0x1F61C, 0x1F61D, 0x1F61E, 0x1F620, 0x1F621, 0x1F622, 0x1F623, 0x1F624,
       0x1F625, 0x1F628, 0x1F629, 0x1F62A, 0x1F62B, 0x1F62D, 0x1F630, 0x1F631, 0x1F632, 0x1F633, 0x1F635, 0x1F637};
   public static List<String> emotions1, emotions2;
-  public static String[] emojiCodes=new String[]{"\\ue058","\\ue057","\\ue056","\\ue059","\\ue105","\\ue106",
-      "\\ue107","\\ue108", "\\ue401","\\ue402","\\ue403","\\ue404","\\ue405","\\ue406","\\ue407","\\ue408","\\ue409",
-      "\\ue40a","\\ue40b","\\ue40d","\\ue40e","\\ue40f","\\ue410","\\ue411","\\ue412","\\ue413",
-      "\\ue414","\\ue415","\\ue416","\\ue417","\\ue418","\\ue41f","\\ue00e","\\ue421"};
+  public static String[] emojiCodes = new String[]{"\\u1f60a", "\\u1f60c",
+      "\\u1f60d", "\\u1f60f", "\\u1f61a", "\\u1f61b", "\\u1f61c", "\\u1f61e", "\\u1f62a", "\\u1f601", "\\u1f602", "\\u1f603",
+      "\\u1f604", "\\u1f609", "\\u1f612", "\\u1f613", "\\u1f614", "\\u1f616", "\\u1f618", "\\u1f620", "\\u1f621", "\\u1f622",
+      "\\u1f621", "\\u1f622", "\\u1f623", "\\u1f625", "\\u1f628", "\\u1f630", "\\u1f631", "\\u1f632", "\\u1f633", "\\u1f637",
+      "\\u1f44d", "\\u1f44e", "\\u1f44f"};
 
   static String getEmojiByUnicode(int unicode) {
     return new String(Character.toChars(unicode));
   }
+
+  private static Pattern pattern;
 
   static {
     emotions = new ArrayList<String>();
@@ -45,20 +48,21 @@ public class EmotionUtils {
     emotions1 = emotions.subList(0, 21);
     emotions2 = emotions.subList(21, emotions.size());
 
-    emotionTexts=new ArrayList<String>();
-    for(String emojiCode : emojiCodes){
+    emotionTexts = new ArrayList<String>();
+    for (String emojiCode : emojiCodes) {
       emotionTexts.add(emojiCode);
     }
-    emotionTexts1=emotionTexts.subList(0,21);
-    emotionTexts2=emotionTexts.subList(21,emotionTexts.size());
+    emotionTexts1 = emotionTexts.subList(0, 21);
+    emotionTexts2 = emotionTexts.subList(21, emotionTexts.size());
+    pattern = buildPattern();
   }
 
   private static Pattern buildPattern() {
-    return Pattern.compile("\\\\ue[a-z0-9]{3}", Pattern.CASE_INSENSITIVE);
+    return Pattern.compile("\\\\u1f[a-z0-9]{3}");
   }
 
   public static boolean haveEmotion(String text) {
-    Matcher matcher = buildMatcher(text);
+    Matcher matcher = pattern.matcher(text);
     if (matcher.find()) {
       return true;
     } else {
@@ -81,34 +85,29 @@ public class EmotionUtils {
   }
 
   public static CharSequence replace(Context ctx, String text) {
-    try {
-      SpannableString spannableString = new SpannableString(text);
-      int start = 0;
-      Matcher matcher = buildMatcher(text);
-      while (matcher.find()) {
-        String faceText = matcher.group();
-        String key = faceText.substring(1);
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        Bitmap bitmap = BitmapFactory.decodeResource(ctx.getResources(),
-            ctx.getResources().getIdentifier(key, "drawable",
-                ctx.getPackageName()), options);
-        ImageSpan imageSpan = new ImageSpan(ctx, bitmap);
-        int startIndex = text.indexOf(faceText, start);
-        int endIndex = startIndex + faceText.length();
-        if (startIndex >= 0) {
-          spannableString.setSpan(imageSpan, startIndex, endIndex,
-              Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
-        start = (endIndex - 1);
+    SpannableString spannableString = new SpannableString(text);
+    Matcher matcher = pattern.matcher(text);
+    while (matcher.find()) {
+      String factText = matcher.group();
+      String key = factText.substring(1);
+      if (emotionTexts.contains(factText)) {
+        Bitmap bitmap = getDrawableByName(ctx, key);
+        ImageSpan image = new ImageSpan(ctx, bitmap);
+        int start = matcher.start();
+        int end = matcher.end();
+        spannableString.setSpan(image, start, end,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
       }
-      return spannableString;
-    } catch (Exception e) {
-      return text;
     }
+    return spannableString;
   }
 
-  public static Matcher buildMatcher(String text) {
-    Pattern pattern = buildPattern();
-    return pattern.matcher(text);
+  public static Bitmap getDrawableByName(Context ctx, String name) {
+    BitmapFactory.Options options = new BitmapFactory.Options();
+    Bitmap bitmap = BitmapFactory.decodeResource(ctx.getResources(),
+        ctx.getResources().getIdentifier(name, "drawable",
+            ctx.getPackageName()), options);
+    return bitmap;
   }
 }
+
