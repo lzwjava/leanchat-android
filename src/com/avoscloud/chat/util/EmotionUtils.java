@@ -18,54 +18,25 @@ import java.util.regex.Pattern;
  * Created by lzw on 14-9-25.
  */
 public class EmotionUtils {
-  public static List<String> emotionTexts = new ArrayList<String>();
+  public static List<String> emotionTexts;
+  public static List<String> emotionTexts1;
+  public static List<String> emotionTexts2;
 
   private static List<String> emotions;
   public static int[] emotionCodes = new int[]{0x1F601, 0x1F602, 0x1F603, 0x1F604, 0x1F605, 0x1F606, 0x1F609, 0x1F60A, 0x1F60B, 0x1F60C,
       0x1F60D, 0x1F60F, 0x1F612, 0x1F613, 0x1F614, 0x1F616, 0x1F618, 0x1F61A, 0x1F61C, 0x1F61D, 0x1F61E, 0x1F620, 0x1F621, 0x1F622, 0x1F623, 0x1F624,
       0x1F625, 0x1F628, 0x1F629, 0x1F62A, 0x1F62B, 0x1F62D, 0x1F630, 0x1F631, 0x1F632, 0x1F633, 0x1F635, 0x1F637};
   public static List<String> emotions1, emotions2;
+  public static String[] emojiCodes=new String[]{"\\ue058","\\ue057","\\ue056","\\ue059","\\ue105","\\ue106",
+      "\\ue107","\\ue108", "\\ue401","\\ue402","\\ue403","\\ue404","\\ue405","\\ue406","\\ue407","\\ue408","\\ue409",
+      "\\ue40a","\\ue40b","\\ue40d","\\ue40e","\\ue40f","\\ue410","\\ue411","\\ue412","\\ue413",
+      "\\ue414","\\ue415","\\ue416","\\ue417","\\ue418","\\ue41f","\\ue00e","\\ue421"};
 
   static String getEmojiByUnicode(int unicode) {
     return new String(Character.toChars(unicode));
   }
 
   static {
-    /*emotionTexts.add("\\ue056");
-    emotionTexts.add("\\ue057");
-    emotionTexts.add("\\ue058");
-    emotionTexts.add("\\ue059");
-    emotionTexts.add("\\ue105");
-    emotionTexts.add("\\ue106");
-    emotionTexts.add("\\ue107");
-    emotionTexts.add("\\ue108");
-    emotionTexts.add("\\ue401");
-    emotionTexts.add("\\ue402");
-    emotionTexts.add("\\ue403");
-    emotionTexts.add("\\ue404");
-    emotionTexts.add("\\ue405");
-    emotionTexts.add("\\ue406");
-    emotionTexts.add("\\ue407");
-    emotionTexts.add("\\ue408");
-    emotionTexts.add("\\ue409");
-    emotionTexts.add("\\ue40a");
-    emotionTexts.add("\\ue40b");
-    emotionTexts.add("\\ue40d");
-    emotionTexts.add("\\ue40e");
-    emotionTexts.add("\\ue40f");
-    emotionTexts.add("\\ue410");
-    emotionTexts.add("\\ue411");
-    emotionTexts.add("\\ue412");
-    emotionTexts.add("\\ue413");
-    emotionTexts.add("\\ue414");
-    emotionTexts.add("\\ue415");
-    emotionTexts.add("\\ue416");
-    emotionTexts.add("\\ue417");
-    emotionTexts.add("\\ue418");
-    emotionTexts.add("\\ue41f");
-    emotionTexts.add("\\ue00e");
-    emotionTexts.add("\\ue421");*/
-
     emotions = new ArrayList<String>();
     int i;
     for (i = 0; i < emotionCodes.length; i++) {
@@ -73,6 +44,13 @@ public class EmotionUtils {
     }
     emotions1 = emotions.subList(0, 21);
     emotions2 = emotions.subList(21, emotions.size());
+
+    emotionTexts=new ArrayList<String>();
+    for(String emojiCode : emojiCodes){
+      emotionTexts.add(emojiCode);
+    }
+    emotionTexts1=emotionTexts.subList(0,21);
+    emotionTexts2=emotionTexts.subList(21,emotionTexts.size());
   }
 
   private static Pattern buildPattern() {

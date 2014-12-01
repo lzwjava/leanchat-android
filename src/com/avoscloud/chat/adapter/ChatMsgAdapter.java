@@ -124,7 +124,7 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
 
     Msg.Type type = msg.getType();
     if (type == Msg.Type.Text) {
-      contentView.setText(EmotionUtils.scaleEmotions(msg.getContent()));
+      contentView.setText(EmotionUtils.replace(ctx,msg.getContent()));
     } else if (type == Msg.Type.Image) {
       String localPath = PathUtils.getChatFileDir() + msg.getObjectId();
       String url = msg.getContent();

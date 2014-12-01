@@ -133,9 +133,9 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     final EmotionGridAdapter emotionGridAdapter = new EmotionGridAdapter(ctx);
     List<String> pageEmotions;
     if (pos == 0) {
-      pageEmotions = EmotionUtils.emotions1;
+      pageEmotions = EmotionUtils.emotionTexts1;
     } else {
-      pageEmotions = EmotionUtils.emotions2;
+      pageEmotions = EmotionUtils.emotionTexts2;
     }
     emotionGridAdapter.setDatas(pageEmotions);
     gridView.setAdapter(emotionGridAdapter);
