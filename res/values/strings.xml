@@ -123,4 +123,5 @@
     <string name="slideUpToCancel">手指上滑，取消发送</string>
     <string name="releaseToCancel">松开手指，取消录音</string>
     <string name="sessionPausedTips">会话暂停，等网络良好</string>
-</resources>
+
+    </resources>

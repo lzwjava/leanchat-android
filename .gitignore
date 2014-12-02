@@ -1,4 +1,4 @@
-bin/
-gen/
+bin
+gen
 *.apk
 lint-result.xml
