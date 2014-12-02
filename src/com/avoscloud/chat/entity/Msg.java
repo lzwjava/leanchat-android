@@ -1,21 +1,15 @@
 package com.avoscloud.chat.entity;
 
 import com.alibaba.fastjson.JSON;
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVMessage;
 import com.avos.avoscloud.AVUtils;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.service.ChatService;
-import com.avoscloud.chat.util.AVOSUtils;
 import com.avoscloud.chat.util.EmotionUtils;
 import com.avoscloud.chat.util.PathUtils;
-import com.avoscloud.chat.util.Utils;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;

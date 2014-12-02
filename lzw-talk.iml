@@ -39,9 +39,9 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="android-async-http-1.4.6" level="application" />
-    <orderEntry type="module" module-name="avoscloud" />
     <orderEntry type="module" module-name="avospush" />
     <orderEntry type="module" module-name="avosstatistics" />
+    <orderEntry type="module" module-name="avoscloud" />
   </component>
 </module>
 

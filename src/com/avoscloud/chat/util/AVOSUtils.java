@@ -2,7 +2,6 @@ package com.avoscloud.chat.util;
 
 import com.avos.avoscloud.AVMessage;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -12,7 +11,8 @@ import java.util.List;
  */
 public class AVOSUtils {
   public static String convid(String myId, String otherId) {
-    List<String> ids = new ArrayList<String>();
+    List<String> ids;
+    ids = new ArrayList<String>();
     ids.add(myId);
     ids.add(otherId);
     return convid(ids);
