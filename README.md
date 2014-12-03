@@ -47,4 +47,4 @@
 
 ###[API](http://leancloud.cn/docs/api/android/doc/index.html)
 
-#####其他文档、源代码阅读指南、设计思路在 [wiki](https://github.com/leancloud/leanchat-android/wiki) 里面
+#####其他文档、源代码阅读指南、设计思路在 [wiki](https://github.com/leancloud/leanchat-android/wiki) 里面，强烈建议您先读读[代码结构](https://github.com/leancloud/leanchat-android/wiki/%E4%BB%A3%E7%A0%81%E7%BB%93%E6%9E%84)一节。
