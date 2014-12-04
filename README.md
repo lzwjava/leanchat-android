@@ -36,9 +36,9 @@
 * [AVOS Cloud SDK](https://cn.avoscloud.com/docs/sdk_down.html)，选择基础模块、实时通信模块和统计模块即可。
 * [AdventureCloud](https://github.com/avoscloud/AdventureCloud) ，相关的服务器代码
 
-## 搭建
+## 部署项目
 *  申请应用，替换App.java中的appId,appKey
-*  fork [AdventureCloud](https://github.com/avoscloud/AdventureCloud)，部署到自己的云代码中去
+*  fork [AdventureCloud](https://github.com/avoscloud/AdventureCloud)，[部署云代码](https://github.com/leancloud/leanchat-cloudcode)
 *  建表`AddRequest`
 *  [申请百度地图key](http://developer.baidu.com/map)，替换掉AndroidMenifest.xml 中的baidu key
 
