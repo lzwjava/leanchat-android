@@ -27,12 +27,13 @@ public class DBMsg {
   public static final String TO_PEER_ID = "toPeerId";
   public static final String ROOM_TYPE = "roomType";
   public static final String OWNER_ID = "ownerId";
+  public static final String READ_STATUS = "readStatus";
 
   public static void createTable(SQLiteDatabase db) {
     db.execSQL("create table if not exists messages (id integer primary key, objectId varchar(63) unique not null," +
         "ownerId varchar(255) not null,fromPeerId varchar(255) not null, convid varchar(255) not null ," +
         "toPeerId varchar(255), content varchar(1023)," +
-        " status integer,type integer,roomType integer,timestamp varchar(63))");
+        " status integer,type integer,roomType integer,readStatus integer,timestamp varchar(63))");
   }
 
   public static void dropTable(SQLiteDatabase db) {
@@ -62,6 +63,7 @@ public class DBMsg {
         cv.put(STATUS, msg.getStatus().getValue());
         cv.put(ROOM_TYPE, msg.getRoomType().getValue());
         cv.put(CONVID, msg.getConvid());
+        cv.put(READ_STATUS, msg.getReadStatus().getValue());
         cv.put(TO_PEER_ID, msg.getToPeerId());
         cv.put(OWNER_ID, User.curUserId());
         cv.put(TYPE, msg.getType().getValue());
@@ -100,6 +102,8 @@ public class DBMsg {
     msg.setStatus(status);
     msg.setConvid(c.getString(c.getColumnIndex(CONVID)));
     msg.setObjectId(c.getString(c.getColumnIndex(OBJECT_ID)));
+    int readStatusInt = c.getInt(c.getColumnIndex(READ_STATUS));
+    msg.setReadStatus(Msg.ReadStatus.fromInt(readStatusInt));
     int roomTypeInt = c.getInt(c.getColumnIndex(ROOM_TYPE));
     RoomType roomType = RoomType.fromInt(roomTypeInt);
     msg.setRoomType(roomType);
@@ -146,5 +150,30 @@ public class DBMsg {
     ContentValues cv = new ContentValues();
     cv.put(STATUS, status.getValue());
     return updateMessage(objectId, cv);
+  }
+
+  public static void markMsgsAsHaveRead(List<Msg> msgs) {
+    DBHelper dbHelper = new DBHelper(App.ctx, App.DB_NAME, App.DB_VER);
+    SQLiteDatabase db = dbHelper.getWritableDatabase();
+    db.beginTransaction();
+    for (Msg msg : msgs) {
+      msg.setReadStatus(Msg.ReadStatus.HaveRead);
+      ContentValues cv = new ContentValues();
+      cv.put(READ_STATUS, msg.getReadStatus().getValue());
+      db.update(MESSAGES, cv, "objectId=?", new String[]{msg.getObjectId()});
+    }
+    db.setTransactionSuccessful();
+    db.endTransaction();
+    db.close();
+  }
+
+  public static int getUnreadCount(SQLiteDatabase db, String convid) {
+    Cursor cursor = db.rawQuery("select count(*) from messages where convid=? and readStatus=?",
+        new String[]{convid, Msg.ReadStatus.Unread.getValue() + ""});
+    if (cursor.moveToNext()) {
+      return cursor.getInt(0);
+    }
+    cursor.close();
+    return 0;
   }
 }

@@ -27,6 +27,7 @@ public class MsgBuilder {
       convid = toId;
     }
     msg.setConvid(convid);
+    msg.setReadStatus(Msg.ReadStatus.HaveRead);
   }
 
   public void text(String content) {

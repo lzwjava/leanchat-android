@@ -10,4 +10,5 @@ public class Conversation {
   public Msg msg;
   public User toUser;
   public ChatGroup chatGroup;
+  public int unreadCount;
 }

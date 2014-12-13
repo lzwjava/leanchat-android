@@ -54,6 +54,23 @@ public class Msg {
     }
   }
 
+  public static enum ReadStatus {
+    Unread(0), HaveRead(1);
+    int value;
+
+    ReadStatus(int value) {
+      this.value = value;
+    }
+
+    public int getValue() {
+      return value;
+    }
+
+    public static ReadStatus fromInt(int i) {
+      return values()[i];
+    }
+  }
+
   //long timestamp;
   //String fromPeerId;
   //List<String> toPeerIds;
@@ -63,10 +80,10 @@ public class Msg {
   String objectId;
   String convid;
 
-
   RoomType roomType = RoomType.Single;
   Status status = Status.SendStart;
   Type type = Type.Text;
+  ReadStatus readStatus;
 
 
   public Msg() {
@@ -154,6 +171,14 @@ public class Msg {
     this.type = type;
   }
 
+  public ReadStatus getReadStatus() {
+    return readStatus;
+  }
+
+  public void setReadStatus(ReadStatus readStatus) {
+    this.readStatus = readStatus;
+  }
+
   public void setTimestamp(long timestamp) {
     internalMessage.setTimestamp(timestamp);
   }
@@ -161,6 +186,7 @@ public class Msg {
   public String getContent() {
     return content;
   }
+
 
   public String getStatusDesc() {
     if (status == Status.SendStart) {

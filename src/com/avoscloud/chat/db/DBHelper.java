@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class DBHelper extends SQLiteOpenHelper {
 
-  public DBHelper(Context context, String name,int version) {
+  public DBHelper(Context context, String name, int version) {
     super(context, name, null, version);
   }
 
@@ -25,7 +25,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
   @Override
   public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-    switch (newVersion){
+    switch (newVersion) {
+      case 4:
       case 3:
       case 2:
         DBMsg.dropTable(db);  //lazy solution

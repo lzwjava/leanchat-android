@@ -190,7 +190,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   }
 
   public void setEditTextChangeListener() {
-    contentEdit.addTextChangedListener(new SimpleTextWatcher(){
+    contentEdit.addTextChangedListener(new SimpleTextWatcher() {
 
       @Override
       public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -383,6 +383,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
         convid = group.getGroupId();
       }
       msgs = DBMsg.getMsgs(dbHelper, convid, msgSize);
+      DBMsg.markMsgsAsHaveRead(msgs);
       ChatService.cacheUserOrChatGroup(msgs);
     }
 

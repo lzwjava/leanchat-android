@@ -43,7 +43,7 @@ public class RecentMessageAdapter extends BaseListAdapter<Conversation> {
     TextView recentUnreadView = ViewHolder.findViewById(convertView, R.id.recent_unread);
 
     Msg msg = item.msg;
-    if (msg.getRoomType()== RoomType.Single) {
+    if (msg.getRoomType() == RoomType.Single) {
       User user = item.toUser;
       String avatar = user.getAvatarUrl();
       if (avatar != null && !avatar.equals("")) {
@@ -59,9 +59,9 @@ public class RecentMessageAdapter extends BaseListAdapter<Conversation> {
     }
 
     //recentTimeView.setText(TimeUtils.getDate);
-    int num = 0;//unread count
+    int num = item.unreadCount;
     if (msg.getType() == Msg.Type.Text) {
-      CharSequence spannableString = EmotionUtils.replace(ctx,msg.getContent());
+      CharSequence spannableString = EmotionUtils.replace(ctx, msg.getContent());
       recentMsgView.setText(spannableString);
     } else if (msg.getType() == Msg.Type.Image) {
       recentMsgView.setText("[" + App.ctx.getString(R.string.image) + "]");

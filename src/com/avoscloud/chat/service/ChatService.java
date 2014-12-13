@@ -6,11 +6,13 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import com.alibaba.fastjson.JSONException;
 import com.avos.avoscloud.*;
 import com.avoscloud.chat.avobject.ChatGroup;
 import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.App;
+import com.avoscloud.chat.db.DBHelper;
 import com.avoscloud.chat.db.DBMsg;
 import com.avoscloud.chat.entity.Conversation;
 import com.avoscloud.chat.entity.Msg;
@@ -76,6 +78,8 @@ public class ChatService {
     List<Msg> msgs = DBMsg.getRecentMsgs(User.curUserId());
     cacheUserOrChatGroup(msgs);
     ArrayList<Conversation> conversations = new ArrayList<Conversation>();
+    DBHelper dbHelper = new DBHelper(App.ctx, App.DB_NAME, App.DB_VER);
+    SQLiteDatabase db = dbHelper.getReadableDatabase();
     for (Msg msg : msgs) {
       Conversation conversation = new Conversation();
       if (msg.getRoomType() == RoomType.Single) {
@@ -84,9 +88,12 @@ public class ChatService {
       } else {
         conversation.chatGroup = App.lookupChatGroup(msg.getConvid());
       }
+      int unreadCount = DBMsg.getUnreadCount(db, msg.getConvid());
       conversation.msg = msg;
+      conversation.unreadCount = unreadCount;
       conversations.add(conversation);
     }
+    db.close();
     return conversations;
   }
 
@@ -166,6 +173,7 @@ public class ChatService {
       msg.setRoomType(RoomType.Group);
     }
     msg.setStatus(Msg.Status.SendReceived);
+    msg.setReadStatus(Msg.ReadStatus.Unread);
     msg.setConvid(convid);
     handleReceivedMsg(context, msg, listeners, group);
   }
