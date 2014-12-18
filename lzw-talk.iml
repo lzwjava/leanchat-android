@@ -14,18 +14,17 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 19 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="avoscloud" />
+    <orderEntry type="module" module-name="avospush" />
+    <orderEntry type="library" name="fastjson" level="application" />
+    <orderEntry type="library" name="httpmime-4.2.4" level="application" />
+    <orderEntry type="library" name="android-async-http-1.4.6" level="application" />
+    <orderEntry type="library" name="android-support-v4" level="application" />
     <orderEntry type="module-library">
       <library name="libs">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/android-async-http-1.4.6.jar!/" />
-          <root url="jar://$MODULE_DIR$/libs/android-support-v4.jar!/" />
-          <root url="jar://$MODULE_DIR$/libs/avoscloud-v2.6.9.1.jar!/" />
-          <root url="jar://$MODULE_DIR$/libs/avospush-v2.6.9.1.jar!/" />
-          <root url="jar://$MODULE_DIR$/libs/avossearch-v2.6.9.1.jar!/" />
           <root url="jar://$MODULE_DIR$/libs/avosstatistics-v2.6.9.1.jar!/" />
           <root url="jar://$MODULE_DIR$/libs/baidumapapi_v3_0_0.jar!/" />
-          <root url="jar://$MODULE_DIR$/libs/fastjson.jar!/" />
-          <root url="jar://$MODULE_DIR$/libs/httpmime-4.2.4.jar!/" />
           <root url="jar://$MODULE_DIR$/libs/locSDK_4.2.jar!/" />
           <root url="jar://$MODULE_DIR$/libs/prettytime-3.2.5.Final.jar!/" />
           <root url="jar://$MODULE_DIR$/libs/universal-image-loader-1.9.2_sources.jar!/" />
