@@ -50,6 +50,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   public static final int LOCATION_REQUEST = 1;
   private static final int TAKE_CAMERA_REQUEST = 2;
   public static final int PAGE_SIZE = 20;
+  static String RETRY_ACTION ="com.avoscloud.chat.RETRY_CONNECT";
 
   private ChatMsgAdapter adapter;
   private List<Msg> msgs = new ArrayList<Msg>();
@@ -620,6 +621,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
       if (Connectivity.isConnected(ctx) == false) {
         throw new NetworkErrorException(App.ctx.getString(R.string.pleaseCheckNetwork));
       } else if (ChatService.isSessionPaused()) {
+        ctx.sendBroadcast(new Intent(RETRY_ACTION));
         throw new NetworkErrorException(App.ctx.getString(R.string.sessionPausedTips));
       } else {
         msg = sendMsg();
