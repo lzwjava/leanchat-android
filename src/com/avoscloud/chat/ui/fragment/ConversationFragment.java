@@ -24,13 +24,13 @@ import java.util.List;
 /**
  * Created by lzw on 14-9-17.
  */
-public class ConversationFragment extends BaseFragment implements AdapterView.OnItemClickListener ,MsgListener{
+public class ConversationFragment extends BaseFragment implements AdapterView.OnItemClickListener, MsgListener {
   ListView listview;
   RecentMessageAdapter adapter;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.message_fragment, container,false);
+    return inflater.inflate(R.layout.message_fragment, container, false);
   }
 
   @Override
@@ -52,10 +52,10 @@ public class ConversationFragment extends BaseFragment implements AdapterView.On
   public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
     // TODO Auto-generated method stub
     Conversation recent = (Conversation) adapter.getItem(position);
-    if (recent.msg.getRoomType()== RoomType.Single) {
-      ChatActivity.goUserChat(getActivity(), recent.toUser.getObjectId());
+    if (recent.getMsg().getRoomType() == RoomType.Single) {
+      ChatActivity.goUserChat(getActivity(), recent.getToUser().getObjectId());
     } else {
-      ChatActivity.goGroupChat(getActivity(), recent.chatGroup.getObjectId());
+      ChatActivity.goGroupChat(getActivity(), recent.getToChatGroup().getObjectId());
     }
   }
 

@@ -14,16 +14,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.SaveCallback;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.User;
+import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.service.ChatService;
+import com.avoscloud.chat.service.PreferenceMap;
 import com.avoscloud.chat.service.UpdateService;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.activity.NotifySettingActivity;
 import com.avoscloud.chat.util.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -59,7 +63,7 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
   }
 
   private void findView() {
-    View fragmentView=getView();
+    View fragmentView = getView();
     usernameView = (TextView) fragmentView.findViewById(R.id.username);
     avatarView = (ImageView) fragmentView.findViewById(R.id.avatar);
     usernameLayout = fragmentView.findViewById(R.id.usernameLayout);
@@ -108,16 +112,16 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
 
   private void showSexChooseDialog() {
     User user = User.curUser();
-    int checkItem = user.getGender()== User.Gender.Male ? 0 : 1;
+    int checkItem = user.getGender() == User.Gender.Male ? 0 : 1;
     new AlertDialog.Builder(ctx).setTitle(R.string.sex)
         .setSingleChoiceItems(User.genderStrings, checkItem, new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
             User.Gender gender;
-            if(which==0){
-              gender= User.Gender.Male;
-            }else{
-              gender= User.Gender.Female;
+            if (which == 0) {
+              gender = User.Gender.Male;
+            } else {
+              gender = User.Gender.Female;
             }
             UserService.saveSex(gender, saveCallback);
             dialog.dismiss();
@@ -138,7 +142,7 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
         new SimpleNetTask(ctx) {
           @Override
           protected void doInBack() throws Exception {
-            UserService.saveAvatar(path);
+            saveAvatar(path);
           }
 
           @Override
@@ -149,6 +153,16 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
 
       }
     }
+  }
+
+  public static void saveAvatar(String path) throws IOException, AVException {
+    User user = User.curUser();
+    final AVFile file = AVFile.withAbsoluteLocalPath(user.getUsername(), path);
+    file.save();
+    user.setAvatar(file);
+
+    user.save();
+    user.fetch();
   }
 
   public Uri startImageCrop(Uri uri, int outputX, int outputY,
@@ -163,7 +177,6 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
     intent.putExtra("outputY", outputY);
     intent.putExtra("scale", true);
     String outputPath = PathUtils.getAvatarTmpPath();
-    Logger.d("outputPath=" + outputPath);
     Uri outputUri = Uri.fromFile(new File(outputPath));
     intent.putExtra(MediaStore.EXTRA_OUTPUT, outputUri);
     intent.putExtra("return-data", true);

@@ -33,6 +33,8 @@ import java.util.*;
  */
 public class ChatService {
   private static final int REPLY_NOTIFY_ID = 1;
+  private static final long NOTIFY_PEROID = 1000;
+  static long lastNotifyTime = 0;
 
   public static <T extends AVUser> String getPeerId(T user) {
     return user.getObjectId();
@@ -84,13 +86,13 @@ public class ChatService {
       Conversation conversation = new Conversation();
       if (msg.getRoomType() == RoomType.Single) {
         String chatUserId = msg.getOtherId();
-        conversation.toUser = App.lookupUser(chatUserId);
+        conversation.setToUser(App.lookupUser(chatUserId));
       } else {
-        conversation.chatGroup = App.lookupChatGroup(msg.getConvid());
+        conversation.setToChatGroup(App.lookupChatGroup(msg.getConvid()));
       }
       int unreadCount = DBMsg.getUnreadCount(db, msg.getConvid());
-      conversation.msg = msg;
-      conversation.unreadCount = unreadCount;
+      conversation.setMsg(msg);
+      conversation.setUnreadCount(unreadCount);
       conversations.add(conversation);
     }
     db.close();
@@ -127,6 +129,11 @@ public class ChatService {
   }
 
   public static void notifyMsg(Context context, Msg msg, Group group) throws JSONException {
+    if (System.currentTimeMillis() - lastNotifyTime < NOTIFY_PEROID) {
+      return;
+    } else {
+      lastNotifyTime = System.currentTimeMillis();
+    }
     int icon = context.getApplicationInfo().icon;
     Intent intent;
     if (group == null) {

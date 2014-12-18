@@ -42,9 +42,9 @@ public class RecentMessageAdapter extends BaseListAdapter<Conversation> {
     TextView recentTimeView = ViewHolder.findViewById(convertView, R.id.recent_teim_text);
     TextView recentUnreadView = ViewHolder.findViewById(convertView, R.id.recent_unread);
 
-    Msg msg = item.msg;
+    Msg msg = item.getMsg();
     if (msg.getRoomType() == RoomType.Single) {
-      User user = item.toUser;
+      User user = item.getToUser();
       String avatar = user.getAvatarUrl();
       if (avatar != null && !avatar.equals("")) {
         ImageLoader.getInstance().displayImage(avatar, recentAvatarView, PhotoUtil.avatarImageOptions);
@@ -53,13 +53,13 @@ public class RecentMessageAdapter extends BaseListAdapter<Conversation> {
       }
       recentNameView.setText(user.getUsername());
     } else {
-      ChatGroup chatGroup = item.chatGroup;
+      ChatGroup chatGroup = item.getToChatGroup();
       recentNameView.setText(chatGroup.getTitle());
       recentAvatarView.setImageResource(R.drawable.group_icon);
     }
 
     //recentTimeView.setText(TimeUtils.getDate);
-    int num = item.unreadCount;
+    int num = item.getUnreadCount();
     if (msg.getType() == Msg.Type.Text) {
       CharSequence spannableString = EmotionUtils.replace(ctx, msg.getContent());
       recentMsgView.setText(spannableString);
