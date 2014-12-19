@@ -4,4 +4,5 @@
     android:layout_height="wrap_content"
     android:id="@+id/textContent"
     android:text="chat_content"
+    android:maxWidth="@dimen/chatContentMaxWidth"
     android:textColor="@color/chatLeftText" />

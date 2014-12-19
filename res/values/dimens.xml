@@ -3,7 +3,7 @@
     <dimen name="radius">5dp</dimen>
     <dimen name="chatBottomHeight">50dp</dimen>
     <dimen name="userHead">45dp</dimen>
-    <dimen name="chatItemMarginTop">3dp</dimen>
+    <dimen name="chatItemMarginTop">5dp</dimen>
     <dimen name="chatContentMaxWidth">200dp</dimen>
     <dimen name="marginToUsername">5dp</dimen>
     <dimen name="chatImageMaxWidth">80dp</dimen>

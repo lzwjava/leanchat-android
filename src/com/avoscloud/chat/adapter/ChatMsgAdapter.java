@@ -101,13 +101,13 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
 
   public View getView(int position, View conView, ViewGroup parent) {
     Msg msg = datas.get(position);
-    int itemViewType = getItemViewType(position);
     boolean isComMsg = msg.isComeMessage();
     if (conView == null) {
-      conView = createViewByType(itemViewType, msg.getType(), isComMsg);
+      conView = createViewByType(msg.getType(), isComMsg);
     }
     TextView sendTimeView = ViewHolder.findViewById(conView, R.id.sendTimeView);
     TextView contentView = ViewHolder.findViewById(conView, R.id.textContent);
+    View contentLayout = ViewHolder.findViewById(conView, R.id.contentLayout);
     ImageView imageView = ViewHolder.findViewById(conView, R.id.imageView);
     ImageView avatarView = ViewHolder.findViewById(conView, R.id.avatar);
     PlayButton playBtn = ViewHolder.findViewById(conView, R.id.playBtn);
@@ -136,6 +136,7 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
     Msg.Type type = msg.getType();
     if (type == Msg.Type.Text) {
       contentView.setText(EmotionUtils.replace(ctx, msg.getContent()));
+      contentLayout.requestLayout();
     } else if (type == Msg.Type.Image) {
       String localPath = PathUtils.getChatFileDir() + msg.getObjectId();
       String url = msg.getContent();
@@ -237,8 +238,7 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
     }
   }
 
-  public View createViewByType(int itemViewType, Msg.Type type, boolean isComeMsg) {
-    int[] baseLayoutIds = new int[]{R.layout.chat_item_base_left, R.layout.chat_item_base_right};
+  public View createViewByType(Msg.Type type, boolean isComeMsg) {
     View baseView;
     if (isComeMsg) {
       baseView = inflater.inflate(R.layout.chat_item_base_left, null);
