@@ -14,20 +14,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.SaveCallback;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.User;
-import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.service.ChatService;
-import com.avoscloud.chat.service.PreferenceMap;
 import com.avoscloud.chat.service.UpdateService;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.activity.NotifySettingActivity;
 import com.avoscloud.chat.util.*;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -142,7 +138,7 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
         new SimpleNetTask(ctx) {
           @Override
           protected void doInBack() throws Exception {
-            saveAvatar(path);
+            UserService.saveAvatar(path);
           }
 
           @Override
@@ -153,16 +149,6 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
 
       }
     }
-  }
-
-  public static void saveAvatar(String path) throws IOException, AVException {
-    User user = User.curUser();
-    final AVFile file = AVFile.withAbsoluteLocalPath(user.getUsername(), path);
-    file.save();
-    user.setAvatar(file);
-
-    user.save();
-    user.fetch();
   }
 
   public Uri startImageCrop(Uri uri, int outputX, int outputY,

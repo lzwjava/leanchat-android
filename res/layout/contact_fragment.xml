@@ -9,8 +9,7 @@
     <RelativeLayout
         android:id="@+id/layout_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/base_bg">
+        android:layout_height="match_parent">
 
         <com.avoscloud.chat.ui.view.ClearEditText
             android:id="@+id/et_msg_search"
@@ -32,10 +31,9 @@
             android:layout_below="@id/et_msg_search"
             android:layout_gravity="top"
             android:layout_toLeftOf="@+id/right_letter"
-            android:background="@drawable/user_add_top_bg"
             android:orientation="horizontal">
 
-            <ListView
+            <com.avoscloud.chat.ui.view.xlist.XListView
                 android:id="@+id/list_friends"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

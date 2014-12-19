@@ -98,23 +98,19 @@ public class UserService {
     return user;
   }
 
+  public static void cacheUserIfNone(String userId) throws AVException {
+    if (CacheService.lookupUser(userId) == null) {
+      CacheService.registerUserCache(findUser(userId));
+    }
+  }
+
   public static void saveAvatar(String path) throws IOException, AVException {
     User user = User.curUser();
-    if (user.getLocation() == null) {
-      PreferenceMap preferenceMap = new PreferenceMap(App.ctx, user.getObjectId());
-      user.setLocation(preferenceMap.getLocation());
-    }
     final AVFile file = AVFile.withAbsoluteLocalPath(user.getUsername(), path);
     file.save();
     user.setAvatar(file);
 
     user.save();
     user.fetch();
-  }
-
-  public static void cacheUserIfNone(String userId) throws AVException {
-    if (CacheService.lookupUser(userId) == null) {
-      CacheService.registerUserCache(findUser(userId));
-    }
   }
 }

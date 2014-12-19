@@ -28,16 +28,17 @@ import com.avoscloud.chat.ui.activity.NewFriendActivity;
 import com.avoscloud.chat.ui.view.ClearEditText;
 import com.avoscloud.chat.ui.view.EnLetterView;
 import com.avoscloud.chat.ui.view.HeaderLayout;
+import com.avoscloud.chat.ui.view.xlist.XListView;
 import com.avoscloud.chat.util.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ContactFragment extends BaseFragment implements OnItemClickListener, OnItemLongClickListener, OnClickListener {
+public class ContactFragment extends BaseFragment implements OnItemClickListener, OnItemLongClickListener, OnClickListener, XListView.IXListViewListener {
   ClearEditText clearEditText;
   TextView dialog;
-  ListView friendsList;
+  XListView friendsList;
   EnLetterView rightLetter;
   UserFriendAdapter userAdapter;
   List<User> friends = new ArrayList<User>();
@@ -60,7 +61,7 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
     // TODO Auto-generated method stub
     super.onActivityCreated(savedInstanceState);
     init();
-    refresh();
+    onRefresh();
   }
 
   private void init() {
@@ -138,7 +139,10 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
   }
 
   private void initListView() {
-    friendsList = (ListView) getView().findViewById(R.id.list_friends);
+    friendsList = (XListView) getView().findViewById(R.id.list_friends);
+    friendsList.setPullRefreshEnable(true);
+    friendsList.setPullLoadEnable(false);
+    friendsList.setXListViewListener(this);
     LayoutInflater mInflater = LayoutInflater.from(ctx);
     RelativeLayout headView = (RelativeLayout) mInflater.inflate(R.layout.contact_include_new_friend, null);
     msgTipsView = (ImageView) headView.findViewById(R.id.iv_msg_tips);
@@ -189,6 +193,37 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
     }
   }
 
+  @Override
+  public void onRefresh() {
+    new NetAsyncTask(ctx, false) {
+      boolean haveAddRequest;
+      List<User> friends1;
+
+      @Override
+      protected void doInBack() throws Exception {
+        haveAddRequest = AddRequestService.hasAddRequest();
+        friends1 = UserService.findFriends();
+        CacheService.registerBatchUser(friends1);
+        CacheService.setFriendIds(UserService.transformIds(friends1));
+      }
+
+      @Override
+      protected void onPost(Exception e) {
+        friendsList.stopRefresh();
+        if (e != null) {
+          Utils.toast(ctx, e.getMessage());
+        } else {
+          setAddRequestTipsAndListView(haveAddRequest, friends1);
+        }
+      }
+    }.execute();
+  }
+
+  @Override
+  public void onLoadMore() {
+
+  }
+
   private class LetterListViewListener implements
       EnLetterView.OnTouchingLetterChangedListener {
 
@@ -219,7 +254,7 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
     super.onHiddenChanged(hidden);
     this.hidden = hidden;
     if (!hidden) {
-      refresh();
+      onRefresh();
     }
   }
 
@@ -227,29 +262,8 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
   public void onResume() {
     super.onResume();
     if (!hidden) {
-      refresh();
+      onRefresh();
     }
-  }
-
-  public void refresh() {
-    new SimpleNetTask(ctx, false) {
-      boolean haveAddRequest;
-      List<User> friends;
-
-      @Override
-      protected void doInBack() throws Exception {
-        haveAddRequest = AddRequestService.hasAddRequest();
-        friends = UserService.findFriends();
-        CacheService.registerBatchUser(friends);
-        CacheService.setFriendIds(UserService.transformIds(friends));
-      }
-
-      @Override
-      public void onSucceed() {
-        setAddRequestTipsAndListView(haveAddRequest, friends);
-      }
-
-    }.execute();
   }
 
   @Override

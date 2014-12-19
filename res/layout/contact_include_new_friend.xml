@@ -34,7 +34,7 @@
                 android:layout_height="@dimen/tip_icon_size"
                 android:layout_marginTop="5dp"
                 android:layout_gravity="top|right"
-                android:visibility="visible"
+                android:visibility="invisible"
                 android:contentDescription="@string/action_settings"
                 android:src="@drawable/msg_tips" />
         </FrameLayout>

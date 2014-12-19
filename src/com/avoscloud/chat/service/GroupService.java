@@ -17,6 +17,7 @@ public class GroupService {
     User user = User.curUser();
     AVQuery<ChatGroup> q = AVObject.getQuery(ChatGroup.class);
     q.whereEqualTo(ChatGroup.M, user.getObjectId());
+    q.orderByDescending(C.UPDATED_AT);
     q.include(ChatGroup.OWNER);
     q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
     return q.find();

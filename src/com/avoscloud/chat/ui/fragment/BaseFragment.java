@@ -1,11 +1,10 @@
 package com.avoscloud.chat.ui.fragment;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import com.avoscloud.chat.ui.view.HeaderLayout;
 import com.avoscloud.chat.R;
+import com.avoscloud.chat.ui.view.HeaderLayout;
 
 public class BaseFragment extends Fragment {
   HeaderLayout headerLayout;

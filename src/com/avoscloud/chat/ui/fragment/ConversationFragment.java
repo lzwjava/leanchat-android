@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import com.avoscloud.chat.adapter.RecentMessageAdapter;
 import com.avoscloud.chat.entity.Conversation;
 import com.avoscloud.chat.entity.RoomType;
@@ -15,6 +14,7 @@ import com.avoscloud.chat.service.listener.MsgListener;
 import com.avoscloud.chat.service.receiver.GroupMsgReceiver;
 import com.avoscloud.chat.service.receiver.MsgReceiver;
 import com.avoscloud.chat.ui.activity.ChatActivity;
+import com.avoscloud.chat.ui.view.xlist.XListView;
 import com.avoscloud.chat.util.NetAsyncTask;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.util.Utils;
@@ -24,8 +24,8 @@ import java.util.List;
 /**
  * Created by lzw on 14-9-17.
  */
-public class ConversationFragment extends BaseFragment implements AdapterView.OnItemClickListener, MsgListener {
-  ListView listview;
+public class ConversationFragment extends BaseFragment implements AdapterView.OnItemClickListener, MsgListener, XListView.IXListViewListener {
+  XListView xListView;
   RecentMessageAdapter adapter;
 
   @Override
@@ -37,15 +37,18 @@ public class ConversationFragment extends BaseFragment implements AdapterView.On
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
     initView();
-    refresh();
+    onRefresh();
   }
 
   private void initView() {
     headerLayout.showTitle(R.string.messages);
-    listview = (ListView) getView().findViewById(R.id.convList);
+    xListView = (XListView) getView().findViewById(R.id.convList);
+    xListView.setPullLoadEnable(false);
+    xListView.setPullRefreshEnable(true);
+    xListView.setXListViewListener(this);
     adapter = new RecentMessageAdapter(getActivity());
-    listview.setAdapter(adapter);
-    listview.setOnItemClickListener(this);
+    xListView.setAdapter(adapter);
+    xListView.setOnItemClickListener(this);
   }
 
   @Override
@@ -66,19 +69,16 @@ public class ConversationFragment extends BaseFragment implements AdapterView.On
     super.onHiddenChanged(hidden);
     this.hidden = hidden;
     if (!hidden) {
-      refresh();
+      onRefresh();
     }
   }
 
-  public void refresh() {
-    new GetDataTask(ctx, false).execute();
-  }
 
   @Override
   public void onResume() {
     super.onResume();
     if (!hidden) {
-      refresh();
+      onRefresh();
     }
     GroupMsgReceiver.addMsgListener(this);
     MsgReceiver.addMsgListener(this);
@@ -93,8 +93,18 @@ public class ConversationFragment extends BaseFragment implements AdapterView.On
 
   @Override
   public boolean onMessageUpdate(String otherId) {
-    refresh();
+    onRefresh();
     return false;
+  }
+
+  @Override
+  public void onRefresh() {
+    new GetDataTask(ctx, false).execute();
+  }
+
+  @Override
+  public void onLoadMore() {
+
   }
 
   class GetDataTask extends NetAsyncTask {
@@ -111,6 +121,7 @@ public class ConversationFragment extends BaseFragment implements AdapterView.On
 
     @Override
     protected void onPost(Exception e) {
+      xListView.stopRefresh();
       if (e != null) {
         Utils.toast(ctx, R.string.pleaseCheckNetwork);
       } else {

@@ -7,7 +7,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import com.avos.avoscloud.Group;
 import com.avos.avoscloud.Session;
 import com.avoscloud.chat.adapter.GroupAdapter;
@@ -15,7 +14,7 @@ import com.avoscloud.chat.avobject.ChatGroup;
 import com.avoscloud.chat.service.CacheService;
 import com.avoscloud.chat.service.ChatService;
 import com.avoscloud.chat.service.listener.GroupEventListener;
-import com.avoscloud.chat.util.SimpleNetTask;
+import com.avoscloud.chat.ui.view.xlist.XListView;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.service.receiver.GroupMsgReceiver;
@@ -30,9 +29,9 @@ import java.util.List;
 /**
  * Created by lzw on 14-10-7.
  */
-public class GroupListActivity extends BaseActivity implements GroupEventListener, AdapterView.OnItemClickListener {
+public class GroupListActivity extends BaseActivity implements GroupEventListener, AdapterView.OnItemClickListener, XListView.IXListViewListener {
   public static final int GROUP_NAME_REQUEST = 0;
-  ListView groupListView;
+  XListView groupListView;
   List<ChatGroup> chatGroups = new ArrayList<ChatGroup>();
   GroupAdapter groupAdapter;
   String newGroupName;
@@ -43,7 +42,7 @@ public class GroupListActivity extends BaseActivity implements GroupEventListene
     setContentView(R.layout.group_list_activity);
     findView();
     initList();
-    refresh();
+    onRefresh();
     initActionBar(App.ctx.getString(R.string.group));
     GroupMsgReceiver.addListener(this);
   }
@@ -66,31 +65,15 @@ public class GroupListActivity extends BaseActivity implements GroupEventListene
 
   private void initList() {
     groupAdapter = new GroupAdapter(ctx, chatGroups);
+    groupListView.setPullRefreshEnable(true);
+    groupListView.setPullLoadEnable(false);
+    groupListView.setXListViewListener(this);
     groupListView.setAdapter(groupAdapter);
     groupListView.setOnItemClickListener(this);
   }
 
-  private void refresh() {
-    new SimpleNetTask(ctx) {
-      List<ChatGroup> subChatGroups;
-
-      @Override
-      protected void doInBack() throws Exception {
-        subChatGroups = GroupService.findGroups();
-      }
-
-      @Override
-      protected void onSucceed() {
-        chatGroups.clear();
-        chatGroups.addAll(subChatGroups);
-        CacheService.registerChatGroupsCache(chatGroups);
-        groupAdapter.notifyDataSetChanged();
-      }
-    }.execute();
-  }
-
   private void findView() {
-    groupListView = (ListView) findViewById(R.id.groupList);
+    groupListView = (XListView) findViewById(R.id.groupList);
   }
 
   @Override
@@ -148,7 +131,7 @@ public class GroupListActivity extends BaseActivity implements GroupEventListene
 
   @Override
   public void onQuit(Group group) {
-    refresh();
+    onRefresh();
   }
 
   private ChatGroup findChatGroup(String groupId) {
@@ -171,5 +154,35 @@ public class GroupListActivity extends BaseActivity implements GroupEventListene
     ChatGroup chatGroup = (ChatGroup) parent.getAdapter().getItem(position);
     Group group = ChatService.getGroupById(chatGroup.getObjectId());
     group.join();
+  }
+
+  @Override
+  public void onRefresh() {
+    new NetAsyncTask(ctx, false) {
+      List<ChatGroup> subChatGroups;
+
+      @Override
+      protected void doInBack() throws Exception {
+        subChatGroups = GroupService.findGroups();
+      }
+
+      @Override
+      protected void onPost(Exception e) {
+        groupListView.stopRefresh();
+        if (e != null) {
+
+        } else {
+          chatGroups.clear();
+          chatGroups.addAll(subChatGroups);
+          CacheService.registerChatGroupsCache(chatGroups);
+          groupAdapter.notifyDataSetChanged();
+        }
+      }
+    }.execute();
+  }
+
+  @Override
+  public void onLoadMore() {
+
   }
 }

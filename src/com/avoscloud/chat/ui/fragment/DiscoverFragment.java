@@ -30,7 +30,7 @@ public class DiscoverFragment extends BaseFragment
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.discover_fragment, container,false);
+    return inflater.inflate(R.layout.discover_fragment, container, false);
   }
 
   @Override
@@ -82,7 +82,7 @@ public class DiscoverFragment extends BaseFragment
   public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
     // TODO Auto-generated method stub
     User user = (User) adapter.getItem(position - 1);
-    PersonInfoActivity.goPersonInfo(ctx,user.getObjectId());
+    PersonInfoActivity.goPersonInfo(ctx, user.getObjectId());
   }
 
   @Override
