@@ -12,7 +12,7 @@ import com.avos.avoscloud.Group;
 import com.avos.avoscloud.Session;
 import com.avoscloud.chat.adapter.GroupAdapter;
 import com.avoscloud.chat.avobject.ChatGroup;
-import com.avoscloud.chat.entity.RoomType;
+import com.avoscloud.chat.service.CacheService;
 import com.avoscloud.chat.service.ChatService;
 import com.avoscloud.chat.service.listener.GroupEventListener;
 import com.avoscloud.chat.util.SimpleNetTask;
@@ -83,7 +83,7 @@ public class GroupListActivity extends BaseActivity implements GroupEventListene
       protected void onSucceed() {
         chatGroups.clear();
         chatGroups.addAll(subChatGroups);
-        App.registerChatGroupsCache(chatGroups);
+        CacheService.registerChatGroupsCache(chatGroups);
         groupAdapter.notifyDataSetChanged();
       }
     }.execute();
@@ -127,7 +127,7 @@ public class GroupListActivity extends BaseActivity implements GroupEventListene
             Utils.printException(e);
           } else {
             chatGroups.add(0, chatGroup);
-            App.registerChatGroupsCache(Arrays.asList(chatGroup));
+            CacheService.registerChatGroupsCache(Arrays.asList(chatGroup));
             groupAdapter.notifyDataSetChanged();
           }
         }
@@ -137,18 +137,13 @@ public class GroupListActivity extends BaseActivity implements GroupEventListene
       if (_chatGroup == null) {
         throw new RuntimeException("chat group is null");
       }
-      ChatActivity.goGroupChat(this,_chatGroup.getObjectId());
+      ChatActivity.goGroupChat(this, _chatGroup.getObjectId());
     }
   }
 
   @Override
-  public void onMemberJoin(Group group, List<String> joinedPeerIds) {
-
-  }
-
-  @Override
-  public void onMemberLeft(Group group, List<String> leftPeerIds) {
-
+  public void onMemberUpdate(Group group) {
+    groupAdapter.notifyDataSetChanged();
   }
 
   @Override

@@ -12,9 +12,7 @@ public interface GroupEventListener {
 
   void onJoined(Group group);
 
-  void onMemberJoin(Group group, List<String> joinedPeerIds);
-
-  void onMemberLeft(Group group, List<String> leftPeerIds);
+  void onMemberUpdate(Group group);
 
   void onQuit(Group group);
 }

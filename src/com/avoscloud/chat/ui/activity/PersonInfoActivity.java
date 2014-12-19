@@ -10,7 +10,7 @@ import android.widget.*;
 import com.avos.avoscloud.AVException;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.User;
-import com.avoscloud.chat.base.App;
+import com.avoscloud.chat.service.CacheService;
 import com.avoscloud.chat.service.CloudService;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.util.NetAsyncTask;
@@ -24,7 +24,7 @@ public class PersonInfoActivity extends BaseActivity implements OnClickListener 
   ImageView avatarView, avatarArrowView;
   LinearLayout allLayout;
   Button chatBtn, addFriendBtn;
-  RelativeLayout avatarLayout,  genderLayout;
+  RelativeLayout avatarLayout, genderLayout;
 
   String userId = "";
   User user;
@@ -48,7 +48,7 @@ public class PersonInfoActivity extends BaseActivity implements OnClickListener 
 
   private void initData() {
     userId = getIntent().getStringExtra(USER_ID);
-    user = App.lookupUser(userId);
+    user = CacheService.lookupUser(userId);
   }
 
   private void findView() {
@@ -76,21 +76,16 @@ public class PersonInfoActivity extends BaseActivity implements OnClickListener 
     } else {
       initActionBar(R.string.detailInfo);
       avatarArrowView.setVisibility(View.INVISIBLE);
-      try {
-        List<User> cacheFriends = UserService.findFriends(true);
-        boolean isFriend = cacheFriends.contains(user);
-        if (isFriend) {
-          chatBtn.setVisibility(View.VISIBLE);
-          chatBtn.setOnClickListener(this);
-        } else {
-          chatBtn.setVisibility(View.GONE);
-          addFriendBtn.setVisibility(View.VISIBLE);
-          addFriendBtn.setOnClickListener(this);
-        }
-      } catch (AVException e) {
-        e.printStackTrace();
+      List<String> cacheFriends = CacheService.getFriendIds();
+      boolean isFriend = cacheFriends.contains(user.getObjectId());
+      if (isFriend) {
+        chatBtn.setVisibility(View.VISIBLE);
+        chatBtn.setOnClickListener(this);
+      } else {
+        chatBtn.setVisibility(View.GONE);
+        addFriendBtn.setVisibility(View.VISIBLE);
+        addFriendBtn.setOnClickListener(this);
       }
-
     }
     updateView(user);
   }

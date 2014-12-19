@@ -6,10 +6,10 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.adapter.GroupAddMembersAdapter;
-import com.avoscloud.chat.avobject.ChatGroup;
 import com.avoscloud.chat.avobject.User;
-import com.avoscloud.chat.base.App;
+import com.avoscloud.chat.service.CacheService;
 import com.avoscloud.chat.service.GroupService;
+import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.util.SimpleNetTask;
 import com.avoscloud.chat.util.Utils;
 
@@ -19,25 +19,31 @@ import java.util.List;
 /**
  * Created by lzw on 14-10-11.
  */
-public class GroupAddMembersActivity extends BaseActivity {
+public class GroupAddMembersActivity extends GroupBaseActivity {
   public static final int OK = 0;
   GroupAddMembersAdapter adapter;
   ListView userList;
-  List<User> users;
-  public static ChatGroup chatGroup;
-  public static List<User> members;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.group_add_members_layout);
     findView();
-    initData();
     initList();
     initActionBar();
+    onGroupUpdate();
   }
 
-  private void initData() {
+  private void setListData() {
+    List<String> ids = CacheService.getFriendIds();
+    ids.removeAll(getChatGroup().getMembers());
+    adapter.setDatas(ids);
+    adapter.notifyDataSetChanged();
+  }
+
+  @Override
+  void onGroupUpdate() {
+    setListData();
   }
 
   @Override
@@ -57,11 +63,11 @@ public class GroupAddMembersActivity extends BaseActivity {
   }
 
   private void addMembers() {
-    final List<User> checkedUsers = adapter.getCheckedDatas();
+    final List<String> checkedUsers = adapter.getCheckedDatas();
     new SimpleNetTask(ctx) {
       @Override
       protected void doInBack() throws Exception {
-        GroupService.inviteMembers(chatGroup, checkedUsers);
+        GroupService.inviteMembers(getChatGroup(), checkedUsers);
       }
 
       @Override
@@ -73,17 +79,8 @@ public class GroupAddMembersActivity extends BaseActivity {
   }
 
   private void initList() {
-    App app = App.getInstance();
-    users = app.getFriends();
-    List<User> restUsers = removeMembers(users, members);
-    adapter = new GroupAddMembersAdapter(ctx, restUsers);
+    adapter = new GroupAddMembersAdapter(ctx, new ArrayList<String>());
     userList.setAdapter(adapter);
-  }
-
-  private List<User> removeMembers(List<User> users, List<User> members) {
-    List<User> restUsers = new ArrayList<User>(users);
-    restUsers.removeAll(members);
-    return restUsers;
   }
 
   private void findView() {

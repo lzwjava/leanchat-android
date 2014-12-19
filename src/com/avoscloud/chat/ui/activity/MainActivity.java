@@ -11,7 +11,7 @@ import android.widget.Button;
 import com.avos.avoscloud.AVGeoPoint;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.User;
-import com.avoscloud.chat.base.App;
+import com.avoscloud.chat.service.CacheService;
 import com.avoscloud.chat.service.ChatService;
 import com.avoscloud.chat.service.PreferenceMap;
 import com.avoscloud.chat.service.UpdateService;
@@ -64,7 +64,7 @@ public class MainActivity extends BaseActivity {
     //UpdateService.createUpdateInfoInBackground();
     UpdateService updateService = UpdateService.getInstance(this);
     updateService.checkUpdate();
-    App.registerUserCache(User.curUser());
+    CacheService.registerUserCache(User.curUser());
     FinishReceiver.broadcast(this);
     ChatService.openSession(this);
   }

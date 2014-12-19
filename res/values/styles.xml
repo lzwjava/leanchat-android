@@ -271,7 +271,6 @@
     </style>
 
     <style name="ChatAvatar">
-
         <item name="android:layout_width">@dimen/userHead</item>
         <item name="android:layout_height">@dimen/userHead</item>
         <item name="android:clickable">true</item>

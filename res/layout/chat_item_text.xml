@@ -5,5 +5,5 @@
     android:id="@+id/textContent"
     android:text="chat_content"
     android:maxWidth="@dimen/chatContentMaxWidth"
-    android:gravity="center"
+    android:gravity="left"
     android:textColor="@color/chatLeftText" />

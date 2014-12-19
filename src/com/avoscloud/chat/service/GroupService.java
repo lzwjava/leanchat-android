@@ -3,12 +3,9 @@ package com.avoscloud.chat.service;
 import com.avos.avoscloud.*;
 import com.avoscloud.chat.avobject.ChatGroup;
 import com.avoscloud.chat.avobject.User;
-import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.base.C;
-import com.avoscloud.chat.util.ChatUtils;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by lzw on 14-10-8.
@@ -29,10 +26,9 @@ public class GroupService {
     return chatGroup.getOwner().equals(user);
   }
 
-  public static void inviteMembers(ChatGroup chatGroup, List<User> users) {
+  public static void inviteMembers(ChatGroup chatGroup, List<String> users) {
     Group group = getGroup(chatGroup);
-    List<String> userIds = UserService.transformIds(users);
-    group.inviteMember(userIds);
+    group.inviteMember(users);
   }
 
   public static Group getGroup(ChatGroup chatGroup) {
@@ -46,31 +42,37 @@ public class GroupService {
   }
 
   public static ChatGroup setNewChatGroupData(String groupId, String newGroupName) throws AVException {
-    CloudService.saveChatGroup(groupId,User.curUser().getObjectId(),newGroupName);
+    CloudService.saveChatGroup(groupId, User.curUser().getObjectId(), newGroupName);
     ChatGroup chatGroup = ChatGroup.createWithoutData(ChatGroup.class, groupId);
     chatGroup.fetch("owner");
     return chatGroup;
   }
 
   public static void cacheChatGroups(List<String> ids) throws AVException {
-    if (ids.size() == 0) {
-      return;
+    Set<String> uncachedIds = new HashSet<String>();
+    for (String id : ids) {
+      if (CacheService.lookupChatGroup(id) == null) {
+        uncachedIds.add(id);
+      }
     }
-    findChatGroups(ids);
+    findChatGroups(new ArrayList<String>(uncachedIds));
   }
 
   private static List<ChatGroup> findChatGroups(List<String> ids) throws AVException {
+    if (ids.size() == 0) {
+      return new ArrayList<ChatGroup>();
+    }
     AVQuery<ChatGroup> q = AVObject.getQuery(ChatGroup.class);
     q.whereContainedIn(C.OBJECT_ID, ids);
     q.include(ChatGroup.OWNER);
     q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
     List<ChatGroup> chatGroups = q.find();
-    App.registerChatGroupsCache(chatGroups);
+    CacheService.registerChatGroupsCache(chatGroups);
     return chatGroups;
   }
 
   public static void cacheChatGroupIfNone(String groupId) throws AVException {
-    if (App.lookupChatGroup(groupId) == null) {
+    if (CacheService.lookupChatGroup(groupId) == null) {
       cacheChatGroups(Arrays.asList(groupId));
     }
   }

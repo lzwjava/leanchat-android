@@ -86,9 +86,9 @@ public class ChatService {
       Conversation conversation = new Conversation();
       if (msg.getRoomType() == RoomType.Single) {
         String chatUserId = msg.getOtherId();
-        conversation.setToUser(App.lookupUser(chatUserId));
+        conversation.setToUser(CacheService.lookupUser(chatUserId));
       } else {
-        conversation.setToChatGroup(App.lookupChatGroup(msg.getConvid()));
+        conversation.setToChatGroup(CacheService.lookupChatGroup(msg.getConvid()));
       }
       int unreadCount = DBMsg.getUnreadCount(db, msg.getConvid());
       conversation.setMsg(msg);
@@ -100,26 +100,19 @@ public class ChatService {
   }
 
   public static void cacheUserOrChatGroup(List<Msg> msgs) throws AVException {
-    Set<String> uncachedIds = new HashSet<String>();
-    Set<String> uncachedChatGroupIds = new HashSet<String>();
+    Set<String> userIds = new HashSet<String>();
+    Set<String> groupIds = new HashSet<String>();
     for (Msg msg : msgs) {
       if (msg.getRoomType() == RoomType.Single) {
-        String chatUserId = msg.getOtherId();
-        if (App.lookupUser(chatUserId) == null) {
-          uncachedIds.add(chatUserId);
-        }
+        userIds.add(msg.getToPeerId());
       } else {
         String groupId = msg.getConvid();
-        if (App.lookupChatGroup(groupId) == null) {
-          uncachedChatGroupIds.add(groupId);
-        }
+        groupIds.add(groupId);
       }
-      if(App.lookupUser(msg.getFromPeerId())==null){
-        uncachedIds.add(msg.getFromPeerId());
-      }
+      userIds.add(msg.getFromPeerId());
     }
-    UserService.cacheUser(new ArrayList<String>(uncachedIds));
-    GroupService.cacheChatGroups(new ArrayList<String>(uncachedChatGroupIds));
+    CacheService.cacheUserAndGet(new ArrayList<String>(userIds));
+    GroupService.cacheChatGroups(new ArrayList<String>(groupIds));
   }
 
   public static void closeSession() {
@@ -273,7 +266,7 @@ public class ChatService {
 
   public static List<User> findGroupMembers(ChatGroup chatGroup) throws AVException {
     List<String> members = chatGroup.getMembers();
-    return UserService.findUsers(members);
+    return CacheService.findUsers(members);
   }
 
   public static Msg resendMsg(Msg msg) {

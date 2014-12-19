@@ -6,6 +6,7 @@ import android.widget.TextView;
 import com.avos.avoscloud.*;
 import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.C;
+import com.avoscloud.chat.service.CacheService;
 import com.avoscloud.chat.service.PreferenceMap;
 import com.avoscloud.chat.ui.view.ViewHolder;
 import com.avoscloud.chat.R;
@@ -47,7 +48,7 @@ public class ChatUtils {
         public void done(AVObject avObject, AVException e) {
           if(e==null){
             User avUser = (User) avObject;
-            App.registerUserCache(avUser);
+            CacheService.registerUserCache(avUser);
           }
         }
       });

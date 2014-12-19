@@ -6,6 +6,7 @@ import com.avos.avoscloud.AVUtils;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.App;
+import com.avoscloud.chat.service.CacheService;
 import com.avoscloud.chat.service.ChatService;
 import com.avoscloud.chat.util.EmotionUtils;
 import com.avoscloud.chat.util.PathUtils;
@@ -237,7 +238,7 @@ public class Msg {
 
   public String getFromName() {
     String peerId = getFromPeerId();
-    User user = App.lookupUser(peerId);
+    User user = CacheService.lookupUser(peerId);
     return user.getUsername();
   }
 

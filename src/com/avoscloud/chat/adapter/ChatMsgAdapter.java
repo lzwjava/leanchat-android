@@ -11,12 +11,12 @@ import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.entity.RoomType;
 import com.avoscloud.chat.service.AudioHelper;
+import com.avoscloud.chat.service.CacheService;
 import com.avoscloud.chat.util.EmotionUtils;
 import com.avoscloud.chat.ui.activity.ChatActivity;
 import com.avoscloud.chat.ui.activity.LocationActivity;
 import com.avoscloud.chat.ui.view.PlayButton;
 import com.avoscloud.chat.ui.view.ViewHolder;
-import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.entity.Msg;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.activity.ImageBrowerActivity;
@@ -128,7 +128,7 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
     }
 
     String fromPeerId = msg.getFromPeerId();
-    User user = App.lookupUser(fromPeerId);
+    User user = CacheService.lookupUser(fromPeerId);
     if (user == null) {
       throw new RuntimeException("cannot find user");
     }

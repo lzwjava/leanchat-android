@@ -1,10 +1,11 @@
 package com.avoscloud.chat.service.receiver;
 
 import android.content.Context;
-import com.avos.avoscloud.AVGroupMessageReceiver;
-import com.avos.avoscloud.AVMessage;
-import com.avos.avoscloud.Group;
+import com.avos.avoscloud.*;
+import com.avoscloud.chat.avobject.ChatGroup;
+import com.avoscloud.chat.service.CacheService;
 import com.avoscloud.chat.service.ChatService;
+import com.avoscloud.chat.service.GroupService;
 import com.avoscloud.chat.service.listener.GroupEventListener;
 import com.avoscloud.chat.service.listener.MsgListener;
 import com.avoscloud.chat.util.AVOSUtils;
@@ -40,7 +41,7 @@ public class GroupMsgReceiver extends AVGroupMessageReceiver {
 
   @Override
   public void onKicked(Context context, Group group, List<String> kickedPeers) {
-    Logger.d("kick " + group.getGroupId()  +" ids="+kickedPeers);
+    Logger.d("kick " + group.getGroupId() + " ids=" + kickedPeers);
   }
 
   @Override
@@ -54,7 +55,7 @@ public class GroupMsgReceiver extends AVGroupMessageReceiver {
   public void onMessageFailure(Context context, Group group, AVMessage message) {
     Logger.d("onMessageFailure");
     AVOSUtils.logAVMessage(message);
-    ChatService.onMessageFailure(message,msgListeners,group);
+    ChatService.onMessageFailure(message, msgListeners, group);
   }
 
   @Override
@@ -78,19 +79,34 @@ public class GroupMsgReceiver extends AVGroupMessageReceiver {
     Logger.d(op + ":" + targetIds + " rejected");
   }
 
+  public void notifyMemberUpdate(final Group group) {
+    if (CacheService.isCurrentGroup(group)) {
+      final ChatGroup chatGroup = CacheService.lookupChatGroup(group.getGroupId());
+      chatGroup.fetchInBackground(new GetCallback<AVObject>() {
+        @Override
+        public void done(AVObject object, AVException e) {
+          if (e != null) {
+            e.printStackTrace();
+          } else {
+            CacheService.registerChatGroup(chatGroup);
+            for (GroupEventListener listener : groupListeners) {
+              listener.onMemberUpdate(group);
+            }
+          }
+        }
+      });
+    }
+  }
+
   @Override
   public void onMemberJoin(Context context, Group group, List<String> joinedPeerIds) {
-    for (GroupEventListener listener : groupListeners) {
-      listener.onMemberJoin(group, joinedPeerIds);
-    }
+    notifyMemberUpdate(group);
     Logger.d(joinedPeerIds + " join " + group.getGroupId());
   }
 
   @Override
   public void onMemberLeft(Context context, Group group, List<String> leftPeerIds) {
-    for (GroupEventListener listener : groupListeners) {
-      listener.onMemberLeft(group, leftPeerIds);
-    }
+    notifyMemberUpdate(group);
     Logger.d(leftPeerIds + " left " + group.getGroupId());
   }
 

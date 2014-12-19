@@ -50,7 +50,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   public static final int LOCATION_REQUEST = 1;
   private static final int TAKE_CAMERA_REQUEST = 2;
   public static final int PAGE_SIZE = 20;
-  static String RETRY_ACTION ="com.avoscloud.chat.RETRY_CONNECT";
+  static String RETRY_ACTION = "com.avoscloud.chat.RETRY_CONNECT";
 
   private ChatMsgAdapter adapter;
   private List<Msg> msgs = new ArrayList<Msg>();
@@ -75,7 +75,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   public static final String ROOM_TYPE = "roomType";
   User chatUser;
   Group group;
-  ChatGroup chatGroup;
   String audioId;
   MsgAgent msgAgent;
 
@@ -89,7 +88,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
 
   private void initByIntent(Intent intent) {
     initData(intent);
-    initActionBar();
     initEmotionPager();
     initRecordBtn();
     setEditTextChangeListener();
@@ -222,11 +220,10 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     if (roomType == RoomType.Single) {
       title = chatUser.getUsername();
     } else {
-      title = chatGroup.getTitle();
+      title = getChatGroup().getTitle();
     }
     initActionBar(title);
   }
-
 
   private void findView() {
     xListView = (XListView) findViewById(R.id.listview);
@@ -268,6 +265,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     } else {
       GroupMsgReceiver.addMsgListener(this);
     }
+    initActionBar();
   }
 
   @Override
@@ -288,14 +286,15 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     msgSize = PAGE_SIZE;
     if (roomType == RoomType.Single) {
       String chatUserId = intent.getStringExtra(CHAT_USER_ID);
-      chatUser = App.lookupUser(chatUserId);
+      chatUser = CacheService.lookupUser(chatUserId);
       ChatService.withUserToWatch(chatUser, true);
       msgAgent = new MsgAgent(roomType, chatUser.getObjectId());
     } else {
       String groupId = intent.getStringExtra(GROUP_ID);
       Session session = ChatService.getSession();
       group = session.getGroup(groupId);
-      chatGroup = App.lookupChatGroup(groupId);
+      ChatGroup chatGroup = CacheService.lookupChatGroup(groupId);
+      CacheService.setCurrentChatGroup(chatGroup);
       msgAgent = new MsgAgent(roomType, groupId);
     }
   }
@@ -314,7 +313,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
       if (roomType == RoomType.Single) {
         PersonInfoActivity.goPersonInfo(ctx, chatUser.getObjectId());
       } else {
-        GroupDetailActivity.chatGroup = chatGroup;
         Utils.goActivity(ctx, GroupDetailActivity.class);
       }
     }
@@ -325,7 +323,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     if (roomType == RoomType.Single) {
       return chatUser.getObjectId();
     } else {
-      return chatGroup.getObjectId();
+      return getChatGroup().getObjectId();
     }
   }
 
@@ -677,6 +675,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   protected void onDestroy() {
     if (roomType == RoomType.Single) {
       ChatService.withUserToWatch(chatUser, false);
+    } else {
+      CacheService.setCurrentChatGroup(null);
     }
     ctx = null;
     super.onDestroy();
@@ -704,5 +704,9 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     intent.putExtra(GROUP_ID, groupId);
     intent.putExtra(ROOM_TYPE, RoomType.Group.getValue());
     return intent;
+  }
+
+  public ChatGroup getChatGroup() {
+    return CacheService.getCurrentChatGroup();
   }
 }

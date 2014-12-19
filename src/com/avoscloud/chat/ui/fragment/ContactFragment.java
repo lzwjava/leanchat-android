@@ -18,6 +18,7 @@ import com.avoscloud.chat.adapter.UserFriendAdapter;
 import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.service.AddRequestService;
+import com.avoscloud.chat.service.CacheService;
 import com.avoscloud.chat.service.CloudService;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.activity.AddFriendActivity;
@@ -239,6 +240,8 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
       protected void doInBack() throws Exception {
         haveAddRequest = AddRequestService.hasAddRequest();
         friends = UserService.findFriends();
+        CacheService.registerBatchUser(friends);
+        CacheService.setFriendIds(UserService.transformIds(friends));
       }
 
       @Override
@@ -253,7 +256,7 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
   public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
     // TODO Auto-generated method stub
     User user = (User) userAdapter.getItem(position - 1);
-    ChatActivity.goUserChat(getActivity(),user.getObjectId());
+    ChatActivity.goUserChat(getActivity(), user.getObjectId());
   }
 
   @Override

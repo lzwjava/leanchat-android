@@ -16,6 +16,7 @@ import com.avoscloud.chat.ui.view.xlist.XListView;
 import com.avoscloud.chat.util.ChatUtils;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
+import com.avoscloud.chat.util.NetAsyncTask;
 import com.avoscloud.chat.util.Utils;
 
 import java.util.ArrayList;
@@ -75,10 +76,17 @@ public class AddFriendActivity extends BaseActivity implements OnClickListener, 
     }
   }
 
-  private void search(String searchName) {
-    UserService.searchUser(searchName, adapter.getCount(), new FindCallback<User>() {
+  private void search(final String searchName) {
+    new NetAsyncTask(ctx, false) {
+      List<User> users;
+
       @Override
-      public void done(List<User> users, AVException e) {
+      protected void doInBack() throws Exception {
+        users = UserService.searchUser(searchName, adapter.getCount());
+      }
+
+      @Override
+      protected void onPost(Exception e) {
         stopLoadMore();
         if (e != null) {
           e.printStackTrace();
@@ -87,7 +95,8 @@ public class AddFriendActivity extends BaseActivity implements OnClickListener, 
           ChatUtils.handleListResult(listView, adapter, users);
         }
       }
-    });
+    }.execute();
+
   }
 
 

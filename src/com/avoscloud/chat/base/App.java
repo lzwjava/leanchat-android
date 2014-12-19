@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.StrictMode;
 import com.avos.avoscloud.*;
 import com.avoscloud.chat.avobject.*;
-import com.avoscloud.chat.ui.activity.LoginActivity;
 import com.avoscloud.chat.ui.activity.SplashActivity;
 import com.avoscloud.chat.util.Logger;
 import com.avoscloud.chat.util.PhotoUtil;
@@ -16,7 +15,6 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 
 import java.io.File;
-import java.util.*;
 
 /**
  * Created by lzw on 14-5-29.
@@ -24,11 +22,8 @@ import java.util.*;
 public class App extends Application {
   public static final String DB_NAME = "chat.db3";
   public static final int DB_VER = 4;
-  public static boolean debug = false;
+  public static boolean debug = true;
   public static App ctx;
-  private static Map<String, User> usersCache = new HashMap<String, User>();
-  public static Map<String, ChatGroup> chatGroupsCache = new HashMap<String, ChatGroup>();
-  List<User> friends = new ArrayList<User>();
 
   @Override
   public void onCreate() {
@@ -91,39 +86,4 @@ public class App extends Application {
     ImageLoader.getInstance().init(config);
   }
 
-  public static User lookupUser(String userId) {
-    return usersCache.get(userId);
-  }
-
-  public static void registerUserCache(String userId, User user) {
-    usersCache.put(userId, user);
-  }
-
-  public static void registerUserCache(User user) {
-    registerUserCache(user.getObjectId(), user);
-  }
-
-  public static void registerBatchUserCache(List<User> users) {
-    for (User user : users) {
-      registerUserCache(user);
-    }
-  }
-
-  public static ChatGroup lookupChatGroup(String groupId) {
-    return chatGroupsCache.get(groupId);
-  }
-
-  public static void registerChatGroupsCache(List<ChatGroup> chatGroups) {
-    for (ChatGroup chatGroup : chatGroups) {
-      chatGroupsCache.put(chatGroup.getObjectId(), chatGroup);
-    }
-  }
-
-  public List<User> getFriends() {
-    return friends;
-  }
-
-  public void setFriends(List<User> friends) {
-    this.friends = friends;
-  }
 }

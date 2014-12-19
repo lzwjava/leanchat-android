@@ -11,7 +11,9 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by lzw on 14-9-15.
@@ -25,71 +27,34 @@ public class UserService {
     return q.get(id);
   }
 
-  public static List<User> findFriends(boolean useCache) throws AVException {
+  public static List<User> findFriends() throws AVException {
     User curUser = User.curUser();
     AVRelation<User> relation = curUser.getRelation(User.FRIENDS);
     relation.setTargetClass("_User");
     AVQuery<User> query = relation.getQuery(User.class);
-    if (useCache) {
-      query.setCachePolicy(AVQuery.CachePolicy.CACHE_ONLY);
-    } else {
-      query.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
-    }
+    query.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
     List<User> users = query.find();
-    App.registerBatchUserCache(users);
-    App app = App.getInstance();
-    app.setFriends(users);
     return users;
-  }
-
-  public static List<User> findFriends() throws AVException {
-    return findFriends(false);
   }
 
   public static void displayAvatar(String imageUrl, ImageView avatarView) {
     imageLoader.displayImage(imageUrl, avatarView, PhotoUtil.avatarImageOptions);
   }
 
-  public static void cacheUser(List<String> uncachedIds) throws AVException {
-    if (uncachedIds.size() == 0) {
-      return;
-    }
-    findUsers(uncachedIds);
-  }
-
-  public static List<User> findUsers(List<String> userIds) throws AVException {
-    if (userIds.size() <= 0) {
-      return new ArrayList<User>();
-    }
-    AVQuery<User> q = User.getQuery(User.class);
-    q.whereContainedIn(C.OBJECT_ID, userIds);
-    q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
-    List<User> users = q.find();
-    App.registerBatchUserCache(users);
-    return users;
-  }
-
-  public static void searchUser(String searchName, int skip, FindCallback<User> findCallback) {
+  public static List<User> searchUser(String searchName, int skip) throws AVException {
     AVQuery<User> q = User.getQuery(User.class);
     q.whereContains(User.USERNAME, searchName);
     q.limit(C.PAGE_SIZE);
     q.skip(skip);
     User user = User.curUser();
-    List<String> friendIds = getFriendIds();
+    List<String> friendIds = new ArrayList<String>(CacheService.getFriendIds());
     friendIds.add(user.getObjectId());
     q.whereNotContainedIn(C.OBJECT_ID, friendIds);
     q.orderByDescending(C.UPDATED_AT);
     q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
-    q.findInBackground(findCallback);
-  }
-
-  private static List<String> getFriendIds() {
-    List<User> friends = App.getInstance().getFriends();
-    List<String> ids = new ArrayList<String>();
-    for (User friend : friends) {
-      ids.add(friend.getObjectId());
-    }
-    return ids;
+    List<User> users = q.find();
+    CacheService.registerBatchUser(users);
+    return users;
   }
 
   public static List<User> findNearbyPeople(int skip) throws AVException {
@@ -107,7 +72,7 @@ public class UserService {
     q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
     q.limit(C.PAGE_SIZE);
     List<User> users = q.find();
-    App.registerBatchUserCache(users);
+    CacheService.registerBatchUser(users);
     return users;
   }
 
@@ -148,8 +113,8 @@ public class UserService {
   }
 
   public static void cacheUserIfNone(String userId) throws AVException {
-    if (App.lookupUser(userId) == null) {
-      App.registerUserCache(findUser(userId));
+    if (CacheService.lookupUser(userId) == null) {
+      CacheService.registerUserCache(findUser(userId));
     }
   }
 }
