@@ -14,7 +14,9 @@
         android:layout_marginLeft="5dp"
         android:orientation="horizontal">
 
-        <include layout="@layout/chat_item_base_user" />
+        <ImageView
+            android:id="@+id/avatar"
+            style="@style/ChatAvatar" />
 
         <LinearLayout
             android:id="@+id/contentLayout"
