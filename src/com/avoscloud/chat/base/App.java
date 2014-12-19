@@ -6,6 +6,7 @@ import android.os.StrictMode;
 import com.avos.avoscloud.*;
 import com.avoscloud.chat.avobject.*;
 import com.avoscloud.chat.ui.activity.LoginActivity;
+import com.avoscloud.chat.ui.activity.SplashActivity;
 import com.avoscloud.chat.util.Logger;
 import com.avoscloud.chat.util.PhotoUtil;
 import com.baidu.mapapi.SDKInitializer;
@@ -42,7 +43,7 @@ public class App extends Application {
     AVObject.registerSubclass(UpdateInfo.class);
 
     AVInstallation.getCurrentInstallation().saveInBackground();
-    PushService.setDefaultPushCallback(ctx, LoginActivity.class);
+    PushService.setDefaultPushCallback(ctx, SplashActivity.class);
     AVOSCloud.setDebugLogEnabled(debug);
     if (App.debug) {
       Logger.level = Logger.VERBOSE;
