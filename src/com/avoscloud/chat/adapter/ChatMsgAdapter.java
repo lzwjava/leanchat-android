@@ -112,6 +112,7 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
     ImageView avatarView = ViewHolder.findViewById(conView, R.id.avatar);
     PlayButton playBtn = ViewHolder.findViewById(conView, R.id.playBtn);
     TextView locationView = ViewHolder.findViewById(conView, R.id.locationView);
+    TextView usernameView = ViewHolder.findViewById(conView, R.id.username);
 
     View statusSendFailed = ViewHolder.findViewById(conView, R.id.status_send_failed);
     View statusSendSucceed = ViewHolder.findViewById(conView, R.id.status_send_succeed);
@@ -130,6 +131,14 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
     User user = App.lookupUser(fromPeerId);
     if (user == null) {
       throw new RuntimeException("cannot find user");
+    }
+    if (isComMsg == true) {
+      if (chatActivity.roomType == RoomType.Single) {
+        usernameView.setVisibility(View.GONE);
+      } else {
+        usernameView.setVisibility(View.VISIBLE);
+        usernameView.setText(user.getUsername());
+      }
     }
     UserService.displayAvatar(user.getAvatarUrl(), avatarView);
 

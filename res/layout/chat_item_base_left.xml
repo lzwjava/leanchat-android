@@ -5,35 +5,39 @@
     android:orientation="vertical"
     android:padding="3dp">
 
-    <include layout="@layout/chat_item_time_layout" />
+    <include layout="@layout/chat_item_base_time" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/chatItemMarginTop"
+        android:layout_marginLeft="5dp"
         android:orientation="horizontal">
 
+        <include layout="@layout/chat_item_base_user" />
+
         <LinearLayout
+            android:id="@+id/contentLayout"
+            android:orientation="vertical"
+            android:layout_marginLeft="@dimen/marginToUsername"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/chatItemMarginTop"
-            android:layout_marginLeft="5dp">
+            android:maxWidth="@dimen/chatContentMaxWidth"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:background="@drawable/chat_left_qp">
 
-            <ImageView
-                android:id="@+id/avatar"
-                style="@style/ChatAvatar" />
-
-            <LinearLayout
-                android:id="@+id/contentLayout"
-                android:orientation="vertical"
-                android:layout_marginLeft="@dimen/marginToUsername"
-                android:layout_width="wrap_content"
-                android:maxWidth="@dimen/chatContentMaxWidth"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:background="@drawable/chat_left_qp">
-
-            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/username"
+        android:minWidth="@dimen/userHead"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="username"
+        android:layout_gravity="left"
+        android:layout_marginLeft="5dp"
+        android:gravity="center"
+        android:textSize="11sp" />
 
 </LinearLayout>

@@ -5,14 +5,14 @@
     android:orientation="vertical"
     android:padding="3dp">
 
-    <include layout="@layout/chat_item_time_layout" />
+    <include layout="@layout/chat_item_base_time" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="right">
 
-        <include layout="@layout/chat_item_status_layout" />
+        <include layout="@layout/chat_item_base_status" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -33,9 +33,7 @@
 
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/avatar"
-                style="@style/ChatAvatar" />
+            <include layout="@layout/chat_item_base_user" />
 
         </LinearLayout>
 
