@@ -15,7 +15,7 @@ import com.avoscloud.chat.service.AudioHelper;
 public class PlayButton extends ImageView implements View.OnClickListener {
   String path;
   Context ctx;
-  boolean isLeft;
+  boolean leftSide;
   AnimationDrawable anim;
   AudioHelper audioHelper;
 
@@ -23,17 +23,20 @@ public class PlayButton extends ImageView implements View.OnClickListener {
     this.audioHelper = audioHelper;
   }
 
-
   public PlayButton(Context context, AttributeSet attrs) {
     super(context, attrs);
     ctx = context;
-    isLeft = getLeftAttributeValue(context, attrs);
-    stopRecordAnimation();
+    leftSide = getLeftFromAttrs(context, attrs);
+    setLeftSide(leftSide);
     setOnClickListener(this);
-
   }
 
-  public boolean getLeftAttributeValue(Context context, AttributeSet attrs) {
+  public void setLeftSide(boolean leftSide) {
+    this.leftSide = leftSide;
+    stopRecordAnimation();
+  }
+
+  public boolean getLeftFromAttrs(Context context, AttributeSet attrs) {
     TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.PlayBtn);
     boolean left = true;
     for (int i = 0; i < typedArray.getIndexCount(); i++) {
@@ -53,24 +56,25 @@ public class PlayButton extends ImageView implements View.OnClickListener {
 
   @Override
   public void onClick(View v) {
-    if(audioHelper==null){
+    if (audioHelper == null) {
       throw new NullPointerException();
     }
-    if(audioHelper.isPlaying()==true && audioHelper.getAudioPath().equals(path)){
+    if (audioHelper.isPlaying() == true && audioHelper.getAudioPath().equals(path)) {
       audioHelper.pausePlayer();
       stopRecordAnimation();
-    }
-
-    if (mediaPlayer != null && mediaPlayer.isPlaying()) {
-      mediaPlayer.pause();
-      setBackgroundResource(backResourceId);
     } else {
-      playAudio(path);
+      startRecordAnimation();
+      audioHelper.playAudio(path, new Runnable() {
+        @Override
+        public void run() {
+          stopRecordAnimation();
+        }
+      });
     }
   }
 
   private void startRecordAnimation() {
-    if (isLeft) {
+    if (leftSide) {
       setImageResource(R.anim.anim_chat_voice_left);
     } else {
       setImageResource(R.anim.anim_chat_voice_right);
@@ -80,7 +84,7 @@ public class PlayButton extends ImageView implements View.OnClickListener {
   }
 
   private void stopRecordAnimation() {
-    if (isLeft) {
+    if (leftSide) {
       setImageResource(R.drawable.voice_right3);
     } else {
       setImageResource(R.drawable.voice_left3);

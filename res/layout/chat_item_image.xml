@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/imageView"
+    android:layout_width="wrap_content"
+    android:maxWidth="@dimen/chatImageMaxWidth"
+    android:maxHeight="@dimen/chatImageMaxWidth"
+    android:layout_height="wrap_content"
+    android:src="@null" />
