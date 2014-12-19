@@ -114,6 +114,9 @@ public class ChatService {
           uncachedChatGroupIds.add(groupId);
         }
       }
+      if(App.lookupUser(msg.getFromPeerId())==null){
+        uncachedIds.add(msg.getFromPeerId());
+      }
     }
     UserService.cacheUser(new ArrayList<String>(uncachedIds));
     GroupService.cacheChatGroups(new ArrayList<String>(uncachedChatGroupIds));
@@ -196,10 +199,9 @@ public class ChatService {
         }
         if (group != null) {
           GroupService.cacheChatGroupIfNone(group.getGroupId());
-        } else {
-          String fromId = msg.getFromPeerId();
-          UserService.cacheUserIfNone(fromId);
         }
+        String fromId = msg.getFromPeerId();
+        UserService.cacheUserIfNone(fromId);
       }
 
       @Override
