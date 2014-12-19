@@ -23,7 +23,7 @@ import java.util.*;
 public class App extends Application {
   public static final String DB_NAME = "chat.db3";
   public static final int DB_VER = 4;
-  public static boolean debug = true;
+  public static boolean debug = false;
   public static App ctx;
   private static Map<String, User> usersCache = new HashMap<String, User>();
   public static Map<String, ChatGroup> chatGroupsCache = new HashMap<String, ChatGroup>();
