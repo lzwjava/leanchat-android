@@ -2,33 +2,38 @@ package com.avoscloud.chat.ui.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.media.MediaPlayer;
+import android.graphics.drawable.AnimationDrawable;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ImageView;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.util.Utils;
-
-import java.io.IOException;
+import com.avoscloud.chat.service.AudioHelper;
 
 /**
  * Created by lzw on 14-9-22.
  */
-public class PlayButton extends View implements View.OnClickListener {
-  MediaPlayer mediaPlayer;
+public class PlayButton extends ImageView implements View.OnClickListener {
   String path;
   Context ctx;
-  boolean prepared = false;
-  int backResourceId;
+  boolean isLeft;
+  AnimationDrawable anim;
+  AudioHelper audioHelper;
 
-  public PlayButton(Context context) {
-    super(context);
-    ctx = context;
-    init();
+  public void setAudioHelper(AudioHelper audioHelper) {
+    this.audioHelper = audioHelper;
   }
+
 
   public PlayButton(Context context, AttributeSet attrs) {
     super(context, attrs);
     ctx = context;
+    isLeft = getLeftAttributeValue(context, attrs);
+    stopRecordAnimation();
+    setOnClickListener(this);
+
+  }
+
+  public boolean getLeftAttributeValue(Context context, AttributeSet attrs) {
     TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.PlayBtn);
     boolean left = true;
     for (int i = 0; i < typedArray.getIndexCount(); i++) {
@@ -39,66 +44,49 @@ public class PlayButton extends View implements View.OnClickListener {
           break;
       }
     }
-    if (left) {
-      backResourceId = R.drawable.voice_left;
-    } else {
-      backResourceId = R.drawable.voice_right;
-    }
-    init();
+    return left;
   }
 
   public void setPath(String path) {
     this.path = path;
-    prepared = false;
-  }
-
-  public void playAudio() {
-    if (prepared == false) {
-      try {
-        mediaPlayer = new MediaPlayer();
-        mediaPlayer.setDataSource(path);
-        mediaPlayer.prepare();
-        mediaPlayer.start();
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-          @Override
-          public void onCompletion(MediaPlayer mp) {
-            setBackgroundResource(backResourceId);
-          }
-        });
-        setBackgroundDrawable(null);
-        prepared = true;
-      } catch (IOException e) {
-        e.printStackTrace();
-        Utils.toast(ctx, e.getMessage());
-      }
-    } else {
-      mediaPlayer.start();
-      setBackgroundDrawable(null);
-    }
-  }
-
-  private void init() {
-    setBackgroundResource(backResourceId);
-    setOnClickListener(this);
-  }
-
-  @Override
-  protected void onDetachedFromWindow() {
-    if (mediaPlayer != null) {
-      mediaPlayer.stop();
-      mediaPlayer.release();
-      mediaPlayer = null;
-    }
-    super.onDetachedFromWindow();
   }
 
   @Override
   public void onClick(View v) {
+    if(audioHelper==null){
+      throw new NullPointerException();
+    }
+    if(audioHelper.isPlaying()==true && audioHelper.getAudioPath().equals(path)){
+      audioHelper.pausePlayer();
+      stopRecordAnimation();
+    }
+
     if (mediaPlayer != null && mediaPlayer.isPlaying()) {
       mediaPlayer.pause();
       setBackgroundResource(backResourceId);
     } else {
-      playAudio();
+      playAudio(path);
+    }
+  }
+
+  private void startRecordAnimation() {
+    if (isLeft) {
+      setImageResource(R.anim.anim_chat_voice_left);
+    } else {
+      setImageResource(R.anim.anim_chat_voice_right);
+    }
+    anim = (AnimationDrawable) getDrawable();
+    anim.start();
+  }
+
+  private void stopRecordAnimation() {
+    if (isLeft) {
+      setImageResource(R.drawable.voice_right3);
+    } else {
+      setImageResource(R.drawable.voice_left3);
+    }
+    if (anim != null) {
+      anim.stop();
     }
   }
 }
