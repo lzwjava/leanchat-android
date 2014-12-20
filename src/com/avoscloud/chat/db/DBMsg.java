@@ -168,12 +168,13 @@ public class DBMsg {
   }
 
   public static int getUnreadCount(SQLiteDatabase db, String convid) {
+    int count = 0;
     Cursor cursor = db.rawQuery("select count(*) from messages where convid=? and readStatus=?",
         new String[]{convid, Msg.ReadStatus.Unread.getValue() + ""});
     if (cursor.moveToNext()) {
-      return cursor.getInt(0);
+      count = cursor.getInt(0);
     }
     cursor.close();
-    return 0;
+    return count;
   }
 }

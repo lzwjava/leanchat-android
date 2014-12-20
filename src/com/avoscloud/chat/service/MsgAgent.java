@@ -28,8 +28,8 @@ public class MsgAgent {
     MsgBuilder builder = new MsgBuilder();
     builder.target(roomType, toId);
     msgBuilderHelper.specifyType(builder);
-    builder.upload();
-    Msg msg = builder.build();
+    Msg msg = builder.preBuild();
+    builder.uploadMsg(msg);
     sendMsg(msg);
     DBMsg.insertMsg(msg);
     return msg;

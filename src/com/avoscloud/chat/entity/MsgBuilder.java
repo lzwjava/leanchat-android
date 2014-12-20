@@ -54,7 +54,7 @@ public class MsgBuilder {
     file(Msg.Type.Audio, objectId);
   }
 
-  public Msg build() {
+  public Msg preBuild() {
     msg.setStatus(Msg.Status.SendStart);
     msg.setTimestamp(System.currentTimeMillis());
     msg.setFromPeerId(ChatService.getSelfId());
@@ -64,7 +64,7 @@ public class MsgBuilder {
     return msg;
   }
 
-  public void upload() throws IOException, AVException {
+  public void uploadMsg(Msg msg) throws IOException, AVException {
     if (msg.getType() != Msg.Type.Audio && msg.getType() != Msg.Type.Image) {
       return;
     }
