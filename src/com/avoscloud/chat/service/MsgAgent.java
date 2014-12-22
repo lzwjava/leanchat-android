@@ -36,20 +36,24 @@ public class MsgAgent {
     final Msg msg = builder.preBuild();
     DBMsg.insertMsg(msg);
     callback.onStart(msg);
+    uploadAndSendMsg(msg, callback);
+  }
+
+  public void uploadAndSendMsg(final Msg msg, final SendCallback callback) {
     new NetAsyncTask(App.ctx, false) {
       String uploadUrl;
 
       @Override
       protected void doInBack() throws Exception {
-        uploadUrl = builder.uploadMsg(msg);
+        uploadUrl = MsgBuilder.uploadMsg(msg);
       }
 
       @Override
       protected void onPost(Exception e) {
         if (e != null) {
           e.printStackTrace();
-          callback.onError(e);
           DBMsg.updateStatus(msg.getObjectId(), Msg.Status.SendFailed);
+          callback.onError(e);
         } else {
           if (uploadUrl != null) {
             DBMsg.updateContent(msg.getObjectId(), uploadUrl);
@@ -73,4 +77,18 @@ public class MsgAgent {
     return msg;
   }
 
+  public static void resendMsg(Msg msg, SendCallback sendCallback) {
+    String toId;
+    if (msg.getRoomType() == RoomType.Group) {
+      String groupId = msg.getConvid();
+      toId = groupId;
+    } else {
+      toId = msg.getToPeerId();
+      msg.setRequestReceipt(true);
+    }
+    DBMsg.updateStatus(msg.getObjectId(), Msg.Status.SendStart);
+    sendCallback.onStart(msg);
+    MsgAgent msgAgent = new MsgAgent(msg.getRoomType(), toId);
+    msgAgent.uploadAndSendMsg(msg, sendCallback);
+  }
 }

@@ -353,7 +353,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   }
 
   public void resendMsg(final Msg resendMsg) {
-    ChatService.resendMsg(resendMsg);
+    MsgAgent.resendMsg(resendMsg, sendCallback);
   }
 
   class GetDataTask extends NetAsyncTask {
@@ -596,6 +596,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     public void onError(Exception e) {
       e.printStackTrace();
       Utils.toast(e.getMessage());
+      loadMsgsFromDB(false);
     }
 
     @Override

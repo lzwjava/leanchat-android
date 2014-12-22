@@ -269,21 +269,6 @@ public class ChatService {
     return CacheService.findUsers(members);
   }
 
-  public static Msg resendMsg(Msg msg) {
-    String toId;
-    if (msg.getRoomType() == RoomType.Group) {
-      String groupId = msg.getConvid();
-      toId = groupId;
-    } else {
-      toId = msg.getToPeerId();
-      msg.setRequestReceipt(true);
-    }
-    MsgAgent msgAgent = new MsgAgent(msg.getRoomType(), toId);
-    msgAgent.sendMsg(msg);
-    DBMsg.updateStatus(msg.getObjectId(), Msg.Status.SendStart);
-    return msg;
-  }
-
   public static void cancelNotification(Context ctx) {
     Utils.cancelNotification(ctx, REPLY_NOTIFY_ID);
   }

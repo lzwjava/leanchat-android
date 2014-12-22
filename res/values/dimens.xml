@@ -6,7 +6,7 @@
     <dimen name="chatItemMarginTop">5dp</dimen>
     <dimen name="chatContentMaxWidth">200dp</dimen>
     <dimen name="marginToUsername">5dp</dimen>
-    <dimen name="chatImageMaxWidth">80dp</dimen>
+    <dimen name="chatImageMaxSize">200dp</dimen>
     <dimen name="chatTextMinWidth">60dp</dimen>
     <dimen name="avatarSize">50dp</dimen>
     <dimen name="playBtnWidth">30dp</dimen>
