@@ -1,10 +1,15 @@
 package com.avoscloud.chat.service;
 
-import com.avos.avoscloud.*;
+import com.avos.avoscloud.AVMessage;
+import com.avos.avoscloud.Group;
+import com.avos.avoscloud.Session;
+import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.db.DBMsg;
 import com.avoscloud.chat.entity.Msg;
 import com.avoscloud.chat.entity.MsgBuilder;
 import com.avoscloud.chat.entity.RoomType;
+import com.avoscloud.chat.entity.SendCallback;
+import com.avoscloud.chat.util.NetAsyncTask;
 
 import java.io.IOException;
 
@@ -24,15 +29,36 @@ public class MsgAgent {
     void specifyType(MsgBuilder msgBuilder);
   }
 
-  public Msg createAndSendMsg(MsgBuilderHelper msgBuilderHelper) throws IOException, AVException {
-    MsgBuilder builder = new MsgBuilder();
+  public void createAndSendMsg(MsgBuilderHelper msgBuilderHelper, final SendCallback callback) {
+    final MsgBuilder builder = new MsgBuilder();
     builder.target(roomType, toId);
     msgBuilderHelper.specifyType(builder);
-    Msg msg = builder.preBuild();
-    builder.uploadMsg(msg);
-    sendMsg(msg);
+    final Msg msg = builder.preBuild();
     DBMsg.insertMsg(msg);
-    return msg;
+    callback.onStart(msg);
+    new NetAsyncTask(App.ctx, false) {
+      String uploadUrl;
+
+      @Override
+      protected void doInBack() throws Exception {
+        uploadUrl = builder.uploadMsg(msg);
+      }
+
+      @Override
+      protected void onPost(Exception e) {
+        if (e != null) {
+          e.printStackTrace();
+          callback.onError(e);
+          DBMsg.updateStatus(msg.getObjectId(), Msg.Status.SendFailed);
+        } else {
+          if (uploadUrl != null) {
+            DBMsg.updateContent(msg.getObjectId(), uploadUrl);
+          }
+          sendMsg(msg);
+          callback.onSuccess(msg);
+        }
+      }
+    }.execute();
   }
 
   public Msg sendMsg(Msg msg) {

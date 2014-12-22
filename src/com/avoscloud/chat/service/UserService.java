@@ -23,7 +23,7 @@ public class UserService {
 
   public static User findUser(String id) throws AVException {
     AVQuery<User> q = User.getQuery(User.class);
-    q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
+    q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ONLY);
     return q.get(id);
   }
 

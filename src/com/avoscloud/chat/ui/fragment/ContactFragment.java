@@ -269,7 +269,7 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
   @Override
   public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
     // TODO Auto-generated method stub
-    User user = (User) userAdapter.getItem(position - 1);
+    User user = (User) arg0.getAdapter().getItem(position);
     ChatActivity.goUserChat(getActivity(), user.getObjectId());
   }
 

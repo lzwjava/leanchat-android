@@ -85,6 +85,9 @@ public class EmotionUtils {
   }
 
   public static CharSequence replace(Context ctx, String text) {
+    if (text == null) {
+      return null;
+    }
     SpannableString spannableString = new SpannableString(text);
     Matcher matcher = pattern.matcher(text);
     while (matcher.find()) {

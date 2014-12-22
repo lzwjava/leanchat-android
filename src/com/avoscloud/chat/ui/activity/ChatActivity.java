@@ -1,6 +1,5 @@
 package com.avoscloud.chat.ui.activity;
 
-import android.accounts.NetworkErrorException;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -24,6 +23,7 @@ import com.avoscloud.chat.db.DBHelper;
 import com.avoscloud.chat.db.DBMsg;
 import com.avoscloud.chat.entity.MsgBuilder;
 import com.avoscloud.chat.entity.RoomType;
+import com.avoscloud.chat.entity.SendCallback;
 import com.avoscloud.chat.service.*;
 import com.avoscloud.chat.service.listener.MsgListener;
 import com.avoscloud.chat.service.receiver.GroupMsgReceiver;
@@ -162,17 +162,14 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
       @Override
       public void onFinishedRecord(final String audioPath, int secs) {
         final String objectId = audioId;
-        new SendMsgTask(ctx) {
-          @Override
-          Msg sendMsg() throws Exception {
-            return msgAgent.createAndSendMsg(new MsgAgent.MsgBuilderHelper() {
-              @Override
-              public void specifyType(MsgBuilder msgBuilder) {
-                msgBuilder.audio(objectId);
-              }
-            });
-          }
-        }.execute();
+        if (isStateFine()) {
+          msgAgent.createAndSendMsg(new MsgAgent.MsgBuilderHelper() {
+            @Override
+            public void specifyType(MsgBuilder msgBuilder) {
+              msgBuilder.audio(objectId);
+            }
+          }, sendCallback);
+        }
         setNewRecordPath();
       }
 
@@ -356,12 +353,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   }
 
   public void resendMsg(final Msg resendMsg) {
-    new SendMsgTask(ctx) {
-      @Override
-      Msg sendMsg() throws Exception {
-        return ChatService.resendMsg(resendMsg);
-      }
-    }.execute();
+    ChatService.resendMsg(resendMsg);
   }
 
   class GetDataTask extends NetAsyncTask {
@@ -527,25 +519,20 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   private void sendText() {
     final String content = contentEdit.getText().toString();
     if (TextUtils.isEmpty(content) == false) {
-      new SendMsgTask(ctx) {
-        @Override
-        Msg sendMsg() throws Exception {
-          return msgAgent.createAndSendMsg(new MsgAgent.MsgBuilderHelper() {
-            @Override
-            public void specifyType(MsgBuilder msgBuilder) {
-              msgBuilder.text(content);
-            }
-          });
-        }
-
-        @Override
-        protected void onPost(Exception e) {
-          super.onPost(e);
-          if (e == null) {
+      if (isStateFine()) {
+        msgAgent.createAndSendMsg(new MsgAgent.MsgBuilderHelper() {
+          @Override
+          public void specifyType(MsgBuilder msgBuilder) {
+            msgBuilder.text(content);
+          }
+        }, new DefaultSendCallback() {
+          @Override
+          public void onSuccess(Msg msg) {
+            super.onSuccess(msg);
             contentEdit.setText("");
           }
-        }
-      }.execute();
+        });
+      }
     }
   }
 
@@ -591,59 +578,49 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     final double longitude = data.getDoubleExtra("y", 0);
     final String address = data.getStringExtra("address");
     if (address != null && !address.equals("")) {
-      new SendMsgTask(ctx) {
-        @Override
-        Msg sendMsg() throws Exception {
-          return msgAgent.createAndSendMsg(new MsgAgent.MsgBuilderHelper() {
-            @Override
-            public void specifyType(MsgBuilder msgBuilder) {
-              msgBuilder.location(address, latitude, longitude);
-            }
-          });
-        }
-      }.execute();
+      if (isStateFine()) {
+        msgAgent.createAndSendMsg(new MsgAgent.MsgBuilderHelper() {
+          @Override
+          public void specifyType(MsgBuilder msgBuilder) {
+            msgBuilder.location(address, latitude, longitude);
+          }
+        }, sendCallback);
+      }
     } else {
       Utils.toast(ctx, R.string.cannotGetYourAddressInfo);
     }
   }
 
-  public abstract class SendMsgTask extends NetAsyncTask {
-    Msg msg;
-
-    protected SendMsgTask(Context cxt) {
-      super(cxt, false);
+  class DefaultSendCallback implements SendCallback {
+    @Override
+    public void onError(Exception e) {
+      e.printStackTrace();
+      Utils.toast(e.getMessage());
     }
 
     @Override
-    protected void doInBack() throws Exception {
-      if (Connectivity.isConnected(ctx) == false) {
-        throw new NetworkErrorException(App.ctx.getString(R.string.pleaseCheckNetwork));
-      } else if (ChatService.isSessionPaused()) {
-        ctx.sendBroadcast(new Intent(RETRY_ACTION));
-        throw new NetworkErrorException(App.ctx.getString(R.string.sessionPausedTips));
-      } else {
-        msg = sendMsg();
-      }
+    public void onStart(Msg msg) {
+      loadMsgsFromDB(false);
     }
 
     @Override
-    protected void onPost(Exception e) {
-      if (e != null) {
-        e.printStackTrace();
-        Utils.toast(e.getMessage());
-      } else {
-        loadMsgsFromDB(false);
-      }
+    public void onSuccess(Msg msg) {
+      loadMsgsFromDB(false);
     }
-
-    abstract Msg sendMsg() throws Exception;
   }
 
-  public String getOtherId() {
-    if (roomType == RoomType.Single) {
-      return chatUser.getObjectId();
+  private SendCallback sendCallback = new DefaultSendCallback();
+
+  public boolean isStateFine() {
+    if (Connectivity.isConnected(ctx) == false) {
+      Utils.toast(ctx, App.ctx.getString(R.string.pleaseCheckNetwork));
+      return false;
+    } else if (ChatService.isSessionPaused()) {
+      ctx.sendBroadcast(new Intent(RETRY_ACTION));
+      Utils.toast(ctx, App.ctx.getString(R.string.sessionPausedTips));
+      return false;
     } else {
-      return group.getGroupId();
+      return true;
     }
   }
 
@@ -652,17 +629,14 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     final String newPath = PathUtils.getChatFilePath(objectId);
     //PhotoUtil.simpleCompressImage(localSelectPath,newPath);
     PhotoUtil.compressImage(localSelectPath, newPath);
-    new SendMsgTask(ctx) {
-      @Override
-      Msg sendMsg() throws Exception {
-        return msgAgent.createAndSendMsg(new MsgAgent.MsgBuilderHelper() {
-          @Override
-          public void specifyType(MsgBuilder msgBuilder) {
-            msgBuilder.image(objectId);
-          }
-        });
-      }
-    }.execute();
+    if (isStateFine()) {
+      msgAgent.createAndSendMsg(new MsgAgent.MsgBuilderHelper() {
+        @Override
+        public void specifyType(MsgBuilder msgBuilder) {
+          msgBuilder.image(objectId);
+        }
+      }, sendCallback);
+    }
   }
 
   public void scrollToLast() {

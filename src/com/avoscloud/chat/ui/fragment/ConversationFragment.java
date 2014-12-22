@@ -52,9 +52,9 @@ public class ConversationFragment extends BaseFragment implements AdapterView.On
   }
 
   @Override
-  public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+  public void onItemClick(AdapterView<?> adapterView, View arg1, int position, long arg3) {
     // TODO Auto-generated method stub
-    Conversation recent = (Conversation) adapter.getItem(position);
+    Conversation recent = (Conversation) adapterView.getAdapter().getItem(position);
     if (recent.getMsg().getRoomType() == RoomType.Single) {
       ChatActivity.goUserChat(getActivity(), recent.getToUser().getObjectId());
     } else {

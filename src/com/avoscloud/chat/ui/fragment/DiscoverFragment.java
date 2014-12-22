@@ -81,7 +81,7 @@ public class DiscoverFragment extends BaseFragment
   @Override
   public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
     // TODO Auto-generated method stub
-    User user = (User) adapter.getItem(position - 1);
+    User user = (User) arg0.getAdapter().getItem(position);
     PersonInfoActivity.goPersonInfo(ctx, user.getObjectId());
   }
 

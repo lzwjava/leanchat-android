@@ -239,7 +239,11 @@ public class Msg {
   public String getFromName() {
     String peerId = getFromPeerId();
     User user = CacheService.lookupUser(peerId);
-    return user.getUsername();
+    if (user != null) {
+      return user.getUsername();
+    } else {
+      return "";
+    }
   }
 
   public CharSequence getNotifyContent() {

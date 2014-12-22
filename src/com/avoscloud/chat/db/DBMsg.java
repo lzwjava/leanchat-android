@@ -177,4 +177,10 @@ public class DBMsg {
     cursor.close();
     return count;
   }
+
+  public static void updateContent(String objectId, String url) {
+    ContentValues cv = new ContentValues();
+    cv.put(CONTENT, url);
+    updateMessage(objectId, cv);
+  }
 }

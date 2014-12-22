@@ -2,6 +2,7 @@ package com.avoscloud.chat.entity;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
+import com.avoscloud.chat.db.DBMsg;
 import com.avoscloud.chat.service.ChatService;
 import com.avoscloud.chat.util.AVOSUtils;
 import com.avoscloud.chat.util.PathUtils;
@@ -64,9 +65,9 @@ public class MsgBuilder {
     return msg;
   }
 
-  public void uploadMsg(Msg msg) throws IOException, AVException {
+  public String uploadMsg(Msg msg) throws IOException, AVException {
     if (msg.getType() != Msg.Type.Audio && msg.getType() != Msg.Type.Image) {
-      return;
+      return null;
     }
     String objectId = msg.getObjectId();
     if (objectId == null) {
@@ -77,5 +78,6 @@ public class MsgBuilder {
     file.save();
     String url = file.getUrl();
     msg.setContent(url);
+    return url;
   }
 }
