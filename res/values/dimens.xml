@@ -29,4 +29,5 @@
     <dimen name="chatBottomMoreHeight">140dp</dimen>
     <dimen name="chatMaxNameWidth">80dp</dimen>
     <dimen name="chatImageWidth">100dp</dimen>
+    <dimen name="myspace_margin_left">10dp</dimen>
 </resources>

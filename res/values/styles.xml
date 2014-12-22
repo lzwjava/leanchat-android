@@ -301,4 +301,11 @@
         <item name="android:layout_height">@dimen/avatarSize</item>
     </style>
 
+    <style name="myspace_left_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">@dimen/myspace_margin_left</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+
 </resources>
