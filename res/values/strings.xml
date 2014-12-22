@@ -123,5 +123,8 @@
     <string name="slideUpToCancel">手指上滑，取消发送</string>
     <string name="releaseToCancel">松开手指，取消录音</string>
     <string name="sessionPausedTips">会话暂停，等网络良好</string>
+    <string name="sort">排序</string>
+    <string name="loginTime">登录时间</string>
+    <string name="distance">距离</string>
 
-    </resources>
+</resources>

@@ -8,22 +8,15 @@
 
     <include layout="@layout/base_header_layout" />
 
-    <FrameLayout
+    <com.avoscloud.chat.ui.view.xlist.XListView
+        android:id="@+id/list_near"
         android:layout_width="match_parent"
-        android:layout_height="0.0dip"
-        android:layout_weight="1.0"
-        android:background="@color/msg_chat_bg">
-
-        <com.avoscloud.chat.ui.view.xlist.XListView
-            android:id="@+id/list_near"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:cacheColorHint="@android:color/transparent"
-            android:divider="@drawable/base_horizontal_line"
-            android:dividerHeight="1dp"
-            android:fadingEdgeLength="0dp"
-            android:fastScrollEnabled="true"
-            android:paddingBottom="10dp" />
-    </FrameLayout>
+        android:layout_height="match_parent"
+        android:cacheColorHint="@android:color/transparent"
+        android:divider="@drawable/base_horizontal_line"
+        android:dividerHeight="1dp"
+        android:fadingEdgeLength="0dp"
+        android:fastScrollEnabled="true"
+        android:paddingBottom="10dp" />
 
 </LinearLayout>

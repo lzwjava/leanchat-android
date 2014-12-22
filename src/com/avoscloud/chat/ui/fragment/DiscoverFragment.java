@@ -1,5 +1,7 @@
 package com.avoscloud.chat.ui.fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +10,7 @@ import android.widget.AdapterView;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.adapter.NearPeopleAdapter;
 import com.avoscloud.chat.avobject.User;
+import com.avoscloud.chat.service.PreferenceMap;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.activity.PersonInfoActivity;
 import com.avoscloud.chat.ui.view.xlist.XListView;
@@ -27,6 +30,11 @@ public class DiscoverFragment extends BaseFragment
   XListView listView;
   NearPeopleAdapter adapter;
   List<User> nears = new ArrayList<User>();
+  int orderType;
+  PreferenceMap preferenceMap;
+
+  private final SortDialogListener distanceListener = new SortDialogListener(UserService.ORDER_DISTANCE);
+  private final SortDialogListener updatedAtListener = new SortDialogListener(UserService.ORDER_UPDATED_AT);
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -36,8 +44,32 @@ public class DiscoverFragment extends BaseFragment
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
+    preferenceMap = PreferenceMap.getCurUserPrefDao(getActivity());
+    orderType = preferenceMap.getNearbyOrder();
     headerLayout.showTitle(R.string.discover);
+    headerLayout.showRightImageButton(R.drawable.nearby_order, new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(R.string.sort).setPositiveButton(R.string.loginTime,
+            updatedAtListener).setNegativeButton(R.string.distance, distanceListener).show();
+      }
+    });
     initXListView();
+  }
+
+  public class SortDialogListener implements DialogInterface.OnClickListener {
+    int orderType;
+
+    public SortDialogListener(int orderType) {
+      this.orderType = orderType;
+    }
+
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+      DiscoverFragment.this.orderType = orderType;
+      onRefresh();
+    }
   }
 
 
@@ -61,7 +93,7 @@ public class DiscoverFragment extends BaseFragment
 
       @Override
       protected void doInBack() throws Exception {
-        users = UserService.findNearbyPeople(adapter.getCount());
+        users = UserService.findNearbyPeople(adapter.getCount(), orderType);
       }
 
       @Override
@@ -107,5 +139,11 @@ public class DiscoverFragment extends BaseFragment
   @Override
   public void onLoadMore() {
     findNearbyPeople();
+  }
+
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    preferenceMap.setNearbyOrder(orderType);
   }
 }

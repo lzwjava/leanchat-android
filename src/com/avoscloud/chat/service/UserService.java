@@ -19,6 +19,8 @@ import java.util.Set;
  * Created by lzw on 14-9-15.
  */
 public class UserService {
+  public static final int ORDER_UPDATED_AT = 1;
+  public static final int ORDER_DISTANCE = 0;
   public static ImageLoader imageLoader = ImageLoader.getInstance();
 
   public static User findUser(String id) throws AVException {
@@ -57,7 +59,8 @@ public class UserService {
     return users;
   }
 
-  public static List<User> findNearbyPeople(int skip) throws AVException {
+
+  public static List<User> findNearbyPeople(int skip, int orderType) throws AVException {
     PreferenceMap preferenceMap = PreferenceMap.getCurUserPrefDao(App.ctx);
     AVGeoPoint geoPoint = preferenceMap.getLocation();
     if (geoPoint == null) {
@@ -67,7 +70,11 @@ public class UserService {
     AVQuery<User> q = AVObject.getQuery(User.class);
     User user = User.curUser();
     q.whereNotEqualTo(C.OBJECT_ID, user.getObjectId());
-    q.whereNear(User.LOCATION, geoPoint);
+    if (orderType == ORDER_DISTANCE) {
+      q.whereNear(User.LOCATION, geoPoint);
+    } else {
+      q.orderByDescending(C.UPDATED_AT);
+    }
     q.skip(skip);
     q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
     q.limit(C.PAGE_SIZE);

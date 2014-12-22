@@ -19,6 +19,7 @@ public class PreferenceMap {
   public static final String NOTIFY_WHEN_NEWS = "notifyWhenNews";
   public static final String VOICE_NOTIFY = "voiceNotify";
   public static final String VIBRATE_NOTIFY = "vibrateNotify";
+  public static final String NEARBY_ORDER = "nearbyOrder";
 
   Context cxt;
   SharedPreferences pref;
@@ -27,6 +28,7 @@ public class PreferenceMap {
   //String latitude;
   //String longitude;
   public static PreferenceMap currentUserPreferenceMap;
+  int nearbyOrder;
 
   public PreferenceMap(Context cxt) {
     this.cxt = cxt;
@@ -130,4 +132,12 @@ public class PreferenceMap {
     editor.putBoolean(VIBRATE_NOTIFY, vibrateNotify);
   }
 
+
+  public int getNearbyOrder() {
+    return pref.getInt(NEARBY_ORDER, UserService.ORDER_DISTANCE);
+  }
+
+  public void setNearbyOrder(int nearbyOrder) {
+    editor.putInt(NEARBY_ORDER, nearbyOrder).commit();
+  }
 }
