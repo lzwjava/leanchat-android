@@ -24,6 +24,7 @@ import com.avoscloud.chat.util.PathUtils;
 import com.avoscloud.chat.util.PhotoUtil;
 import com.avoscloud.chat.util.TimeUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageSize;
 
 import java.io.File;
 import java.util.List;

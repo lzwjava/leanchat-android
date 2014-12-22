@@ -28,4 +28,5 @@
     <dimen name="tip_icon_size">10dp</dimen>
     <dimen name="chatBottomMoreHeight">140dp</dimen>
     <dimen name="chatMaxNameWidth">80dp</dimen>
+    <dimen name="chatImageWidth">100dp</dimen>
 </resources>
