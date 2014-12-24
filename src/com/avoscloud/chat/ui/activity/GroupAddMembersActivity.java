@@ -35,7 +35,8 @@ public class GroupAddMembersActivity extends GroupBaseActivity {
   }
 
   private void setListData() {
-    List<String> ids = CacheService.getFriendIds();
+    List<String> ids = new ArrayList<String>();
+    ids.addAll(CacheService.getFriendIds());
     ids.removeAll(getChatGroup().getMembers());
     adapter.setDatas(ids);
     adapter.notifyDataSetChanged();

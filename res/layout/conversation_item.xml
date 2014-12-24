@@ -20,13 +20,13 @@
 
         <TextView
             android:id="@+id/recent_unread"
-            android:layout_width="18dip"
-            android:layout_height="18dip"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
             android:layout_toRightOf="@+id/iv_recent_avatar"
             android:layout_above="@+id/iv_recent_avatar"
-            android:layout_marginBottom="-15dp"
-            android:layout_marginLeft="-10dp"
             android:background="@drawable/msg_tips"
+            android:layout_marginLeft="-10dp"
+            android:layout_marginBottom="-18dp"
             android:gravity="center"
             android:textColor="#ffffffff"
             android:textSize="10.0dip" />
