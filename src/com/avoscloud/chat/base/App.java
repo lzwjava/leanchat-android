@@ -22,7 +22,7 @@ import java.io.File;
 public class App extends Application {
   public static final String DB_NAME = "chat.db3";
   public static final int DB_VER = 4;
-  public static boolean debug = true;
+  public static boolean debug = false;
   public static App ctx;
 
   @Override
