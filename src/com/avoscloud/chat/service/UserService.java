@@ -7,6 +7,7 @@ import com.avoscloud.chat.base.C;
 import com.avoscloud.chat.util.Logger;
 import com.avoscloud.chat.util.PhotoUtil;
 import com.avoscloud.chat.base.App;
+import com.avoscloud.chat.util.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.IOException;
@@ -119,5 +120,39 @@ public class UserService {
 
     user.save();
     user.fetch();
+  }
+
+  public static void updateUserInfo() {
+    User user = User.curUser();
+    if (user != null) {
+      AVInstallation installation = AVInstallation.getCurrentInstallation();
+      if (installation != null) {
+        user.setInstallation(installation);
+        user.saveInBackground();
+      }
+    }
+  }
+
+  public static void updateUserLocation() {
+    PreferenceMap preferenceMap = PreferenceMap.getCurUserPrefDao(App.ctx);
+    AVGeoPoint lastLocation = preferenceMap.getLocation();
+    if (lastLocation != null) {
+      final User user = User.curUser();
+      final AVGeoPoint location = user.getLocation();
+      if (location == null || !Utils.doubleEqual(location.getLatitude(), lastLocation.getLatitude())
+          || !Utils.doubleEqual(location.getLongitude(), lastLocation.getLongitude())) {
+        user.setLocation(lastLocation);
+        user.saveInBackground(new SaveCallback() {
+          @Override
+          public void done(AVException e) {
+            if (e != null) {
+              e.printStackTrace();
+            } else {
+              Logger.v("lastLocation save " + user.getLocation());
+            }
+          }
+        });
+      }
+    }
   }
 }

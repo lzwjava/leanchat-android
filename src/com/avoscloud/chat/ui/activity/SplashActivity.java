@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import com.avoscloud.chat.avobject.User;
-import com.avoscloud.chat.util.ChatUtils;
+import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.util.Utils;
 import com.avoscloud.chat.R;
 
@@ -20,7 +20,7 @@ public class SplashActivity extends BaseEntryActivity {
     setContentView(R.layout.entry_splash_layout);
 
     if (User.curUser() != null) {
-      ChatUtils.updateUserInfo();
+      UserService.updateUserInfo();
       handler.sendEmptyMessageDelayed(GO_MAIN_MSG, SPLASH_DURATION);
     } else {
       handler.sendEmptyMessageDelayed(GO_LOGIN_MSG, SPLASH_DURATION);

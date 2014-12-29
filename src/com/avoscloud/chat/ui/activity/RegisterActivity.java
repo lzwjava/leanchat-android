@@ -10,7 +10,6 @@ import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.service.UserService;
-import com.avoscloud.chat.util.ChatUtils;
 import com.avoscloud.chat.util.NetAsyncTask;
 import com.avoscloud.chat.util.Utils;
 
@@ -81,7 +80,7 @@ public class RegisterActivity extends BaseEntryActivity {
           Utils.toast(App.ctx.getString(R.string.registerFailed) + e.getMessage());
         } else {
           Utils.toast(R.string.registerSucceed);
-          ChatUtils.updateUserLocation();
+          UserService.updateUserLocation();
           MainActivity.goMainActivity(RegisterActivity.this);
         }
       }

@@ -1,11 +1,9 @@
 package com.avoscloud.chat.avobject;
 
-import com.avos.avoscloud.AVClassName;
-import com.avos.avoscloud.AVFile;
-import com.avos.avoscloud.AVGeoPoint;
-import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.*;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
+import com.avoscloud.chat.base.C;
 
 /**
  * Created by lzw on 14-6-26.
@@ -18,6 +16,7 @@ public class User extends AVUser {
   public static final String FRIENDS = "friends";
   public static final String LOCATION = "location";
   public static final String GENDER = "gender";
+  public static final String INSTALLATION = "installation";
 
   public static String[] genderStrings = new String[]{App.ctx.getString(R.string.male),
       App.ctx.getString(R.string.female)};
@@ -27,6 +26,8 @@ public class User extends AVUser {
   private String sortLetters;
   //Gender gender;
   private static User curUser;
+  //String installationId;
+  //AVInstallation installation;
 
   public static enum Gender {
     Male(0), Female(1);
@@ -123,5 +124,18 @@ public class User extends AVUser {
 
   public void setSortLetters(String sortLetters) {
     this.sortLetters = sortLetters;
+  }
+
+  public AVInstallation getInstallation() {
+    try {
+      return getAVObject(INSTALLATION, AVInstallation.class);
+    } catch (Exception e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  public void setInstallation(AVInstallation installation) {
+    put(INSTALLATION, installation);
   }
 }

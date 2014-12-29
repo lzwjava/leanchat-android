@@ -9,7 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.User;
-import com.avoscloud.chat.util.ChatUtils;
+import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.util.NetAsyncTask;
 import com.avoscloud.chat.util.Utils;
 
@@ -69,7 +69,7 @@ public class LoginActivity extends BaseEntryActivity implements OnClickListener 
         if (e != null) {
           Utils.toast(e.getMessage());
         } else {
-          ChatUtils.updateUserLocation();
+          UserService.updateUserLocation();
           MainActivity.goMainActivity(LoginActivity.this);
           finish();
         }

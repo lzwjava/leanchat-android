@@ -11,16 +11,12 @@ import android.widget.Button;
 import com.avos.avoscloud.AVGeoPoint;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.User;
-import com.avoscloud.chat.service.CacheService;
-import com.avoscloud.chat.service.ChatService;
-import com.avoscloud.chat.service.PreferenceMap;
-import com.avoscloud.chat.service.UpdateService;
+import com.avoscloud.chat.service.*;
 import com.avoscloud.chat.service.receiver.FinishReceiver;
 import com.avoscloud.chat.ui.fragment.ContactFragment;
 import com.avoscloud.chat.ui.fragment.ConversationFragment;
 import com.avoscloud.chat.ui.fragment.DiscoverFragment;
 import com.avoscloud.chat.ui.fragment.MySpaceFragment;
-import com.avoscloud.chat.util.ChatUtils;
 import com.avoscloud.chat.util.Logger;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -110,8 +106,7 @@ public class MainActivity extends BaseActivity {
         AVGeoPoint avGeoPoint = preferenceMap.getLocation();
         if (avGeoPoint != null && avGeoPoint.getLatitude() == location.getLatitude()
             && avGeoPoint.getLongitude() == location.getLongitude()) {
-          ChatUtils.updateUserLocation();
-          ChatUtils.updateUserInfo();
+          UserService.updateUserLocation();
           locClient.stop();
           return;
         }
