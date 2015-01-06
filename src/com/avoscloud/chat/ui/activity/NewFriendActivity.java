@@ -41,6 +41,13 @@ public class NewFriendActivity extends BaseActivity implements OnItemLongClickLi
       @Override
       protected void doInBack() throws Exception {
         subAddRequests = AddRequestService.findAddRequests();
+        List<AddRequest> filters=new ArrayList<AddRequest>();
+        for(AddRequest addRequest: subAddRequests){
+          if(addRequest.getFromUser()!=null){
+            filters.add(addRequest);
+          }
+        }
+        subAddRequests=filters;
       }
 
       @Override

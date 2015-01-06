@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.AddRequest;
+import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.service.CloudService;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.view.ViewHolder;
@@ -37,9 +38,7 @@ public class NewFriendAdapter extends BaseListAdapter<AddRequest> {
     ImageView avatarView = ViewHolder.findViewById(conView, R.id.avatar);
     final Button addBtn = ViewHolder.findViewById(conView, R.id.add);
 
-    String avatarUrl = addRequest.getFromUser().getAvatarUrl();
-    UserService.displayAvatar(avatarUrl,avatarView);
-
+    UserService.displayAvatar(addRequest.getFromUser(),avatarView);
     int status = addRequest.getStatus();
     if (status == AddRequest.STATUS_WAIT) {
       addBtn.setOnClickListener(new OnClickListener() {
@@ -53,7 +52,9 @@ public class NewFriendAdapter extends BaseListAdapter<AddRequest> {
     } else if (status == AddRequest.STATUS_DONE) {
       toAgreedTextView(addBtn);
     }
-    nameView.setText(addRequest.getFromUser().getUsername());
+    if(addRequest.getFromUser()!=null){
+      nameView.setText(addRequest.getFromUser().getUsername());
+    }
     return conView;
   }
 

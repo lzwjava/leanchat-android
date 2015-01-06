@@ -1,5 +1,6 @@
 package com.avoscloud.chat.service;
 
+import android.text.TextUtils;
 import android.widget.ImageView;
 import com.avos.avoscloud.*;
 import com.avoscloud.chat.avobject.User;
@@ -42,6 +43,15 @@ public class UserService {
 
   public static void displayAvatar(String imageUrl, ImageView avatarView) {
     imageLoader.displayImage(imageUrl, avatarView, PhotoUtil.avatarImageOptions);
+  }
+
+  public static void displayAvatar(User user,ImageView avatarView){
+    if(user!=null){
+      String avatarUrl = user.getAvatarUrl();
+      if(TextUtils.isEmpty(avatarUrl)==false){
+        displayAvatar(avatarUrl,avatarView);
+      }
+    }
   }
 
   public static List<User> searchUser(String searchName, int skip) throws AVException {
