@@ -11,6 +11,7 @@ import android.widget.Button;
 import com.avos.avoscloud.AVGeoPoint;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.User;
+import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.service.*;
 import com.avoscloud.chat.service.receiver.FinishReceiver;
 import com.avoscloud.chat.ui.fragment.ContactFragment;
@@ -65,6 +66,8 @@ public class MainActivity extends BaseActivity {
     if(User.curUser()!=null){
       ChatService.openSession();
     }
+
+    //App.initTables();
   }
 
   public static void goMainActivity(Activity activity) {

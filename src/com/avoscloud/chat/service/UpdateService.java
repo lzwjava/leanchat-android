@@ -173,7 +173,6 @@ public class UpdateService {
   public static void createUpdateInfo() throws AVException {
     UpdateInfo updateInfo = new UpdateInfo();
     updateInfo.setVersion(1);
-    updateInfo.setAppName("appName");
     updateInfo.setApkUrl("https://leancloud.cn");
     updateInfo.setDesc("desc");
     updateInfo.save();

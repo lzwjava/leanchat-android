@@ -731,4 +731,11 @@ public class Utils {
     add.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS
         | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
   }
+
+  public static byte[] getBytesFromBitmap(Bitmap bitmap) {
+    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+    byte[] byteArray = stream.toByteArray();
+    return byteArray;
+  }
 }

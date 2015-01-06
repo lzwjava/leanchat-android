@@ -96,6 +96,7 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
     return viewType.getValue();
   }
 
+  @Override
   public int getViewTypeCount() {
     return msgViewTypes;
   }

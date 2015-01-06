@@ -6,7 +6,6 @@ import com.avos.avoscloud.AVObject;
 @AVClassName("UpdateInfo")
 public class UpdateInfo extends AVObject {
   public static final String DESC = "desc";
-  public static final String APP_NAME = "appName";
   public static String VERSION = "version";
   public static String APK_URL = "apkUrl";
 
@@ -35,13 +34,5 @@ public class UpdateInfo extends AVObject {
 
   public void setDesc(String desc) {
     put(DESC, desc);
-  }
-
-  public String getAppName() {
-    return getString(APP_NAME);
-  }
-
-  public void setAppName(String appName) {
-    put(APP_NAME, appName);
   }
 }
