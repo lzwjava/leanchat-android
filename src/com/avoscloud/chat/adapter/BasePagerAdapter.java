@@ -4,13 +4,14 @@ import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by lzw on 14-9-25.
  */
 public class BasePagerAdapter extends PagerAdapter {
-  List<View> views;
+  List<View> views=new ArrayList<View>();
 
   public BasePagerAdapter(List<View> views) {
     this.views = views;

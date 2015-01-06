@@ -68,7 +68,7 @@ public class ChatService {
     return SessionManager.getInstance(getPeerId(User.curUser()));
   }
 
-  public static void openSession(Activity activity) {
+  public static void openSession() {
     Session session = getSession();
     session.setSignatureFactory(new SignatureFactory());
     if (session.isOpen() == false) {

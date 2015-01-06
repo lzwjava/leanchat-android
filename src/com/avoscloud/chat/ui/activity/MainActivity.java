@@ -62,7 +62,9 @@ public class MainActivity extends BaseActivity {
     updateService.checkUpdate();
     CacheService.registerUserCache(User.curUser());
     FinishReceiver.broadcast(this);
-    ChatService.openSession(this);
+    if(User.curUser()!=null){
+      ChatService.openSession();
+    }
   }
 
   public static void goMainActivity(Activity activity) {

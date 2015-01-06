@@ -83,20 +83,18 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     ctx = this;
     setContentView(R.layout.chat_layout);
     findView();
+    initEmotionPager();
+    initRecordBtn();
+    setEditTextChangeListener();
+    initListView();
+    setSoftInputMode();
     initByIntent(getIntent());
   }
 
   private void initByIntent(Intent intent) {
     initData(intent);
-    initEmotionPager();
-    initRecordBtn();
-    setEditTextChangeListener();
-
-    initListView();
-    setSoftInputMode();
     loadMsgsFromDB(true);
     ChatService.cancelNotification(ctx);
-    Logger.d(EmotionUtils.emotionCodes.length + " len");
   }
 
   @Override

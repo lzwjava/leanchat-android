@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.StrictMode;
 import com.avos.avoscloud.*;
 import com.avoscloud.chat.avobject.*;
+import com.avoscloud.chat.service.ChatService;
 import com.avoscloud.chat.ui.activity.SplashActivity;
 import com.avoscloud.chat.util.Logger;
 import com.avoscloud.chat.util.PhotoUtil;
@@ -48,6 +49,9 @@ public class App extends Application {
     initImageLoader(ctx);
     initBaidu();
     openStrictMode();
+    if(User.curUser()!=null){
+      ChatService.openSession();
+    }
   }
 
   public void openStrictMode() {
