@@ -14,21 +14,6 @@
 ![img](https://raw.githubusercontent.com/lzwjava/plan/master/im362.png)
 
 
-##当前特性
-
-###单聊
-* 消息支持文字，图片
-* 接受回执，有发送失败、发送成功，已接收状态。
-* 本地保存消息记录
-* 统一的服务器时间戳
-
-
-###群聊
-* 邀请群成员
-* 踢人
-* 建群
-* 退群
-
 ## 依赖
 
 用到的依赖包，都在[libs](https://github.com/avoscloud/Adventure/tree/master/libs)中：
