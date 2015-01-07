@@ -37,11 +37,7 @@
 * [AdventureCloud](https://github.com/avoscloud/AdventureCloud) ，相关的服务器代码
 
 ## 部署项目
-*  申请应用，替换App.java中的appId,appKey
-*  fork [AdventureCloud](https://github.com/avoscloud/AdventureCloud)，[部署云代码](https://github.com/leancloud/leanchat-cloudcode)
-*  建表`AddRequest`
-*  [申请百度地图key](http://developer.baidu.com/map)，替换掉AndroidMenifest.xml 中的baidu key
-
+见[如何替换 AppId 部署应用](https://github.com/leancloud/leanchat-android/wiki/%E5%A6%82%E4%BD%95%E6%9B%BF%E6%8D%A2-AppId-%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8)
 
 ###[Document](http://leancloud.cn/docs/realtime.html)
 
