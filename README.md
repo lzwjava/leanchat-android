@@ -34,7 +34,7 @@
 用到的依赖包，都在[libs](https://github.com/avoscloud/Adventure/tree/master/libs)中：
 
 * [AVOS Cloud SDK](https://cn.avoscloud.com/docs/sdk_down.html)，选择基础模块、实时通信模块和统计模块即可。
-* [AdventureCloud](https://github.com/avoscloud/AdventureCloud) ，相关的服务器代码
+* [Leanchat-cloud-code](https://github.com/leancloud/leanchat-cloudcode)，Leanchat 云代码后端
 
 ## 部署项目
 见[如何替换 AppId 部署应用](https://github.com/leancloud/leanchat-android/wiki/%E5%A6%82%E4%BD%95%E6%9B%BF%E6%8D%A2-AppId-%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8)
