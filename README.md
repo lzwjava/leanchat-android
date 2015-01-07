@@ -39,7 +39,6 @@
 ## 部署项目
 见[如何替换 AppId 部署应用](https://github.com/leancloud/leanchat-android/wiki/%E5%A6%82%E4%BD%95%E6%9B%BF%E6%8D%A2-AppId-%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8)
 
-该项目的表结构，请以公共账号登录 [leancloud.cn](https://leancloud.cn)  账号/密码：leancloud@163.com/Public123 ，应用LeanChat-Public即可，只是一个示例，和本demo的表结构一样，而数据不一样。
 
 ###[Document](http://leancloud.cn/docs/realtime.html)
 
