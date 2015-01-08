@@ -1,10 +1,12 @@
 package com.avoscloud.chat.ui.activity;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -46,10 +48,11 @@ import java.util.List;
 
 public class ChatActivity extends BaseActivity implements OnClickListener, MsgListener,
     XListView.IXListViewListener {
-  private static final int IMAGE_REQUEST = 0;
   public static final int LOCATION_REQUEST = 1;
   private static final int TAKE_CAMERA_REQUEST = 2;
   public static final int PAGE_SIZE = 20;
+  private static final int GALLERY_REQUEST = 0;
+  private static final int GALLERY_KITKAT_REQUEST = 3;
   static String RETRY_ACTION = "com.avoscloud.chat.RETRY_CONNECT";
 
   private ChatMsgAdapter adapter;
@@ -500,10 +503,18 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   }
 
   public void selectImageFromLocal() {
-    Intent intent;
-    intent = new Intent(Intent.ACTION_GET_CONTENT);
-    intent.setType("image/*");
-    startActivityForResult(intent, IMAGE_REQUEST);
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+      Intent intent = new Intent();
+      intent.setType("image/*");
+      intent.setAction(Intent.ACTION_GET_CONTENT);
+      startActivityForResult(Intent.createChooser(intent, getResources().getString(R.string.select_picture)),
+          GALLERY_REQUEST);
+    } else {
+      Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+      intent.addCategory(Intent.CATEGORY_OPENABLE);
+      intent.setType("image/*");
+      startActivityForResult(intent, GALLERY_KITKAT_REQUEST);
+    }
   }
 
   public void selectImageFromCamera() {
@@ -534,29 +545,26 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     }
   }
 
-  private String parsePathByReturnData(Intent data) {
-    if (data == null) {
-      return null;
-    }
-    String localSelectPath = null;
-    Uri selectedImage = data.getData();
-    if (selectedImage != null) {
-      Cursor cursor = getContentResolver().query(
-          selectedImage, null, null, null, null);
-      cursor.moveToFirst();
-      int columnIndex = cursor.getColumnIndex("_data");
-      localSelectPath = cursor.getString(columnIndex);
-      cursor.close();
-    }
-    return localSelectPath;
-  }
-
+  @TargetApi(Build.VERSION_CODES.KITKAT)
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (resultCode == RESULT_OK) {
       switch (requestCode) {
-        case IMAGE_REQUEST:
-          String localSelectPath = parsePathByReturnData(data);
+        case GALLERY_REQUEST:
+        case GALLERY_KITKAT_REQUEST:
+          if (data == null) {
+            return;
+          }
+          Uri uri;
+          if (requestCode == GALLERY_REQUEST) {
+            uri = data.getData();
+          } else {
+            uri = data.getData();
+            final int takeFlags = data.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+                | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            getContentResolver().takePersistableUriPermission(uri, takeFlags);
+          }
+          String localSelectPath = ProviderPathUtils.getPath(ctx, uri);
           sendImageByPath(localSelectPath);
           break;
         case TAKE_CAMERA_REQUEST:

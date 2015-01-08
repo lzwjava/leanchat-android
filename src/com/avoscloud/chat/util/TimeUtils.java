@@ -19,7 +19,9 @@ public class TimeUtils {
   public static String millisecs2DateString(long timestamp) {
     long gap = System.currentTimeMillis() - timestamp;
     if (gap < 1000 * 60 * 60 * 24) {
-      return prettyTime.format(new Date(timestamp));
+      String s = prettyTime.format(new Date(timestamp));
+      //return s.replace(" ", "");
+      return s;
     } else {
       return getDate(new Date(timestamp));
     }

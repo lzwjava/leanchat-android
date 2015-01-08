@@ -126,5 +126,6 @@
     <string name="sort">排序</string>
     <string name="loginTime">登录时间</string>
     <string name="distance">距离</string>
+    <string name="select_picture">选择图片</string>
 
 </resources>
