@@ -3,7 +3,7 @@ package com.avoscloud.chat.entity;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
 import com.avoscloud.chat.service.ChatService;
-import com.avoscloud.chat.util.AVOSUtils;
+import com.avoscloud.chat.util.ChatUtils;
 import com.avoscloud.chat.util.PathUtils;
 import com.avoscloud.chat.util.Utils;
 
@@ -22,7 +22,7 @@ public class MsgBuilder {
     if (roomType == RoomType.Single) {
       msg.setToPeerId(toId);
       msg.setRequestReceipt(true);
-      convid = AVOSUtils.convid(ChatService.getSelfId(), toId);
+      convid = ChatUtils.convid(ChatService.getSelfId(), toId);
     } else {
       convid = toId;
     }

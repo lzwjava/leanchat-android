@@ -19,10 +19,7 @@ import com.avoscloud.chat.entity.RoomType;
 import com.avoscloud.chat.service.listener.MsgListener;
 import com.avoscloud.chat.service.receiver.MsgReceiver;
 import com.avoscloud.chat.ui.activity.ChatActivity;
-import com.avoscloud.chat.util.AVOSUtils;
-import com.avoscloud.chat.util.Logger;
-import com.avoscloud.chat.util.NetAsyncTask;
-import com.avoscloud.chat.util.Utils;
+import com.avoscloud.chat.util.*;
 
 import java.io.File;
 import java.util.*;
@@ -166,7 +163,7 @@ public class ChatService {
     if (group == null) {
       String selfId = getSelfId();
       msg.setToPeerId(selfId);
-      convid = AVOSUtils.convid(selfId, msg.getFromPeerId());
+      convid = ChatUtils.convid(selfId, msg.getFromPeerId());
       msg.setRoomType(RoomType.Single);
     } else {
       convid = group.getGroupId();

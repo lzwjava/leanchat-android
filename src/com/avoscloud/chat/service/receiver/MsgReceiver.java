@@ -7,7 +7,7 @@ import com.avos.avoscloud.Session;
 import com.avoscloud.chat.service.ChatService;
 import com.avoscloud.chat.service.listener.MsgListener;
 import com.avoscloud.chat.service.listener.StatusListener;
-import com.avoscloud.chat.util.AVOSUtils;
+import com.avoscloud.chat.util.ChatUtils;
 import com.avoscloud.chat.util.Logger;
 
 import java.util.ArrayList;
@@ -69,28 +69,28 @@ public class MsgReceiver extends AVMessageReceiver {
   @Override
   public void onMessage(final Context context, Session session, AVMessage avMsg) {
     Logger.d("onMessage");
-    AVOSUtils.logAVMessage(avMsg);
+    ChatUtils.logAVMessage(avMsg);
     ChatService.onMessage(context, avMsg, msgListeners, null);
   }
 
   @Override
   public void onMessageSent(Context context, Session session, AVMessage avMsg) {
     Logger.d("onMessageSent");
-    AVOSUtils.logAVMessage(avMsg);
+    ChatUtils.logAVMessage(avMsg);
     ChatService.onMessageSent(avMsg, msgListeners, null);
   }
 
   @Override
   public void onMessageDelivered(Context context, Session session, AVMessage msg) {
     Logger.d("onMessageDelivered");
-    AVOSUtils.logAVMessage(msg);
+    ChatUtils.logAVMessage(msg);
     ChatService.onMessageDelivered(msg, msgListeners);
   }
 
   @Override
   public void onMessageFailure(Context context, Session session, AVMessage avMsg) {
     Logger.d("onMessageFailure");
-    AVOSUtils.logAVMessage(avMsg);
+    ChatUtils.logAVMessage(avMsg);
     ChatService.onMessageFailure(avMsg, msgListeners, null);
   }
 

@@ -5,10 +5,9 @@ import com.avos.avoscloud.*;
 import com.avoscloud.chat.avobject.ChatGroup;
 import com.avoscloud.chat.service.CacheService;
 import com.avoscloud.chat.service.ChatService;
-import com.avoscloud.chat.service.GroupService;
 import com.avoscloud.chat.service.listener.GroupEventListener;
 import com.avoscloud.chat.service.listener.MsgListener;
-import com.avoscloud.chat.util.AVOSUtils;
+import com.avoscloud.chat.util.ChatUtils;
 import com.avoscloud.chat.util.Logger;
 
 import java.util.HashSet;
@@ -47,21 +46,21 @@ public class GroupMsgReceiver extends AVGroupMessageReceiver {
   @Override
   public void onMessageSent(Context context, Group group, AVMessage message) {
     Logger.d("onMessageSent");
-    AVOSUtils.logAVMessage(message);
+    ChatUtils.logAVMessage(message);
     ChatService.onMessageSent(message, msgListeners, group);
   }
 
   @Override
   public void onMessageFailure(Context context, Group group, AVMessage message) {
     Logger.d("onMessageFailure");
-    AVOSUtils.logAVMessage(message);
+    ChatUtils.logAVMessage(message);
     ChatService.onMessageFailure(message, msgListeners, group);
   }
 
   @Override
   public void onMessage(Context context, Group group, AVMessage msg) {
     Logger.d("onMessage");
-    AVOSUtils.logAVMessage(msg);
+    ChatUtils.logAVMessage(msg);
     ChatService.onMessage(context, msg, msgListeners, group);
   }
 

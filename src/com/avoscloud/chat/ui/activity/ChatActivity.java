@@ -374,7 +374,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     protected void doInBack() throws Exception {
       String convid;
       if (roomType == RoomType.Single) {
-        convid = AVOSUtils.convid(ChatService.getPeerId(curUser), ChatService.getPeerId(chatUser));
+        convid = ChatUtils.convid(ChatService.getPeerId(curUser), ChatService.getPeerId(chatUser));
       } else {
         convid = group.getGroupId();
       }
