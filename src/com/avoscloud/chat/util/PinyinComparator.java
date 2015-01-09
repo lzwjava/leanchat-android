@@ -1,11 +1,12 @@
 package com.avoscloud.chat.util;
 
-import com.avoscloud.chat.avobject.User;
+
+import com.avoscloud.chat.entity.SortUser;
 
 import java.util.Comparator;
 
-public class PinyinComparator implements Comparator<User> {
-  public int compare(User o1, User o2) {
+public class PinyinComparator implements Comparator<SortUser> {
+  public int compare(SortUser o1, SortUser o2) {
     if (o1.getSortLetters().equals("@")
         || o2.getSortLetters().equals("#")) {
       return -1;

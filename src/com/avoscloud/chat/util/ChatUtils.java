@@ -3,16 +3,13 @@ package com.avoscloud.chat.util;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.avos.avoscloud.*;
-import com.avoscloud.chat.avobject.User;
-import com.avoscloud.chat.base.C;
-import com.avoscloud.chat.service.CacheService;
-import com.avoscloud.chat.service.PreferenceMap;
-import com.avoscloud.chat.ui.view.ViewHolder;
+import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.adapter.BaseListAdapter;
-import com.avoscloud.chat.base.App;
+import com.avoscloud.chat.avobject.User;
+import com.avoscloud.chat.base.C;
 import com.avoscloud.chat.service.UserService;
+import com.avoscloud.chat.ui.view.ViewHolder;
 import com.avoscloud.chat.ui.view.xlist.XListView;
 
 import java.util.List;
@@ -46,10 +43,10 @@ public class ChatUtils {
     }
   }
 
-  public static void setUserView(View conView, User user) {
+  public static void setUserView(View conView, AVUser user) {
     ImageView avatarView = ViewHolder.findViewById(conView, R.id.avatar);
     TextView nameView = ViewHolder.findViewById(conView, R.id.username);
-    UserService.displayAvatar(user.getAvatarUrl(), avatarView);
+    UserService.displayAvatar(User.getAvatarUrl(user), avatarView);
     nameView.setText(user.getUsername());
   }
 }

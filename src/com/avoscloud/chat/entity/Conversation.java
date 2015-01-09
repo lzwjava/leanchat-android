@@ -1,14 +1,14 @@
 package com.avoscloud.chat.entity;
 
+import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.avobject.ChatGroup;
-import com.avoscloud.chat.avobject.User;
 
 /**
  * Created by lzw on 14-9-26.
  */
 public class Conversation {
   private Msg msg;
-  private User toUser;
+  private AVUser toUser;
   private ChatGroup toChatGroup;
   private int unreadCount;
 
@@ -20,11 +20,11 @@ public class Conversation {
     this.msg = msg;
   }
 
-  public User getToUser() {
+  public AVUser getToUser() {
     return toUser;
   }
 
-  public void setToUser(User toUser) {
+  public void setToUser(AVUser toUser) {
     this.toUser = toUser;
   }
 

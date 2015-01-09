@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import butterknife.InjectView;
+import com.avoscloud.chat.R;
 import com.avoscloud.chat.adapter.RecentMessageAdapter;
 import com.avoscloud.chat.entity.Conversation;
 import com.avoscloud.chat.entity.RoomType;
@@ -14,9 +16,9 @@ import com.avoscloud.chat.service.listener.MsgListener;
 import com.avoscloud.chat.service.receiver.GroupMsgReceiver;
 import com.avoscloud.chat.service.receiver.MsgReceiver;
 import com.avoscloud.chat.ui.activity.ChatActivity;
+import com.avoscloud.chat.ui.view.BaseListView;
 import com.avoscloud.chat.ui.view.xlist.XListView;
 import com.avoscloud.chat.util.NetAsyncTask;
-import com.avoscloud.chat.R;
 import com.avoscloud.chat.util.Utils;
 
 import java.util.List;
@@ -24,9 +26,10 @@ import java.util.List;
 /**
  * Created by lzw on 14-9-17.
  */
-public class ConversationFragment extends BaseFragment implements AdapterView.OnItemClickListener, MsgListener, XListView.IXListViewListener {
-  XListView xListView;
-  RecentMessageAdapter adapter;
+public class ConversationFragment extends BaseFragment implements MsgListener {
+
+  @InjectView(R.id.convList)
+  BaseListView<Conversation> listView;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,26 +43,31 @@ public class ConversationFragment extends BaseFragment implements AdapterView.On
     onRefresh();
   }
 
-  private void initView() {
-    headerLayout.showTitle(R.string.messages);
-    xListView = (XListView) getView().findViewById(R.id.convList);
-    xListView.setPullLoadEnable(false);
-    xListView.setPullRefreshEnable(true);
-    xListView.setXListViewListener(this);
-    adapter = new RecentMessageAdapter(getActivity());
-    xListView.setAdapter(adapter);
-    xListView.setOnItemClickListener(this);
+  private void onRefresh() {
+    listView.onRefresh();
   }
 
-  @Override
-  public void onItemClick(AdapterView<?> adapterView, View arg1, int position, long arg3) {
-    // TODO Auto-generated method stub
-    Conversation recent = (Conversation) adapterView.getAdapter().getItem(position);
-    if (recent.getMsg().getRoomType() == RoomType.Single) {
-      ChatActivity.goUserChat(getActivity(), recent.getToUser().getObjectId());
-    } else {
-      ChatActivity.goGroupChat(getActivity(), recent.getToChatGroup().getObjectId());
-    }
+  private void initView() {
+    headerLayout.showTitle(R.string.messages);
+    listView = (BaseListView<Conversation>) getView().findViewById(R.id.convList);
+    listView.init(new BaseListView.DataInterface<Conversation>() {
+      @Override
+      public List<Conversation> getDatas(int skip, int limit, List<Conversation> currentDatas) throws Exception {
+        return ChatService.getConversationsAndCache();
+      }
+
+      @Override
+      public void onItemSelected(Conversation item) {
+        if (item.getMsg().getRoomType() == RoomType.Single) {
+          ChatActivity.goUserChat(getActivity(), item.getToUser().getObjectId());
+        } else {
+          ChatActivity.goGroupChat(getActivity(), item.getToChatGroup().getObjectId());
+        }
+      }
+
+    }, new RecentMessageAdapter(getActivity()));
+
+
   }
 
   private boolean hidden;
@@ -95,39 +103,5 @@ public class ConversationFragment extends BaseFragment implements AdapterView.On
   public boolean onMessageUpdate(String otherId) {
     onRefresh();
     return false;
-  }
-
-  @Override
-  public void onRefresh() {
-    new GetDataTask(ctx, false).execute();
-  }
-
-  @Override
-  public void onLoadMore() {
-
-  }
-
-  class GetDataTask extends NetAsyncTask {
-    List<Conversation> conversations;
-
-    GetDataTask(Context cxt, boolean openDialog) {
-      super(cxt, openDialog);
-    }
-
-    @Override
-    protected void doInBack() throws Exception {
-      conversations = ChatService.getConversationsAndCache();
-    }
-
-    @Override
-    protected void onPost(Exception e) {
-      xListView.stopRefresh();
-      if (e != null) {
-        Utils.toast(ctx, R.string.pleaseCheckNetwork);
-      } else {
-        adapter.setDatas(conversations);
-        adapter.notifyDataSetChanged();
-      }
-    }
   }
 }

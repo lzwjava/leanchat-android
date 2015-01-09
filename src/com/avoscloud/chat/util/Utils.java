@@ -9,8 +9,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
@@ -25,9 +23,9 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-import com.avoscloud.chat.avobject.User;
-import com.avoscloud.chat.base.App;
+import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
+import com.avoscloud.chat.base.App;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -673,19 +671,19 @@ public class Utils {
     return false;
   }
 
-  public static Map<String, User> list2map(List<User> users) {
-    Map<String, User> friends = new HashMap<String, User>();
-    for (User user : users) {
+  public static Map<String, AVUser> list2map(List<AVUser> users) {
+    Map<String, AVUser> friends = new HashMap<String, AVUser>();
+    for (AVUser user : users) {
       friends.put(user.getUsername(), user);
     }
     return friends;
   }
 
-  public static List<User> map2list(Map<String, User> maps) {
-    List<User> users = new ArrayList<User>();
-    Iterator<Map.Entry<String, User>> iterator = maps.entrySet().iterator();
+  public static List<AVUser> map2list(Map<String, AVUser> maps) {
+    List<AVUser> users = new ArrayList<AVUser>();
+    Iterator<Map.Entry<String, AVUser>> iterator = maps.entrySet().iterator();
     while (iterator.hasNext()) {
-      Map.Entry<String, User> entry = iterator.next();
+      Map.Entry<String, AVUser> entry = iterator.next();
       users.add(entry.getValue());
     }
     return users;

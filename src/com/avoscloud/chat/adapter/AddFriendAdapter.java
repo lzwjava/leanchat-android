@@ -7,18 +7,19 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.service.CloudService;
-import com.avoscloud.chat.ui.view.ViewHolder;
 import com.avoscloud.chat.service.UserService;
+import com.avoscloud.chat.ui.view.ViewHolder;
 import com.avoscloud.chat.util.NetAsyncTask;
 import com.avoscloud.chat.util.Utils;
 
 import java.util.List;
 
-public class AddFriendAdapter extends BaseListAdapter<User> {
-  public AddFriendAdapter(Context context, List<User> list) {
+public class AddFriendAdapter extends BaseListAdapter<AVUser> {
+  public AddFriendAdapter(Context context, List<AVUser> list) {
     super(context, list);
     // TODO Auto-generated constructor stub
   }
@@ -29,11 +30,11 @@ public class AddFriendAdapter extends BaseListAdapter<User> {
     if (conView == null) {
       conView = inflater.inflate(R.layout.contact_add_friend_item, null);
     }
-    final User contact = datas.get(position);
+    final AVUser contact = datas.get(position);
     TextView nameView = ViewHolder.findViewById(conView, R.id.name);
     ImageView avatarView = ViewHolder.findViewById(conView, R.id.avatar);
     Button addBtn = ViewHolder.findViewById(conView, R.id.add);
-    String avatarUrl = contact.getAvatarUrl();
+    String avatarUrl = User.getAvatarUrl(contact);
     UserService.displayAvatar(avatarUrl, avatarView);
     nameView.setText(contact.getUsername());
     addBtn.setText(R.string.add);

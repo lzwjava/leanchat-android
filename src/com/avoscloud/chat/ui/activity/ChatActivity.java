@@ -4,42 +4,46 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.view.ViewPager;
-import android.text.*;
+import android.text.Selection;
+import android.text.Spannable;
+import android.text.TextUtils;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.Group;
 import com.avos.avoscloud.Session;
-import com.avoscloud.chat.adapter.EmotionPagerAdapter;
-import com.avoscloud.chat.avobject.User;
-import com.avoscloud.chat.db.DBHelper;
-import com.avoscloud.chat.db.DBMsg;
-import com.avoscloud.chat.entity.MsgBuilder;
-import com.avoscloud.chat.entity.RoomType;
-import com.avoscloud.chat.entity.SendCallback;
-import com.avoscloud.chat.service.*;
-import com.avoscloud.chat.service.listener.MsgListener;
-import com.avoscloud.chat.service.receiver.GroupMsgReceiver;
-import com.avoscloud.chat.service.receiver.MsgReceiver;
-import com.avoscloud.chat.ui.view.RecordButton;
-import com.avoscloud.chat.ui.view.xlist.XListView;
-import com.avoscloud.chat.util.*;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.adapter.ChatMsgAdapter;
 import com.avoscloud.chat.adapter.EmotionGridAdapter;
+import com.avoscloud.chat.adapter.EmotionPagerAdapter;
 import com.avoscloud.chat.avobject.ChatGroup;
 import com.avoscloud.chat.base.App;
+import com.avoscloud.chat.db.DBHelper;
+import com.avoscloud.chat.db.DBMsg;
 import com.avoscloud.chat.entity.Msg;
+import com.avoscloud.chat.entity.MsgBuilder;
+import com.avoscloud.chat.entity.RoomType;
+import com.avoscloud.chat.entity.SendCallback;
+import com.avoscloud.chat.service.CacheService;
+import com.avoscloud.chat.service.ChatService;
+import com.avoscloud.chat.service.MsgAgent;
+import com.avoscloud.chat.service.UserService;
+import com.avoscloud.chat.service.listener.MsgListener;
+import com.avoscloud.chat.service.receiver.GroupMsgReceiver;
+import com.avoscloud.chat.service.receiver.MsgReceiver;
 import com.avoscloud.chat.ui.view.EmotionEditText;
+import com.avoscloud.chat.ui.view.RecordButton;
+import com.avoscloud.chat.ui.view.xlist.XListView;
+import com.avoscloud.chat.util.*;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 
 import java.io.File;
@@ -57,7 +61,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
 
   private ChatMsgAdapter adapter;
   private List<Msg> msgs = new ArrayList<Msg>();
-  User curUser;
+  AVUser curUser;
   DBHelper dbHelper;
   public static ChatActivity ctx;
 
@@ -76,7 +80,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   public static final String CHAT_USER_ID = "chatUserId";
   public static final String GROUP_ID = "groupId";
   public static final String ROOM_TYPE = "roomType";
-  User chatUser;
+  AVUser chatUser;
   Group group;
   String audioId;
   MsgAgent msgAgent;
@@ -277,7 +281,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
   }
 
   public void initData(Intent intent) {
-    curUser = User.curUser();
+    curUser = AVUser.getCurrentUser();
     dbHelper = new DBHelper(ctx, App.DB_NAME, App.DB_VER);
     int roomTypeInt = intent.getIntExtra(ROOM_TYPE, RoomType.Single.getValue());
     roomType = RoomType.fromInt(roomTypeInt);

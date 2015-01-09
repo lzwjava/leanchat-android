@@ -1,15 +1,12 @@
 package com.avoscloud.chat.avobject;
 
-import com.avos.avoscloud.*;
+import com.avos.avoscloud.AVFile;
+import com.avos.avoscloud.AVInstallation;
+import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
-import com.avoscloud.chat.base.C;
 
-/**
- * Created by lzw on 14-6-26.
- */
-@AVClassName("_User")
-public class User extends AVUser {
+public class User {
   public static final String USERNAME = "username";
   public static final String PASSWORD = "password";
   public static final String AVATAR = "avatar";
@@ -21,13 +18,14 @@ public class User extends AVUser {
   public static String[] genderStrings = new String[]{App.ctx.getString(R.string.male),
       App.ctx.getString(R.string.female)};
 
-  //AVFile avatar;
-  //AVGeoPoint location;
-  private String sortLetters;
-  //Gender gender;
-  private static User curUser;
-  //String installationId;
-  //AVInstallation installation;
+  public static String getCurrentUserId() {
+    AVUser user = AVUser.getCurrentUser();
+    if (user != null) {
+      return user.getObjectId();
+    } else {
+      return null;
+    }
+  }
 
   public static enum Gender {
     Male(0), Female(1);
@@ -47,39 +45,8 @@ public class User extends AVUser {
     }
   }
 
-  public User() {
-  }
-
-  public static User curUser() {
-    if (curUser == null) {
-      curUser = getCurrentUser(User.class);
-    }
-    return curUser;
-  }
-
-  public static void setCurUser(User curUser) {
-    User.curUser = curUser;
-  }
-
-  public static String curUserId() {
-    User user = curUser();
-    if (user != null) {
-      return user.getObjectId();
-    } else {
-      return null;
-    }
-  }
-
-  public AVFile getAvatar() {
-    return getAVFile(AVATAR);
-  }
-
-  public void setAvatar(AVFile avatar) {
-    put(AVATAR, avatar);
-  }
-
-  public String getAvatarUrl() {
-    AVFile avatar = getAvatar();
+  public static String getAvatarUrl(AVUser user) {
+    AVFile avatar = user.getAVFile(AVATAR);
     if (avatar != null) {
       return avatar.getUrl();
     } else {
@@ -87,55 +54,26 @@ public class User extends AVUser {
     }
   }
 
-  public void addFriend(User user) {
-    getRelation(FRIENDS).add(user);
-  }
-
-
-  public void removeFriend(User user) {
-    getRelation(FRIENDS).remove(user);
-  }
-
-  public AVGeoPoint getLocation() {
-    return getAVGeoPoint(LOCATION);
-  }
-
-  public void setLocation(AVGeoPoint location) {
-    put(LOCATION, location);
-  }
-
-  public Gender getGender() {
-    int genderInt = getInt(GENDER);
+  public static Gender getGender(AVUser user) {
+    int genderInt = user.getInt(GENDER);
     return Gender.fromInt(genderInt);
   }
 
-  public void setGender(Gender gender) {
-    put(GENDER, gender.getValue());
+  public static void setGender(AVUser user, Gender gender) {
+    user.put(GENDER, gender.getValue());
   }
 
-  public String getGenderDesc() {
-    Gender gender = getGender();
+  public static String getGenderDesc(AVUser user) {
+    Gender gender = getGender(user);
     return genderStrings[gender.getValue()];
   }
 
-  public String getSortLetters() {
-    return sortLetters;
-  }
-
-  public void setSortLetters(String sortLetters) {
-    this.sortLetters = sortLetters;
-  }
-
-  public AVInstallation getInstallation() {
+  public static AVInstallation getInstallation(AVUser user) {
     try {
-      return getAVObject(INSTALLATION, AVInstallation.class);
+      return user.getAVObject(INSTALLATION, AVInstallation.class);
     } catch (Exception e) {
       e.printStackTrace();
       return null;
     }
-  }
-
-  public void setInstallation(AVInstallation installation) {
-    put(INSTALLATION, installation);
   }
 }

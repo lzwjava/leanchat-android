@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.App;
@@ -68,8 +69,8 @@ public class RegisterActivity extends BaseEntryActivity {
     new NetAsyncTask(ctx) {
       @Override
       protected void doInBack() throws Exception {
-        User user = UserService.signUp(name, password);
-        user.setGender(gender);
+        AVUser user = UserService.signUp(name, password);
+        User.setGender(user, gender);
         user.setFetchWhenSave(true);
         user.save();
       }

@@ -7,7 +7,7 @@
 
     <include layout="@layout/base_header_layout" />
 
-    <com.avoscloud.chat.ui.view.xlist.XListView
+    <com.avoscloud.chat.ui.view.BaseListView
         android:id="@+id/convList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

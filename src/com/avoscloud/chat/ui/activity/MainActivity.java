@@ -9,9 +9,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import com.avos.avoscloud.AVGeoPoint;
+import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.avobject.User;
-import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.service.*;
 import com.avoscloud.chat.service.receiver.FinishReceiver;
 import com.avoscloud.chat.ui.fragment.ContactFragment;
@@ -61,9 +60,9 @@ public class MainActivity extends BaseActivity {
     //UpdateService.createUpdateInfoInBackground();
     UpdateService updateService = UpdateService.getInstance(this);
     updateService.checkUpdate();
-    CacheService.registerUserCache(User.curUser());
+    CacheService.registerUserCache(AVUser.getCurrentUser());
     FinishReceiver.broadcast(this);
-    if(User.curUser()!=null){
+    if (AVUser.getCurrentUser() != null) {
       ChatService.openSession();
     }
 
@@ -105,7 +104,7 @@ public class MainActivity extends BaseActivity {
       int locType = location.getLocType();
       Logger.d("onReceiveLocation latitude=" + latitude + " longitude=" + longitude
           + " locType=" + locType + " address=" + location.getAddrStr());
-      User user = User.curUser();
+      AVUser user = AVUser.getCurrentUser();
       PreferenceMap preferenceMap = new PreferenceMap(ctx, user.getObjectId());
       if (user != null) {
         AVGeoPoint avGeoPoint = preferenceMap.getLocation();

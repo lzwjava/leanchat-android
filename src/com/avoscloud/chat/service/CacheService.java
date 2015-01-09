@@ -2,9 +2,9 @@ package com.avoscloud.chat.service;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.Group;
 import com.avoscloud.chat.avobject.ChatGroup;
-import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.C;
 
 import java.util.*;
@@ -14,24 +14,24 @@ import java.util.*;
  */
 public class CacheService {
   private static Map<String, ChatGroup> chatGroupsCache = new HashMap<String, ChatGroup>();
-  private static Map<String, User> usersCache = new HashMap<String, User>();
+  private static Map<String, AVUser> usersCache = new HashMap<String, AVUser>();
   private static List<String> friendIds = new ArrayList<String>();
   private static ChatGroup currentChatGroup;
 
-  public static User lookupUser(String userId) {
+  public static AVUser lookupUser(String userId) {
     return usersCache.get(userId);
   }
 
-  public static void registerUserCache(String userId, User user) {
+  public static void registerUserCache(String userId, AVUser user) {
     usersCache.put(userId, user);
   }
 
-  public static void registerUserCache(User user) {
+  public static void registerUserCache(AVUser user) {
     registerUserCache(user.getObjectId(), user);
   }
 
-  public static void registerBatchUser(List<User> users) {
-    for (User user : users) {
+  public static void registerBatchUser(List<AVUser> users) {
+    for (AVUser user : users) {
       registerUserCache(user);
     }
   }
@@ -74,7 +74,7 @@ public class CacheService {
     }
   }
 
-  public static List<User> cacheUserAndGet(List<String> ids) throws AVException {
+  public static List<AVUser> cacheUserAndGet(List<String> ids) throws AVException {
     Set<String> uncachedIds = new HashSet<String>();
     for (String id : ids) {
       if (lookupUser(id) == null) {
@@ -82,21 +82,21 @@ public class CacheService {
       }
     }
     findUsers(new ArrayList<String>(uncachedIds));
-    List<User> users = new ArrayList<User>();
+    List<AVUser> users = new ArrayList<AVUser>();
     for (String id : ids) {
       users.add(lookupUser(id));
     }
     return users;
   }
 
-  public static List<User> findUsers(List<String> userIds) throws AVException {
+  public static List<AVUser> findUsers(List<String> userIds) throws AVException {
     if (userIds.size() <= 0) {
-      return new ArrayList<User>();
+      return new ArrayList<AVUser>();
     }
-    AVQuery<User> q = User.getQuery(User.class);
+    AVQuery<AVUser> q = AVUser.getQuery(AVUser.class);
     q.whereContainedIn(C.OBJECT_ID, userIds);
     q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
-    List<User> users = q.find();
+    List<AVUser> users = q.find();
     registerBatchUser(users);
     return users;
   }

@@ -2,9 +2,9 @@ package com.avoscloud.chat.entity;
 
 import com.alibaba.fastjson.JSON;
 import com.avos.avoscloud.AVMessage;
+import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.AVUtils;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.service.CacheService;
 import com.avoscloud.chat.service.ChatService;
@@ -238,7 +238,7 @@ public class Msg {
 
   public String getFromName() {
     String peerId = getFromPeerId();
-    User user = CacheService.lookupUser(peerId);
+    AVUser user = CacheService.lookupUser(peerId);
     if (user != null) {
       return user.getUsername();
     } else {

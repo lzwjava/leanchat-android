@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.*;
-import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.service.CacheService;
@@ -27,7 +27,7 @@ public class PersonInfoActivity extends BaseActivity implements OnClickListener 
   RelativeLayout avatarLayout, genderLayout;
 
   String userId = "";
-  User user;
+  AVUser user;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +65,7 @@ public class PersonInfoActivity extends BaseActivity implements OnClickListener 
   }
 
   private void initView() {
-    User curUser = User.curUser();
+    AVUser curUser = AVUser.getCurrentUser();
     if (curUser.equals(user)) {
       initActionBar(R.string.personalInfo);
       avatarLayout.setOnClickListener(this);
@@ -96,11 +96,11 @@ public class PersonInfoActivity extends BaseActivity implements OnClickListener 
     ctx.startActivity(intent);
   }
 
-  private void updateView(User user) {
-    String avatar = user.getAvatarUrl();
+  private void updateView(AVUser user) {
+    String avatar = User.getAvatarUrl(user);
     UserService.displayAvatar(avatar, avatarView);
     usernameView.setText(user.getUsername());
-    genderView.setText(user.getGenderDesc());
+    genderView.setText(User.getGenderDesc(user));
   }
 
   @Override

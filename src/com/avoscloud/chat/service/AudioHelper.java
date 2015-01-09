@@ -12,7 +12,7 @@ public class AudioHelper {
   private Runnable finishCallback;
   private static AudioHelper audioHelper;
   private String audioPath;
-  boolean onceStart=false;
+  boolean onceStart = false;
 
   public static AudioHelper getInstance() {
     if (audioHelper == null) {
@@ -54,7 +54,7 @@ public class AudioHelper {
   }
 
   public synchronized void playAudio(String path, Runnable finishCallback) {
-    if(onceStart){
+    if (onceStart) {
       mediaPlayer.reset();
     }
     tryRunFinishCallback();
@@ -70,7 +70,7 @@ public class AudioHelper {
         }
       });
       mediaPlayer.start();
-      onceStart=true;
+      onceStart = true;
     } catch (IOException e) {
       e.printStackTrace();
     }

@@ -6,15 +6,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.avoscloud.chat.avobject.User;
-import com.avoscloud.chat.entity.Conversation;
-import com.avoscloud.chat.entity.RoomType;
-import com.avoscloud.chat.util.EmotionUtils;
-import com.avoscloud.chat.ui.view.ViewHolder;
+import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.ChatGroup;
+import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.App;
+import com.avoscloud.chat.entity.Conversation;
 import com.avoscloud.chat.entity.Msg;
+import com.avoscloud.chat.entity.RoomType;
+import com.avoscloud.chat.ui.view.ViewHolder;
+import com.avoscloud.chat.util.EmotionUtils;
 import com.avoscloud.chat.util.PhotoUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -44,8 +45,8 @@ public class RecentMessageAdapter extends BaseListAdapter<Conversation> {
 
     Msg msg = item.getMsg();
     if (msg.getRoomType() == RoomType.Single) {
-      User user = item.getToUser();
-      String avatar = user.getAvatarUrl();
+      AVUser user = item.getToUser();
+      String avatar = User.getAvatarUrl(user);
       if (avatar != null && !avatar.equals("")) {
         ImageLoader.getInstance().displayImage(avatar, recentAvatarView, PhotoUtil.avatarImageOptions);
       } else {

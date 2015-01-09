@@ -4,10 +4,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import com.avos.avoscloud.AVGeoPoint;
-import com.avoscloud.chat.avobject.User;
-import com.avoscloud.chat.util.Logger;
+import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
+import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.App;
+import com.avoscloud.chat.util.Logger;
 
 /**
  * Created by lzw on 14-6-19.
@@ -45,13 +46,13 @@ public class PreferenceMap {
 
   public static PreferenceMap getCurUserPrefDao(Context ctx) {
     if (currentUserPreferenceMap == null) {
-      currentUserPreferenceMap = new PreferenceMap(ctx, User.curUserId());
+      currentUserPreferenceMap = new PreferenceMap(ctx, User.getCurrentUserId());
     }
     return currentUserPreferenceMap;
   }
 
   public static PreferenceMap getMyPrefDao(Context ctx) {
-    User user = User.curUser();
+    AVUser user = AVUser.getCurrentUser();
     if (user == null) {
       throw new RuntimeException("user is null");
     }

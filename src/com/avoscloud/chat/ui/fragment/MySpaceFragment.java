@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.SaveCallback;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.User;
@@ -52,10 +53,10 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
   }
 
   private void refresh() {
-    User curUser = User.curUser();
+    AVUser curUser = AVUser.getCurrentUser();
     usernameView.setText(curUser.getUsername());
-    genderView.setText(curUser.getGenderDesc());
-    UserService.displayAvatar(curUser.getAvatarUrl(), avatarView);
+    genderView.setText(User.getGenderDesc(curUser));
+    UserService.displayAvatar(User.getAvatarUrl(curUser), avatarView);
   }
 
   private void findView() {
@@ -86,8 +87,7 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
       startActivityForResult(intent, IMAGE_PICK_REQUEST);
     } else if (id == R.id.logoutLayout) {
       ChatService.closeSession();
-      User.logOut();
-      User.setCurUser(null);
+      AVUser.logOut();
       getActivity().finish();
     } else if (id == R.id.sexLayout) {
       showSexChooseDialog();
@@ -107,8 +107,8 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
   };
 
   private void showSexChooseDialog() {
-    User user = User.curUser();
-    int checkItem = user.getGender() == User.Gender.Male ? 0 : 1;
+    AVUser user = AVUser.getCurrentUser();
+    int checkItem = User.getGender(user) == User.Gender.Male ? 0 : 1;
     new AlertDialog.Builder(ctx).setTitle(R.string.sex)
         .setSingleChoiceItems(User.genderStrings, checkItem, new DialogInterface.OnClickListener() {
           @Override

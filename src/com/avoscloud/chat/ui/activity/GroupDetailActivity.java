@@ -8,16 +8,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.Group;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.adapter.GroupUsersAdapter;
-import com.avoscloud.chat.avobject.ChatGroup;
-import com.avoscloud.chat.avobject.User;
-import com.avoscloud.chat.service.CacheService;
 import com.avoscloud.chat.service.ChatService;
+import com.avoscloud.chat.service.GroupService;
 import com.avoscloud.chat.service.listener.GroupEventListener;
 import com.avoscloud.chat.service.receiver.GroupMsgReceiver;
-import com.avoscloud.chat.service.GroupService;
 import com.avoscloud.chat.util.SimpleNetTask;
 import com.avoscloud.chat.util.Utils;
 
@@ -31,7 +29,7 @@ public class GroupDetailActivity extends GroupBaseActivity implements AdapterVie
     AdapterView.OnItemLongClickListener, GroupEventListener {
   public static final int ADD_MEMBERS = 0;
   private static final int QUIT_GROUP = 1;
-  public static List<User> members = new ArrayList<User>();
+  public static List<AVUser> members = new ArrayList<AVUser>();
   GridView usersGrid;
   GroupUsersAdapter usersAdapter;
   boolean isOwner;
@@ -78,7 +76,7 @@ public class GroupDetailActivity extends GroupBaseActivity implements AdapterVie
 
   private void refresh() {
     new SimpleNetTask(ctx) {
-      List<User> subMembers = new ArrayList<User>();
+      List<AVUser> subMembers = new ArrayList<AVUser>();
 
       @Override
       protected void doInBack() throws Exception {
@@ -101,7 +99,7 @@ public class GroupDetailActivity extends GroupBaseActivity implements AdapterVie
   }
 
   private void initData() {
-    isOwner = GroupService.isGroupOwner(getChatGroup(), User.curUser());
+    isOwner = GroupService.isGroupOwner(getChatGroup(), AVUser.getCurrentUser());
   }
 
   private void findView() {
@@ -110,13 +108,13 @@ public class GroupDetailActivity extends GroupBaseActivity implements AdapterVie
 
   @Override
   public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-    User user = (User) parent.getAdapter().getItem(position);
+    AVUser user = (AVUser) parent.getAdapter().getItem(position);
     PersonInfoActivity.goPersonInfo(ctx, user.getObjectId());
   }
 
   @Override
   public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-    final User user = (User) parent.getAdapter().getItem(position);
+    final AVUser user = (AVUser) parent.getAdapter().getItem(position);
     boolean isTheOwner = GroupService.isGroupOwner(getChatGroup(), user);
     if (isTheOwner == false) {
       new AlertDialog.Builder(ctx).setMessage(R.string.kickTips)

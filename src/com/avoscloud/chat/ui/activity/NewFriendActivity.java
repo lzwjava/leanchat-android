@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
+import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.adapter.NewFriendAdapter;
 import com.avoscloud.chat.avobject.AddRequest;
@@ -41,13 +42,13 @@ public class NewFriendActivity extends BaseActivity implements OnItemLongClickLi
       @Override
       protected void doInBack() throws Exception {
         subAddRequests = AddRequestService.findAddRequests();
-        List<AddRequest> filters=new ArrayList<AddRequest>();
-        for(AddRequest addRequest: subAddRequests){
-          if(addRequest.getFromUser()!=null){
+        List<AddRequest> filters = new ArrayList<AddRequest>();
+        for (AddRequest addRequest : subAddRequests) {
+          if (addRequest.getFromUser() != null) {
             filters.add(addRequest);
           }
         }
-        subAddRequests=filters;
+        subAddRequests = filters;
       }
 
       @Override
@@ -56,7 +57,7 @@ public class NewFriendActivity extends BaseActivity implements OnItemLongClickLi
           e.printStackTrace();
           Utils.toast(ctx, R.string.pleaseCheckNetwork);
         } else {
-          PreferenceMap preferenceMap = new PreferenceMap(ctx, User.curUserId());
+          PreferenceMap preferenceMap = new PreferenceMap(ctx, User.getCurrentUserId());
           preferenceMap.setAddRequestN(subAddRequests.size());
           adapter.addAll(subAddRequests);
         }

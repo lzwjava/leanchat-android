@@ -2,7 +2,6 @@ package com.avoscloud.chat.service;
 
 import com.avos.avoscloud.*;
 import com.avoscloud.chat.avobject.ChatGroup;
-import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.C;
 
 import java.util.*;
@@ -14,7 +13,7 @@ public class GroupService {
   public static final String GROUP_ID = "groupId";
 
   public static List<ChatGroup> findGroups() throws AVException {
-    User user = User.curUser();
+    AVUser user = AVUser.getCurrentUser();
     AVQuery<ChatGroup> q = AVObject.getQuery(ChatGroup.class);
     q.whereEqualTo(ChatGroup.M, user.getObjectId());
     q.orderByDescending(C.UPDATED_AT);
@@ -23,7 +22,7 @@ public class GroupService {
     return q.find();
   }
 
-  public static boolean isGroupOwner(ChatGroup chatGroup, User user) {
+  public static boolean isGroupOwner(ChatGroup chatGroup, AVUser user) {
     return chatGroup.getOwner().equals(user);
   }
 
@@ -37,13 +36,13 @@ public class GroupService {
     return session.getGroup(chatGroup.getObjectId());
   }
 
-  public static void kickMember(ChatGroup chatGroup, User member) {
+  public static void kickMember(ChatGroup chatGroup, AVUser member) {
     Group group = getGroup(chatGroup);
     group.kickMember(Arrays.asList(member.getObjectId()));
   }
 
   public static ChatGroup setNewChatGroupData(String groupId, String newGroupName) throws AVException {
-    CloudService.saveChatGroup(groupId, User.curUser().getObjectId(), newGroupName);
+    CloudService.saveChatGroup(groupId, AVUser.getCurrentUser().getObjectId(), newGroupName);
     ChatGroup chatGroup = ChatGroup.createWithoutData(ChatGroup.class, groupId);
     chatGroup.fetch("owner");
     return chatGroup;

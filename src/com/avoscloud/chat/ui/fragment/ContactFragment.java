@@ -13,10 +13,11 @@ import android.view.ViewGroup;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.adapter.UserFriendAdapter;
-import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.App;
+import com.avoscloud.chat.entity.SortUser;
 import com.avoscloud.chat.service.AddRequestService;
 import com.avoscloud.chat.service.CacheService;
 import com.avoscloud.chat.service.CloudService;
@@ -41,13 +42,13 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
   XListView friendsList;
   EnLetterView rightLetter;
   UserFriendAdapter userAdapter;
-  List<User> friends = new ArrayList<User>();
+  List<SortUser> friends = new ArrayList<SortUser>();
   HeaderLayout headerLayout;
   ImageView msgTipsView;
   LinearLayout newFriendLayout, groupLayout;
 
-  CharacterParser characterParser;
-  PinyinComparator pinyinComparator;
+  static CharacterParser characterParser;
+  static PinyinComparator pinyinComparator;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,13 +61,16 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
   public void onActivityCreated(Bundle savedInstanceState) {
     // TODO Auto-generated method stub
     super.onActivityCreated(savedInstanceState);
-    init();
+    characterParser = CharacterParser.getInstance();
+    pinyinComparator = new PinyinComparator();
+    intHeader();
+    initListView();
+    initRightLetterView();
+    initEditText();
     onRefresh();
   }
 
-  private void init() {
-    characterParser = CharacterParser.getInstance();
-    pinyinComparator = new PinyinComparator();
+  private void intHeader() {
     headerLayout = (HeaderLayout) getView().findViewById(R.id.headerLayout);
     headerLayout.showTitle(App.ctx.getString(R.string.contact));
     headerLayout.showRightImageButton(R.drawable.base_action_bar_add_bg_selector, new OnClickListener() {
@@ -75,9 +79,6 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
         Utils.goActivity(ctx, AddFriendActivity.class);
       }
     });
-    initListView();
-    initRightLetterView();
-    initEditText();
   }
 
   private void initEditText() {
@@ -91,39 +92,37 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
   }
 
   private void filterData(String filterStr) {
-    List<User> filterDateList = new ArrayList<User>();
+
     if (TextUtils.isEmpty(filterStr)) {
-      filterDateList = friends;
+      userAdapter.updateDatas(friends);
     } else {
+      List<SortUser> filterDateList = new ArrayList<SortUser>();
       filterDateList.clear();
-      for (User sortModel : friends) {
-        String name = sortModel.getUsername();
+      for (SortUser sortModel : friends) {
+        String name = sortModel.getInnerUser().getUsername();
         if (name != null) {
-          if (name.indexOf(filterStr.toString()) != -1
+          if (name.contains(filterStr)
               || characterParser.getSelling(name).startsWith(
-              filterStr.toString())) {
+              filterStr)) {
             filterDateList.add(sortModel);
           }
         }
       }
+      Collections.sort(filterDateList, pinyinComparator);
+      userAdapter.updateDatas(filterDateList);
     }
-    Collections.sort(filterDateList, pinyinComparator);
-    userAdapter.updateListView(filterDateList);
   }
 
-  private void fillFriendsData(List<User> datas) {
-    friends.clear();
+  private List<SortUser> convertAVUser(List<AVUser> datas) {
+    List<SortUser> sortUsers = new ArrayList<SortUser>();
     int total = datas.size();
     for (int i = 0; i < total; i++) {
-      User user = datas.get(i);
-      User sortUser = new User();
-      sortUser.setAvatar(user.getAvatar());
-      sortUser.setUsername(user.getUsername());
-      sortUser.setObjectId(user.getObjectId());
-      //sortUser.(user.getContacts());
-      String username = sortUser.getUsername();
+      AVUser avUser = datas.get(i);
+      SortUser sortUser = new SortUser();
+      sortUser.setInnerUser(avUser);
+      String username = avUser.getUsername();
       if (username != null) {
-        String pinyin = characterParser.getSelling(sortUser.getUsername());
+        String pinyin = characterParser.getSelling(username);
         String sortString = pinyin.substring(0, 1).toUpperCase();
         if (sortString.matches("[A-Z]")) {
           sortUser.setSortLetters(sortString.toUpperCase());
@@ -133,9 +132,10 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
       } else {
         sortUser.setSortLetters("#");
       }
-      friends.add(sortUser);
+      sortUsers.add(sortUser);
     }
-    Collections.sort(friends, pinyinComparator);
+    Collections.sort(sortUsers, pinyinComparator);
+    return sortUsers;
   }
 
   private void initListView() {
@@ -197,7 +197,7 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
   public void onRefresh() {
     new NetAsyncTask(ctx, false) {
       boolean haveAddRequest;
-      List<User> friends1;
+      List<AVUser> friends1;
 
       @Override
       protected void doInBack() throws Exception {
@@ -236,15 +236,12 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
     }
   }
 
-  private void setAddRequestTipsAndListView(boolean hasAddRequest, List<User> friends) {
+  private void setAddRequestTipsAndListView(boolean hasAddRequest, List<AVUser> friends) {
     msgTipsView.setVisibility(hasAddRequest ? View.VISIBLE : View.GONE);
-    fillFriendsData(friends);
-    if (userAdapter == null) {
-      userAdapter = new UserFriendAdapter(getActivity(), friends);
-      friendsList.setAdapter(userAdapter);
-    } else {
-      userAdapter.notifyDataSetChanged();
-    }
+    List<SortUser> sortUsers = convertAVUser(friends);
+    this.friends = Collections.unmodifiableList(sortUsers);
+    userAdapter.updateDatas(sortUsers);
+    userAdapter.notifyDataSetChanged();
   }
 
   private boolean hidden;
@@ -269,20 +266,20 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
   @Override
   public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
     // TODO Auto-generated method stub
-    User user = (User) arg0.getAdapter().getItem(position);
-    ChatActivity.goUserChat(getActivity(), user.getObjectId());
+    SortUser user = (SortUser) arg0.getAdapter().getItem(position);
+    ChatActivity.goUserChat(getActivity(), user.getInnerUser().getObjectId());
   }
 
   @Override
   public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int position,
                                  long arg3) {
     // TODO Auto-generated method stub
-    User user = (User) userAdapter.getItem(position - 1);
+    SortUser user = (SortUser) userAdapter.getItem(position - 1);
     showDeleteDialog(user);
     return true;
   }
 
-  public void showDeleteDialog(final User user) {
+  public void showDeleteDialog(final SortUser user) {
     new AlertDialog.Builder(ctx).setMessage(R.string.deleteContact)
         .setPositiveButton(R.string.sure, new DialogInterface.OnClickListener() {
           @Override
@@ -292,18 +289,17 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
         }).setNegativeButton(R.string.cancel, null).show();
   }
 
-  private void deleteFriend(final User user) {
+  private void deleteFriend(final SortUser user) {
     new SimpleNetTask(ctx) {
       @Override
       protected void doInBack() throws Exception {
-        User curUser = User.curUser();
-        CloudService.removeFriendForBoth(curUser, user);
+        CloudService.removeFriendForBoth(AVUser.getCurrentUser(), user.getInnerUser());
       }
 
       @Override
       public void onSucceed() {
         Utils.toast(App.ctx.getString(R.string.deleteSucceed));
-        userAdapter.remove(user);
+        onRefresh();
       }
     }.execute();
   }

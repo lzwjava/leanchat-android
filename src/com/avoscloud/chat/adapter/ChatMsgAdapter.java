@@ -7,24 +7,24 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.User;
+import com.avoscloud.chat.entity.Msg;
 import com.avoscloud.chat.entity.RoomType;
 import com.avoscloud.chat.service.AudioHelper;
 import com.avoscloud.chat.service.CacheService;
-import com.avoscloud.chat.util.EmotionUtils;
+import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.activity.ChatActivity;
+import com.avoscloud.chat.ui.activity.ImageBrowerActivity;
 import com.avoscloud.chat.ui.activity.LocationActivity;
 import com.avoscloud.chat.ui.view.PlayButton;
 import com.avoscloud.chat.ui.view.ViewHolder;
-import com.avoscloud.chat.entity.Msg;
-import com.avoscloud.chat.service.UserService;
-import com.avoscloud.chat.ui.activity.ImageBrowerActivity;
+import com.avoscloud.chat.util.EmotionUtils;
 import com.avoscloud.chat.util.PathUtils;
 import com.avoscloud.chat.util.PhotoUtil;
 import com.avoscloud.chat.util.TimeUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageSize;
 
 import java.io.File;
 import java.util.List;
@@ -130,7 +130,7 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
     }
 
     String fromPeerId = msg.getFromPeerId();
-    User user = CacheService.lookupUser(fromPeerId);
+    AVUser user = CacheService.lookupUser(fromPeerId);
     if (user == null) {
       throw new RuntimeException("cannot find user");
     }
@@ -142,7 +142,7 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
         usernameView.setText(user.getUsername());
       }
     }
-    UserService.displayAvatar(user.getAvatarUrl(), avatarView);
+    UserService.displayAvatar(User.getAvatarUrl(user), avatarView);
 
     Msg.Type type = msg.getType();
     if (type == Msg.Type.Text) {

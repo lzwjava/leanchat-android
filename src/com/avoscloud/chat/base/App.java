@@ -6,19 +6,21 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.StrictMode;
 import com.avos.avoscloud.*;
-import com.avoscloud.chat.avobject.*;
+import com.avos.avospush.push.AVPushServiceAppManager;
+import com.avoscloud.chat.R;
+import com.avoscloud.chat.avobject.AddRequest;
+import com.avoscloud.chat.avobject.ChatGroup;
+import com.avoscloud.chat.avobject.UpdateInfo;
 import com.avoscloud.chat.service.ChatService;
 import com.avoscloud.chat.service.UpdateService;
-import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.activity.SplashActivity;
 import com.avoscloud.chat.util.Logger;
 import com.avoscloud.chat.util.PhotoUtil;
-import com.baidu.mapapi.SDKInitializer;
 import com.avoscloud.chat.util.Utils;
+import com.baidu.mapapi.SDKInitializer;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.utils.StorageUtils;
-import com.avoscloud.chat.R;
 
 import java.io.File;
 
@@ -43,11 +45,10 @@ public class App extends Application {
     String appId = "x3o016bxnkpyee7e9pa5pre6efx2dadyerdlcez0wbzhw25g";
     String appKey = "057x24cfdzhffnl3dzk14jh9xo2rq6w1hy1fdzt5tv46ym78";
 
-    AVOSCloud.initialize(this, appId,appKey);
+    AVOSCloud.initialize(this, appId, appKey);
 
     //AVOSCloud.initialize(this, publicId,publicKey);
 
-    AVObject.registerSubclass(User.class);
     AVObject.registerSubclass(AddRequest.class);
     AVObject.registerSubclass(ChatGroup.class);
     AVObject.registerSubclass(UpdateInfo.class);
@@ -63,7 +64,7 @@ public class App extends Application {
     initImageLoader(ctx);
     initBaidu();
     openStrictMode();
-    if (User.curUser() != null) {
+    if (AVUser.getCurrentUser() != null) {
       ChatService.openSession();
     }
   }
@@ -110,13 +111,13 @@ public class App extends Application {
       public void run() {
         try {
 
-          if(User.curUser()==null){
+          if (AVUser.getCurrentUser() == null) {
             throw new NullPointerException("Please run it when login");
           }
           //create AddRequest Table
-          AddRequest addRequest=new AddRequest();
-          addRequest.setFromUser(User.curUser());
-          addRequest.setToUser(User.curUser());
+          AddRequest addRequest = new AddRequest();
+          addRequest.setFromUser(AVUser.getCurrentUser());
+          addRequest.setToUser(AVUser.getCurrentUser());
           addRequest.setStatus(AddRequest.STATUS_WAIT);
           addRequest.save();
           addRequest.delete();
@@ -124,12 +125,12 @@ public class App extends Application {
           UpdateService.createUpdateInfo();
 
           //create Avatar Table for default avatar
-          Bitmap bitmap= BitmapFactory.decodeResource(App.ctx.getResources(),R.drawable.head);
-          byte[] bs=Utils.getBytesFromBitmap(bitmap);
-          AVFile file=new AVFile("head",bs);
+          Bitmap bitmap = BitmapFactory.decodeResource(App.ctx.getResources(), R.drawable.head);
+          byte[] bs = Utils.getBytesFromBitmap(bitmap);
+          AVFile file = new AVFile("head", bs);
           file.save();
-          AVObject avatar=new AVObject("Avatar");
-          avatar.put("file",file);
+          AVObject avatar = new AVObject("Avatar");
+          avatar.put("file", file);
           avatar.save();
 
         } catch (AVException e) {

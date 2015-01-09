@@ -3,8 +3,8 @@ package com.avoscloud.chat.service;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.avobject.AddRequest;
-import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.base.C;
 
@@ -17,12 +17,12 @@ public class AddRequestService {
   public static int countAddRequests() throws AVException {
     AVQuery<AddRequest> q = AVObject.getQuery(AddRequest.class);
     q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
-    q.whereEqualTo(AddRequest.TO_USER, User.curUser());
+    q.whereEqualTo(AddRequest.TO_USER, AVUser.getCurrentUser());
     return q.count();
   }
 
   public static List<AddRequest> findAddRequests() throws AVException {
-    User user = User.curUser();
+    AVUser user = AVUser.getCurrentUser();
     AVQuery<AddRequest> q = AVObject.getQuery(AddRequest.class);
     q.include(AddRequest.FROM_USER);
     q.whereEqualTo(AddRequest.TO_USER, user);

@@ -1,6 +1,5 @@
 package com.avoscloud.chat.service;
 
-import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -41,15 +40,15 @@ public class ChatService {
   }
 
   public static String getSelfId() {
-    return getPeerId(User.curUser());
+    return getPeerId(AVUser.getCurrentUser());
   }
 
-  public static <T extends AVUser> void withUsersToWatch(List<T> users, boolean watch) {
+  public static <T extends com.avos.avoscloud.AVUser> void withUsersToWatch(List<T> users, boolean watch) {
     List<String> peerIds = new ArrayList<String>();
-    for (AVUser user : users) {
+    for (com.avos.avoscloud.AVUser user : users) {
       peerIds.add(getPeerId(user));
     }
-    String selfId = getPeerId(User.curUser());
+    String selfId = getPeerId(AVUser.getCurrentUser());
     Session session = SessionManager.getInstance(selfId);
     if (watch) {
       session.watchPeers(peerIds);
@@ -58,26 +57,24 @@ public class ChatService {
     }
   }
 
-  public static <T extends AVUser> void withUserToWatch(T user, boolean watch) {
+  public static <T extends com.avos.avoscloud.AVUser> void withUserToWatch(T user, boolean watch) {
     List<T> users = new ArrayList<T>();
     users.add(user);
     withUsersToWatch(users, watch);
   }
 
   public static Session getSession() {
-    return SessionManager.getInstance(getPeerId(User.curUser()));
+    return SessionManager.getInstance(getPeerId(AVUser.getCurrentUser()));
   }
 
   public static void openSession() {
     Session session = getSession();
     session.setSignatureFactory(new SignatureFactory());
-    if (session.isOpen() == false) {
-      session.open(new LinkedList<String>());
-    }
+    session.open(new LinkedList<String>());
   }
 
   public static List<Conversation> getConversationsAndCache() throws AVException {
-    List<Msg> msgs = DBMsg.getRecentMsgs(User.curUserId());
+    List<Msg> msgs = DBMsg.getRecentMsgs(User.getCurrentUserId());
     cacheUserOrChatGroup(msgs);
     ArrayList<Conversation> conversations = new ArrayList<Conversation>();
     DBHelper dbHelper = new DBHelper(App.ctx, App.DB_NAME, App.DB_VER);
@@ -212,7 +209,7 @@ public class ChatService {
             }
           }
           if (!done) {
-            if (User.curUser() != null) {
+            if (AVUser.getCurrentUser() != null) {
               PreferenceMap preferenceMap = PreferenceMap.getCurUserPrefDao(context);
               if (preferenceMap.isNotifyWhenNews()) {
                 notifyMsg(context, msg, group);
@@ -264,7 +261,7 @@ public class ChatService {
     }
   }
 
-  public static List<User> findGroupMembers(ChatGroup chatGroup) throws AVException {
+  public static List<AVUser> findGroupMembers(ChatGroup chatGroup) throws AVException {
     List<String> members = chatGroup.getMembers();
     return CacheService.findUsers(members);
   }

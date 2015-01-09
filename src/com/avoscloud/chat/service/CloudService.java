@@ -2,36 +2,34 @@ package com.avoscloud.chat.service;
 
 import com.avos.avoscloud.AVCloud;
 import com.avos.avoscloud.AVException;
-import com.avoscloud.chat.avobject.User;
-import com.avoscloud.chat.util.Logger;
+import com.avos.avoscloud.AVUser;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Created by lzw on 14-9-29.
  */
 public class CloudService {
-  public static void removeFriendForBoth(User toUser, User fromUser) throws AVException {
+  public static void removeFriendForBoth(AVUser toUser, AVUser fromUser) throws AVException {
     callCloudRelationFn(toUser, fromUser, "removeFriend");
   }
 
-  public static void callCloudRelationFn(User toUser, User fromUser, String functionName) throws AVException {
+  public static void callCloudRelationFn(AVUser toUser, AVUser fromUser, String functionName) throws AVException {
     Map<String, Object> map = usersParamsMap(fromUser, toUser);
     Object res = AVCloud.callFunction(functionName, map);
   }
 
-  public static Map<String, Object> usersParamsMap(User fromUser, User toUser) {
+  public static Map<String, Object> usersParamsMap(AVUser fromUser, AVUser toUser) {
     Map<String, Object> map = new HashMap<String, Object>();
     map.put("fromUserId", fromUser.getObjectId());
     map.put("toUserId", toUser.getObjectId());
     return map;
   }
 
-  public static void tryCreateAddRequest(User toUser) throws AVException {
-    User user = User.curUser();
+  public static void tryCreateAddRequest(AVUser toUser) throws AVException {
+    AVUser user = AVUser.getCurrentUser();
     Map<String, Object> map = usersParamsMap(user, toUser);
     AVCloud.callFunction("tryCreateAddRequest", map);
   }

@@ -7,11 +7,12 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.util.NetAsyncTask;
 import com.avoscloud.chat.util.Utils;
+
 
 public class LoginActivity extends BaseEntryActivity implements OnClickListener {
   EditText usernameEdit, passwordEdit;
@@ -61,7 +62,7 @@ public class LoginActivity extends BaseEntryActivity implements OnClickListener 
     new NetAsyncTask(ctx) {
       @Override
       protected void doInBack() throws Exception {
-        User.logIn(name, password);
+        AVUser.logIn(name, password);
       }
 
       @Override

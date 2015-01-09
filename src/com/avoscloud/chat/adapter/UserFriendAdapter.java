@@ -9,29 +9,30 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
-import com.avoscloud.chat.avobject.User;
-import com.avoscloud.chat.ui.view.ViewHolder;
 import com.avoscloud.chat.R;
+import com.avoscloud.chat.avobject.User;
+import com.avoscloud.chat.entity.SortUser;
 import com.avoscloud.chat.service.UserService;
+import com.avoscloud.chat.ui.view.ViewHolder;
 
 import java.util.List;
 
 @SuppressLint("DefaultLocale")
 public class UserFriendAdapter extends BaseAdapter implements SectionIndexer {
   private Context ct;
-  private List<User> data;
+  private List<SortUser> data;
 
-  public UserFriendAdapter(Context ct, List<User> datas) {
+  public UserFriendAdapter(Context ct, List<SortUser> datas) {
     this.ct = ct;
     this.data = datas;
   }
 
-  public void updateListView(List<User> list) {
+  public void updateDatas(List<SortUser> list) {
     this.data = list;
     notifyDataSetChanged();
   }
 
-  public void remove(User user) {
+  public void remove(SortUser user) {
     this.data.remove(user);
     notifyDataSetChanged();
   }
@@ -61,11 +62,11 @@ public class UserFriendAdapter extends BaseAdapter implements SectionIndexer {
     TextView nameView = ViewHolder.findViewById(convertView, R.id.tv_friend_name);
     ImageView avatarView = ViewHolder.findViewById(convertView, R.id.img_friend_avatar);
 
-    User friend = data.get(position);
-    final String name = friend.getUsername();
-    final String avatarUrl = friend.getAvatarUrl();
+    SortUser friend = data.get(position);
+    final String name = friend.getInnerUser().getUsername();
+    final String avatarUrl = User.getAvatarUrl(friend.getInnerUser());
 
-    UserService.displayAvatar(avatarUrl,avatarView);
+    UserService.displayAvatar(avatarUrl, avatarView);
     nameView.setText(name);
 
     int section = getSectionForPosition(position);

@@ -6,19 +6,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.avos.avoscloud.AVGeoPoint;
-import com.avoscloud.chat.avobject.User;
-import com.avoscloud.chat.service.PreferenceMap;
-import com.avoscloud.chat.ui.view.ViewHolder;
+import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
+import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.App;
+import com.avoscloud.chat.service.PreferenceMap;
 import com.avoscloud.chat.service.UserService;
+import com.avoscloud.chat.ui.view.ViewHolder;
 import com.avoscloud.chat.util.Utils;
 import org.ocpsoft.prettytime.PrettyTime;
 
 import java.util.Date;
 import java.util.List;
 
-public class NearPeopleAdapter extends BaseListAdapter<User> {
+public class NearPeopleAdapter extends BaseListAdapter<AVUser> {
   PrettyTime prettyTime;
   AVGeoPoint location;
 
@@ -33,7 +34,7 @@ public class NearPeopleAdapter extends BaseListAdapter<User> {
     location = preferenceMap.getLocation();
   }
 
-  public NearPeopleAdapter(Context ctx, List<User> datas) {
+  public NearPeopleAdapter(Context ctx, List<AVUser> datas) {
     super(ctx, datas);
     init();
   }
@@ -43,22 +44,22 @@ public class NearPeopleAdapter extends BaseListAdapter<User> {
     if (convertView == null) {
       convertView = inflater.inflate(R.layout.discover_near_people_item, null, false);
     }
-    final User user = datas.get(position);
+    final AVUser user = datas.get(position);
     TextView nameView = ViewHolder.findViewById(convertView, R.id.name_text);
     TextView distanceView = ViewHolder.findViewById(convertView, R.id.distance_text);
     TextView loginTimeView = ViewHolder.findViewById(convertView, R.id.login_time_text);
     ImageView avatarView = ViewHolder.findViewById(convertView, R.id.avatar_view);
-    String avatarUrl = user.getAvatarUrl();
+    String avatarUrl = User.getAvatarUrl(user);
 
     UserService.displayAvatar(avatarUrl, avatarView);
 
-    AVGeoPoint geoPoint = user.getLocation();
+    AVGeoPoint geoPoint = user.getAVGeoPoint(User.LOCATION);
     String currentLat = String.valueOf(location.getLatitude());
     String currentLong = String.valueOf(location.getLongitude());
     if (geoPoint != null && !currentLat.equals("") && !currentLong.equals("")) {
       double distance = DistanceOfTwoPoints(Double.parseDouble(currentLat), Double.parseDouble(currentLong),
-          user.getLocation().getLatitude(),
-          user.getLocation().getLongitude());
+          user.getAVGeoPoint(User.LOCATION).getLatitude(),
+          user.getAVGeoPoint(User.LOCATION).getLongitude());
       distanceView.setText(Utils.getPrettyDistance(distance));
     } else {
       distanceView.setText(App.ctx.getString(R.string.unknown));

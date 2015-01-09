@@ -4,18 +4,16 @@ import android.text.TextUtils;
 import android.widget.ImageView;
 import com.avos.avoscloud.*;
 import com.avoscloud.chat.avobject.User;
+import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.base.C;
 import com.avoscloud.chat.util.Logger;
 import com.avoscloud.chat.util.PhotoUtil;
-import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.util.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by lzw on 14-9-15.
@@ -25,19 +23,19 @@ public class UserService {
   public static final int ORDER_DISTANCE = 0;
   public static ImageLoader imageLoader = ImageLoader.getInstance();
 
-  public static User findUser(String id) throws AVException {
-    AVQuery<User> q = User.getQuery(User.class);
+  public static AVUser findUser(String id) throws AVException {
+    AVQuery<AVUser> q = AVUser.getQuery(AVUser.class);
     q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ONLY);
     return q.get(id);
   }
 
-  public static List<User> findFriends() throws AVException {
-    User curUser = User.curUser();
-    AVRelation<User> relation = curUser.getRelation(User.FRIENDS);
+  public static List<AVUser> findFriends() throws AVException {
+    AVUser curUser = AVUser.getCurrentUser();
+    AVRelation<AVUser> relation = curUser.getRelation(User.FRIENDS);
     relation.setTargetClass("_User");
-    AVQuery<User> query = relation.getQuery(User.class);
+    AVQuery<AVUser> query = relation.getQuery(AVUser.class);
     query.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
-    List<User> users = query.find();
+    List<AVUser> users = query.find();
     return users;
   }
 
@@ -45,41 +43,41 @@ public class UserService {
     imageLoader.displayImage(imageUrl, avatarView, PhotoUtil.avatarImageOptions);
   }
 
-  public static void displayAvatar(User user,ImageView avatarView){
-    if(user!=null){
-      String avatarUrl = user.getAvatarUrl();
-      if(TextUtils.isEmpty(avatarUrl)==false){
-        displayAvatar(avatarUrl,avatarView);
+  public static void displayAvatar(AVUser user, ImageView avatarView) {
+    if (user != null) {
+      String avatarUrl = User.getAvatarUrl(user);
+      if (TextUtils.isEmpty(avatarUrl) == false) {
+        displayAvatar(avatarUrl, avatarView);
       }
     }
   }
 
-  public static List<User> searchUser(String searchName, int skip) throws AVException {
-    AVQuery<User> q = User.getQuery(User.class);
+  public static List<AVUser> searchUser(String searchName, int skip) throws AVException {
+    AVQuery<AVUser> q = AVUser.getQuery(AVUser.class);
     q.whereContains(User.USERNAME, searchName);
     q.limit(C.PAGE_SIZE);
     q.skip(skip);
-    User user = User.curUser();
+    AVUser user = AVUser.getCurrentUser();
     List<String> friendIds = new ArrayList<String>(CacheService.getFriendIds());
     friendIds.add(user.getObjectId());
     q.whereNotContainedIn(C.OBJECT_ID, friendIds);
     q.orderByDescending(C.UPDATED_AT);
     q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
-    List<User> users = q.find();
+    List<AVUser> users = q.find();
     CacheService.registerBatchUser(users);
     return users;
   }
 
 
-  public static List<User> findNearbyPeople(int skip, int orderType) throws AVException {
+  public static List<AVUser> findNearbyPeople(int orderType, int skip, int limit) throws AVException {
     PreferenceMap preferenceMap = PreferenceMap.getCurUserPrefDao(App.ctx);
     AVGeoPoint geoPoint = preferenceMap.getLocation();
     if (geoPoint == null) {
       Logger.i("geo point is null");
-      return new ArrayList<User>();
+      return new ArrayList<AVUser>();
     }
-    AVQuery<User> q = AVObject.getQuery(User.class);
-    User user = User.curUser();
+    AVQuery<AVUser> q = AVObject.getQuery(AVUser.class);
+    AVUser user = AVUser.getCurrentUser();
     q.whereNotEqualTo(C.OBJECT_ID, user.getObjectId());
     if (orderType == ORDER_DISTANCE) {
       q.whereNear(User.LOCATION, geoPoint);
@@ -87,16 +85,16 @@ public class UserService {
       q.orderByDescending(C.UPDATED_AT);
     }
     q.skip(skip);
+    q.limit(limit);
     q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
-    q.limit(C.PAGE_SIZE);
-    List<User> users = q.find();
+    List<AVUser> users = q.find();
     CacheService.registerBatchUser(users);
     return users;
   }
 
   public static void saveSex(User.Gender gender, SaveCallback saveCallback) {
-    User user = User.curUser();
-    user.setGender(gender);
+    AVUser user = AVUser.getCurrentUser();
+    User.setGender(user, gender);
     user.saveInBackground(saveCallback);
   }
 
@@ -108,8 +106,8 @@ public class UserService {
     return ids;
   }
 
-  public static User signUp(String name, String password) throws AVException {
-    User user = new User();
+  public static AVUser signUp(String name, String password) throws AVException {
+    AVUser user = new AVUser();
     user.setUsername(name);
     user.setPassword(password);
     user.signUp();
@@ -123,21 +121,21 @@ public class UserService {
   }
 
   public static void saveAvatar(String path) throws IOException, AVException {
-    User user = User.curUser();
+    AVUser user = AVUser.getCurrentUser();
     final AVFile file = AVFile.withAbsoluteLocalPath(user.getUsername(), path);
     file.save();
-    user.setAvatar(file);
+    user.put(User.AVATAR, file);
 
     user.save();
     user.fetch();
   }
 
   public static void updateUserInfo() {
-    User user = User.curUser();
+    AVUser user = AVUser.getCurrentUser();
     if (user != null) {
       AVInstallation installation = AVInstallation.getCurrentInstallation();
       if (installation != null) {
-        user.setInstallation(installation);
+        user.put(User.INSTALLATION, installation);
         user.saveInBackground();
       }
     }
@@ -147,18 +145,18 @@ public class UserService {
     PreferenceMap preferenceMap = PreferenceMap.getCurUserPrefDao(App.ctx);
     AVGeoPoint lastLocation = preferenceMap.getLocation();
     if (lastLocation != null) {
-      final User user = User.curUser();
-      final AVGeoPoint location = user.getLocation();
+      final AVUser user = AVUser.getCurrentUser();
+      final AVGeoPoint location = user.getAVGeoPoint(User.LOCATION);
       if (location == null || !Utils.doubleEqual(location.getLatitude(), lastLocation.getLatitude())
           || !Utils.doubleEqual(location.getLongitude(), lastLocation.getLongitude())) {
-        user.setLocation(lastLocation);
+        user.put(User.LOCATION, lastLocation);
         user.saveInBackground(new SaveCallback() {
           @Override
           public void done(AVException e) {
             if (e != null) {
               e.printStackTrace();
             } else {
-              Logger.v("lastLocation save " + user.getLocation());
+              Logger.v("lastLocation save " + user.getAVGeoPoint(User.LOCATION));
             }
           }
         });

@@ -7,11 +7,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.avos.avoscloud.AVUser;
+import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.C;
-import com.avoscloud.chat.ui.view.ViewHolder;
-import com.avoscloud.chat.R;
 import com.avoscloud.chat.service.UserService;
+import com.avoscloud.chat.ui.view.ViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,13 +22,13 @@ import java.util.List;
  */
 public class UserAdapter extends BaseAdapter {
   Activity cxt;
-  List<User> users = new ArrayList<User>();
+  List<AVUser> users = new ArrayList<AVUser>();
 
   public UserAdapter(Activity cxt) {
     this.cxt = cxt;
   }
 
-  public void setUsers(List<User> users) {
+  public void setUsers(List<AVUser> users) {
     this.users = users;
   }
 
@@ -55,11 +56,11 @@ public class UserAdapter extends BaseAdapter {
     TextView usernameView = ViewHolder.findViewById(conView, R.id.name);
     TextView onlineStatusView = ViewHolder.findViewById(conView, R.id.onlineStatus);
     ImageView avatarView = ViewHolder.findViewById(conView, R.id.userAvatar);
-    User user = users.get(position);
+    AVUser user = users.get(position);
     usernameView.setText(user.getUsername());
     setTextBasedOnFlag(user.getBoolean(C.ONLINE), onlineStatusView,
         R.string.status_online, R.string.status_offline);
-    UserService.displayAvatar(user.getAvatarUrl(), avatarView);
+    UserService.displayAvatar(User.getAvatarUrl(user), avatarView);
     return conView;
   }
 

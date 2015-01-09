@@ -7,15 +7,13 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.FindCallback;
+import com.avos.avoscloud.AVUser;
+import com.avoscloud.chat.R;
 import com.avoscloud.chat.adapter.AddFriendAdapter;
-import com.avoscloud.chat.avobject.User;
+import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.view.xlist.XListView;
 import com.avoscloud.chat.util.ChatUtils;
-import com.avoscloud.chat.R;
-import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.util.NetAsyncTask;
 import com.avoscloud.chat.util.Utils;
 
@@ -25,7 +23,7 @@ import java.util.List;
 public class AddFriendActivity extends BaseActivity implements OnClickListener, XListView.IXListViewListener, OnItemClickListener {
   EditText searchNameEdit;
   Button searchBtn;
-  List<User> users = new ArrayList<User>();//change it first , then adapter
+  List<AVUser> users = new ArrayList<AVUser>();//change it first , then adapter
   XListView listView;
   AddFriendAdapter adapter;
   String searchName = "";
@@ -78,7 +76,7 @@ public class AddFriendActivity extends BaseActivity implements OnClickListener, 
 
   private void search(final String searchName) {
     new NetAsyncTask(ctx, false) {
-      List<User> users;
+      List<AVUser> users;
 
       @Override
       protected void doInBack() throws Exception {

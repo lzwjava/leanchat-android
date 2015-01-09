@@ -3,6 +3,7 @@ package com.avoscloud.chat.db;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.entity.Msg;
@@ -65,7 +66,7 @@ public class DBMsg {
         cv.put(CONVID, msg.getConvid());
         cv.put(READ_STATUS, msg.getReadStatus().getValue());
         cv.put(TO_PEER_ID, msg.getToPeerId());
-        cv.put(OWNER_ID, User.curUserId());
+        cv.put(OWNER_ID, User.getCurrentUserId());
         cv.put(TYPE, msg.getType().getValue());
         cv.put(CONTENT, msg.getContent());
         db.insert(MESSAGES, null, cv);

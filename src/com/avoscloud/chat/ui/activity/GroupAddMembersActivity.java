@@ -6,10 +6,8 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.adapter.GroupAddMembersAdapter;
-import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.service.CacheService;
 import com.avoscloud.chat.service.GroupService;
-import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.util.SimpleNetTask;
 import com.avoscloud.chat.util.Utils;
 

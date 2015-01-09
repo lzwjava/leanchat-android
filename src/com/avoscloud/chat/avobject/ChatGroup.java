@@ -2,6 +2,7 @@ package com.avoscloud.chat.avobject;
 
 import com.avos.avoscloud.AVClassName;
 import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,11 +38,11 @@ public class ChatGroup extends AVObject {
     put(NAME, name);
   }
 
-  public User getOwner() {
-    return getAVUser(OWNER, User.class);
+  public AVUser getOwner() {
+    return getAVUser(OWNER, AVUser.class);
   }
 
-  public void setOwner(User owner) {
+  public void setOwner(AVUser owner) {
     put(OWNER, owner);
   }
 
