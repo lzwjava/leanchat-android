@@ -14,21 +14,6 @@
 ![img](https://raw.githubusercontent.com/lzwjava/plan/master/im362.png)
 
 
-##当前特性
-
-###单聊
-* 消息支持文字，图片
-* 接受回执，有发送失败、发送成功，已接收状态。
-* 本地保存消息记录
-* 统一的服务器时间戳
-
-
-###群聊
-* 邀请群成员
-* 踢人
-* 建群
-* 退群
-
 ## 依赖
 
 用到的依赖包，都在[libs](https://github.com/avoscloud/Adventure/tree/master/libs)中：
@@ -38,6 +23,7 @@
 
 ## 部署项目
 见[如何替换 AppId 部署应用](https://github.com/leancloud/leanchat-android/wiki/%E5%A6%82%E4%BD%95%E6%9B%BF%E6%8D%A2-AppId-%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8)
+
 
 ###[Document](http://leancloud.cn/docs/realtime.html)
 
