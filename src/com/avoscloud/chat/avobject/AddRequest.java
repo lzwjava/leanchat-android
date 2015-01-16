@@ -15,13 +15,14 @@ public class AddRequest extends AVObject {
   public static final String FROM_USER = "fromUser";
   public static final String TO_USER = "toUser";
   public static final String STATUS = "status";
-  AVUser fromUser;
+
   AVUser toUser;
   //int status;
 
   public AddRequest() {
   }
 
+  AVUser fromUser;
   public synchronized AVUser getFromUser() {
     if (fromUser == null) {
       fromUser = getAVUser(FROM_USER, AVUser.class);

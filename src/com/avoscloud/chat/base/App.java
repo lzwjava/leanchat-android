@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.StrictMode;
 import com.avos.avoscloud.*;
-import com.avos.avospush.push.AVPushServiceAppManager;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.AddRequest;
 import com.avoscloud.chat.avobject.ChatGroup;
@@ -15,7 +14,7 @@ import com.avoscloud.chat.service.ChatService;
 import com.avoscloud.chat.service.UpdateService;
 import com.avoscloud.chat.ui.activity.SplashActivity;
 import com.avoscloud.chat.util.Logger;
-import com.avoscloud.chat.util.PhotoUtil;
+import com.avoscloud.chat.util.PhotoUtils;
 import com.avoscloud.chat.util.Utils;
 import com.baidu.mapapi.SDKInitializer;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -100,7 +99,7 @@ public class App extends Application {
   public static void initImageLoader(Context context) {
     File cacheDir = StorageUtils.getOwnCacheDirectory(context,
         "leanchat/Cache");
-    ImageLoaderConfiguration config = PhotoUtil.getImageLoaderConfig(context, cacheDir);
+    ImageLoaderConfiguration config = PhotoUtils.getImageLoaderConfig(context, cacheDir);
     // Initialize ImageLoader with configuration.
     ImageLoader.getInstance().init(config);
   }

@@ -1,7 +1,6 @@
 package com.avoscloud.chat.ui.activity;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;

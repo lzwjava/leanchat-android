@@ -16,7 +16,7 @@ import com.avoscloud.chat.entity.Msg;
 import com.avoscloud.chat.entity.RoomType;
 import com.avoscloud.chat.ui.view.ViewHolder;
 import com.avoscloud.chat.util.EmotionUtils;
-import com.avoscloud.chat.util.PhotoUtil;
+import com.avoscloud.chat.util.PhotoUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class RecentMessageAdapter extends BaseListAdapter<Conversation> {
@@ -48,7 +48,7 @@ public class RecentMessageAdapter extends BaseListAdapter<Conversation> {
       AVUser user = item.getToUser();
       String avatar = User.getAvatarUrl(user);
       if (avatar != null && !avatar.equals("")) {
-        ImageLoader.getInstance().displayImage(avatar, recentAvatarView, PhotoUtil.avatarImageOptions);
+        ImageLoader.getInstance().displayImage(avatar, recentAvatarView, PhotoUtils.avatarImageOptions);
       } else {
         recentAvatarView.setImageResource(R.drawable.default_user_avatar);
       }

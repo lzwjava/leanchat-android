@@ -22,7 +22,7 @@ import com.avoscloud.chat.ui.view.PlayButton;
 import com.avoscloud.chat.ui.view.ViewHolder;
 import com.avoscloud.chat.util.EmotionUtils;
 import com.avoscloud.chat.util.PathUtils;
-import com.avoscloud.chat.util.PhotoUtil;
+import com.avoscloud.chat.util.PhotoUtils;
 import com.avoscloud.chat.util.TimeUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -243,9 +243,9 @@ public class ChatMsgAdapter extends BaseListAdapter<Msg> {
     File file = new File(localPath);
     ImageLoader imageLoader = UserService.imageLoader;
     if (file.exists()) {
-      imageLoader.displayImage("file://" + localPath, imageView, PhotoUtil.normalImageOptions);
+      imageLoader.displayImage("file://" + localPath, imageView, PhotoUtils.normalImageOptions);
     } else {
-      imageLoader.displayImage(url, imageView, PhotoUtil.normalImageOptions);
+      imageLoader.displayImage(url, imageView, PhotoUtils.normalImageOptions);
     }
   }
 

@@ -7,7 +7,7 @@ import android.content.res.Resources;
  *
  * @author MarkMjw
  */
-public class PixelUtil {
+public class PixelUtils {
   private static Resources resources = Resources.getSystem();
   private static int desityDpi = resources.getDisplayMetrics().densityDpi;
   private static float scaledDensity = resources.getDisplayMetrics().scaledDensity;

@@ -178,12 +178,12 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
     if (extras != null) {
       Bitmap bitmap = extras.getParcelable("data");
       if (bitmap != null) {
-        bitmap = PhotoUtil.toRoundCorner(bitmap, 10);
+        bitmap = PhotoUtils.toRoundCorner(bitmap, 10);
         String filename = new SimpleDateFormat("yyMMddHHmmss")
             .format(new Date());
         path = PathUtils.getAvatarDir() + filename;
         Logger.d("save bitmap to " + path);
-        PhotoUtil.saveBitmap(PathUtils.getAvatarDir(), filename,
+        PhotoUtils.saveBitmap(PathUtils.getAvatarDir(), filename,
             bitmap, true);
         if (bitmap != null && bitmap.isRecycled() == false) {
           //bitmap.recycle();

@@ -10,7 +10,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
-import com.avoscloud.chat.util.PixelUtil;
+import com.avoscloud.chat.util.PixelUtils;
 import com.avoscloud.chat.R;
 
 public class EnLetterView extends View {
@@ -49,7 +49,7 @@ public class EnLetterView extends View {
       paint.setColor(getResources().getColor(R.color.color_bottom_text_normal));
       paint.setTypeface(Typeface.DEFAULT_BOLD);
       paint.setAntiAlias(true);
-      paint.setTextSize(PixelUtil.sp2px(12));
+      paint.setTextSize(PixelUtils.sp2px(12));
       if (i == choose) {
         paint.setColor(Color.parseColor("#3399ff"));
         paint.setFakeBoldText(true);

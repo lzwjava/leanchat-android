@@ -639,7 +639,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, MsgLi
     final String objectId = Utils.uuid();
     final String newPath = PathUtils.getChatFilePath(objectId);
     //PhotoUtil.simpleCompressImage(localSelectPath,newPath);
-    PhotoUtil.compressImage(localSelectPath, newPath);
+    PhotoUtils.compressImage(localSelectPath, newPath);
     if (isStateFine()) {
       msgAgent.createAndSendMsg(new MsgAgent.MsgBuilderHelper() {
         @Override
