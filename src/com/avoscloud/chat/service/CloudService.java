@@ -3,6 +3,9 @@ package com.avoscloud.chat.service;
 import com.avos.avoscloud.AVCloud;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
+import com.avoscloud.chat.R;
+import com.avoscloud.chat.base.App;
+import com.avoscloud.chat.util.Utils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +15,12 @@ import java.util.Map;
  * Created by lzw on 14-9-29.
  */
 public class CloudService {
+  public static void checkCloudCodeDeploy(AVException e) {
+    if (e.getCode() == AVException.INVALID_JSON) {
+      Utils.toast(App.ctx.getString(R.string.cloudCodeNotDeployTips));
+    }
+  }
+
   public static void removeFriendForBoth(AVUser toUser, AVUser fromUser) throws AVException {
     callCloudRelationFn(toUser, fromUser, "removeFriend");
   }
@@ -52,7 +61,7 @@ public class CloudService {
     Map<String, Object> map = new HashMap<String, Object>();
     map.put("self_id", selfId);
     map.put("watch_ids", watchIds);
-    return (HashMap<String,Object>)AVCloud.callFunction("sign", map);
+    return (HashMap<String, Object>) AVCloud.callFunction("sign", map);
   }
 
   public static HashMap<String, Object> groupSign(String selfId, String groupId, List<String> peerIds, String action) throws AVException {
@@ -61,6 +70,6 @@ public class CloudService {
     map.put("group_id", groupId);
     map.put("group_peer_ids", peerIds);
     map.put("action", action);
-    return (HashMap<String,Object>)AVCloud.callFunction("group_sign", map);
+    return (HashMap<String, Object>) AVCloud.callFunction("group_sign", map);
   }
 }

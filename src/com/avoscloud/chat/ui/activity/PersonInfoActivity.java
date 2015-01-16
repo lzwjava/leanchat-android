@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.*;
+import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.User;
@@ -122,6 +123,7 @@ public class PersonInfoActivity extends BaseActivity implements OnClickListener 
           protected void onPost(Exception e) {
             if (e != null) {
               Utils.toast(e.getMessage());
+              CloudService.checkCloudCodeDeploy((AVException) e);
             } else {
               Utils.toast(R.string.sendRequestSucceed);
             }
