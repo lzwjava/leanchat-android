@@ -44,20 +44,12 @@ LeanChat 是 [LeanCloud](http://leancloud.cn) [实时通信](https://leancloud.c
 
 #### 初始化数据表
 
-LeanChat 的运行会依赖一些表，使用下面的步骤进行创建：
-
-1. `com.avoscloud.chat.ui.activity.MainActivity#onCreate(Bundle)` 方法的最后，取消对 `App.initTables();` 语句的注释。
-2. 编译并安装运行应用。
-3. 注册账号并登陆。
-
-登陆完成后，`App.initTables();` 语句会被执行，数据表就会被创建。可以从 LeanCloud 网站的数据控制台确认是否存在如下几张表：
-
+请创建下面几个表(Class)，创建表即可，不用设置字段。
 ```
 AddRequest
 Avatar
 UpdateInfo
 ```
-确认无误后，退出应用。**并将 `App.initTabes();` 语句注释或者删除**。
 
 **提示**：如果需要，你还可以查看 LeanChat 范例应用的表结构，请以公共账号登录 [leancloud.cn](http://leancloud.cn) ，账号/密码：leancloud@163.com/Public123 ，选择应用 LeanChat-Public 即可，这只是一个示例，和本 demo 的表结构一样，但数据不一样。
 
