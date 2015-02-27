@@ -18,7 +18,15 @@ public class AddRequestService {
     AVQuery<AddRequest> q = AVObject.getQuery(AddRequest.class);
     q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
     q.whereEqualTo(AddRequest.TO_USER, AVUser.getCurrentUser());
-    return q.count();
+    try {
+      return q.count();
+    } catch (AVException e) {
+      if (e.getCode() == AVException.CACHE_MISS) {
+        return 0;
+      } else {
+        throw e;
+      }
+    }
   }
 
   public static List<AddRequest> findAddRequests() throws AVException {

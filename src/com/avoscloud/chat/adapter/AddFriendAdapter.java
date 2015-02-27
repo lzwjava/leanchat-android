@@ -7,9 +7,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.User;
+import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.service.CloudService;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.view.ViewHolder;
@@ -52,6 +54,7 @@ public class AddFriendAdapter extends BaseListAdapter<AVUser> {
           protected void onPost(Exception e) {
             if (e != null) {
               Utils.toast(e.getMessage());
+              CloudService.checkCloudCodeDeploy((AVException) e);
             } else {
               Utils.toast(R.string.sendRequestSucceed);
             }

@@ -130,5 +130,6 @@
 
     <string name="listEmptyHint">无数据</string>
     <string name="noMore">已无更多</string>
+    <string name="cloudCodeNotDeployTips">云代码未部署，请到项目主页根据说明来部署</string>
 
 </resources>
