@@ -1,4 +1,8 @@
-bin
-gen
 *.apk
 lint-result.xml
+app/build
+.gradle
+local.properties
+.idea/workspace.xml
+.idea/libraries
+.DS_Store

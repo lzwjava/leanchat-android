@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="#ffbaba"
+    android:padding="10dp"
+    android:gravity="center_vertical"
+    android:id="@+id/im_client_state_view"
+    android:visibility="visible">
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginLeft="30dp"
+        android:src="@drawable/message_send_fail" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="20dp"
+        android:textSize="16sp"
+        android:text="会话断开，请检查网络连接"
+        android:textColor="#707070" />
+
+</LinearLayout>
