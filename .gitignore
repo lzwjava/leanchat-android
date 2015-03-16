@@ -1,3 +1,5 @@
+build
+gen
 *.apk
 lint-result.xml
 app/build
