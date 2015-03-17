@@ -23,7 +23,6 @@ import com.avoscloud.chat.service.chat.MsgUtils;
 import com.avoscloud.chat.ui.view.PlayButton;
 import com.avoscloud.chat.ui.view.ViewHolder;
 import com.avoscloud.chat.util.EmotionUtils;
-import com.avoscloud.chat.util.PathUtils;
 import com.avoscloud.chat.util.PhotoUtils;
 import com.avoscloud.chat.util.TimeUtils;
 
@@ -159,20 +158,21 @@ public class ChatMsgAdapter extends BaseListAdapter<AVIMTypedMessage> {
     if (isComMsg == false) {
       hideStatusViews(statusSendStart, statusSendFailed, statusSendSucceed);
       setSendFailedBtnListener(statusSendFailed, msg);
-/*      switch (msg.getStatus()) {
-        case SendFailed:
+      switch (msg.getMessageStatus()) {
+        case AVIMMessageStatusFailed:
           statusSendFailed.setVisibility(View.VISIBLE);
           break;
-        case SendSucceed:
+        case AVIMMessageStatusSent:
           statusSendSucceed.setVisibility(View.VISIBLE);
           break;
-        case SendStart:
+        case AVIMMessageStatusNone:
+        case AVIMMessageStatusSending:
           statusSendStart.setVisibility(View.VISIBLE);
           break;
-      }*/
-      /*if (chatActivity.convType == ConvType.Group) {
+      }
+      if (convType == ConvType.Group) {
         statusSendSucceed.setVisibility(View.GONE);
-      }*/
+      }
     }
     return conView;
   }

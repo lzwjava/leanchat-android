@@ -3,6 +3,7 @@ package com.avoscloud.chat.db;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import com.avos.avoscloud.im.v2.AVIMMessageStatus;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.util.ParcelableUtil;
@@ -52,6 +53,14 @@ public class MsgsTable {
     return insertMsgs(msgs);
   }
 
+  public byte[] marshallMsg(AVIMTypedMessage msg) {
+    byte[] msgBytes = ParcelableUtil.marshall(msg);
+    if (msgBytes == null) {
+      throw new NullPointerException("msg bytes is null");
+    }
+    return msgBytes;
+  }
+
   int insertMsgs(List<AVIMTypedMessage> msgs) {
     SQLiteDatabase db = dbHelper.getWritableDatabase();
     db.beginTransaction();
@@ -62,11 +71,7 @@ public class MsgsTable {
         cv.put(MSG_ID, msg.getMessageId());
         cv.put(TIME, msg.getTimestamp() + "");
         cv.put(CONVID, msg.getConversationId());
-        byte[] msgBytes = ParcelableUtil.marshall(msg);
-        if (msgBytes == null) {
-          throw new NullPointerException("msg bytes is null");
-        }
-        cv.put(OBJECT, msgBytes);
+        cv.put(OBJECT, marshallMsg(msg));
         db.insert(MSGS_TABLE, null, cv);
         n++;
       }
@@ -122,52 +127,37 @@ public class MsgsTable {
     cv.put(STATUS, status.getValue());
     cv.put(TIMESTAMP, timestamp + "");
     String objectId = msgId;
-    return updateMessage(objectId, cv);
+    return updateMsg(objectId, cv);
   }*/
 
-  int updateMessage(String msgId, ContentValues cv) {
+  public int updateMsg(String msgId, AVIMTypedMessage msg) {
+    byte[] bytes = marshallMsg(msg);
+    ContentValues cv = new ContentValues();
+    cv.put(OBJECT, bytes);
+    return updateMsg(msgId, msg);
+  }
+
+  private AVIMTypedMessage selectMsgByMsgId(String msgId) {
+    SQLiteDatabase db = dbHelper.getReadableDatabase();
+    Cursor c = db.query(MSGS_TABLE, null, "msg_id=?", new String[]{msgId}, null, null, null);
+    return createMsgByCursor(c);
+  }
+
+  public int updateStatus(String msgId, AVIMMessageStatus status) {
+    AVIMTypedMessage msg = selectMsgByMsgId(msgId);
+    if (msg.getMessageStatus() != status) {
+      msg.setMessageStatus(status);
+      return updateMsg(msgId, msg);
+    } else {
+      return 0;
+    }
+  }
+
+  private int updateMsg(String msgId, ContentValues cv) {
     SQLiteDatabase db = dbHelper.getWritableDatabase();
     int updateN = db.update(MSGS_TABLE, cv, "msg_id=?", new String[]{msgId});
     return updateN;
   }
-/*
-  public static int updateStatus(String objectId, AVIMTypedMessage.Status status) {
-    ContentValues cv = new ContentValues();
-    cv.put(STATUS, status.getValue());
-    return updateMessage(objectId, cv);
-  }*/
-
-  /*public static void markMsgsAsHaveRead(List<AVIMTypedMessage> msgs) {
-    DBHelper dbHelper = new DBHelper(App.ctx, App.DB_NAME, App.DB_VER);
-    SQLiteDatabase db = dbHelper.getWritableDatabase();
-    db.beginTransaction();
-    for (AVIMTypedMessage msg : msgs) {
-      msg.setReadStatus(AVIMTypedMessage.ReadStatus.HaveRead);
-      ContentValues cv = new ContentValues();
-      cv.put(READ_STATUS, msg.getReadStatus().getValue());
-      db.update(MESSAGES, cv, "objectId=?", new String[]{msg.getObjectId()});
-    }
-    db.setTransactionSuccessful();
-    db.endTransaction();
-    db.close();
-  }
-*/
-  /*public static int getUnreadCount(SQLiteDatabase db, String convid) {
-    int count = 0;
-    Cursor cursor = db.rawQuery("select count(*) from messages where convid=? and readStatus=?",
-        new String[]{convid, AVIMTypedMessage.ReadStatus.Unread.getValue() + ""});
-    if (cursor.moveToNext()) {
-      count = cursor.getInt(0);
-    }
-    cursor.close();
-    return count;
-  }*/
-
-/*  public static void updateContent(String objectId, String url) {
-    ContentValues cv = new ContentValues();
-    cv.put(CONTENT, url);
-    updateMessage(objectId, cv);
-  }*/
 
   void close() {
     msgsTable = null;

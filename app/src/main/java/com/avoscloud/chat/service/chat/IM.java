@@ -145,6 +145,7 @@ public class IM extends AVIMClientEventHandler {
 
   public void onMessageDelivered(AVIMTypedMessage msg) {
     Logger.i("");
+    msgsTable.updateStatus(msg.getMessageId(), msg.getMessageStatus());
     //Utils.toast("onMessageDelivered");
   }
 

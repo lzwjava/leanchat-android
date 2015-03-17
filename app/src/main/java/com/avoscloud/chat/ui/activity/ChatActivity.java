@@ -20,7 +20,9 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.im.v2.*;
+import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.AVIMConversationCreatedCallback;
+import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMLocationMessage;
 import com.avoscloud.chat.R;
@@ -44,7 +46,6 @@ import com.avoscloud.chat.ui.view.RecordButton;
 import com.avoscloud.chat.ui.view.xlist.XListView;
 import com.avoscloud.chat.util.*;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
-import de.greenrobot.event.EventBus;
 
 import java.io.File;
 import java.util.ArrayList;
