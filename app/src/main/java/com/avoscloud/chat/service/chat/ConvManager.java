@@ -35,12 +35,11 @@ public class ConvManager {
   }
 
   public static ConvType typeOfConv(AVIMConversation conv) {
-    Object typeObject = conv.getAttribute(ConvType.TYPE_KEY);
-    if (typeObject != null) {
+    try {
+      Object typeObject = conv.getAttribute(ConvType.TYPE_KEY);
       int typeInt = (Integer) typeObject;
       return ConvType.fromInt(typeInt);
-    } else {
-      Logger.d("type is null");
+    } catch (NullPointerException e) {
       return ConvType.Single;
     }
   }
@@ -245,7 +244,6 @@ public class ConvManager {
       }
     });
   }
-
 
   public void createGroupConv(List<String> members, final AVIMConversationCreatedCallback callback) {
     AVIMClient imClient = im.getImClient();

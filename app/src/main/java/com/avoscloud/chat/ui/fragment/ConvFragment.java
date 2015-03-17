@@ -69,6 +69,7 @@ public class ConvFragment extends BaseFragment implements IM.ConnectionListener 
         ChatActivity.goByConv(getActivity(), item.getConv());
       }
     });
+    listView.setToastIfEmpty(false);
     listView.setPullLoadEnable(false);
   }
 

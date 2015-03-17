@@ -39,7 +39,6 @@ public class IM extends AVIMClientEventHandler {
   private RoomsTable roomsTable;
   private EventBus eventBus = EventBus.getDefault();
 
-
   private static ConnectionListener defaultConnectListener = new ConnectionListener() {
     @Override
     public void onConnectionChanged(boolean connect) {
@@ -146,7 +145,7 @@ public class IM extends AVIMClientEventHandler {
 
   public void onMessageDelivered(AVIMTypedMessage msg) {
     Logger.i("");
-    Utils.toast("onMessageDelivered");
+    //Utils.toast("onMessageDelivered");
   }
 
   public AVIMClient getImClient() {
@@ -184,7 +183,7 @@ public class IM extends AVIMClientEventHandler {
       @Override
       public void done(AVIMClient client, AVException e) {
         if (Utils.filterException(e)) {
-          Utils.toast("imClient closed");
+          //Utils.toast("imClient closed");
         }
       }
     });
@@ -214,16 +213,16 @@ public class IM extends AVIMClientEventHandler {
     return connect;
   }
 
-  private static class MsgHandler extends AVIMMessageHandler {
+  private static class MsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
 
     @Override
-    public void onMessage(AVIMMessage message, AVIMConversation conversation) {
-      getInstance().onMessage(conversation, (AVIMTypedMessage) message);
+    public void onMessage(AVIMTypedMessage message, AVIMConversation conversation, AVIMClient client) {
+      getInstance().onMessage(conversation, message);
     }
 
     @Override
-    public void onMessageReceipt(AVIMMessage message, AVIMConversation conversation) {
-      getInstance().onMessageDelivered((AVIMTypedMessage) message);
+    public void onMessageReceipt(AVIMTypedMessage message, AVIMConversation conversation, AVIMClient client) {
+      getInstance().onMessageDelivered(message);
     }
   }
 

@@ -58,14 +58,13 @@ public class MainActivity extends BaseActivity {
     //discoverBtn.performClick();
     initBaiduLocClient();
 
-    //UpdateService.createUpdateInfoInBackground();
     UpdateService updateService = UpdateService.getInstance(this);
     updateService.checkUpdate();
     CacheService.registerUser(AVUser.getCurrentUser());
     LoginFinishReceiver.broadcast(this);
 
     im = IM.getInstance();
-    //App.initTables();
+    im.open(AVUser.getCurrentUser().getObjectId());
   }
 
   public static void goMainActivity(Activity activity) {
@@ -99,19 +98,19 @@ public class MainActivity extends BaseActivity {
       Logger.d("onReceiveLocation latitude=" + latitude + " longitude=" + longitude
           + " locType=" + locType + " address=" + location.getAddrStr());
       AVUser user = AVUser.getCurrentUser();
-      PreferenceMap preferenceMap = new PreferenceMap(ctx, user.getObjectId());
       if (user != null) {
+        PreferenceMap preferenceMap = new PreferenceMap(ctx, user.getObjectId());
         AVGeoPoint avGeoPoint = preferenceMap.getLocation();
         if (avGeoPoint != null && avGeoPoint.getLatitude() == location.getLatitude()
             && avGeoPoint.getLongitude() == location.getLongitude()) {
           UserService.updateUserLocation();
           locClient.stop();
-          return;
+        } else {
+          AVGeoPoint newGeoPoint = new AVGeoPoint(location.getLatitude(),
+              location.getLongitude());
+          preferenceMap.setLocation(newGeoPoint);
         }
       }
-      AVGeoPoint avGeoPoint = new AVGeoPoint(location.getLatitude(),
-          location.getLongitude());
-      preferenceMap.setLocation(avGeoPoint);
     }
   }
 

@@ -60,10 +60,6 @@ public class App extends Application {
     initImageLoader(ctx);
     initBaidu();
     openStrictMode();
-    if (AVUser.getCurrentUser() != null) {
-      IM im = IM.getInstance();
-      im.open(AVUser.getCurrentUser().getObjectId());
-    }
   }
 
   public void openStrictMode() {
