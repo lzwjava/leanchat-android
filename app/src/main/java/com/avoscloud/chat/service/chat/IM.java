@@ -9,6 +9,7 @@ import com.alibaba.fastjson.JSONException;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.im.v2.*;
+import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.db.MsgsTable;
 import com.avoscloud.chat.db.RoomsTable;
@@ -144,7 +145,9 @@ public class IM extends AVIMClientEventHandler {
   }
 
   public void onMessageDelivered(AVIMTypedMessage msg) {
-    Logger.i("");
+    if (msg.getMessageId() == null) {
+      throw new NullPointerException("message id is null");
+    }
     msgsTable.updateStatus(msg.getMessageId(), msg.getMessageStatus());
     //Utils.toast("onMessageDelivered");
   }
@@ -160,7 +163,7 @@ public class IM extends AVIMClientEventHandler {
   public void open(String selfId) {
     imClient = AVIMClient.getInstance(selfId);
     this.selfId = selfId;
-    imClient.open(new AVIMClient.IMClientCallback() {
+    imClient.open(new AVIMClientCallback() {
       @Override
       public void done(AVIMClient client, AVException e) {
         if (Utils.filterException(e)) {
@@ -180,7 +183,8 @@ public class IM extends AVIMClientEventHandler {
   }
 
   public void close() {
-    imClient.close(new AVIMClient.IMClientCallback() {
+    imClient.close(new AVIMClientCallback() {
+
       @Override
       public void done(AVIMClient client, AVException e) {
         if (Utils.filterException(e)) {

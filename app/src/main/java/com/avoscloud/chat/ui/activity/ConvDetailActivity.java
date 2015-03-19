@@ -15,7 +15,7 @@ import butterknife.OnClick;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.im.v2.AVIMConversation;
-import com.avos.avoscloud.im.v2.AVIMConversationCallback;
+import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.adapter.GroupUsersAdapter;
 import com.avoscloud.chat.base.App;

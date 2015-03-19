@@ -3,7 +3,8 @@ package com.avoscloud.chat.db;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import com.avos.avoscloud.im.v2.AVIMMessageStatus;
+import com.avos.avoscloud.im.v2.AVIMMessage;
+import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.util.ParcelableUtil;
@@ -143,7 +144,7 @@ public class MsgsTable {
     return createMsgByCursor(c);
   }
 
-  public int updateStatus(String msgId, AVIMMessageStatus status) {
+  public int updateStatus(String msgId, AVIMMessage.AVIMMessageStatus status) {
     AVIMTypedMessage msg = selectMsgByMsgId(msgId);
     if (msg.getMessageStatus() != status) {
       msg.setMessageStatus(status);
