@@ -18,8 +18,6 @@ LeanChat 是 [LeanCloud](http://leancloud.cn) [实时通信](https://leancloud.c
 * [Leanchat-ios](https://github.com/leancloud/leanchat-ios)：iOS 客户端
 * [Leanchat-cloud-code](https://github.com/leancloud/leanchat-cloudcode)：可选服务端，使用 LeanCloud [云代码](https://leancloud.cn/docs/cloud_code_guide.html) 实现，实现了聊天的签名，更安全。
 
-如果你从 github clone 速度很慢，可以从 [这里](https://download.leancloud.cn/demo/) 下载项目源码压缩包。
-
 ## 部署
 
 ### 创建应用
