@@ -36,7 +36,7 @@ public class CloudService {
     try {
       return AVCloud.callFunction("conv_sign", map);
     } catch (AVException e) {
-      throw (SignatureFactory.SignatureException) e;
+      throw new SignatureFactory.SignatureException(e.getCode(), e.getMessage());
     }
   }
 }

@@ -56,7 +56,8 @@ public class IM extends AVIMClientEventHandler {
     AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class, msgHandler);
     AVIMMessageManager.setConversationEventHandler(ConvManager.getConvHandler());
     AVIMClient.setClientEventHandler(this);
-    AVIMClient.setSignatureFactory(new SignatureFactory());
+    //签名
+    //AVIMClient.setSignatureFactory(new SignatureFactory());
   }
 
   public void setConnectionListener(ConnectionListener connectionListener) {
