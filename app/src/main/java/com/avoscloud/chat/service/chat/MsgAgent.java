@@ -23,7 +23,6 @@ import java.io.IOException;
  * Created by lzw on 14/11/23.
  */
 public class MsgAgent {
-  private static String RETRY_ACTION = "com.avoscloud.chat.RETRY_CONNECT";
   private AVIMConversation conv;
   private MsgsTable msgsTable;
   private IM im;
@@ -45,7 +44,6 @@ public class MsgAgent {
       Utils.toast(ctx, ctx.getString(R.string.pleaseCheckNetwork));
       return false;
     } else if (!im.isConnect()) {
-      ctx.sendBroadcast(new Intent(RETRY_ACTION));
       Utils.toast(ctx, ctx.getString(R.string.sessionPausedTips));
       return true;
     } else {
