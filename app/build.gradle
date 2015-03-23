@@ -26,13 +26,16 @@ android {
 dependencies {
     compile 'com.android.support:support-v4:19.1.0'
     compile 'com.loopj.android:android-async-http:1.4.6'
-    //compile 'cn.leancloud.android:avoscloud-sdk:v2.6.+'
-    //compile 'cn.leancloud.android:avoscloud-push:v2.6.+@aar'
-    compile project(path: ':avoscloud-push')
-    compile 'cn.leancloud.android:Java-WebSocket:1.2.0-leancloud'
-    compile 'cn.leancloud.android:avoscloud-statistics:v2.6.+@aar'
-    compile 'de.greenrobot:eventbus:2.4.0'
+    //compile 'cn.leancloud.android:avoscloud-sdk:v3.0+'
+    //compile 'cn.leancloud.android:avoscloud-push:v3.0+@aar'
+    //compile 'cn.leancloud.android:avoscloud-statistics:v2.6.+@aar'
+    compile files('libs/avoscloud-push-v3.0.jar')
+    compile files('libs/avoscloud-sdk-v3.0.jar')
+    compile files('libs/avoscloud-statistics-v3.0.jar')
 
+    compile 'cn.leancloud.android:Java-WebSocket:1.2.0-leancloud'
+    compile 'cn.leancloud.android:fastjson:1.1.37-leancloud'
+    compile 'de.greenrobot:eventbus:2.4.0'
     compile 'org.apache.httpcomponents:httpmime:4.2.4'
     compile 'com.jakewharton:butterknife:6.1.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'

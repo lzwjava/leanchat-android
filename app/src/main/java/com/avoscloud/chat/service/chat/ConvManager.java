@@ -6,6 +6,7 @@ import com.avos.avoscloud.im.v2.*;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
+import com.avos.avoscloud.im.v2.callback.AVIMMessagesQueryCallback;
 import com.avoscloud.chat.base.C;
 import com.avoscloud.chat.db.RoomsTable;
 import com.avoscloud.chat.entity.ConvType;
@@ -292,13 +293,13 @@ public class ConvManager {
     final AVException[] es = new AVException[1];
     final List<AVIMMessage> msgs = new ArrayList<AVIMMessage>();
     final CountDownLatch latch = new CountDownLatch(1);
-    conv.queryMessages(msgId, time, limit, new AVIMHistoryMessageCallback() {
+    conv.queryMessages(msgId,time,limit,new AVIMMessagesQueryCallback() {
       @Override
-      public void done(List<AVIMMessage> messages, AVException e) {
+      public void done(List<AVIMMessage> avimMessages, AVException e) {
         if (e != null) {
           es[0] = e;
         } else {
-          msgs.addAll(messages);
+          msgs.addAll(avimMessages);
         }
         latch.countDown();
       }

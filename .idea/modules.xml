@@ -3,10 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$USER_HOME$/clojure/AndroidSDK/avoscloud-push/avoscloud-push.iml" filepath="$USER_HOME$/clojure/AndroidSDK/avoscloud-push/avoscloud-push.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../AndroidSDK/avoscloud-push/avoscloud-push.iml" filepath="$PROJECT_DIR$/../AndroidSDK/avoscloud-push/avoscloud-push.iml" />
-      <module fileurl="file://$USER_HOME$/clojure/AndroidSDK/avoscloud-sdk/avoscloud-sdk.iml" filepath="$USER_HOME$/clojure/AndroidSDK/avoscloud-sdk/avoscloud-sdk.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../AndroidSDK/avoscloud-sdk/avoscloud-sdk.iml" filepath="$PROJECT_DIR$/../AndroidSDK/avoscloud-sdk/avoscloud-sdk.iml" />
       <module fileurl="file://$PROJECT_DIR$/lzw-talk.iml" filepath="$PROJECT_DIR$/lzw-talk.iml" />
     </modules>
   </component>

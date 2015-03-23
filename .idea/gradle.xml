@@ -7,8 +7,6 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
-            <option value="$USER_HOME$/clojure/AndroidSDK/avoscloud-push" />
-            <option value="$USER_HOME$/clojure/AndroidSDK/avoscloud-sdk" />
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
           </set>
