@@ -32,6 +32,7 @@ public class EmotionUtils {
       "\\u1f44d", "\\u1f44e", "\\u1f44f"};
   private static List<String> emotions;
   private static Pattern pattern;
+
   static {
     emotions = new ArrayList<String>();
     int i;
