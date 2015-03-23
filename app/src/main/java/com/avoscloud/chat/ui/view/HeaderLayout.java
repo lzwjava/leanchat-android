@@ -50,7 +50,7 @@ public class HeaderLayout extends LinearLayout {
     showLeftBackButton(R.string.emptyStr, listener);
   }
 
-  public void showLeftBackButton(){
+  public void showLeftBackButton() {
     showLeftBackButton(null);
   }
 

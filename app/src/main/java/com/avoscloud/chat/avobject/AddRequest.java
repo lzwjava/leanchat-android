@@ -18,11 +18,11 @@ public class AddRequest extends AVObject {
 
   AVUser toUser;
   //int status;
+  AVUser fromUser;
 
   public AddRequest() {
   }
 
-  AVUser fromUser;
   public synchronized AVUser getFromUser() {
     if (fromUser == null) {
       fromUser = getAVUser(FROM_USER, AVUser.class);

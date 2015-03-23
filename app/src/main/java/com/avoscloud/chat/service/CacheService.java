@@ -73,12 +73,12 @@ public class CacheService {
     return curConv;
   }
 
-  public static boolean isCurConvid(String convid) {
-    return curConv != null && curConv.getConversationId().equals(convid);
-  }
-
   public static void setCurConv(AVIMConversation curConv) {
     CacheService.curConv = curConv;
+  }
+
+  public static boolean isCurConvid(String convid) {
+    return curConv != null && curConv.getConversationId().equals(convid);
   }
 
   public static boolean isCurConv(AVIMConversation conv) {

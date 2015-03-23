@@ -54,16 +54,15 @@ import java.util.List;
 public class ChatActivity extends ConvBaseActivity implements OnClickListener,
     XListView.IXListViewListener {
   public static final int LOCATION_REQUEST = 1;
-  private static final int TAKE_CAMERA_REQUEST = 2;
   public static final int PAGE_SIZE = 20;
+  public static final String CONVID = "convid";
+  private static final int TAKE_CAMERA_REQUEST = 2;
   private static final int GALLERY_REQUEST = 0;
   private static final int GALLERY_KITKAT_REQUEST = 3;
-  public static final String CONVID = "convid";
-
-  private ChatMsgAdapter adapter;
-  private RoomsTable roomsTable;
   public static Activity ctx;
   public static ChatActivity instance;
+  private ChatMsgAdapter adapter;
+  private RoomsTable roomsTable;
   private boolean visible;
 
   private View chatTextLayout, chatAudioLayout, chatAddLayout, chatEmotionLayout;
@@ -79,6 +78,26 @@ public class ChatActivity extends ConvBaseActivity implements OnClickListener,
   private MsgsTable msgsTable;
   private MsgAgent msgAgent;
   private MsgAgent.SendCallback defaultSendCallback = new DefaultSendCallback();
+
+  public static void goByConv(Context from, AVIMConversation conv) {
+    CacheService.registerConv(conv);
+    Intent intent = new Intent(from, ChatActivity.class);
+    intent.putExtra(CONVID, conv.getConversationId());
+    from.startActivity(intent);
+  }
+
+  public static void goByUserId(final Activity from, String userId) {
+    final ProgressDialog dialog = Utils.showSpinnerDialog(from);
+    ConvManager.getInstance().fetchConvWithUserId(userId, new AVIMConversationCreatedCallback() {
+      @Override
+      public void done(AVIMConversation conversation, AVException e) {
+        dialog.dismiss();
+        if (Utils.filterException(e)) {
+          goByConv(from, conversation);
+        }
+      }
+    });
+  }
 
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -292,7 +311,6 @@ public class ChatActivity extends ConvBaseActivity implements OnClickListener,
     return super.onMenuItemSelected(featureId, item);
   }
 
-
   public void refreshMsgsFromDB() {
     new GetDataTask(ctx, false).execute();
   }
@@ -309,69 +327,6 @@ public class ChatActivity extends ConvBaseActivity implements OnClickListener,
 
   @Override
   public void onLoadMore() {
-  }
-
-  class GetDataTask extends NetAsyncTask {
-    private List<AVIMTypedMessage> msgs;
-    private boolean loadHistory;
-
-    GetDataTask(Context ctx, boolean loadHistory) {
-      super(ctx, false);
-      this.loadHistory = loadHistory;
-    }
-
-    @Override
-    protected void doInBack() throws Exception {
-      String msgId = null;
-      long maxTime = System.currentTimeMillis() + 10 * 1000;
-      int limit;
-      long time;
-      if (loadHistory == false) {
-        time = maxTime;
-        int count = adapter.getCount();
-        if (count > PAGE_SIZE) {
-          limit = count;
-        } else {
-          limit = PAGE_SIZE;
-        }
-      } else {
-        if (adapter.getDatas().size() > 0) {
-          msgId = adapter.getDatas().get(0).getMessageId();
-          AVIMTypedMessage firstMsg = adapter.getDatas().get(0);
-          time = firstMsg.getTimestamp();
-        } else {
-          time = maxTime;
-        }
-        limit = PAGE_SIZE;
-      }
-      msgs = msgsTable.selectMsgs(conv.getConversationId(), time, limit);
-      //msgs = ConvManager.getInstance().queryHistoryMessage(conv, msgId, time, limit);
-      CacheService.cacheMsgs(msgs);
-    }
-
-    @Override
-    protected void onPost(Exception e) {
-      if (Utils.filterException(e)) {
-        ChatUtils.stopRefresh(xListView);
-        if (loadHistory == false) {
-          adapter.setDatas(msgs);
-          Logger.d("msgs size=" + msgs.size());
-          adapter.notifyDataSetChanged();
-          scrollToLast();
-        } else {
-          List<AVIMTypedMessage> newMsgs = new ArrayList<AVIMTypedMessage>();
-          newMsgs.addAll(msgs);
-          newMsgs.addAll(adapter.getDatas());
-          adapter.setDatas(newMsgs);
-          adapter.notifyDataSetChanged();
-          if (msgs.size() > 0) {
-            xListView.setSelection(msgs.size() - 1);
-          } else {
-            Utils.toast(R.string.loadMessagesFinish);
-          }
-        }
-      }
-    }
   }
 
   @Override
@@ -488,7 +443,6 @@ public class ChatActivity extends ConvBaseActivity implements OnClickListener,
         TAKE_CAMERA_REQUEST);
   }
 
-
   private void sendText() {
     final String content = contentEdit.getText().toString();
     if (!TextUtils.isEmpty(content)) {
@@ -545,20 +499,6 @@ public class ChatActivity extends ConvBaseActivity implements OnClickListener,
     super.onActivityResult(requestCode, resultCode, data);
   }
 
-  class DefaultSendCallback implements MsgAgent.SendCallback {
-    @Override
-    public void onError(Exception e) {
-      e.printStackTrace();
-      Utils.toast(e.getMessage());
-      refreshMsgsFromDB();
-    }
-
-    @Override
-    public void onSuccess(AVIMTypedMessage msg) {
-      refreshMsgsFromDB();
-    }
-  }
-
   public void scrollToLast() {
     xListView.post(new Runnable() {
       @Override
@@ -605,26 +545,6 @@ public class ChatActivity extends ConvBaseActivity implements OnClickListener,
     this.finish();
   }
 
-  public static void goByConv(Context from, AVIMConversation conv) {
-    CacheService.registerConv(conv);
-    Intent intent = new Intent(from, ChatActivity.class);
-    intent.putExtra(CONVID, conv.getConversationId());
-    from.startActivity(intent);
-  }
-
-  public static void goByUserId(final Activity from, String userId) {
-    final ProgressDialog dialog = Utils.showSpinnerDialog(from);
-    ConvManager.getInstance().fetchConvWithUserId(userId, new AVIMConversationCreatedCallback() {
-      @Override
-      public void done(AVIMConversation conversation, AVException e) {
-        dialog.dismiss();
-        if (Utils.filterException(e)) {
-          goByConv(from, conversation);
-        }
-      }
-    });
-  }
-
   public boolean isVisible() {
     return visible;
   }
@@ -640,5 +560,82 @@ public class ChatActivity extends ConvBaseActivity implements OnClickListener,
   protected void onPause() {
     super.onPause();
     visible = false;
+  }
+
+  class GetDataTask extends NetAsyncTask {
+    private List<AVIMTypedMessage> msgs;
+    private boolean loadHistory;
+
+    GetDataTask(Context ctx, boolean loadHistory) {
+      super(ctx, false);
+      this.loadHistory = loadHistory;
+    }
+
+    @Override
+    protected void doInBack() throws Exception {
+      String msgId = null;
+      long maxTime = System.currentTimeMillis() + 10 * 1000;
+      int limit;
+      long time;
+      if (loadHistory == false) {
+        time = maxTime;
+        int count = adapter.getCount();
+        if (count > PAGE_SIZE) {
+          limit = count;
+        } else {
+          limit = PAGE_SIZE;
+        }
+      } else {
+        if (adapter.getDatas().size() > 0) {
+          msgId = adapter.getDatas().get(0).getMessageId();
+          AVIMTypedMessage firstMsg = adapter.getDatas().get(0);
+          time = firstMsg.getTimestamp();
+        } else {
+          time = maxTime;
+        }
+        limit = PAGE_SIZE;
+      }
+      msgs = msgsTable.selectMsgs(conv.getConversationId(), time, limit);
+      //msgs = ConvManager.getInstance().queryHistoryMessage(conv, msgId, time, limit);
+      CacheService.cacheMsgs(msgs);
+    }
+
+    @Override
+    protected void onPost(Exception e) {
+      if (Utils.filterException(e)) {
+        ChatUtils.stopRefresh(xListView);
+        if (loadHistory == false) {
+          adapter.setDatas(msgs);
+          Logger.d("msgs size=" + msgs.size());
+          adapter.notifyDataSetChanged();
+          scrollToLast();
+        } else {
+          List<AVIMTypedMessage> newMsgs = new ArrayList<AVIMTypedMessage>();
+          newMsgs.addAll(msgs);
+          newMsgs.addAll(adapter.getDatas());
+          adapter.setDatas(newMsgs);
+          adapter.notifyDataSetChanged();
+          if (msgs.size() > 0) {
+            xListView.setSelection(msgs.size() - 1);
+          } else {
+            Utils.toast(R.string.loadMessagesFinish);
+          }
+        }
+      }
+    }
+  }
+
+  class DefaultSendCallback implements MsgAgent.SendCallback {
+    @Override
+    public void onError(Exception e) {
+      e.printStackTrace();
+      Utils.toast(e.getMessage());
+      refreshMsgsFromDB();
+    }
+
+    @Override
+    public void onSuccess(AVIMTypedMessage msg) {
+      refreshMsgsFromDB();
+    }
   }
 }

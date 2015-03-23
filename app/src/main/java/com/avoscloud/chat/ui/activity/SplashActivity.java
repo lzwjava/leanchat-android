@@ -9,9 +9,22 @@ import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.util.Utils;
 
 public class SplashActivity extends BaseEntryActivity {
+  public static final int SPLASH_DURATION = 2000;
   private static final int GO_MAIN_MSG = 1;
   private static final int GO_LOGIN_MSG = 2;
-  public static final int SPLASH_DURATION = 2000;
+  private Handler handler = new Handler() {
+    @Override
+    public void handleMessage(Message msg) {
+      switch (msg.what) {
+        case GO_MAIN_MSG:
+          MainActivity.goMainActivity(SplashActivity.this);
+          break;
+        case GO_LOGIN_MSG:
+          Utils.goActivity(ctx, LoginActivity.class);
+          break;
+      }
+    }
+  };
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -26,18 +39,4 @@ public class SplashActivity extends BaseEntryActivity {
       handler.sendEmptyMessageDelayed(GO_LOGIN_MSG, SPLASH_DURATION);
     }
   }
-
-  private Handler handler = new Handler() {
-    @Override
-    public void handleMessage(Message msg) {
-      switch (msg.what) {
-        case GO_MAIN_MSG:
-          MainActivity.goMainActivity(SplashActivity.this);
-          break;
-        case GO_LOGIN_MSG:
-          Utils.goActivity(ctx, LoginActivity.class);
-          break;
-      }
-    }
-  };
 }

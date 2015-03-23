@@ -21,8 +21,6 @@ public class EmotionUtils {
   public static List<String> emotionTexts;
   public static List<String> emotionTexts1;
   public static List<String> emotionTexts2;
-
-  private static List<String> emotions;
   public static int[] emotionCodes = new int[]{0x1F601, 0x1F602, 0x1F603, 0x1F604, 0x1F605, 0x1F606, 0x1F609, 0x1F60A, 0x1F60B, 0x1F60C,
       0x1F60D, 0x1F60F, 0x1F612, 0x1F613, 0x1F614, 0x1F616, 0x1F618, 0x1F61A, 0x1F61C, 0x1F61D, 0x1F61E, 0x1F620, 0x1F621, 0x1F622, 0x1F623, 0x1F624,
       0x1F625, 0x1F628, 0x1F629, 0x1F62A, 0x1F62B, 0x1F62D, 0x1F630, 0x1F631, 0x1F632, 0x1F633, 0x1F635, 0x1F637};
@@ -32,13 +30,8 @@ public class EmotionUtils {
       "\\u1f604", "\\u1f609", "\\u1f612", "\\u1f613", "\\u1f614", "\\u1f616", "\\u1f618", "\\u1f620", "\\u1f621", "\\u1f622",
       "\\u1f621", "\\u1f622", "\\u1f623", "\\u1f625", "\\u1f628", "\\u1f630", "\\u1f631", "\\u1f632", "\\u1f633", "\\u1f637",
       "\\u1f44d", "\\u1f44e", "\\u1f44f"};
-
-  static String getEmojiByUnicode(int unicode) {
-    return new String(Character.toChars(unicode));
-  }
-
+  private static List<String> emotions;
   private static Pattern pattern;
-
   static {
     emotions = new ArrayList<String>();
     int i;
@@ -55,6 +48,10 @@ public class EmotionUtils {
     emotionTexts1 = emotionTexts.subList(0, 21);
     emotionTexts2 = emotionTexts.subList(21, emotionTexts.size());
     pattern = buildPattern();
+  }
+
+  static String getEmojiByUnicode(int unicode) {
+    return new String(Character.toChars(unicode));
   }
 
   private static Pattern buildPattern() {

@@ -74,8 +74,8 @@ public class ChatUtils {
   }
 
   public static void logAVMessage(AVMessage avMsg) {
-    Logger.d("avMsg message="+avMsg.getMessage()+" timestamp="+avMsg.getTimestamp()+" toPeerIds="+avMsg.getToPeerIds
-        ()+" fromPeerId="+avMsg.getFromPeerId()+" receiptTs="+avMsg.getReceiptTimestamp()+" groupId="+avMsg.getGroupId
-        ()+" isRequestReceipt="+avMsg.isRequestReceipt());
+    Logger.d("avMsg message=" + avMsg.getMessage() + " timestamp=" + avMsg.getTimestamp() + " toPeerIds=" + avMsg.getToPeerIds
+        () + " fromPeerId=" + avMsg.getFromPeerId() + " receiptTs=" + avMsg.getReceiptTimestamp() + " groupId=" + avMsg.getGroupId
+        () + " isRequestReceipt=" + avMsg.isRequestReceipt());
   }
 }

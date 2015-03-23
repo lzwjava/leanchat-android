@@ -16,6 +16,11 @@ import com.avoscloud.chat.util.Utils;
 public class BaseActivity extends FragmentActivity {
   protected Context ctx;
 
+  protected static void alwaysShowMenuItem(MenuItem add) {
+    add.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS
+        | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+  }
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -56,10 +61,5 @@ public class BaseActivity extends FragmentActivity {
 
   protected void initActionBar(int id) {
     initActionBar(App.ctx.getString(id));
-  }
-
-  protected static void alwaysShowMenuItem(MenuItem add) {
-    add.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS
-        | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
   }
 }

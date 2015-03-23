@@ -4,12 +4,12 @@ import android.util.Log;
 
 public class Logger {
   public static final int VERBOSE = 0;
+  public static int level = VERBOSE;
   public static final int INFO = 1;
   public static final int DEBUG = 2;
   public static final int WARN = 3;
   public static final int ERROR = 4;
   public static final int NONE = 5;
-  public static int level = VERBOSE;
   public static String tag = "lzw";
 
   private static String getDebugInfo() {

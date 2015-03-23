@@ -1,7 +1,6 @@
 package com.avoscloud.chat.service.chat;
 
 import android.content.Context;
-import android.content.Intent;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.im.v2.AVIMConversation;

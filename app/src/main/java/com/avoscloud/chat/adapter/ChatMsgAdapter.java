@@ -31,19 +31,6 @@ public class ChatMsgAdapter extends BaseListAdapter<AVIMTypedMessage> {
   private int msgViewTypes = 8;
   private ClickListener clickListener;
 
-  private enum MsgViewType {
-    ComeText(0), ToText(1), ComeImage(2), ToImage(3), ComeAudio(4), ToAudio(5), ComeLocation(6), ToLocation(7);
-    int value;
-
-    MsgViewType(int value) {
-      this.value = value;
-    }
-
-    public int getValue() {
-      return value;
-    }
-  }
-
   public ChatMsgAdapter(Context context, ConvType convType) {
     super(context);
     this.convType = convType;
@@ -265,6 +252,19 @@ public class ChatMsgAdapter extends BaseListAdapter<AVIMTypedMessage> {
     }
     contentView.addView(content);
     return baseView;
+  }
+
+  private enum MsgViewType {
+    ComeText(0), ToText(1), ComeImage(2), ToImage(3), ComeAudio(4), ToAudio(5), ComeLocation(6), ToLocation(7);
+    int value;
+
+    MsgViewType(int value) {
+      this.value = value;
+    }
+
+    public int getValue() {
+      return value;
+    }
   }
 
   public interface ClickListener {

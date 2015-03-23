@@ -13,7 +13,6 @@ import com.avoscloud.chat.entity.ConvType;
 import com.avoscloud.chat.entity.Room;
 import com.avoscloud.chat.service.CacheService;
 import com.avoscloud.chat.service.event.ConvChangeEvent;
-import com.avoscloud.chat.util.Logger;
 import com.avoscloud.chat.util.Utils;
 import de.greenrobot.event.EventBus;
 
@@ -24,8 +23,31 @@ import java.util.concurrent.CountDownLatch;
  * Created by lzw on 15/2/11.
  */
 public class ConvManager {
-  private IM im;
   private static ConvManager convManager;
+  private static AVIMConversationEventHandler convHandler = new AVIMConversationEventHandler() {
+    @Override
+    public void onMemberLeft(AVIMClient client, AVIMConversation conversation, List<String> members, String kickedBy) {
+      Utils.toast(MsgUtils.nameByUserIds(members) + " left, kicked by " + MsgUtils.nameByUserId(kickedBy));
+      getInstance().postConvChanged(conversation);
+    }
+
+    @Override
+    public void onMemberJoined(AVIMClient client, AVIMConversation conversation, List<String> members, String invitedBy) {
+      Utils.toast(MsgUtils.nameByUserIds(members) + " joined , invited by " + MsgUtils.nameByUserId(invitedBy));
+      getInstance().postConvChanged(conversation);
+    }
+
+    @Override
+    public void onKicked(AVIMClient client, AVIMConversation conversation, String kickedBy) {
+      Utils.toast("you are kicked by " + MsgUtils.nameByUserId(kickedBy));
+    }
+
+    @Override
+    public void onInvited(AVIMClient client, AVIMConversation conversation, String operator) {
+      Utils.toast("you are invited by " + MsgUtils.nameByUserId(operator));
+    }
+  };
+  private IM im;
 
   public ConvManager() {
     im = IM.getInstance();
@@ -90,6 +112,10 @@ public class ConvManager {
       List<String> members = conv.getMembers();
       return nameOfConv(conv) + " (" + members.size() + ")";
     }
+  }
+
+  public static AVIMConversationEventHandler getConvHandler() {
+    return convHandler;
   }
 
   public List<Room> findAndCacheRooms() throws AVException, InterruptedException {
@@ -258,34 +284,6 @@ public class ConvManager {
     imClient.createConversation(members, map, callback);
   }
 
-  private static AVIMConversationEventHandler convHandler = new AVIMConversationEventHandler() {
-    @Override
-    public void onMemberLeft(AVIMClient client, AVIMConversation conversation, List<String> members, String kickedBy) {
-      Utils.toast(MsgUtils.nameByUserIds(members) + " left, kicked by " + MsgUtils.nameByUserId(kickedBy));
-      getInstance().postConvChanged(conversation);
-    }
-
-    @Override
-    public void onMemberJoined(AVIMClient client, AVIMConversation conversation, List<String> members, String invitedBy) {
-      Utils.toast(MsgUtils.nameByUserIds(members) + " joined , invited by " + MsgUtils.nameByUserId(invitedBy));
-      getInstance().postConvChanged(conversation);
-    }
-
-    @Override
-    public void onKicked(AVIMClient client, AVIMConversation conversation, String kickedBy) {
-      Utils.toast("you are kicked by " + MsgUtils.nameByUserId(kickedBy));
-    }
-
-    @Override
-    public void onInvited(AVIMClient client, AVIMConversation conversation, String operator) {
-      Utils.toast("you are invited by " + MsgUtils.nameByUserId(operator));
-    }
-  };
-
-  public static AVIMConversationEventHandler getConvHandler() {
-    return convHandler;
-  }
-
   /**
    * msgId 、time 共同使用，防止某毫秒时刻有重复消息
    */
@@ -293,7 +291,7 @@ public class ConvManager {
     final AVException[] es = new AVException[1];
     final List<AVIMMessage> msgs = new ArrayList<AVIMMessage>();
     final CountDownLatch latch = new CountDownLatch(1);
-    conv.queryMessages(msgId,time,limit,new AVIMMessagesQueryCallback() {
+    conv.queryMessages(msgId, time, limit, new AVIMMessagesQueryCallback() {
       @Override
       public void done(List<AVIMMessage> avimMessages, AVException e) {
         if (e != null) {

@@ -27,6 +27,12 @@ public class PersonInfoActivity extends BaseActivity implements OnClickListener 
   String userId = "";
   AVUser user;
 
+  public static void goPersonInfo(Context ctx, String userId) {
+    Intent intent = new Intent(ctx, PersonInfoActivity.class);
+    intent.putExtra(USER_ID, userId);
+    ctx.startActivity(intent);
+  }
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     // TODO Auto-generated method stub
@@ -86,12 +92,6 @@ public class PersonInfoActivity extends BaseActivity implements OnClickListener 
       }
     }
     updateView(user);
-  }
-
-  public static void goPersonInfo(Context ctx, String userId) {
-    Intent intent = new Intent(ctx, PersonInfoActivity.class);
-    intent.putExtra(USER_ID, userId);
-    ctx.startActivity(intent);
   }
 
   private void updateView(AVUser user) {

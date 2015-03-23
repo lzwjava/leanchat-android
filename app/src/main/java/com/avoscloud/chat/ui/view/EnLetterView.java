@@ -14,18 +14,14 @@ import com.avoscloud.chat.R;
 import com.avoscloud.chat.util.PixelUtils;
 
 public class EnLetterView extends View {
-  private OnTouchingLetterChangedListener onTouchingLetterChangedListener;
   public static String[] letters = {"A", "B", "C", "D", "E", "F", "G", "H", "I",
       "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V",
-      "W", "X", "Y", "Z", "#" };
+      "W", "X", "Y", "Z", "#"};
+  private OnTouchingLetterChangedListener onTouchingLetterChangedListener;
   private int choose = -1;// 閫変腑
   private Paint paint = new Paint();
 
   private TextView textDialog;
-
-  public void setTextView(TextView mTextDialog) {
-    this.textDialog = mTextDialog;
-  }
 
   public EnLetterView(Context context, AttributeSet attrs, int defStyle) {
     super(context, attrs, defStyle);
@@ -37,6 +33,10 @@ public class EnLetterView extends View {
 
   public EnLetterView(Context context) {
     super(context);
+  }
+
+  public void setTextView(TextView mTextDialog) {
+    this.textDialog = mTextDialog;
   }
 
   protected void onDraw(Canvas canvas) {

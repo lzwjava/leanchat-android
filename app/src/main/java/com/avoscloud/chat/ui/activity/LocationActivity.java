@@ -30,15 +30,13 @@ public class LocationActivity extends BaseActivity implements
   public static final String LONGITUDE = "longitude";
   public static final String TYPE_SCAN = "scan";
   public static final String ADDRESS = "address";
+  static BDLocation lastLocation = null;
   private LocationClient locClient;
   private MyLocationListener myListener = new MyLocationListener();
-
   private MapView mapView;
   private BaiduMap baiduMap;
   private BaiduReceiver receiver;
   private GeoCoder geoCoder = null;
-  static BDLocation lastLocation = null;
-
   private BitmapDescriptor descriptor = BitmapDescriptorFactory.fromResource(R.drawable.icon_geo);
 
   private String intentType;
@@ -134,6 +132,53 @@ public class LocationActivity extends BaseActivity implements
     }
   }
 
+  @Override
+  public void onGetGeoCodeResult(GeoCodeResult arg0) {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void onGetReverseGeoCodeResult(ReverseGeoCodeResult result) {
+    // TODO Auto-generated method stub
+    if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
+      Utils.toast(ctx, App.ctx.getString(R.string.cannotFindResult));
+      return;
+    }
+    Logger.d(App.ctx.getString(R.string.reverseGeoCodeResultIs) + result.getAddress());
+    lastLocation.setAddrStr(result.getAddress());
+  }
+
+  @Override
+  protected void onPause() {
+    mapView.onPause();
+    super.onPause();
+    lastLocation = null;
+  }
+
+  @Override
+  protected void onResume() {
+    mapView.onResume();
+    super.onResume();
+  }
+
+  @Override
+  protected void onDestroy() {
+    if (locClient != null && locClient.isStarted()) {
+      // 退出时销毁定位
+      locClient.stop();
+    }
+    // 关闭定位图层
+    baiduMap.setMyLocationEnabled(false);
+    mapView.onDestroy();
+    mapView = null;
+    // 取消监听 SDK 广播
+    unregisterReceiver(receiver);
+    super.onDestroy();
+    // 回收 bitmap 资源
+    descriptor.recycle();
+  }
+
   /**
    * 定位SDK监听函数
    */
@@ -195,53 +240,6 @@ public class LocationActivity extends BaseActivity implements
         Utils.toast(ctx, App.ctx.getString(R.string.badNetwork));
       }
     }
-  }
-
-  @Override
-  public void onGetGeoCodeResult(GeoCodeResult arg0) {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public void onGetReverseGeoCodeResult(ReverseGeoCodeResult result) {
-    // TODO Auto-generated method stub
-    if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
-      Utils.toast(ctx, App.ctx.getString(R.string.cannotFindResult));
-      return;
-    }
-    Logger.d(App.ctx.getString(R.string.reverseGeoCodeResultIs) + result.getAddress());
-    lastLocation.setAddrStr(result.getAddress());
-  }
-
-  @Override
-  protected void onPause() {
-    mapView.onPause();
-    super.onPause();
-    lastLocation = null;
-  }
-
-  @Override
-  protected void onResume() {
-    mapView.onResume();
-    super.onResume();
-  }
-
-  @Override
-  protected void onDestroy() {
-    if (locClient != null && locClient.isStarted()) {
-      // 退出时销毁定位
-      locClient.stop();
-    }
-    // 关闭定位图层
-    baiduMap.setMyLocationEnabled(false);
-    mapView.onDestroy();
-    mapView = null;
-    // 取消监听 SDK 广播
-    unregisterReceiver(receiver);
-    super.onDestroy();
-    // 回收 bitmap 资源
-    descriptor.recycle();
   }
 
 }

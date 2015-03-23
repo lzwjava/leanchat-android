@@ -10,7 +10,6 @@ import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.AddRequest;
 import com.avoscloud.chat.avobject.UpdateInfo;
 import com.avoscloud.chat.service.UpdateService;
-import com.avoscloud.chat.service.chat.IM;
 import com.avoscloud.chat.ui.activity.SplashActivity;
 import com.avoscloud.chat.util.Logger;
 import com.avoscloud.chat.util.PhotoUtils;
@@ -28,6 +27,56 @@ import java.io.File;
 public class App extends Application {
   public static boolean debug = true;
   public static App ctx;
+
+  public static App getInstance() {
+    return ctx;
+  }
+
+  /**
+   * 初始化ImageLoader
+   */
+  public static void initImageLoader(Context context) {
+    File cacheDir = StorageUtils.getOwnCacheDirectory(context,
+        "leanchat/Cache");
+    ImageLoaderConfiguration config = PhotoUtils.getImageLoaderConfig(context, cacheDir);
+    // Initialize ImageLoader with configuration.
+    ImageLoader.getInstance().init(config);
+  }
+
+  public static void initTables() {
+    new Thread(new Runnable() {
+      @Override
+      public void run() {
+        try {
+
+          if (AVUser.getCurrentUser() == null) {
+            throw new NullPointerException("Please run it when login");
+          }
+          //create AddRequest Table
+          AddRequest addRequest = new AddRequest();
+          addRequest.setFromUser(AVUser.getCurrentUser());
+          addRequest.setToUser(AVUser.getCurrentUser());
+          addRequest.setStatus(AddRequest.STATUS_WAIT);
+          addRequest.save();
+          addRequest.delete();
+
+          UpdateService.createUpdateInfo();
+
+          //create Avatar Table for default avatar
+          Bitmap bitmap = BitmapFactory.decodeResource(App.ctx.getResources(), R.drawable.head);
+          byte[] bs = Utils.getBytesFromBitmap(bitmap);
+          AVFile file = new AVFile("head", bs);
+          file.save();
+          AVObject avatar = new AVObject("Avatar");
+          avatar.put("file", file);
+          avatar.save();
+
+        } catch (AVException e) {
+          e.printStackTrace();
+        }
+      }
+    }).start();
+  }
 
   @Override
   public void onCreate() {
@@ -81,55 +130,5 @@ public class App extends Application {
 
   private void initBaidu() {
     SDKInitializer.initialize(this);
-  }
-
-  public static App getInstance() {
-    return ctx;
-  }
-
-  /**
-   * 初始化ImageLoader
-   */
-  public static void initImageLoader(Context context) {
-    File cacheDir = StorageUtils.getOwnCacheDirectory(context,
-        "leanchat/Cache");
-    ImageLoaderConfiguration config = PhotoUtils.getImageLoaderConfig(context, cacheDir);
-    // Initialize ImageLoader with configuration.
-    ImageLoader.getInstance().init(config);
-  }
-
-  public static void initTables() {
-    new Thread(new Runnable() {
-      @Override
-      public void run() {
-        try {
-
-          if (AVUser.getCurrentUser() == null) {
-            throw new NullPointerException("Please run it when login");
-          }
-          //create AddRequest Table
-          AddRequest addRequest = new AddRequest();
-          addRequest.setFromUser(AVUser.getCurrentUser());
-          addRequest.setToUser(AVUser.getCurrentUser());
-          addRequest.setStatus(AddRequest.STATUS_WAIT);
-          addRequest.save();
-          addRequest.delete();
-
-          UpdateService.createUpdateInfo();
-
-          //create Avatar Table for default avatar
-          Bitmap bitmap = BitmapFactory.decodeResource(App.ctx.getResources(), R.drawable.head);
-          byte[] bs = Utils.getBytesFromBitmap(bitmap);
-          AVFile file = new AVFile("head", bs);
-          file.save();
-          AVObject avatar = new AVObject("Avatar");
-          avatar.put("file", file);
-          avatar.save();
-
-        } catch (AVException e) {
-          e.printStackTrace();
-        }
-      }
-    }).start();
   }
 }

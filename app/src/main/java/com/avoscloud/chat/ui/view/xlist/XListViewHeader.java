@@ -13,19 +13,16 @@ import android.widget.ProgressBar;
 import com.avoscloud.chat.R;
 
 public class XListViewHeader extends LinearLayout {
+  public final static int STATE_NORMAL = 0;
+  private int mState = STATE_NORMAL;
+  public final static int STATE_READY = 1;
+  public final static int STATE_REFRESHING = 2;
+  private final int ROTATE_ANIM_DURATION = 180;
   private LinearLayout mContainer;
   private ImageView mArrowImageView;
   private ProgressBar mProgressBar;
-  private int mState = STATE_NORMAL;
-
   private Animation mRotateUpAnim;
   private Animation mRotateDownAnim;
-
-  private final int ROTATE_ANIM_DURATION = 180;
-
-  public final static int STATE_NORMAL = 0;
-  public final static int STATE_READY = 1;
-  public final static int STATE_REFRESHING = 2;
 
   public XListViewHeader(Context context) {
     super(context);
@@ -96,6 +93,10 @@ public class XListViewHeader extends LinearLayout {
     mState = state;
   }
 
+  public int getVisiableHeight() {
+    return mContainer.getHeight();
+  }
+
   public void setVisiableHeight(int height) {
     if (height < 0)
       height = 0;
@@ -103,10 +104,6 @@ public class XListViewHeader extends LinearLayout {
         .getLayoutParams();
     lp.height = height;
     mContainer.setLayoutParams(lp);
-  }
-
-  public int getVisiableHeight() {
-    return mContainer.getHeight();
   }
 
 }

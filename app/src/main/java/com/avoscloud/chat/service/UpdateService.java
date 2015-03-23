@@ -26,8 +26,8 @@ import java.util.List;
 public class UpdateService {
   private static final String LAST_VERSION = "lastVersion";
   private static final String PROMTED_UPDATE = "promtedUpdate";
-  Activity activity;
   static UpdateService updateService;
+  Activity activity;
   SharedPreferences pref;
   SharedPreferences.Editor editor;
 
@@ -42,11 +42,6 @@ public class UpdateService {
       updateService = new UpdateService(ctx);
     }
     return updateService;
-  }
-
-  public void openUrlInBrowser(String url) {
-    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-    activity.startActivity(intent);
   }
 
   public static int getVersionCode(Context ctx) {
@@ -71,6 +66,33 @@ public class UpdateService {
       e.printStackTrace();
     }
     return versionName;
+  }
+
+  public static void createUpdateInfoInBackground() {
+    new Thread(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          createUpdateInfo();
+        } catch (AVException e) {
+          e.printStackTrace();
+        }
+        Logger.d("createUpdateInfo");
+      }
+    }).start();
+  }
+
+  public static void createUpdateInfo() throws AVException {
+    UpdateInfo updateInfo = new UpdateInfo();
+    updateInfo.setVersion(1);
+    updateInfo.setApkUrl("https://leancloud.cn");
+    updateInfo.setDesc("desc");
+    updateInfo.save();
+  }
+
+  public void openUrlInBrowser(String url) {
+    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+    activity.startActivity(intent);
   }
 
   public void checkUpdate() {
@@ -154,28 +176,6 @@ public class UpdateService {
         }
       }
     }.execute();
-  }
-
-  public static void createUpdateInfoInBackground() {
-    new Thread(new Runnable() {
-      @Override
-      public void run() {
-        try {
-          createUpdateInfo();
-        } catch (AVException e) {
-          e.printStackTrace();
-        }
-        Logger.d("createUpdateInfo");
-      }
-    }).start();
-  }
-
-  public static void createUpdateInfo() throws AVException {
-    UpdateInfo updateInfo = new UpdateInfo();
-    updateInfo.setVersion(1);
-    updateInfo.setApkUrl("https://leancloud.cn");
-    updateInfo.setDesc("desc");
-    updateInfo.save();
   }
 
   public abstract static class UpdateTask extends NetAsyncTask {

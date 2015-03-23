@@ -27,23 +27,28 @@ import com.baidu.location.LocationClientOption;
  * Created by lzw on 14-9-17.
  */
 public class MainActivity extends BaseActivity {
+  public static final int FRAGMENT_N = 4;
+  public static final int[] tabsNormalBackIds = new int[]{R.drawable.tabbar_chat,
+      R.drawable.tabbar_contacts, R.drawable.tabbar_discover, R.drawable.tabbar_me};
+  public static final int[] tabsActiveBackIds = new int[]{R.drawable.tabbar_chat_active,
+      R.drawable.tabbar_contacts_active, R.drawable.tabbar_discover_active,
+      R.drawable.tabbar_me_active};
+  public LocationClient locClient;
+  public MyLocationListener locationListener;
   Button conversationBtn, contactBtn, discoverBtn, mySpaceBtn;
   View fragmentContainer;
   ContactFragment contactFragment;
   DiscoverFragment discoverFragment;
   ConvFragment convFragment;
   MySpaceFragment mySpaceFragment;
-  public static final int FRAGMENT_N = 4;
   Button[] tabs;
-  public static final int[] tabsNormalBackIds = new int[]{R.drawable.tabbar_chat,
-      R.drawable.tabbar_contacts, R.drawable.tabbar_discover, R.drawable.tabbar_me};
-  public static final int[] tabsActiveBackIds = new int[]{R.drawable.tabbar_chat_active,
-      R.drawable.tabbar_contacts_active, R.drawable.tabbar_discover_active,
-      R.drawable.tabbar_me_active};
   View recentTips, contactTips;
-  public LocationClient locClient;
-  public MyLocationListener locationListener;
   IM im;
+
+  public static void goMainActivity(Activity activity) {
+    Intent intent = new Intent(activity, MainActivity.class);
+    activity.startActivity(intent);
+  }
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -67,11 +72,6 @@ public class MainActivity extends BaseActivity {
     im.open(AVUser.getCurrentUser().getObjectId());
   }
 
-  public static void goMainActivity(Activity activity) {
-    Intent intent = new Intent(activity, MainActivity.class);
-    activity.startActivity(intent);
-  }
-
   private void initBaiduLocClient() {
     locClient = new LocationClient(this.getApplicationContext());
     locClient.setDebug(true);
@@ -86,32 +86,6 @@ public class MainActivity extends BaseActivity {
     locationListener = new MyLocationListener();
     locClient.registerLocationListener(locationListener);
     locClient.start();
-  }
-
-  public class MyLocationListener implements BDLocationListener {
-
-    @Override
-    public void onReceiveLocation(BDLocation location) {
-      double latitude = location.getLatitude();
-      double longitude = location.getLongitude();
-      int locType = location.getLocType();
-      Logger.d("onReceiveLocation latitude=" + latitude + " longitude=" + longitude
-          + " locType=" + locType + " address=" + location.getAddrStr());
-      AVUser user = AVUser.getCurrentUser();
-      if (user != null) {
-        PreferenceMap preferenceMap = new PreferenceMap(ctx, user.getObjectId());
-        AVGeoPoint avGeoPoint = preferenceMap.getLocation();
-        if (avGeoPoint != null && avGeoPoint.getLatitude() == location.getLatitude()
-            && avGeoPoint.getLongitude() == location.getLongitude()) {
-          UserService.updateUserLocation();
-          locClient.stop();
-        } else {
-          AVGeoPoint newGeoPoint = new AVGeoPoint(location.getLatitude(),
-              location.getLongitude());
-          preferenceMap.setLocation(newGeoPoint);
-        }
-      }
-    }
   }
 
   private void init() {
@@ -188,6 +162,32 @@ public class MainActivity extends BaseActivity {
     for (Fragment f : fragments) {
       if (f != null) {
         transaction.hide(f);
+      }
+    }
+  }
+
+  public class MyLocationListener implements BDLocationListener {
+
+    @Override
+    public void onReceiveLocation(BDLocation location) {
+      double latitude = location.getLatitude();
+      double longitude = location.getLongitude();
+      int locType = location.getLocType();
+      Logger.d("onReceiveLocation latitude=" + latitude + " longitude=" + longitude
+          + " locType=" + locType + " address=" + location.getAddrStr());
+      AVUser user = AVUser.getCurrentUser();
+      if (user != null) {
+        PreferenceMap preferenceMap = new PreferenceMap(ctx, user.getObjectId());
+        AVGeoPoint avGeoPoint = preferenceMap.getLocation();
+        if (avGeoPoint != null && avGeoPoint.getLatitude() == location.getLatitude()
+            && avGeoPoint.getLongitude() == location.getLongitude()) {
+          UserService.updateUserLocation();
+          locClient.stop();
+        } else {
+          AVGeoPoint newGeoPoint = new AVGeoPoint(location.getLatitude(),
+              location.getLongitude());
+          preferenceMap.setLocation(newGeoPoint);
+        }
       }
     }
   }

@@ -19,7 +19,6 @@ import com.avos.avoscloud.SaveCallback;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.db.DBHelper;
-import com.avoscloud.chat.db.MsgsTable;
 import com.avoscloud.chat.service.UpdateService;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.service.chat.IM;
@@ -41,6 +40,12 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
   View usernameLayout, avatarLayout, logoutLayout,
       genderLayout, notifyLayout, updateLayout;
   IM im;
+  SaveCallback saveCallback = new SaveCallback() {
+    @Override
+    public void done(AVException e) {
+      refresh();
+    }
+  };
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -103,13 +108,6 @@ public class MySpaceFragment extends BaseFragment implements View.OnClickListene
       updateService.showSureUpdateDialog();
     }
   }
-
-  SaveCallback saveCallback = new SaveCallback() {
-    @Override
-    public void done(AVException e) {
-      refresh();
-    }
-  };
 
   private void showSexChooseDialog() {
     AVUser user = AVUser.getCurrentUser();

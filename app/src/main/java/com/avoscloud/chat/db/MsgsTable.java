@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
-import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.util.ParcelableUtil;
 
@@ -18,15 +17,15 @@ import java.util.List;
  * Created by lzw on 14-5-28.
  */
 public class MsgsTable {
-  private static final String MSG_TABLE_SQL = "CREATE TABLE IF NOT EXISTS `msgs` " +
-      "(`id` INTEGER PRIMARY KEY AUTOINCREMENT, `msg_id` VARCHAR(63) UNIQUE NOT NULL,`convid` VARCHAR(63) NOT NULL," +
-      "`object` BLOB NOT NULL,`time` VARCHAR(63) NOT NULL)";
-  private static final String DROP_MSG_TABLE_SQL = "drop table if exists msgs";
   public static final String MSG_ID = "msg_id";
   public static final String CONVID = "convid";
   public static final String TIME = "time";
   public static final String OBJECT = "object";
   public static final String MSGS_TABLE = "msgs";
+  private static final String MSG_TABLE_SQL = "CREATE TABLE IF NOT EXISTS `msgs` " +
+      "(`id` INTEGER PRIMARY KEY AUTOINCREMENT, `msg_id` VARCHAR(63) UNIQUE NOT NULL,`convid` VARCHAR(63) NOT NULL," +
+      "`object` BLOB NOT NULL,`time` VARCHAR(63) NOT NULL)";
+  private static final String DROP_MSG_TABLE_SQL = "drop table if exists msgs";
   private static MsgsTable msgsTable;
   private DBHelper dbHelper;
 
@@ -39,6 +38,16 @@ public class MsgsTable {
       msgsTable = new MsgsTable();
     }
     return msgsTable;
+  }
+
+  static AVIMTypedMessage createMsgByCursor(Cursor c) {
+    byte[] msgBytes = c.getBlob(c.getColumnIndex(OBJECT));
+    if (msgBytes != null) {
+      AVIMTypedMessage msg = (AVIMTypedMessage) ParcelableUtil.unmarshall(msgBytes, AVIMTypedMessage.CREATOR);
+      return msg;
+    } else {
+      return null;
+    }
   }
 
   void createTable(SQLiteDatabase db) {
@@ -96,16 +105,6 @@ public class MsgsTable {
     c.close();
     Collections.reverse(msgs);
     return msgs;
-  }
-
-  static AVIMTypedMessage createMsgByCursor(Cursor c) {
-    byte[] msgBytes = c.getBlob(c.getColumnIndex(OBJECT));
-    if (msgBytes != null) {
-      AVIMTypedMessage msg = (AVIMTypedMessage) ParcelableUtil.unmarshall(msgBytes, AVIMTypedMessage.CREATOR);
-      return msg;
-    } else {
-      return null;
-    }
   }
 
   public AVIMTypedMessage getMsgByMsgId(String msgId) {

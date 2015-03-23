@@ -18,16 +18,16 @@ import java.util.List;
 public class NewFriendAdapter extends BaseListAdapter<AddRequest> {
   private Listener listener;
 
-  public void setListener(Listener listener) {
-    this.listener = listener;
-  }
-
   public NewFriendAdapter(Context ctx) {
     super(ctx);
   }
 
   public NewFriendAdapter(Context context, List<AddRequest> list) {
     super(context, list);
+  }
+
+  public void setListener(Listener listener) {
+    this.listener = listener;
   }
 
   @Override

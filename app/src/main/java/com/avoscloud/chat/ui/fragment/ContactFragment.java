@@ -40,6 +40,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class ContactFragment extends BaseFragment implements OnItemClickListener, OnItemLongClickListener, OnClickListener, XListView.IXListViewListener {
+  private static CharacterParser characterParser;
+  private static PinyinComparator pinyinComparator;
   private ClearEditText clearEditText;
   private TextView dialog;
   private XListView friendsList;
@@ -49,10 +51,8 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
   private HeaderLayout headerLayout;
   private ImageView msgTipsView;
   private LinearLayout newFriendLayout, groupLayout;
-
-  private static CharacterParser characterParser;
-  private static PinyinComparator pinyinComparator;
   private IM im;
+  private boolean hidden;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -228,20 +228,6 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
   public void onLoadMore() {
   }
 
-  private class LetterListViewListener implements
-      EnLetterView.OnTouchingLetterChangedListener {
-
-    @Override
-    public void onTouchingLetterChanged(String s) {
-      int position = userAdapter.getPositionForSection(s.charAt(0));
-      if (position != -1) {
-        friendsList.setSelection(position);
-      }
-    }
-  }
-
-  private boolean hidden;
-
   @Override
   public void onHiddenChanged(boolean hidden) {
     super.onHiddenChanged(hidden);
@@ -296,5 +282,17 @@ public class ContactFragment extends BaseFragment implements OnItemClickListener
         }
       }
     });
+  }
+
+  private class LetterListViewListener implements
+      EnLetterView.OnTouchingLetterChangedListener {
+
+    @Override
+    public void onTouchingLetterChanged(String s) {
+      int position = userAdapter.getPositionForSection(s.charAt(0));
+      if (position != -1) {
+        friendsList.setSelection(position);
+      }
+    }
   }
 }

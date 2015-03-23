@@ -24,11 +24,11 @@ import java.util.List;
 public class ConvFragment extends BaseFragment implements IM.ConnectionListener {
   @InjectView(R.id.convList)
   BaseListView<Room> listView;
+  @InjectView(R.id.im_client_state_view)
+  View imClientStateView;
   private boolean hidden;
   private EventBus eventBus;
   private ConvManager convManager;
-  @InjectView(R.id.im_client_state_view)
-  View imClientStateView;
   private IM im;
 
   @Override

@@ -8,21 +8,21 @@ import java.io.IOException;
  * Created by lzw on 14/12/19.
  */
 public class AudioHelper {
+  private static AudioHelper audioHelper;
   private MediaPlayer mediaPlayer;
   private Runnable finishCallback;
-  private static AudioHelper audioHelper;
   private String audioPath;
   private boolean onceStart = false;
+
+  private AudioHelper() {
+    mediaPlayer = new MediaPlayer();
+  }
 
   public static AudioHelper getInstance() {
     if (audioHelper == null) {
       audioHelper = new AudioHelper();
     }
     return audioHelper;
-  }
-
-  private AudioHelper() {
-    mediaPlayer = new MediaPlayer();
   }
 
   public String getAudioPath() {

@@ -28,23 +28,29 @@ public class RecordButton extends Button {
   public static final int BACK_IDLE = R.drawable.chat_voice_bg;
   public static final int SLIDE_UP_TO_CANCEL = 0;
   public static final int RELEASE_TO_CANCEL = 1;
-  private TextView textView;
-  private String outputPath = null;
-  private RecordEventListener recordEventListener;
   private static final int MIN_INTERVAL_TIME = 1000;// 2s
-  private long startTime;
-  private Dialog recordIndicator;
   private static int[] recordImageIds = {R.drawable.chat_icon_voice0,
       R.drawable.chat_icon_voice1, R.drawable.chat_icon_voice2,
       R.drawable.chat_icon_voice3, R.drawable.chat_icon_voice4,
       R.drawable.chat_icon_voice5};
-
+  private TextView textView;
+  private String outputPath = null;
+  private RecordEventListener recordEventListener;
+  private long startTime;
+  private Dialog recordIndicator;
   private View view;
   private MediaRecorder recorder;
   private ObtainDecibelThread thread;
   private Handler volumeHandler;
   private ImageView imageView;
   private int status;
+  private OnDismissListener onDismiss = new OnDismissListener() {
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+      stopRecording();
+    }
+  };
 
   public RecordButton(Context context) {
     super(context);
@@ -208,6 +214,12 @@ public class RecordButton extends Button {
     }
   }
 
+  public interface RecordEventListener {
+    public void onFinishedRecord(String audioPath, int secs);
+
+    void onStartRecord();
+  }
+
   private class ObtainDecibelThread extends Thread {
     private volatile boolean running = true;
 
@@ -239,25 +251,11 @@ public class RecordButton extends Button {
 
   }
 
-  private OnDismissListener onDismiss = new OnDismissListener() {
-
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-      stopRecording();
-    }
-  };
-
   class ShowVolumeHandler extends Handler {
     @Override
     public void handleMessage(Message msg) {
       imageView.setImageResource(recordImageIds[msg.what]);
       //imageView.setImageResource(recordImageIds[5]);
     }
-  }
-
-  public interface RecordEventListener {
-    public void onFinishedRecord(String audioPath, int secs);
-
-    void onStartRecord();
   }
 }

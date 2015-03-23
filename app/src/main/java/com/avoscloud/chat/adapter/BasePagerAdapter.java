@@ -11,7 +11,7 @@ import java.util.List;
  * Created by lzw on 14-9-25.
  */
 public class BasePagerAdapter extends PagerAdapter {
-  List<View> views=new ArrayList<View>();
+  List<View> views = new ArrayList<View>();
 
   public BasePagerAdapter(List<View> views) {
     this.views = views;

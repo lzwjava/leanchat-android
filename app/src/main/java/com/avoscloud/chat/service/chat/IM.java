@@ -32,6 +32,13 @@ public class IM extends AVIMClientEventHandler {
   private static final int REPLY_NOTIFY_ID = 1;
   private static IM im;
   private static long lastNotifyTime = 0;
+  private static ConnectionListener defaultConnectListener = new ConnectionListener() {
+    @Override
+    public void onConnectionChanged(boolean connect) {
+      Logger.d("default connect listener");
+    }
+  };
+  private ConnectionListener connectionListener = defaultConnectListener;
   private AVIMClient imClient;
   private String selfId;
   private boolean connect = false;
@@ -39,15 +46,6 @@ public class IM extends AVIMClientEventHandler {
   private MsgsTable msgsTable;
   private RoomsTable roomsTable;
   private EventBus eventBus = EventBus.getDefault();
-
-  private static ConnectionListener defaultConnectListener = new ConnectionListener() {
-    @Override
-    public void onConnectionChanged(boolean connect) {
-      Logger.d("default connect listener");
-    }
-  };
-
-  private ConnectionListener connectionListener = defaultConnectListener;
 
   public IM() {
     msgHandler = new MsgHandler();
@@ -58,10 +56,6 @@ public class IM extends AVIMClientEventHandler {
     AVIMClient.setClientEventHandler(this);
     //签名
     //AVIMClient.setSignatureFactory(new SignatureFactory());
-  }
-
-  public void setConnectionListener(ConnectionListener connectionListener) {
-    this.connectionListener = connectionListener;
   }
 
   public synchronized static IM getInstance() {
@@ -109,6 +103,10 @@ public class IM extends AVIMClientEventHandler {
       notification.defaults |= Notification.DEFAULT_VIBRATE;
     }
     man.notify(REPLY_NOTIFY_ID, notification);
+  }
+
+  public void setConnectionListener(ConnectionListener connectionListener) {
+    this.connectionListener = connectionListener;
   }
 
   public void onMessage(final AVIMConversation conv, final AVIMTypedMessage msg) {
@@ -219,6 +217,10 @@ public class IM extends AVIMClientEventHandler {
     return connect;
   }
 
+  public interface ConnectionListener {
+    void onConnectionChanged(boolean connect);
+  }
+
   private static class MsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
 
     @Override
@@ -230,9 +232,5 @@ public class IM extends AVIMClientEventHandler {
     public void onMessageReceipt(AVIMTypedMessage message, AVIMConversation conversation, AVIMClient client) {
       getInstance().onMessageDelivered(message);
     }
-  }
-
-  public interface ConnectionListener {
-    void onConnectionChanged(boolean connect);
   }
 }

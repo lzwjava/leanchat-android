@@ -24,16 +24,14 @@ import java.util.List;
  */
 public class DiscoverFragment extends BaseFragment {
 
+  private final SortDialogListener distanceListener = new SortDialogListener(UserService.ORDER_DISTANCE);
+  private final SortDialogListener updatedAtListener = new SortDialogListener(UserService.ORDER_UPDATED_AT);
   @InjectView(R.id.list_near)
   BaseListView<AVUser> listView;
-
   NearPeopleAdapter adapter;
   List<AVUser> nears = new ArrayList<AVUser>();
   int orderType;
   PreferenceMap preferenceMap;
-
-  private final SortDialogListener distanceListener = new SortDialogListener(UserService.ORDER_DISTANCE);
-  private final SortDialogListener updatedAtListener = new SortDialogListener(UserService.ORDER_UPDATED_AT);
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,21 +55,6 @@ public class DiscoverFragment extends BaseFragment {
     initXListView();
     listView.onRefresh();
   }
-
-  public class SortDialogListener implements DialogInterface.OnClickListener {
-    int orderType;
-
-    public SortDialogListener(int orderType) {
-      this.orderType = orderType;
-    }
-
-    @Override
-    public void onClick(DialogInterface dialog, int which) {
-      DiscoverFragment.this.orderType = orderType;
-      listView.onRefresh();
-    }
-  }
-
 
   private void initXListView() {
     adapter = new NearPeopleAdapter(ctx, nears);
@@ -99,5 +82,19 @@ public class DiscoverFragment extends BaseFragment {
   public void onDestroy() {
     super.onDestroy();
     preferenceMap.setNearbyOrder(orderType);
+  }
+
+  public class SortDialogListener implements DialogInterface.OnClickListener {
+    int orderType;
+
+    public SortDialogListener(int orderType) {
+      this.orderType = orderType;
+    }
+
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+      DiscoverFragment.this.orderType = orderType;
+      listView.onRefresh();
+    }
   }
 }

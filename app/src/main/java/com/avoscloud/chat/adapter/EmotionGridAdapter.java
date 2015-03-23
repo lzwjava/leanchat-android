@@ -28,7 +28,7 @@ public class EmotionGridAdapter extends BaseListAdapter<String> {
     ImageView emotionImageView = ViewHolder.findViewById(conView, R.id.emotionImageView);
     String emotion = (String) getItem(position);
     emotion = emotion.substring(1);
-    Bitmap bitmap= EmotionUtils.getDrawableByName(ctx,emotion);
+    Bitmap bitmap = EmotionUtils.getDrawableByName(ctx, emotion);
     emotionImageView.setImageBitmap(bitmap);
     return conView;
   }

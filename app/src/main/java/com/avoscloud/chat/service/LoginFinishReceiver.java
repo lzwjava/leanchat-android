@@ -17,13 +17,6 @@ public class LoginFinishReceiver extends BroadcastReceiver {
     this.activity = activity;
   }
 
-  @Override
-  public void onReceive(Context context, Intent intent) {
-    if (intent != null && intent.getAction().equals(FINISH_ACTION)) {
-      activity.finish();
-    }
-  }
-
   public static LoginFinishReceiver register(Activity activity) {
     LoginFinishReceiver receiver = new LoginFinishReceiver(activity);
     activity.registerReceiver(receiver, new IntentFilter(LoginFinishReceiver.FINISH_ACTION));
@@ -32,5 +25,12 @@ public class LoginFinishReceiver extends BroadcastReceiver {
 
   public static void broadcast(Context context) {
     context.sendBroadcast(new Intent(FINISH_ACTION));
+  }
+
+  @Override
+  public void onReceive(Context context, Intent intent) {
+    if (intent != null && intent.getAction().equals(FINISH_ACTION)) {
+      activity.finish();
+    }
   }
 }

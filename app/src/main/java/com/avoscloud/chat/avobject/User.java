@@ -27,24 +27,6 @@ public class User {
     }
   }
 
-  public static enum Gender {
-    Male(0), Female(1);
-
-    int value;
-
-    Gender(int value) {
-      this.value = value;
-    }
-
-    public int getValue() {
-      return value;
-    }
-
-    public static Gender fromInt(int index) {
-      return values()[index];
-    }
-  }
-
   public static String getAvatarUrl(AVUser user) {
     AVFile avatar = user.getAVFile(AVATAR);
     if (avatar != null) {
@@ -74,6 +56,24 @@ public class User {
     } catch (Exception e) {
       e.printStackTrace();
       return null;
+    }
+  }
+
+  public static enum Gender {
+    Male(0), Female(1);
+
+    int value;
+
+    Gender(int value) {
+      this.value = value;
+    }
+
+    public static Gender fromInt(int index) {
+      return values()[index];
+    }
+
+    public int getValue() {
+      return value;
     }
   }
 }

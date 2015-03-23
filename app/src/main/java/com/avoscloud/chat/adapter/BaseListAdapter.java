@@ -21,22 +21,22 @@ public class BaseListAdapter<T> extends BaseAdapter {
     initWithContext(ctx);
   }
 
-  public void initWithContext(Context ctx) {
-    this.ctx = ctx;
-    inflater = LayoutInflater.from(ctx);
-  }
-
   public BaseListAdapter(Context ctx, List<T> datas) {
     initWithContext(ctx);
     this.datas = datas;
   }
 
-  public void setDatas(List<T> datas) {
-    this.datas = datas;
+  public void initWithContext(Context ctx) {
+    this.ctx = ctx;
+    inflater = LayoutInflater.from(ctx);
   }
 
   public List<T> getDatas() {
     return datas;
+  }
+
+  public void setDatas(List<T> datas) {
+    this.datas = datas;
   }
 
   public void addAll(List<T> subDatas) {

@@ -15,6 +15,13 @@ public class ImageBrowserActivity extends BaseActivity {
   private static final String URL = "url";
   private ImageView imageView;
 
+  public static void go(Context ctx, String path, String url) {
+    Intent intent = new Intent(ctx, ImageBrowserActivity.class);
+    intent.putExtra(PATH, path);
+    intent.putExtra(URL, url);
+    ctx.startActivity(intent);
+  }
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -24,12 +31,5 @@ public class ImageBrowserActivity extends BaseActivity {
     String path = intent.getStringExtra(PATH);
     String url = intent.getStringExtra(URL);
     PhotoUtils.displayImageCacheElseNetwork(imageView, path, url);
-  }
-
-  public static void go(Context ctx, String path, String url) {
-    Intent intent = new Intent(ctx, ImageBrowserActivity.class);
-    intent.putExtra(PATH, path);
-    intent.putExtra(URL, url);
-    ctx.startActivity(intent);
   }
 }

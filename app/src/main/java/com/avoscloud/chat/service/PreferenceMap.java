@@ -21,14 +21,13 @@ public class PreferenceMap {
   public static final String VOICE_NOTIFY = "voiceNotify";
   public static final String VIBRATE_NOTIFY = "vibrateNotify";
   public static final String NEARBY_ORDER = "nearbyOrder";
-
-  Context cxt;
-  SharedPreferences pref;
-  SharedPreferences.Editor editor;
   //int addRequestN;
   //String latitude;
   //String longitude;
   public static PreferenceMap currentUserPreferenceMap;
+  Context cxt;
+  SharedPreferences pref;
+  SharedPreferences.Editor editor;
   int nearbyOrder;
 
   public PreferenceMap(Context cxt) {

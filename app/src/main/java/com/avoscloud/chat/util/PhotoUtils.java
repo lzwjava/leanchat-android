@@ -23,6 +23,33 @@ import java.io.IOException;
 
 public class PhotoUtils {
 
+  public static DisplayImageOptions avatarImageOptions = new DisplayImageOptions.Builder()
+      .showImageOnLoading(R.drawable.default_user_avatar)
+      .showImageForEmptyUri(R.drawable.default_user_avatar)
+      .showImageOnFail(R.drawable.default_user_avatar)
+      .cacheInMemory(true)
+      .cacheOnDisc(true)
+      .considerExifParams(true)
+      .imageScaleType(ImageScaleType.EXACTLY)
+      .bitmapConfig(Config.RGB_565)
+      .resetViewBeforeLoading(true)// 设置图片在下载前是否重置，复位
+          //.displayer(new RoundedBitmapDisplayer(20))
+          //.displayer(new FadeInBitmapDisplayer(100))// 淡入
+      .build();
+  public static DisplayImageOptions normalImageOptions = new DisplayImageOptions.Builder()
+      .showImageOnLoading(R.drawable.empty_photo)
+      .showImageForEmptyUri(R.drawable.empty_photo)
+      .showImageOnFail(R.drawable.image_load_fail)
+      .cacheInMemory(true)
+      .cacheOnDisc(true)
+      .considerExifParams(true)
+      .imageScaleType(ImageScaleType.EXACTLY)
+      .bitmapConfig(Config.RGB_565)
+      .resetViewBeforeLoading(true)// 设置图片在下载前是否重置，复位
+          //.displayer(new RoundedBitmapDisplayer(20))
+          //.displayer(new FadeInBitmapDisplayer(100))// 淡入
+      .build();
+
   /**
    * 回收垃圾 recycle
    *
@@ -357,34 +384,6 @@ public class PhotoUtils {
     return newPath;
   }
 
-  public static DisplayImageOptions avatarImageOptions = new DisplayImageOptions.Builder()
-      .showImageOnLoading(R.drawable.default_user_avatar)
-      .showImageForEmptyUri(R.drawable.default_user_avatar)
-      .showImageOnFail(R.drawable.default_user_avatar)
-      .cacheInMemory(true)
-      .cacheOnDisc(true)
-      .considerExifParams(true)
-      .imageScaleType(ImageScaleType.EXACTLY)
-      .bitmapConfig(Config.RGB_565)
-      .resetViewBeforeLoading(true)// 设置图片在下载前是否重置，复位
-          //.displayer(new RoundedBitmapDisplayer(20))
-          //.displayer(new FadeInBitmapDisplayer(100))// 淡入
-      .build();
-
-  public static DisplayImageOptions normalImageOptions = new DisplayImageOptions.Builder()
-      .showImageOnLoading(R.drawable.empty_photo)
-      .showImageForEmptyUri(R.drawable.empty_photo)
-      .showImageOnFail(R.drawable.image_load_fail)
-      .cacheInMemory(true)
-      .cacheOnDisc(true)
-      .considerExifParams(true)
-      .imageScaleType(ImageScaleType.EXACTLY)
-      .bitmapConfig(Config.RGB_565)
-      .resetViewBeforeLoading(true)// 设置图片在下载前是否重置，复位
-          //.displayer(new RoundedBitmapDisplayer(20))
-          //.displayer(new FadeInBitmapDisplayer(100))// 淡入
-      .build();
-
   public static ImageLoaderConfiguration getImageLoaderConfig(Context context, File cacheDir) {
     return new ImageLoaderConfiguration.Builder(
         context)
@@ -396,7 +395,7 @@ public class PhotoUtils {
         .tasksProcessingOrder(QueueProcessingType.LIFO)
         .discCache(new UnlimitedDiscCache(cacheDir))// 自定义缓存路径
             // .defaultDisplayImageOptions(DisplayImageOptions.createSimple())
-        //.writeDebugLogs() // Remove for release app
+            //.writeDebugLogs() // Remove for release app
         .build();
   }
 

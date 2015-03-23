@@ -14,14 +14,13 @@ import java.util.List;
  * Created by lzw on 15/2/12.
  */
 public class RoomsTable {
+  public static final String DROP_TABLE_SQL = "DROP TABLE IF EXISTS `rooms`";
   private static final String CONVID = "convid";
   private static final String UNREAD_COUNT = "unread_count";
   private static final String CONVS_TABLE_SQL = "CREATE TABLE IF NOT EXISTS `rooms` " +
       "(`id` INTEGER PRIMARY KEY AUTOINCREMENT,`convid` VARCHAR(63) UNIQUE NOT NULL, " +
       "`unread_count` INTEGER DEFAULT 0)";
   private static final String ROOMS_TABLE = "rooms";
-  public static final String DROP_TABLE_SQL = "DROP TABLE IF EXISTS `rooms`";
-
   private static RoomsTable roomsTable;
   private DBHelper dbHelper;
 

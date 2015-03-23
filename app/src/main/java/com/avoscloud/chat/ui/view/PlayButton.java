@@ -19,16 +19,16 @@ public class PlayButton extends ImageView implements View.OnClickListener {
   AnimationDrawable anim;
   AudioHelper audioHelper;
 
-  public void setAudioHelper(AudioHelper audioHelper) {
-    this.audioHelper = audioHelper;
-  }
-
   public PlayButton(Context context, AttributeSet attrs) {
     super(context, attrs);
     ctx = context;
     leftSide = getLeftFromAttrs(context, attrs);
     setLeftSide(leftSide);
     setOnClickListener(this);
+  }
+
+  public void setAudioHelper(AudioHelper audioHelper) {
+    this.audioHelper = audioHelper;
   }
 
   public void setLeftSide(boolean leftSide) {

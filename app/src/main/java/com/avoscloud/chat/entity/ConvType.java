@@ -15,11 +15,11 @@ public enum ConvType {
     this.value = value;
   }
 
-  public int getValue() {
-    return value;
-  }
-
   public static ConvType fromInt(int i) {
     return values()[i];
+  }
+
+  public int getValue() {
+    return value;
   }
 }

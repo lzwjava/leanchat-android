@@ -18,6 +18,16 @@ public class UpdateContentActivity extends BaseActivity {
   private TextView fieldNameView;
   private EditText valueEdit;
 
+  public static void goActivityForResult(Activity activity, String fieldName, int requestCode) {
+    Intent intent = new Intent(activity, UpdateContentActivity.class);
+    intent.putExtra(FIELD_NAME, fieldName);
+    activity.startActivityForResult(intent, requestCode);
+  }
+
+  public static String getResultValue(Intent data) {
+    return data.getStringExtra(VALUE);
+  }
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -30,16 +40,6 @@ public class UpdateContentActivity extends BaseActivity {
   public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.update_content_menu, menu);
     return super.onCreateOptionsMenu(menu);
-  }
-
-  public static void goActivityForResult(Activity activity, String fieldName, int requestCode) {
-    Intent intent = new Intent(activity, UpdateContentActivity.class);
-    intent.putExtra(FIELD_NAME, fieldName);
-    activity.startActivityForResult(intent, requestCode);
-  }
-
-  public static String getResultValue(Intent data) {
-    return data.getStringExtra(VALUE);
   }
 
   private void init() {
