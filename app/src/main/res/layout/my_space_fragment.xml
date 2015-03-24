@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <include layout="@layout/base_header_layout" />
 
@@ -24,8 +24,8 @@
                 android:padding="10dp">
 
                 <TextView
-                    android:text="@string/avatar"
-                    style="@style/myspace_left_text" />
+                    style="@style/myspace_left_text"
+                    android:text="@string/avatar" />
 
                 <ImageView
                     android:id="@+id/avatar"
@@ -122,11 +122,11 @@
 
                 <TextView
                     android:id="@+id/logout"
-                    android:layout_width="match_parent"
-                    android:gravity="center"
-                    android:layout_height="match_parent"
                     style="@style/My.Button.logout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_centerInParent="true"
+                    android:gravity="center"
                     android:text="注销" />
 
             </RelativeLayout>

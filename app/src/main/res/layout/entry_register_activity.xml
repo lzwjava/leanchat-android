@@ -9,11 +9,11 @@
 
         <TextView
             style="@style/My.TextView._Black"
+            android:layout_width="@dimen/registerLeftWidth"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:paddingLeft="10dp"
-            android:text="@string/username"
-            android:layout_width="@dimen/registerLeftWidth" />
+            android:text="@string/username" />
 
         <EditText
             android:id="@+id/usernameEdit"
@@ -25,59 +25,59 @@
 
         <TextView
             style="@style/My.TextView._Black"
+            android:layout_width="@dimen/registerLeftWidth"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:paddingLeft="10dp"
-            android:text="@string/password"
-            android:layout_width="@dimen/registerLeftWidth" />
+            android:text="@string/password" />
 
         <EditText
             android:id="@+id/passwordEdit"
             style="@style/Register_Edit"
-            android:inputType="textPassword"
-            android:hint="@string/login_password_hint" />
+            android:hint="@string/login_password_hint"
+            android:inputType="textPassword" />
     </LinearLayout>
 
     <LinearLayout style="@style/Register_Input">
 
         <TextView
             style="@style/My.TextView._Black"
+            android:layout_width="@dimen/registerLeftWidth"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:paddingLeft="10dp"
-            android:text="@string/ensurePassword"
-            android:layout_width="@dimen/registerLeftWidth" />
+            android:text="@string/ensurePassword" />
 
         <EditText
             android:id="@+id/ensurePasswordEdit"
             style="@style/Register_Edit"
-            android:inputType="textPassword"
-            android:hint="@string/ensurePasswordHint" />
+            android:hint="@string/ensurePasswordHint"
+            android:inputType="textPassword" />
     </LinearLayout>
 
     <LinearLayout style="@style/Register_Input">
 
         <TextView
             style="@style/My.TextView._Black"
+            android:layout_width="@dimen/registerLeftWidth"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:paddingLeft="10dp"
-            android:text="@string/sex"
-            android:layout_width="@dimen/registerLeftWidth" />
+            android:text="@string/sex" />
 
         <RadioGroup
+            android:id="@+id/sexRadio"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:id="@+id/sexRadio">
+            android:orientation="horizontal">
 
             <RadioButton
                 android:id="@+id/male"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/male"
-                android:checked="true" />
+                android:checked="true"
+                android:text="@string/male" />
 
             <RadioButton
                 android:id="@+id/female"

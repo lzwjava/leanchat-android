@@ -32,11 +32,11 @@
                 android:id="@+id/iv_msg_tips"
                 android:layout_width="@dimen/tip_icon_size"
                 android:layout_height="@dimen/tip_icon_size"
-                android:layout_marginTop="5dp"
                 android:layout_gravity="top|right"
-                android:visibility="invisible"
+                android:layout_marginTop="5dp"
                 android:contentDescription="@string/action_settings"
-                android:src="@drawable/msg_tips" />
+                android:src="@drawable/msg_tips"
+                android:visibility="invisible" />
         </FrameLayout>
 
         <TextView
@@ -62,8 +62,8 @@
         android:id="@+id/layout_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clickable="true"
         android:layout_below="@+id/layout_new"
+        android:clickable="true"
         android:orientation="horizontal">
 
         <FrameLayout

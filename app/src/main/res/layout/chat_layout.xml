@@ -9,19 +9,19 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_above="@+id/bottomLayout"
+        android:layout_below="@+id/headerLayout"
+        android:background="#fff"
         android:cacheColorHint="#0000"
         android:divider="@null"
-        android:background="#fff"
         android:dividerHeight="5dp"
-        android:layout_below="@+id/headerLayout"
         android:scrollbarStyle="outsideOverlay"
         android:stackFromBottom="true" />
 
     <LinearLayout
         android:id="@+id/bottomLayout"
-        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:background="@drawable/home_bg_bottombar"
         android:orientation="vertical">
 

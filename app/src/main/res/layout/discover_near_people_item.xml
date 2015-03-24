@@ -1,13 +1,13 @@
 <LinearLayout
-    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/common_list_item_height"
-        android:gravity="center_vertical"
         android:layout_margin="5dp"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <ImageView
@@ -24,24 +24,24 @@
             <TextView
                 android:id="@+id/name_text"
                 style="@style/My.TextView._Black"
-                android:textSize="18sp"
-                android:text="你好" />
+                android:text="你好"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/distance_text"
                 style="@style/My.TextView._Gray"
                 android:layout_alignParentRight="true"
-                android:text="distance"
                 android:layout_marginTop="5dp"
                 android:singleLine="true"
+                android:text="distance"
                 android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/login_time_text"
                 style="@style/My.TextView._Gray"
                 android:layout_below="@id/name_text"
-                android:text="你好"
                 android:singleLine="true"
+                android:text="你好"
                 android:textSize="13sp" />
         </RelativeLayout>
 

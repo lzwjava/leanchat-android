@@ -5,9 +5,9 @@
 
     <com.baidu.mapapi.map.MapView
         android:id="@+id/bmapView"
-        android:layout_below="@+id/headerLayout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:layout_below="@+id/headerLayout"
         android:clickable="true" />
 
 </RelativeLayout>

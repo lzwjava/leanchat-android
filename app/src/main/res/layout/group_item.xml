@@ -4,16 +4,16 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:gravity="center_vertical"
+        android:orientation="horizontal"
         android:paddingLeft="80dp">
 
         <ImageView
-            android:src="@drawable/group_icon"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:src="@drawable/group_icon" />
 
         <TextView
             android:id="@+id/name"

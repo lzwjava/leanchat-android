@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    android:layout_height="70dp"
-    android:layout_width="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
     android:padding="10dp">
 
     <ImageView
@@ -15,27 +15,27 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_toRightOf="@id/userAvatar"
         android:layout_marginLeft="30dp"
+        android:layout_toRightOf="@id/userAvatar"
         android:orientation="vertical">
 
         <TextView
-            android:singleLine="true"
+            android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_weight="1"
-            android:text="name"
-            android:id="@+id/name" />
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="name" />
 
         <TextView
             android:id="@+id/onlineStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="[在线]"
+            android:layout_marginRight="10dp"
             android:layout_weight="1"
-            android:textSize="12sp"
-            android:layout_marginRight="10dp" />
+            android:text="[在线]"
+            android:textSize="12sp" />
     </LinearLayout>
 
 </RelativeLayout>

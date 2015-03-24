@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/common_list_item_height"
-    android:orientation="vertical"
-    android:layout_margin="5dp">
+    android:layout_margin="5dp"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -12,9 +12,9 @@
         <ImageView
             android:id="@+id/iv_recent_avatar"
             style="@style/My.ImageView.Photo_Avatar"
-            android:layout_gravity="center_vertical"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
             android:src="@drawable/default_user_avatar" />
 
@@ -22,22 +22,22 @@
             android:id="@+id/recent_unread"
             android:layout_width="18dp"
             android:layout_height="18dp"
-            android:layout_toRightOf="@+id/iv_recent_avatar"
             android:layout_above="@+id/iv_recent_avatar"
-            android:background="@drawable/msg_tips"
-            android:layout_marginLeft="-10dp"
             android:layout_marginBottom="-18dp"
+            android:layout_marginLeft="-10dp"
+            android:layout_toRightOf="@+id/iv_recent_avatar"
+            android:background="@drawable/msg_tips"
             android:gravity="center"
             android:textColor="#ffffffff"
             android:textSize="10.0dip" />
 
         <TextView
             android:id="@+id/recent_time_text"
+            style="@style/My.TextView._Black"
             android:layout_width="wrap_content"
             android:layout_height="25.0dip"
             android:layout_marginLeft="10.0dip"
             android:layout_marginRight="58.0dip"
-            style="@style/My.TextView._Black"
             android:layout_toRightOf="@id/iv_recent_avatar"
             android:ellipsize="end"
             android:gravity="left|center"
@@ -49,9 +49,9 @@
             android:layout_width="fill_parent"
             android:layout_height="35.0dip"
             android:layout_below="@id/recent_time_text"
-            android:layout_toRightOf="@id/iv_recent_avatar"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="35.0dip"
+            android:layout_toRightOf="@id/iv_recent_avatar"
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:paddingLeft="6.0dip"

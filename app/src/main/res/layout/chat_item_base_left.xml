@@ -10,8 +10,8 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/chatItemMarginTop"
         android:layout_marginLeft="5dp"
+        android:layout_marginTop="@dimen/chatItemMarginTop"
         android:orientation="horizontal">
 
         <ImageView
@@ -20,25 +20,25 @@
 
         <LinearLayout
             android:id="@+id/contentLayout"
-            android:orientation="vertical"
-            android:layout_marginLeft="@dimen/marginToUsername"
             android:layout_width="wrap_content"
-            android:maxWidth="@dimen/chatContentMaxWidth"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/marginToUsername"
+            android:background="@drawable/chat_left_qp"
             android:gravity="center"
-            android:background="@drawable/chat_left_qp"></LinearLayout>
+            android:maxWidth="@dimen/chatContentMaxWidth"
+            android:orientation="vertical"></LinearLayout>
 
     </LinearLayout>
 
     <TextView
         android:id="@+id/username"
-        android:maxLines="1"
-        android:ellipsize="end"
         android:layout_width="@dimen/chatMaxNameWidth"
         android:layout_height="wrap_content"
-        android:text="username"
         android:layout_marginLeft="2dp"
+        android:ellipsize="end"
         android:gravity="center"
+        android:maxLines="1"
+        android:text="username"
         android:textSize="11sp" />
 
 </LinearLayout>

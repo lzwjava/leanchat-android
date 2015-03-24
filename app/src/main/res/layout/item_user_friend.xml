@@ -10,8 +10,8 @@
         android:layout_height="wrap_content"
         android:background="#e3e3e3"
         android:padding="2dp"
-        android:textSize="18sp"
-        android:textColor="@color/guide_color" />
+        android:textColor="@color/guide_color"
+        android:textSize="18sp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -23,17 +23,17 @@
             android:id="@+id/img_friend_avatar"
             style="@style/My.ImageView.Photo_Avatar"
             android:layout_alignParentLeft="true"
-            android:src="@drawable/default_user_avatar"
-            android:layout_centerVertical="true" />
+            android:layout_centerVertical="true"
+            android:src="@drawable/default_user_avatar" />
 
         <TextView
             android:id="@+id/tv_friend_name"
             style="@style/My.TextView._Black"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/img_friend_avatar"
-            android:text="name"
-            android:layout_centerVertical="true"
             android:singleLine="true"
+            android:text="name"
             android:textSize="20sp" />
     </RelativeLayout>
 

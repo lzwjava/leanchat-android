@@ -52,17 +52,6 @@ public class IM extends AVIMClientEventHandler {
   public IM() {
   }
 
-  public void init() {
-    msgHandler = new MsgHandler();
-    msgsTable = MsgsTable.getInstance();
-    roomsTable = RoomsTable.getInstance();
-    AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class, msgHandler);
-    AVIMMessageManager.setConversationEventHandler(ConvManager.getConvHandler());
-    AVIMClient.setClientEventHandler(this);
-    //签名
-    //AVIMClient.setSignatureFactory(new SignatureFactory());
-  }
-
   public synchronized static IM getInstance() {
     if (im == null) {
       im = new IM();
@@ -108,6 +97,17 @@ public class IM extends AVIMClientEventHandler {
       notification.defaults |= Notification.DEFAULT_VIBRATE;
     }
     man.notify(REPLY_NOTIFY_ID, notification);
+  }
+
+  public void init() {
+    msgHandler = new MsgHandler();
+    msgsTable = MsgsTable.getInstance();
+    roomsTable = RoomsTable.getInstance();
+    AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class, msgHandler);
+    AVIMMessageManager.setConversationEventHandler(ConvManager.getConvHandler());
+    AVIMClient.setClientEventHandler(this);
+    //签名
+    //AVIMClient.setSignatureFactory(new SignatureFactory());
   }
 
   public void setConnectionListener(ConnectionListener connectionListener) {
