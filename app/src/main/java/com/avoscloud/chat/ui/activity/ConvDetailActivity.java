@@ -121,7 +121,7 @@ public class ConvDetailActivity extends ConvBaseActivity implements AdapterView.
 
   private void initData() {
     convManager = ConvManager.getInstance();
-    isOwner = ConvManager.isConvCreator(conv(), AVUser.getCurrentUser());
+    isOwner = conv().getCreator().equals(AVUser.getCurrentUser().getObjectId());
     convType = ConvManager.typeOfConv(conv());
   }
 
@@ -137,7 +137,7 @@ public class ConvDetailActivity extends ConvBaseActivity implements AdapterView.
       return true;
     }
     final AVUser user = (AVUser) parent.getAdapter().getItem(position);
-    boolean isTheOwner = ConvManager.isConvCreator(conv(), user);
+    boolean isTheOwner = conv().getCreator().equals(user.getObjectId());
     if (!isTheOwner) {
       new AlertDialog.Builder(ctx).setMessage(R.string.kickTips)
           .setPositiveButton(R.string.sure, new DialogInterface.OnClickListener() {

@@ -150,15 +150,16 @@ public class ChatMsgAdapter extends BaseListAdapter<AVIMTypedMessage> {
           statusSendFailed.setVisibility(View.VISIBLE);
           break;
         case AVIMMessageStatusSent:
-          statusSendSucceed.setVisibility(View.VISIBLE);
+          if (convType == ConvType.Single) {
+            statusSendSucceed.setVisibility(View.VISIBLE);
+          }
           break;
         case AVIMMessageStatusNone:
         case AVIMMessageStatusSending:
           statusSendStart.setVisibility(View.VISIBLE);
           break;
-      }
-      if (convType == ConvType.Group) {
-        statusSendSucceed.setVisibility(View.GONE);
+        case AVIMMessageStatusReceipt:
+          break;
       }
     }
     return conView;

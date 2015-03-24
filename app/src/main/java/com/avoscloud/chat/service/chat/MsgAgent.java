@@ -1,6 +1,5 @@
 package com.avoscloud.chat.service.chat;
 
-import android.content.Context;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.im.v2.AVIMConversation;
@@ -10,10 +9,11 @@ import com.avos.avoscloud.im.v2.messages.AVIMAudioMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMLocationMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
-import com.avoscloud.chat.R;
-import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.db.MsgsTable;
-import com.avoscloud.chat.util.*;
+import com.avoscloud.chat.util.Logger;
+import com.avoscloud.chat.util.PathUtils;
+import com.avoscloud.chat.util.PhotoUtils;
+import com.avoscloud.chat.util.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,58 +37,55 @@ public class MsgAgent {
     this.sendCallback = sendCallback;
   }
 
-  private boolean isStateFine() {
-    Context ctx = App.ctx;
-    if (!Connectivity.isConnected(ctx)) {
-      Utils.toast(ctx, ctx.getString(R.string.pleaseCheckNetwork));
-      return false;
-    } else if (!im.isConnect()) {
-      Utils.toast(ctx, ctx.getString(R.string.sessionPausedTips));
-      return true;
-    } else {
-      return true;
-    }
-  }
-
   private void sendMsg(final AVIMTypedMessage msg, final String originPath, final SendCallback callback) {
-    if (isStateFine()) {
-      conv.sendMessage(msg, AVIMConversation.RECEIPT_MESSAGE_FLAG, new AVIMConversationCallback() {
-        @Override
-        public void done(AVException e) {
-          if (e != null) {
-            e.printStackTrace();
-            /*MsgsTable.updateStatus(msg.getObjectId(), AVIMTypedMessage.Status.SendFailed);*/
-            if (callback != null) {
-              callback.onError(e);
-            }
-          } else {
-            msgsTable.insertMsg(msg);
-            if (originPath != null) {
-              File tmpFile = new File(originPath);
-              File newFile = new File(PathUtils.getChatFilePath(msg.getMessageId()));
-              boolean result = tmpFile.renameTo(newFile);
-              Logger.v("remove file " + result);
-              if (!result) {
-                throw new IllegalStateException("move file failed, can't use local cache");
-              }
-            }
-            if (callback != null) {
-              callback.onSuccess(msg);
-            }
+    if (!im.isConnect()) {
+      Logger.d("im not connect");
+    }
+    conv.sendMessage(msg, AVIMConversation.RECEIPT_MESSAGE_FLAG, new AVIMConversationCallback() {
+      @Override
+      public void done(AVException e) {
+        if (e != null) {
+          e.printStackTrace();
+          msg.setMessageId(Utils.uuid());
+          msg.setTimestamp(System.currentTimeMillis());
+        }
+        msgsTable.insertMsg(msg);
+
+        if (e == null && originPath != null) {
+          File tmpFile = new File(originPath);
+          File newFile = new File(PathUtils.getChatFilePath(msg.getMessageId()));
+          boolean result = tmpFile.renameTo(newFile);
+          if (!result) {
+            throw new IllegalStateException("move file failed, can't use local cache");
           }
         }
-      });
-    }
+        if (callback != null) {
+          if (e != null) {
+            callback.onError(e);
+          } else {
+            callback.onSuccess(msg);
+          }
+        }
+      }
+    });
   }
 
-  public void resendMsg(AVIMTypedMessage msg, SendCallback sendCallback) {
-    /*MsgsTable.updateStatus(msg.getObjectId(), AVIMTypedMessage.Status.SendStart);
-    sendCallback.onStart(msg);
-    MsgAgent msgAgent = new MsgAgent(msg.getConvType(), toId);
-    msgAgent.uploadAndSendMsg(msg, sendCallback);*/
+  public void resendMsg(final AVIMTypedMessage msg, final SendCallback sendCallback) {
+    final String tmpId = msg.getMessageId();
+    conv.sendMessage(msg, AVIMConversation.RECEIPT_MESSAGE_FLAG, new AVIMConversationCallback() {
+      @Override
+      public void done(AVException e) {
+        if (e != null) {
+          sendCallback.onError(e);
+        } else {
+          msgsTable.updateFailedMsg(msg, tmpId);
+          sendCallback.onSuccess(msg);
+        }
+      }
+    });
   }
 
-  public void sendText(String content, SendCallback sendCallback) {
+  public void sendText(String content) {
     AVIMTextMessage textMsg = new AVIMTextMessage();
     textMsg.setText(content);
     sendMsg(textMsg, null, sendCallback);

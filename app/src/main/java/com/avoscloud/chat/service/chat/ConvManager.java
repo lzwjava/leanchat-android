@@ -66,14 +66,16 @@ public class ConvManager {
       int typeInt = (Integer) typeObject;
       return ConvType.fromInt(typeInt);
     } catch (NullPointerException e) {
-      return ConvType.Single;
+      e.printStackTrace();
+      return ConvType.Group;
     }
   }
 
   public static String otherIdOfConv(AVIMConversation conv) {
-    assert typeOfConv(conv) == ConvType.Single;
     List<String> members = conv.getMembers();
-    assert members.size() == 2;
+    if (typeOfConv(conv) != ConvType.Single || members.size() != 2) {
+      throw new IllegalStateException("can't get other id, members=" + conv.getMembers());
+    }
     String selfId = AVUser.getCurrentUser().getObjectId();
     if (members.get(0).equals(selfId)) {
       return members.get(1);
@@ -95,14 +97,6 @@ public class ConvManager {
         return "conv name";
       }
     }
-  }
-
-  public static AVUser otherOfConv(AVIMConversation conv) {
-    return CacheService.lookupUser(otherIdOfConv(conv));
-  }
-
-  public static boolean isConvCreator(AVIMConversation conv, AVUser user) {
-    return conv.getCreator().equals(user.getObjectId());
   }
 
   public static String titleOfConv(AVIMConversation conv) {
@@ -276,12 +270,11 @@ public class ConvManager {
   }
 
   public void createGroupConv(List<String> members, final AVIMConversationCreatedCallback callback) {
-    AVIMClient imClient = im.getImClient();
     Map<String, Object> map = new HashMap<String, Object>();
     map.put(ConvType.TYPE_KEY, ConvType.Group.getValue());
     final String name = MsgUtils.nameByUserIds(members);
     map.put(ConvType.NAME_KEY, name);
-    imClient.createConversation(members, map, callback);
+    im.getImClient().createConversation(members, map, callback);
   }
 
   /**

@@ -10,6 +10,7 @@ import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.AddRequest;
 import com.avoscloud.chat.avobject.UpdateInfo;
 import com.avoscloud.chat.service.UpdateService;
+import com.avoscloud.chat.service.chat.IM;
 import com.avoscloud.chat.ui.activity.SplashActivity;
 import com.avoscloud.chat.util.Logger;
 import com.avoscloud.chat.util.PhotoUtils;
@@ -70,7 +71,6 @@ public class App extends Application {
           AVObject avatar = new AVObject("Avatar");
           avatar.put("file", file);
           avatar.save();
-
         } catch (AVException e) {
           e.printStackTrace();
         }
@@ -101,6 +101,10 @@ public class App extends Application {
     PushService.setDefaultPushCallback(ctx, SplashActivity.class);
     AVOSCloud.setDebugLogEnabled(debug);
     AVAnalytics.enableCrashReport(this, !debug);
+
+    IM im = IM.getInstance();
+    im.init();
+
     if (App.debug) {
       Logger.level = Logger.VERBOSE;
     } else {
@@ -108,24 +112,24 @@ public class App extends Application {
     }
     initImageLoader(ctx);
     initBaidu();
-    openStrictMode();
+    if (App.debug) {
+      openStrictMode();
+    }
   }
 
   public void openStrictMode() {
-    if (App.debug) {
-      StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-          .detectDiskReads()
-          .detectDiskWrites()
-          .detectNetwork()   // or .detectAll() for all detectable problems
-          .penaltyLog()
-          .build());
-      StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-          .detectLeakedSqlLiteObjects()
-          .detectLeakedClosableObjects()
-          .penaltyLog()
-              //.penaltyDeath()
-          .build());
-    }
+    StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+        .detectDiskReads()
+        .detectDiskWrites()
+        .detectNetwork()   // or .detectAll() for all detectable problems
+        .penaltyLog()
+        .build());
+    StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+        .detectLeakedSqlLiteObjects()
+        .detectLeakedClosableObjects()
+        .penaltyLog()
+            //.penaltyDeath()
+        .build());
   }
 
   private void initBaidu() {

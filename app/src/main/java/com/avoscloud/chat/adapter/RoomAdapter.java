@@ -9,6 +9,7 @@ import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.entity.ConvType;
 import com.avoscloud.chat.entity.Room;
+import com.avoscloud.chat.service.CacheService;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.service.chat.ConvManager;
 import com.avoscloud.chat.service.chat.MsgUtils;
@@ -37,7 +38,7 @@ public class RoomAdapter extends BaseListAdapter<Room> {
     TextView recentUnreadView = ViewHolder.findViewById(convertView, R.id.recent_unread);
 
     if (ConvManager.typeOfConv(room.getConv()) == ConvType.Single) {
-      AVUser user = ConvManager.otherOfConv(room.getConv());
+      AVUser user = CacheService.lookupUser(ConvManager.otherIdOfConv(room.getConv()));
       UserService.displayAvatar(user, recentAvatarView);
     } else {
       recentAvatarView.setImageResource(R.drawable.group_icon);

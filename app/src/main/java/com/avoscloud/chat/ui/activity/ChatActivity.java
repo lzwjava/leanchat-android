@@ -446,13 +446,8 @@ public class ChatActivity extends ConvBaseActivity implements OnClickListener,
   private void sendText() {
     final String content = contentEdit.getText().toString();
     if (!TextUtils.isEmpty(content)) {
-      msgAgent.sendText(content, new DefaultSendCallback() {
-        @Override
-        public void onSuccess(AVIMTypedMessage msg) {
-          super.onSuccess(msg);
-          contentEdit.setText("");
-        }
-      });
+      msgAgent.sendText(content);
+      contentEdit.setText("");
     }
   }
 
@@ -626,10 +621,9 @@ public class ChatActivity extends ConvBaseActivity implements OnClickListener,
   }
 
   class DefaultSendCallback implements MsgAgent.SendCallback {
+
     @Override
     public void onError(Exception e) {
-      e.printStackTrace();
-      Utils.toast(e.getMessage());
       refreshMsgsFromDB();
     }
 

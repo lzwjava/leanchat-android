@@ -32,12 +32,14 @@ public class IM extends AVIMClientEventHandler {
   private static final int REPLY_NOTIFY_ID = 1;
   private static IM im;
   private static long lastNotifyTime = 0;
+
   private static ConnectionListener defaultConnectListener = new ConnectionListener() {
     @Override
     public void onConnectionChanged(boolean connect) {
       Logger.d("default connect listener");
     }
   };
+
   private ConnectionListener connectionListener = defaultConnectListener;
   private AVIMClient imClient;
   private String selfId;
@@ -48,6 +50,9 @@ public class IM extends AVIMClientEventHandler {
   private EventBus eventBus = EventBus.getDefault();
 
   public IM() {
+  }
+
+  public void init() {
     msgHandler = new MsgHandler();
     msgsTable = MsgsTable.getInstance();
     roomsTable = RoomsTable.getInstance();
@@ -110,6 +115,7 @@ public class IM extends AVIMClientEventHandler {
   }
 
   public void onMessage(final AVIMConversation conv, final AVIMTypedMessage msg) {
+    Logger.d("receive message=" + msg.getContent());
     if (msg.getMessageId() == null) {
       throw new NullPointerException("message id is null");
     }
@@ -148,7 +154,8 @@ public class IM extends AVIMClientEventHandler {
       throw new NullPointerException("message id is null");
     }
     msgsTable.updateStatus(msg.getMessageId(), msg.getMessageStatus());
-    //Utils.toast("onMessageDelivered");
+    MsgEvent msgEvent = new MsgEvent(msg);
+    eventBus.post(msgEvent);
   }
 
   public AVIMClient getImClient() {
@@ -165,15 +172,10 @@ public class IM extends AVIMClientEventHandler {
     imClient.open(new AVIMClientCallback() {
       @Override
       public void done(AVIMClient client, AVException e) {
-        if (Utils.filterException(e)) {
-          //Utils.toast("im Client opened");
-        }
         if (e != null) {
-          Logger.d("exception set connect=false");
           connect = false;
           connectionListener.onConnectionChanged(connect);
         } else {
-          Logger.d("set connect true");
           connect = true;
           connectionListener.onConnectionChanged(connect);
         }
@@ -187,7 +189,7 @@ public class IM extends AVIMClientEventHandler {
       @Override
       public void done(AVIMClient client, AVException e) {
         if (Utils.filterException(e)) {
-          //Utils.toast("imClient closed");
+
         }
       }
     });

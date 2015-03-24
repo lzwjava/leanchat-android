@@ -134,13 +134,20 @@ public class MsgsTable {
     byte[] bytes = marshallMsg(msg);
     ContentValues cv = new ContentValues();
     cv.put(OBJECT, bytes);
-    return updateMsg(msgId, msg);
+    return updateMsg(msgId, cv);
   }
 
   private AVIMTypedMessage selectMsgByMsgId(String msgId) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
     Cursor c = db.query(MSGS_TABLE, null, "msg_id=?", new String[]{msgId}, null, null, null);
-    return createMsgByCursor(c);
+    AVIMTypedMessage msg;
+    if (c.moveToNext()) {
+      msg = createMsgByCursor(c);
+    } else {
+      msg = null;
+    }
+    c.close();
+    return msg;
   }
 
   public int updateStatus(String msgId, AVIMMessage.AVIMMessageStatus status) {
@@ -161,5 +168,13 @@ public class MsgsTable {
 
   void close() {
     msgsTable = null;
+  }
+
+  public void updateFailedMsg(AVIMTypedMessage msg, String tmpId) {
+    ContentValues cv = new ContentValues();
+    cv.put(OBJECT, marshallMsg(msg));
+    cv.put(TIME, msg.getTimestamp());
+    cv.put(MSG_ID, msg.getMessageId());
+    updateMsg(tmpId, cv);
   }
 }
