@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="3dp">
+
+    <include layout="@layout/chat_item_base_time" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="@dimen/chatItemMarginTop"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/avatar"
+            style="@style/ChatAvatar" />
+
+        <LinearLayout
+            android:id="@+id/contentLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/marginToUsername"
+            android:background="@drawable/chat_left_qp"
+            android:gravity="center"
+            android:maxWidth="@dimen/chatContentMaxWidth"
+            android:orientation="vertical"></LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/username"
+        android:layout_width="@dimen/chatMaxNameWidth"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="2dp"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
+        android:text="username"
+        android:textSize="11sp" />
+
+</LinearLayout>

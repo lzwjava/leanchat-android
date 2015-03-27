@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout android:id="@+id/chatMoreLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:visibility="visible">
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1px"
+        android:background="@color/msg_emote_divider"
+        android:focusable="false" />
+
+    <LinearLayout
+        android:id="@+id/chatEmotionLayout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/chatBottomMoreHeight"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/emotionPager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <include
+
+        layout="@layout/chat_bottom_add_layout" />
+</LinearLayout>

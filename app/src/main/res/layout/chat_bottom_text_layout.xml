@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout android:id="@+id/chatTextLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/chatBottomHeight"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <com.avoscloud.chat.ui.view.EmotionEditText
+        android:id="@+id/textEdit"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_weight="1"
+        android:background="@drawable/login_edit_normal"
+        android:singleLine="true"
+        android:textSize="18sp" />
+
+    <LinearLayout
+        android:id="@+id/chatBottomRightLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/sendBtn"
+            android:layout_width="@dimen/chatBottomBtnSize"
+            android:layout_height="@dimen/chatBottomBtnSize"
+            android:layout_margin="5dp"
+            android:background="@drawable/btn_chat_send_selector"
+            android:gravity="center"
+            android:text=""
+            android:textColor="#000"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/turnToAudioBtn"
+            android:layout_width="@dimen/chatBottomBtnSize"
+            android:layout_height="@dimen/chatBottomBtnSize"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/chatBottomBtnMargin"
+            android:background="@drawable/btn_chat_voice_selector"
+            android:textColor="@color/base_color_text_black"
+            android:visibility="visible" />
+    </LinearLayout>
+
+
+</LinearLayout>

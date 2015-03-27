@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/chatAddLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/chatBottomMoreHeight"
+    android:orientation="horizontal"
+    android:paddingTop="10dp"
+    android:visibility="gone"
+    android:weightSum="4">
+
+    <TextView
+        android:id="@+id/addImageBtn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:drawablePadding="10dp"
+        android:drawableTop="@drawable/btn_chat_add_picture_selector"
+        android:gravity="center"
+        android:text="@string/picture" />
+
+    <TextView
+        android:id="@+id/addCameraBtn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:drawablePadding="10dp"
+        android:drawableTop="@drawable/btn_chat_add_camera_selector"
+        android:gravity="center"
+        android:text="@string/camera" />
+
+    <TextView
+        android:id="@+id/addLocationBtn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:drawablePadding="10dp"
+        android:drawableTop="@drawable/btn_chat_add_location_selector"
+        android:gravity="center"
+        android:text="@string/location" />
+
+</LinearLayout>

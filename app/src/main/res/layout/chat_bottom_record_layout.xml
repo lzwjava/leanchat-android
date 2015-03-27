@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout android:id="@+id/chatRecordLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/chatBottomHeight"
+    android:orientation="horizontal">
+
+    <com.avoscloud.chat.ui.view.RecordButton
+        android:id="@+id/recordBtn"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_weight="1"
+        android:text="@string/pressToRecord" />
+
+    <Button
+        android:id="@+id/turnToTextBtn"
+        android:layout_width="@dimen/chatBottomBtnSize"
+        android:layout_height="@dimen/chatBottomBtnSize"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="@dimen/chatBottomBtnMargin"
+        android:background="@drawable/btn_keyboard" />
+</LinearLayout>

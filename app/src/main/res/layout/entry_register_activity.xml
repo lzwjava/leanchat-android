@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/theme_bg_color"
+    android:orientation="vertical">
+
+    <LinearLayout style="@style/Register_Input">
+
+        <TextView
+            style="@style/My.TextView._Black"
+            android:layout_width="@dimen/registerLeftWidth"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:text="@string/username" />
+
+        <EditText
+            android:id="@+id/usernameEdit"
+            style="@style/Register_Edit"
+            android:hint="@string/login_username_hint" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/Register_Input">
+
+        <TextView
+            style="@style/My.TextView._Black"
+            android:layout_width="@dimen/registerLeftWidth"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:text="@string/password" />
+
+        <EditText
+            android:id="@+id/passwordEdit"
+            style="@style/Register_Edit"
+            android:hint="@string/login_password_hint"
+            android:inputType="textPassword" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/Register_Input">
+
+        <TextView
+            style="@style/My.TextView._Black"
+            android:layout_width="@dimen/registerLeftWidth"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:text="@string/ensurePassword" />
+
+        <EditText
+            android:id="@+id/ensurePasswordEdit"
+            style="@style/Register_Edit"
+            android:hint="@string/ensurePasswordHint"
+            android:inputType="textPassword" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/Register_Input">
+
+        <TextView
+            style="@style/My.TextView._Black"
+            android:layout_width="@dimen/registerLeftWidth"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:text="@string/sex" />
+
+        <RadioGroup
+            android:id="@+id/sexRadio"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/male"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/male" />
+
+            <RadioButton
+                android:id="@+id/female"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/female" />
+        </RadioGroup>
+
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/btn_register"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/base_action_bar_height"
+        android:layout_margin="@dimen/activity_vertical_margin"
+        android:background="@drawable/common_btn"
+        android:text="@string/register"
+        android:textColor="@color/base_color_text_white"
+        android:textSize="@dimen/text_size_large" />
+
+</LinearLayout>

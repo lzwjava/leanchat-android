@@ -1,0 +1,50 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_list_item_height"
+        android:layout_margin="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/avatar_view"
+            style="@style/My.ImageView.Photo_Avatar"
+            android:src="@drawable/default_user_avatar" />
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1.0">
+
+            <TextView
+                android:id="@+id/name_text"
+                style="@style/My.TextView._Black"
+                android:text="你好"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/distance_text"
+                style="@style/My.TextView._Gray"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="5dp"
+                android:singleLine="true"
+                android:text="distance"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/login_time_text"
+                style="@style/My.TextView._Gray"
+                android:layout_below="@id/name_text"
+                android:singleLine="true"
+                android:text="你好"
+                android:textSize="13sp" />
+        </RelativeLayout>
+
+    </LinearLayout>
+</LinearLayout>
+
