@@ -20,7 +20,7 @@ LeanChat 是 [LeanCloud](http://leancloud.cn) [实时通信](https://leancloud.c
 
 ### 相关文档
 
-* [开发指南](https://leancloud.cn/docs)
+[实时通信服务开发指南](https://leancloud.cn/docs/realtime_v2.html)
 
 ### 依赖组件
 
