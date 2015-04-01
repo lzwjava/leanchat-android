@@ -14,7 +14,7 @@ import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.util.NetAsyncTask;
 import com.avoscloud.chat.util.Utils;
 
-public class RegisterActivity extends BaseEntryActivity {
+public class EntryRegisterActivity extends EntryBaseActivity {
   View registerButton;
   EditText usernameEdit, passwordEdit, emailEdit;
   RadioGroup sexRadio;
@@ -82,7 +82,7 @@ public class RegisterActivity extends BaseEntryActivity {
         } else {
           Utils.toast(R.string.registerSucceed);
           UserService.updateUserLocation();
-          MainActivity.goMainActivity(RegisterActivity.this);
+          MainActivity.goMainActivity(EntryRegisterActivity.this);
         }
       }
     }.execute();

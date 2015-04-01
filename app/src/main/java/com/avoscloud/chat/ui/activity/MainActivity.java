@@ -13,6 +13,7 @@ import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.service.*;
 import com.avoscloud.chat.service.chat.IM;
+import com.avoscloud.chat.service.event.LoginFinishEvent;
 import com.avoscloud.chat.ui.fragment.ContactFragment;
 import com.avoscloud.chat.ui.fragment.ConvFragment;
 import com.avoscloud.chat.ui.fragment.DiscoverFragment;
@@ -22,6 +23,7 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by lzw on 14-9-17.
@@ -45,6 +47,9 @@ public class MainActivity extends BaseActivity {
   View recentTips, contactTips;
 
   public static void goMainActivity(Activity activity) {
+    EventBus eventBus = EventBus.getDefault();
+    eventBus.post(new LoginFinishEvent());
+
     IM im = IM.getInstance();
     im.setupWithCurrentUser();
     im.open(AVUser.getCurrentUser().getObjectId());

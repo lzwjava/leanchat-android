@@ -94,6 +94,7 @@ public class ConvManager {
         String name = conv.getName();
         return name;
       } catch (NullPointerException e) {
+        e.printStackTrace();
         return "conv name";
       }
     }

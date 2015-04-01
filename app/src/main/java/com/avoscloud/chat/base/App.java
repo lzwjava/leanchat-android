@@ -11,7 +11,7 @@ import com.avoscloud.chat.avobject.AddRequest;
 import com.avoscloud.chat.avobject.UpdateInfo;
 import com.avoscloud.chat.service.UpdateService;
 import com.avoscloud.chat.service.chat.IM;
-import com.avoscloud.chat.ui.activity.SplashActivity;
+import com.avoscloud.chat.ui.activity.EntrySplashActivity;
 import com.avoscloud.chat.util.Logger;
 import com.avoscloud.chat.util.PhotoUtils;
 import com.avoscloud.chat.util.Utils;
@@ -26,7 +26,7 @@ import java.io.File;
  * Created by lzw on 14-5-29.
  */
 public class App extends Application {
-  public static boolean debug = true;
+  public static boolean debug = false;
   public static App ctx;
 
   public static App getInstance() {
@@ -93,11 +93,14 @@ public class App extends Application {
 
     //AVOSCloud.initialize(this, publicId,publicKey);
 
+//    AVOSCloud.initialize(this, "xcalhck83o10dntwh8ft3z5kvv0xc25p6t3jqbe5zlkkdsib",
+//        "m9fzwse7od89gvcnk1dmdq4huprjvghjtiug1u2zu073zn99");
+
     AVObject.registerSubclass(AddRequest.class);
     AVObject.registerSubclass(UpdateInfo.class);
 
     AVInstallation.getCurrentInstallation().saveInBackground();
-    PushService.setDefaultPushCallback(ctx, SplashActivity.class);
+    PushService.setDefaultPushCallback(ctx, EntrySplashActivity.class);
     AVOSCloud.setDebugLogEnabled(debug);
     AVAnalytics.enableCrashReport(this, !debug);
 

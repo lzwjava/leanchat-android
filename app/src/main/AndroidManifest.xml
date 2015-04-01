@@ -63,7 +63,7 @@
             android:theme="@style/MainTheme" />
 
         <activity
-            android:name=".ui.activity.SplashActivity"
+            android:name=".ui.activity.EntrySplashActivity"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -77,10 +77,10 @@
             android:name=".ui.activity.LocationActivity"
             android:theme="@style/MainTheme" />
 
-        <activity android:name=".ui.activity.LoginActivity" />
+        <activity android:name=".ui.activity.EntryLoginActivity" />
 
         <activity
-            android:name=".ui.activity.RegisterActivity"
+            android:name=".ui.activity.EntryRegisterActivity"
             android:theme="@style/MainTheme" />
 
         <activity

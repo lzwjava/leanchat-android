@@ -14,7 +14,7 @@ import com.avoscloud.chat.util.NetAsyncTask;
 import com.avoscloud.chat.util.Utils;
 
 
-public class LoginActivity extends BaseEntryActivity implements OnClickListener {
+public class EntryLoginActivity extends EntryBaseActivity implements OnClickListener {
   EditText usernameEdit, passwordEdit;
   Button loginBtn;
   TextView registerBtn;
@@ -39,7 +39,7 @@ public class LoginActivity extends BaseEntryActivity implements OnClickListener 
   @Override
   public void onClick(View v) {
     if (v == registerBtn) {
-      Utils.goActivity(ctx, RegisterActivity.class);
+      Utils.goActivity(ctx, EntryRegisterActivity.class);
     } else {
       login();
     }
@@ -71,8 +71,7 @@ public class LoginActivity extends BaseEntryActivity implements OnClickListener 
           Utils.toast(e.getMessage());
         } else {
           UserService.updateUserLocation();
-          MainActivity.goMainActivity(LoginActivity.this);
-          finish();
+          MainActivity.goMainActivity(EntryLoginActivity.this);
         }
       }
     }.execute();
