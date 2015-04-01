@@ -48,6 +48,7 @@ public class IM extends AVIMClientEventHandler {
   private MsgsTable msgsTable;
   private RoomsTable roomsTable;
   private EventBus eventBus = EventBus.getDefault();
+  private static boolean setupWithCurrentUser = false;
 
   public IM() {
   }
@@ -101,13 +102,25 @@ public class IM extends AVIMClientEventHandler {
 
   public void init() {
     msgHandler = new MsgHandler();
-    msgsTable = MsgsTable.getInstance();
-    roomsTable = RoomsTable.getInstance();
     AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class, msgHandler);
     AVIMMessageManager.setConversationEventHandler(ConvManager.getConvHandler());
     AVIMClient.setClientEventHandler(this);
     //签名
     //AVIMClient.setSignatureFactory(new SignatureFactory());
+  }
+
+  public void setupWithCurrentUser() {
+    if (setupWithCurrentUser) {
+      return;
+    }
+    if (AVUser.getCurrentUser() == null) {
+      throw new NullPointerException("current user is null");
+    }
+    setupWithCurrentUser = true;
+    msgsTable = MsgsTable.getInstance();
+    msgsTable.setupWithCurrentUser();
+    roomsTable = RoomsTable.getInstance();
+    roomsTable.setupWithCurrentUser();
   }
 
   public void setConnectionListener(ConnectionListener connectionListener) {
@@ -227,12 +240,16 @@ public class IM extends AVIMClientEventHandler {
 
     @Override
     public void onMessage(AVIMTypedMessage message, AVIMConversation conversation, AVIMClient client) {
-      getInstance().onMessage(conversation, message);
+      if (setupWithCurrentUser) {
+        getInstance().onMessage(conversation, message);
+      }
     }
 
     @Override
     public void onMessageReceipt(AVIMTypedMessage message, AVIMConversation conversation, AVIMClient client) {
-      getInstance().onMessageDelivered(message);
+      if (setupWithCurrentUser) {
+        getInstance().onMessageDelivered(message);
+      }
     }
   }
 }

@@ -25,6 +25,9 @@ public class RoomsTable {
   private DBHelper dbHelper;
 
   private RoomsTable() {
+  }
+
+  public void setupWithCurrentUser() {
     dbHelper = DBHelper.getCurrentUserInstance(App.ctx);
   }
 

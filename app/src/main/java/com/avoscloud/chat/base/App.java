@@ -104,6 +104,9 @@ public class App extends Application {
 
     IM im = IM.getInstance();
     im.init();
+    if (AVUser.getCurrentUser() != null) {
+      im.setupWithCurrentUser();
+    }
 
     if (App.debug) {
       Logger.level = Logger.VERBOSE;

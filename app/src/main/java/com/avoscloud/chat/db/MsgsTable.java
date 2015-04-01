@@ -30,6 +30,9 @@ public class MsgsTable {
   private DBHelper dbHelper;
 
   private MsgsTable() {
+  }
+
+  public void setupWithCurrentUser() {
     dbHelper = DBHelper.getCurrentUserInstance(App.ctx);
   }
 

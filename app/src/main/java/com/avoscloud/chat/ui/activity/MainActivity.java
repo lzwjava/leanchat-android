@@ -43,9 +43,11 @@ public class MainActivity extends BaseActivity {
   MySpaceFragment mySpaceFragment;
   Button[] tabs;
   View recentTips, contactTips;
-  IM im;
 
   public static void goMainActivity(Activity activity) {
+    IM im = IM.getInstance();
+    im.setupWithCurrentUser();
+    im.open(AVUser.getCurrentUser().getObjectId());
     Intent intent = new Intent(activity, MainActivity.class);
     activity.startActivity(intent);
   }
@@ -67,9 +69,6 @@ public class MainActivity extends BaseActivity {
     updateService.checkUpdate();
     CacheService.registerUser(AVUser.getCurrentUser());
     LoginFinishReceiver.broadcast(this);
-
-    im = IM.getInstance();
-    im.open(AVUser.getCurrentUser().getObjectId());
   }
 
   private void initBaiduLocClient() {
