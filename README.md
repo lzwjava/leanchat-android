@@ -18,6 +18,9 @@ LeanChat 是 [LeanCloud](http://leancloud.cn) [实时通信](https://leancloud.c
 * [Leanchat-ios](https://github.com/leancloud/leanchat-ios)：iOS 客户端
 * [Leanchat-cloud-code](https://github.com/leancloud/leanchat-cloudcode)：可选服务端，使用 LeanCloud [云代码](https://leancloud.cn/docs/cloud_code_guide.html) 实现，实现了聊天的签名，更安全。
 
+## Eclipse 运行需知
+1. 用到了 [ButterKnife](https://github.com/JakeWharton/butterknife) 开源库，Eclipse需要设置一下来支持 ButterKnife 的注解，http://jakewharton.github.io/butterknife/ide-eclipse.html 。否则会因为 view 没有绑定上，导致崩溃。
+
 ### 相关文档
 
 [实时通信服务开发指南](https://leancloud.cn/docs/realtime_v2.html)
@@ -34,5 +37,5 @@ LeanChat Android 客户端依赖 LeanCloud Android SDK 如下组件：
 
 ### 其他文档
 
-* [代码结构](https://github.com/leancloud/leanchat-android/wiki/%E4%BB%A3%E7%A0%81%E7%BB%93%E6%9E%84)
 * [wiki](https://github.com/leancloud/leanchat-android/wiki)
+
