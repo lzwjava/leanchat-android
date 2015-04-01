@@ -49,7 +49,6 @@ public class App extends Application {
       @Override
       public void run() {
         try {
-
           if (AVUser.getCurrentUser() == null) {
             throw new NullPointerException("Please run it when login");
           }

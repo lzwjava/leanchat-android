@@ -29,16 +29,13 @@ public class MsgsTable {
   private static MsgsTable msgsTable;
   private DBHelper dbHelper;
 
-  private MsgsTable() {
+  private MsgsTable(DBHelper dbHelper) {
+    this.dbHelper = dbHelper;
   }
 
-  public void setupWithCurrentUser() {
-    dbHelper = DBHelper.getCurrentUserInstance(App.ctx);
-  }
-
-  public synchronized static MsgsTable getInstance() {
+  public synchronized static MsgsTable getCurrentUserInstance() {
     if (msgsTable == null) {
-      msgsTable = new MsgsTable();
+      msgsTable = new MsgsTable(DBHelper.getCurrentUserInstance(App.ctx));
     }
     return msgsTable;
   }

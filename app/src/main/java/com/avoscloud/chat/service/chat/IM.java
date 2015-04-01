@@ -50,7 +50,7 @@ public class IM extends AVIMClientEventHandler {
   private EventBus eventBus = EventBus.getDefault();
   private static boolean setupWithCurrentUser = false;
 
-  public IM() {
+  private IM() {
   }
 
   public synchronized static IM getInstance() {
@@ -117,10 +117,8 @@ public class IM extends AVIMClientEventHandler {
       throw new NullPointerException("current user is null");
     }
     setupWithCurrentUser = true;
-    msgsTable = MsgsTable.getInstance();
-    msgsTable.setupWithCurrentUser();
-    roomsTable = RoomsTable.getInstance();
-    roomsTable.setupWithCurrentUser();
+    msgsTable = MsgsTable.getCurrentUserInstance();
+    roomsTable = RoomsTable.getCurrentUserInstance();
   }
 
   public void setConnectionListener(ConnectionListener connectionListener) {
@@ -240,16 +238,12 @@ public class IM extends AVIMClientEventHandler {
 
     @Override
     public void onMessage(AVIMTypedMessage message, AVIMConversation conversation, AVIMClient client) {
-      if (setupWithCurrentUser) {
-        getInstance().onMessage(conversation, message);
-      }
+      im.onMessage(conversation, message);
     }
 
     @Override
     public void onMessageReceipt(AVIMTypedMessage message, AVIMConversation conversation, AVIMClient client) {
-      if (setupWithCurrentUser) {
-        getInstance().onMessageDelivered(message);
-      }
+      im.onMessageDelivered(message);
     }
   }
 }

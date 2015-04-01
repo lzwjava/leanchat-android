@@ -247,8 +247,8 @@ public class ChatActivity extends ConvBaseActivity implements OnClickListener,
   void commonInit() {
     ctx = this;
     instance = this;
-    msgsTable = MsgsTable.getInstance();
-    roomsTable = RoomsTable.getInstance();
+    msgsTable = MsgsTable.getCurrentUserInstance();
+    roomsTable = RoomsTable.getCurrentUserInstance();
   }
 
   public void initData(Intent intent) {

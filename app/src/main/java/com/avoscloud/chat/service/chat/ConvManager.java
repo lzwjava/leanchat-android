@@ -113,7 +113,7 @@ public class ConvManager {
   }
 
   public List<Room> findAndCacheRooms() throws AVException, InterruptedException {
-    RoomsTable roomsTable = RoomsTable.getInstance();
+    RoomsTable roomsTable = RoomsTable.getCurrentUserInstance();
     List<Room> rooms = roomsTable.selectRooms();
     cacheAndFillRooms(rooms);
     return rooms;

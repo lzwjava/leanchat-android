@@ -29,7 +29,7 @@ public class MsgAgent {
 
   public MsgAgent(AVIMConversation conv) {
     this.conv = conv;
-    msgsTable = MsgsTable.getInstance();
+    msgsTable = MsgsTable.getCurrentUserInstance();
     im = IM.getInstance();
   }
 

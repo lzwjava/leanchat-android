@@ -24,16 +24,13 @@ public class RoomsTable {
   private static RoomsTable roomsTable;
   private DBHelper dbHelper;
 
-  private RoomsTable() {
+  private RoomsTable(DBHelper dbHelper) {
+    this.dbHelper = dbHelper;
   }
 
-  public void setupWithCurrentUser() {
-    dbHelper = DBHelper.getCurrentUserInstance(App.ctx);
-  }
-
-  public synchronized static RoomsTable getInstance() {
+  public synchronized static RoomsTable getCurrentUserInstance() {
     if (roomsTable == null) {
-      roomsTable = new RoomsTable();
+      roomsTable = new RoomsTable(DBHelper.getCurrentUserInstance(App.ctx));
     }
     return roomsTable;
   }

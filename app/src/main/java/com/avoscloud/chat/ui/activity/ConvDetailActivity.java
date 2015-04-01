@@ -171,7 +171,7 @@ public class ConvDetailActivity extends ConvBaseActivity implements AdapterView.
       @Override
       public void done(AVException e) {
         if (Utils.filterException(e)) {
-          RoomsTable roomsTable = RoomsTable.getInstance();
+          RoomsTable roomsTable = RoomsTable.getCurrentUserInstance();
           roomsTable.deleteRoom(convid);
           Utils.toast(R.string.alreadyQuitConv);
           ConvDetailActivity.this.finish();
