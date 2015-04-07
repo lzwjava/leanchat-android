@@ -40,6 +40,7 @@ public class IM extends AVIMClientEventHandler {
   };
 
   private ConnectionListener connectionListener = defaultConnectListener;
+  private static boolean setupWithCurrentUser = false;
   private AVIMClient imClient;
   private String selfId;
   private boolean connect = false;
@@ -47,7 +48,6 @@ public class IM extends AVIMClientEventHandler {
   private MsgsTable msgsTable;
   private RoomsTable roomsTable;
   private EventBus eventBus = EventBus.getDefault();
-  private static boolean setupWithCurrentUser = false;
 
   private IM() {
   }
@@ -184,7 +184,7 @@ public class IM extends AVIMClientEventHandler {
       }
 
       @Override
-      protected void onPost(Exception e) {
+      protected void onPost(Exception exception) {
         boolean chatting = ChatActivity.instance != null && ChatActivity.instance.isVisible()
             && CacheService.isCurConvid(message.getConversationId());
         if (!chatting && AVUser.getCurrentUser() != null) {
@@ -240,12 +240,14 @@ public class IM extends AVIMClientEventHandler {
   private static class MsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
 
     @Override
-    public void onMessage(final AVIMTypedMessage message, final AVIMConversation conversation, AVIMClient client) {
+    public void onMessage(AVIMTypedMessage message, AVIMConversation conversation,
+                          AVIMClient client) {
       im.onMessage(message, conversation);
     }
 
     @Override
-    public void onMessageReceipt(AVIMTypedMessage message, AVIMConversation conversation, AVIMClient client) {
+    public void onMessageReceipt(AVIMTypedMessage message, AVIMConversation conversation,
+                                 AVIMClient client) {
       im.onMessageReceipt(message, conversation);
     }
   }
