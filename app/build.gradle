@@ -34,12 +34,14 @@ dependencies {
     compile files('libs/avoscloud-push-v3.0.jar')
     compile files('libs/avoscloud-sdk-v3.0.jar')
     compile files('libs/avoscloud-statistics-v3.0.jar')
+
     compile files('libs/support-v4-19.1.0.jar')
     compile files('libs/android-async-http-1.4.6.jar')
     compile files('libs/Java-WebSocket-1.2.0-leancloud.jar')
     compile files('libs/fastjson-1.1.37-leancloud.jar');
-    compile files('libs/eventbus-2.4.0.jar')
     compile files('libs/httpmime-4.2.4.jar')
+
+    compile files('libs/eventbus-2.4.0.jar')
     compile files('libs/butterknife-6.1.0.jar')
     compile files('libs/universal-image-loader-1.9.3.jar')
     compile files('libs/baidumapapi_v3_0_0.jar')

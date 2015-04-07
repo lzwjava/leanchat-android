@@ -60,6 +60,25 @@ public class ConvManager {
     return convManager;
   }
 
+  public static boolean isValidConv(AVIMConversation conv) {
+    Object type = conv.getAttribute(ConvType.TYPE_KEY);
+    if (type == null) {
+      return false;
+    }
+    int typeInt = (Integer) type;
+    if (typeInt == ConvType.Single.getValue() || typeInt == ConvType.Group.getValue()) {
+      ConvType convType = ConvType.fromInt(typeInt);
+      if (convType == ConvType.Group) {
+        if (conv.getName() == null) {
+          return false;
+        }
+      }
+    } else {
+      return false;
+    }
+    return true;
+  }
+
   public static ConvType typeOfConv(AVIMConversation conv) {
     try {
       Object typeObject = conv.getAttribute(ConvType.TYPE_KEY);

@@ -5,7 +5,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import com.alibaba.fastjson.JSONException;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.im.v2.*;
@@ -60,7 +59,7 @@ public class IM extends AVIMClientEventHandler {
     return im;
   }
 
-  public static void notifyMsg(Context context, AVIMConversation conv, AVIMTypedMessage msg) throws JSONException {
+  public static void notifyMsg(Context context, AVIMConversation conv, AVIMTypedMessage msg) {
     if (System.currentTimeMillis() - lastNotifyTime < NOTIFY_PERIOD) {
       return;
     } else {
@@ -125,48 +124,8 @@ public class IM extends AVIMClientEventHandler {
     this.connectionListener = connectionListener;
   }
 
-  public void onMessage(final AVIMConversation conv, final AVIMTypedMessage msg) {
-    Logger.d("receive message=" + msg.getContent());
-    if (msg.getMessageId() == null) {
-      throw new NullPointerException("message id is null");
-    }
-    CacheService.registerConvIfNone(conv);
-    msgsTable.insertMsg(msg);
-    roomsTable.insertRoom(msg.getConversationId());
-    roomsTable.increaseUnreadCount(msg.getConversationId());
-    MsgEvent msgEvent = new MsgEvent(msg);
-    eventBus.post(msgEvent);
-    new NetAsyncTask(App.ctx, false) {
-      @Override
-      protected void doInBack() throws Exception {
-        CacheService.cacheUserIfNone(msg.getFrom());
-      }
-
-      @Override
-      protected void onPost(Exception e) {
-        boolean chatting = ChatActivity.instance != null && ChatActivity.instance.isVisible()
-            && CacheService.isCurConvid(msg.getConversationId());
-        if (!chatting && AVUser.getCurrentUser() != null) {
-          PreferenceMap preferenceMap = PreferenceMap.getCurUserPrefDao(App.ctx);
-          if (preferenceMap.isNotifyWhenNews()) {
-            notifyMsg(App.ctx, conv, msg);
-          }
-        }
-      }
-    }.execute();
-  }
-
   public void cancelNotification() {
     Utils.cancelNotification(App.ctx, REPLY_NOTIFY_ID);
-  }
-
-  public void onMessageDelivered(AVIMTypedMessage msg) {
-    if (msg.getMessageId() == null) {
-      throw new NullPointerException("message id is null");
-    }
-    msgsTable.updateStatus(msg.getMessageId(), msg.getMessageStatus());
-    MsgEvent msgEvent = new MsgEvent(msg);
-    eventBus.post(msgEvent);
   }
 
   public AVIMClient getImClient() {
@@ -192,6 +151,50 @@ public class IM extends AVIMClientEventHandler {
         }
       }
     });
+  }
+
+
+  private void onMessageReceipt(AVIMTypedMessage message, AVIMConversation conv) {
+    if (message.getMessageId() == null) {
+      throw new NullPointerException("message id is null");
+    }
+    msgsTable.updateStatus(message.getMessageId(), message.getMessageStatus());
+    MsgEvent msgEvent = new MsgEvent(message);
+    eventBus.post(msgEvent);
+  }
+
+  private void onMessage(final AVIMTypedMessage message, final AVIMConversation conversation) {
+    Logger.d("receive message=" + message.getContent());
+    if (message.getMessageId() == null) {
+      throw new NullPointerException("message id is null");
+    }
+    if (!ConvManager.isValidConv(conversation)) {
+      throw new IllegalStateException("receive msg from invalid conversation");
+    }
+    CacheService.registerConvIfNone(conversation);
+    msgsTable.insertMsg(message);
+    roomsTable.insertRoom(message.getConversationId());
+    roomsTable.increaseUnreadCount(message.getConversationId());
+    MsgEvent msgEvent = new MsgEvent(message);
+    eventBus.post(msgEvent);
+    new NetAsyncTask(App.ctx, false) {
+      @Override
+      protected void doInBack() throws Exception {
+        CacheService.cacheUserIfNone(message.getFrom());
+      }
+
+      @Override
+      protected void onPost(Exception e) {
+        boolean chatting = ChatActivity.instance != null && ChatActivity.instance.isVisible()
+            && CacheService.isCurConvid(message.getConversationId());
+        if (!chatting && AVUser.getCurrentUser() != null) {
+          PreferenceMap preferenceMap = PreferenceMap.getCurUserPrefDao(App.ctx);
+          if (preferenceMap.isNotifyWhenNews()) {
+            notifyMsg(App.ctx, conversation, message);
+          }
+        }
+      }
+    }.execute();
   }
 
   public void close() {
@@ -237,13 +240,13 @@ public class IM extends AVIMClientEventHandler {
   private static class MsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
 
     @Override
-    public void onMessage(AVIMTypedMessage message, AVIMConversation conversation, AVIMClient client) {
-      im.onMessage(conversation, message);
+    public void onMessage(final AVIMTypedMessage message, final AVIMConversation conversation, AVIMClient client) {
+      im.onMessage(message, conversation);
     }
 
     @Override
     public void onMessageReceipt(AVIMTypedMessage message, AVIMConversation conversation, AVIMClient client) {
-      im.onMessageDelivered(message);
+      im.onMessageReceipt(message, conversation);
     }
   }
 }

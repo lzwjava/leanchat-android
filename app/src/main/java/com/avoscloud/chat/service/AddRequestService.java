@@ -76,7 +76,17 @@ public class AddRequestService {
     q.whereEqualTo(AddRequest.FROM_USER, curUser);
     q.whereEqualTo(AddRequest.TO_USER, toUser);
     q.whereEqualTo(AddRequest.STATUS, AddRequest.STATUS_WAIT);
-    int count = q.count();
+    int count = 0;
+    try {
+      count = q.count();
+    } catch (AVException e) {
+      e.printStackTrace();
+      if (e.getCode() == AVException.OBJECT_NOT_FOUND) {
+        count = 0;
+      } else {
+        throw e;
+      }
+    }
     if (count > 0) {
       throw new Exception(App.ctx.getString(R.string.alreadyCreateAddRequest));
     } else {

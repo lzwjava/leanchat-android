@@ -26,7 +26,7 @@ import java.io.File;
  * Created by lzw on 14-5-29.
  */
 public class App extends Application {
-  public static boolean debug = false;
+  public static boolean debug = true;
   public static App ctx;
 
   public static App getInstance() {
@@ -89,12 +89,12 @@ public class App extends Application {
     String appId = "x3o016bxnkpyee7e9pa5pre6efx2dadyerdlcez0wbzhw25g";
     String appKey = "057x24cfdzhffnl3dzk14jh9xo2rq6w1hy1fdzt5tv46ym78";
 
-    AVOSCloud.initialize(this, appId, appKey);
+    String testAppId = "xcalhck83o10dntwh8ft3z5kvv0xc25p6t3jqbe5zlkkdsib";
+    String testAppKey = "m9fzwse7od89gvcnk1dmdq4huprjvghjtiug1u2zu073zn99";
 
+    //AVOSCloud.initialize(this, appId, appKey);
     //AVOSCloud.initialize(this, publicId,publicKey);
-
-//    AVOSCloud.initialize(this, "xcalhck83o10dntwh8ft3z5kvv0xc25p6t3jqbe5zlkkdsib",
-//        "m9fzwse7od89gvcnk1dmdq4huprjvghjtiug1u2zu073zn99");
+    AVOSCloud.initialize(this, testAppId, testAppKey);
 
     AVObject.registerSubclass(AddRequest.class);
     AVObject.registerSubclass(UpdateInfo.class);
