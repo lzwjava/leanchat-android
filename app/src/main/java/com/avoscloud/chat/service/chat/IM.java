@@ -52,7 +52,7 @@ public class IM extends AVIMClientEventHandler {
   private IM() {
   }
 
-  public synchronized static IM getInstance() {
+  public static synchronized IM getInstance() {
     if (im == null) {
       im = new IM();
     }
