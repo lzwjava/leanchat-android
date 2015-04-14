@@ -152,7 +152,7 @@ public class MsgsTable {
 
   public int updateStatus(String msgId, AVIMMessage.AVIMMessageStatus status) {
     AVIMTypedMessage msg = selectMsgByMsgId(msgId);
-    if (msg.getMessageStatus() != status) {
+    if (msg != null && msg.getMessageStatus() != status) {
       msg.setMessageStatus(status);
       return updateMsg(msgId, msg);
     } else {

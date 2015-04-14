@@ -102,6 +102,11 @@ public class IM extends AVIMClientEventHandler {
   public void init() {
     msgHandler = new MsgHandler();
     AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class, msgHandler);
+//    try {
+//      AVIMMessageManager.registerAVIMMessageType(AVIMUserInfoMessage.class);
+//    } catch (AVException e) {
+//      e.printStackTrace();
+//    }
     AVIMMessageManager.setConversationEventHandler(ConvManager.getConvHandler());
     AVIMClient.setClientEventHandler(this);
     //签名

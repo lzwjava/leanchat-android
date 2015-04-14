@@ -22,6 +22,7 @@ import android.widget.GridView;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
+import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMLocationMessage;
@@ -31,6 +32,7 @@ import com.avoscloud.chat.adapter.EmotionGridAdapter;
 import com.avoscloud.chat.adapter.EmotionPagerAdapter;
 import com.avoscloud.chat.db.MsgsTable;
 import com.avoscloud.chat.db.RoomsTable;
+import com.avoscloud.chat.entity.AVIMUserInfoMessage;
 import com.avoscloud.chat.entity.ConvType;
 import com.avoscloud.chat.service.CacheService;
 import com.avoscloud.chat.service.UserService;
@@ -49,7 +51,9 @@ import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ChatActivity extends ConvBaseActivity implements OnClickListener,
     XListView.IXListViewListener {
@@ -110,6 +114,21 @@ public class ChatActivity extends ConvBaseActivity implements OnClickListener,
     initListView();
     setSoftInputMode();
     initByIntent(getIntent());
+  }
+
+  private void testSendCustomMessage() {
+    AVIMUserInfoMessage userInfoMessage = new AVIMUserInfoMessage();
+    Map<String, Object> map = new HashMap<>();
+    map.put("nickname", "lzwjava");
+    userInfoMessage.setAttrs(map);
+    conv.sendMessage(userInfoMessage, new AVIMConversationCallback() {
+      @Override
+      public void done(AVException e) {
+        if (e != null) {
+          Logger.d(e.getMessage());
+        }
+      }
+    });
   }
 
   private void initByIntent(Intent intent) {

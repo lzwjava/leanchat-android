@@ -92,9 +92,9 @@ public class App extends Application {
     String testAppId = "xcalhck83o10dntwh8ft3z5kvv0xc25p6t3jqbe5zlkkdsib";
     String testAppKey = "m9fzwse7od89gvcnk1dmdq4huprjvghjtiug1u2zu073zn99";
 
-    //AVOSCloud.initialize(this, appId, appKey);
+    AVOSCloud.initialize(this, appId, appKey);
     //AVOSCloud.initialize(this, publicId,publicKey);
-    AVOSCloud.initialize(this, testAppId, testAppKey);
+    //AVOSCloud.initialize(this, testAppId, testAppKey);
 
     AVObject.registerSubclass(AddRequest.class);
     AVObject.registerSubclass(UpdateInfo.class);
