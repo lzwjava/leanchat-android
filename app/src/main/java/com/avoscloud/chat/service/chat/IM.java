@@ -107,6 +107,7 @@ public class IM extends AVIMClientEventHandler {
 //    } catch (AVException e) {
 //      e.printStackTrace();
 //    }
+
     AVIMMessageManager.setConversationEventHandler(ConvManager.getConvHandler());
     AVIMClient.setClientEventHandler(this);
     //签名

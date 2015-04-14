@@ -8,7 +8,7 @@ import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.service.CacheService;
-import com.avoscloud.chat.util.EmotionUtils;
+import com.avoscloud.chat.service.emoji.EmotionUtils;
 import com.avoscloud.chat.util.PathUtils;
 
 import java.util.List;

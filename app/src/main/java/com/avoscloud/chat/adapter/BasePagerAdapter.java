@@ -11,7 +11,7 @@ import java.util.List;
  * Created by lzw on 14-9-25.
  */
 public class BasePagerAdapter extends PagerAdapter {
-  List<View> views = new ArrayList<View>();
+  private List<View> views = new ArrayList<View>();
 
   public BasePagerAdapter(List<View> views) {
     this.views = views;
@@ -29,9 +29,8 @@ public class BasePagerAdapter extends PagerAdapter {
 
   @Override
   public Object instantiateItem(ViewGroup container, int position) {
-    View view = views.get(position);
-    container.addView(view);
-    return view;
+    container.addView(views.get(position));
+    return views.get(position);
   }
 
   @Override

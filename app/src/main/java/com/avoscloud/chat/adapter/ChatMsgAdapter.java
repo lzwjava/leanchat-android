@@ -15,14 +15,15 @@ import com.avos.avoscloud.im.v2.messages.AVIMLocationMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.avobject.User;
+import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.entity.ConvType;
 import com.avoscloud.chat.service.AudioHelper;
 import com.avoscloud.chat.service.CacheService;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.service.chat.MsgUtils;
+import com.avoscloud.chat.service.emoji.EmotionUtils;
 import com.avoscloud.chat.ui.view.PlayButton;
 import com.avoscloud.chat.ui.view.ViewHolder;
-import com.avoscloud.chat.util.EmotionUtils;
 import com.avoscloud.chat.util.PhotoUtils;
 import com.avoscloud.chat.util.TimeUtils;
 
@@ -124,7 +125,7 @@ public class ChatMsgAdapter extends BaseListAdapter<AVIMTypedMessage> {
     switch (type) {
       case TextMessageType:
         AVIMTextMessage textMsg = (AVIMTextMessage) msg;
-        contentView.setText(EmotionUtils.replace(ctx, textMsg.getText()));
+        contentView.setText(EmotionUtils.replace(App.ctx, textMsg.getText()));
         contentLayout.requestLayout();
         break;
       case ImageMessageType:

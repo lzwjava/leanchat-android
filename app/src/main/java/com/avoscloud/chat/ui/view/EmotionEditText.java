@@ -4,7 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.EditText;
-import com.avoscloud.chat.util.EmotionUtils;
+import com.avoscloud.chat.service.emoji.EmotionUtils;
 
 public class EmotionEditText extends EditText {
 

@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.avoscloud.chat.R;
+import com.avoscloud.chat.service.emoji.EmotionUtils;
 import com.avoscloud.chat.ui.view.ViewHolder;
-import com.avoscloud.chat.util.EmotionUtils;
 
 /**
  * Created by lzw on 14-9-25.
@@ -27,8 +27,8 @@ public class EmotionGridAdapter extends BaseListAdapter<String> {
     }
     ImageView emotionImageView = ViewHolder.findViewById(conView, R.id.emotionImageView);
     String emotion = (String) getItem(position);
-    emotion = emotion.substring(1);
-    Bitmap bitmap = EmotionUtils.getDrawableByName(ctx, emotion);
+    emotion = emotion.substring(1, emotion.length() - 1);
+    Bitmap bitmap = EmotionUtils.getEmojiDrawable(ctx, emotion);
     emotionImageView.setImageBitmap(bitmap);
     return conView;
   }

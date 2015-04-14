@@ -40,6 +40,7 @@ import com.avoscloud.chat.service.chat.ConvManager;
 import com.avoscloud.chat.service.chat.IM;
 import com.avoscloud.chat.service.chat.MsgAgent;
 import com.avoscloud.chat.service.chat.MsgUtils;
+import com.avoscloud.chat.service.emoji.EmotionUtils;
 import com.avoscloud.chat.service.event.ConvChangeEvent;
 import com.avoscloud.chat.service.event.FinishEvent;
 import com.avoscloud.chat.service.event.MsgEvent;
@@ -152,24 +153,20 @@ public class ChatActivity extends ConvBaseActivity implements OnClickListener,
 
   private void initEmotionPager() {
     List<View> views = new ArrayList<View>();
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < EmotionUtils.emojiGroups.size(); i++) {
       views.add(getEmotionGridView(i));
     }
     EmotionPagerAdapter pagerAdapter = new EmotionPagerAdapter(views);
+    emotionPager.setOffscreenPageLimit(3);
     emotionPager.setAdapter(pagerAdapter);
   }
 
   private View getEmotionGridView(int pos) {
     LayoutInflater inflater = LayoutInflater.from(ctx);
-    View emotionView = inflater.inflate(R.layout.chat_emotion_gridview, null);
+    View emotionView = inflater.inflate(R.layout.chat_emotion_gridview, null, false);
     GridView gridView = (GridView) emotionView.findViewById(R.id.gridview);
     final EmotionGridAdapter emotionGridAdapter = new EmotionGridAdapter(ctx);
-    List<String> pageEmotions;
-    if (pos == 0) {
-      pageEmotions = EmotionUtils.emotionTexts1;
-    } else {
-      pageEmotions = EmotionUtils.emotionTexts2;
-    }
+    List<String> pageEmotions = EmotionUtils.emojiGroups.get(pos);
     emotionGridAdapter.setDatas(pageEmotions);
     gridView.setAdapter(emotionGridAdapter);
     gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -180,6 +177,7 @@ public class ChatActivity extends ConvBaseActivity implements OnClickListener,
         StringBuffer sb = new StringBuffer(contentEdit.getText());
         sb.replace(contentEdit.getSelectionStart(), contentEdit.getSelectionEnd(), emotionText);
         contentEdit.setText(sb.toString());
+
         CharSequence info = contentEdit.getText();
         if (info instanceof Spannable) {
           Spannable spannable = (Spannable) info;
