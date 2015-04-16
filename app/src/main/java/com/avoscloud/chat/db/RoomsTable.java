@@ -65,10 +65,14 @@ public class RoomsTable {
   }
 
   public void insertRoom(String convid) {
-    ContentValues cv = new ContentValues();
-    cv.put(CONVID, convid);
     SQLiteDatabase db = dbHelper.getWritableDatabase();
-    db.insert(ROOMS_TABLE, null, cv);
+    Cursor cursor = db.query(ROOMS_TABLE, null, "convid=?", new String[]{convid}, null, null, null);
+    if (!cursor.moveToNext()) {
+      ContentValues cv = new ContentValues();
+      cv.put(CONVID, convid);
+      db.insert(ROOMS_TABLE, null, cv);
+    }
+    cursor.close();
   }
 
   public void deleteRoom(String convid) {

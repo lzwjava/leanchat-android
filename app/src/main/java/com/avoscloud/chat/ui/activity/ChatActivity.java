@@ -618,7 +618,6 @@ public class ChatActivity extends ConvBaseActivity implements OnClickListener,
         ChatUtils.stopRefresh(xListView);
         if (loadHistory == false) {
           adapter.setDatas(msgs);
-          Logger.d("msgs size=" + msgs.size());
           adapter.notifyDataSetChanged();
           scrollToLast();
         } else {
