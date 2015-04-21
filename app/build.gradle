@@ -31,9 +31,9 @@ dependencies {
     //compile 'cn.leancloud.android:avoscloud-push:v3.0+@aar'
     //compile 'cn.leancloud.android:avoscloud-statistics:v2.6.+@aar'
 
-    compile files('libs/avoscloud-push-v3.0.jar')
-    compile files('libs/avoscloud-sdk-v3.0.jar')
-    compile files('libs/avoscloud-statistics-v3.0.jar')
+    compile files('libs/avoscloud-push-v3.1.4.jar')
+    compile files('libs/avoscloud-sdk-v3.1.4.jar')
+    compile files('libs/avoscloud-statistics-v3.1.4.jar')
 
     compile files('libs/support-v4-19.1.0.jar')
     compile files('libs/android-async-http-1.4.6.jar')
