@@ -41,7 +41,7 @@
         android:theme="@android:style/Theme.Holo.Light.NoActionBar">
 
         <activity
-            android:name=".ui.activity.ChatActivity"
+            android:name=".chat.activity.ChatActivity"
             android:launchMode="singleTask"
             android:theme="@style/MainTheme" />
 
@@ -55,15 +55,15 @@
         </receiver>
 
         <activity
-            android:name=".ui.activity.MainActivity"
+            android:name=".ui.MainActivity"
             android:launchMode="singleTask" />
 
         <activity
-            android:name=".ui.activity.UpdateContentActivity"
+            android:name=".ui.base_activity.UpdateContentActivity"
             android:theme="@style/MainTheme" />
 
         <activity
-            android:name=".ui.activity.EntrySplashActivity"
+            android:name=".ui.entry.EntrySplashActivity"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -71,45 +71,45 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.activity.ImageBrowserActivity" />
+        <activity android:name=".chat.activity.ImageBrowserActivity" />
 
         <activity
-            android:name=".ui.activity.LocationActivity"
+            android:name=".chat.activity.LocationActivity"
             android:theme="@style/MainTheme" />
 
-        <activity android:name=".ui.activity.EntryLoginActivity" />
+        <activity android:name=".ui.entry.EntryLoginActivity" />
 
         <activity
-            android:name=".ui.activity.EntryRegisterActivity"
-            android:theme="@style/MainTheme" />
-
-        <activity
-            android:name=".ui.activity.NewFriendActivity"
+            android:name=".ui.entry.EntryRegisterActivity"
             android:theme="@style/MainTheme" />
 
         <activity
-            android:name=".ui.activity.AddFriendActivity"
+            android:name=".ui.contact.NewFriendActivity"
             android:theme="@style/MainTheme" />
 
         <activity
-            android:name=".ui.activity.PersonInfoActivity"
+            android:name=".ui.contact.AddFriendActivity"
             android:theme="@style/MainTheme" />
 
         <activity
-            android:name=".ui.activity.NotifySettingActivity"
+            android:name=".ui.profile.PersonInfoActivity"
             android:theme="@style/MainTheme" />
 
         <activity
-            android:name=".ui.activity.GroupConvListActivity"
+            android:name=".ui.profile.NotifySettingActivity"
+            android:theme="@style/MainTheme" />
+
+        <activity
+            android:name=".ui.contact.GroupConvListActivity"
             android:label="@string/group"
             android:theme="@style/MainTheme" />
 
         <activity
-            android:name=".ui.activity.ConvDetailActivity"
+            android:name=".ui.conversation.ConvDetailActivity"
             android:theme="@style/MainTheme" />
 
         <activity
-            android:name=".ui.activity.ConvAddMembersActivity"
+            android:name=".ui.conversation.ConvAddMembersActivity"
             android:label="@string/inviteMembers"
             android:theme="@style/MainTheme" />
 

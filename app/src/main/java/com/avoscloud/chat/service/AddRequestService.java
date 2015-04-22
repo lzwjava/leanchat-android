@@ -3,7 +3,7 @@ package com.avoscloud.chat.service;
 import android.content.Context;
 import com.avos.avoscloud.*;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.avobject.AddRequest;
+import com.avoscloud.chat.entity.avobject.AddRequest;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.base.C;
 import com.avoscloud.chat.util.SimpleNetTask;

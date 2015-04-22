@@ -3,6 +3,7 @@ package com.avoscloud.chat.adapter;
 import android.content.Context;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import com.avoscloud.chat.chat.adapter.BaseListAdapter;
 import com.avoscloud.chat.util.Logger;
 
 import java.util.ArrayList;

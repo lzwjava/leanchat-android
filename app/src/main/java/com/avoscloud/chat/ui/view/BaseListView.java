@@ -5,8 +5,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.adapter.BaseListAdapter;
-import com.avoscloud.chat.ui.view.xlist.XListView;
+import com.avoscloud.chat.chat.adapter.BaseListAdapter;
+import com.avoscloud.chat.chat.view.xlist.XListView;
 import com.avoscloud.chat.util.SimpleNetTask;
 import com.avoscloud.chat.util.Utils;
 
@@ -68,7 +68,7 @@ public class BaseListView<T> extends XListView implements XListView.IXListViewLi
       @Override
       protected void doInBack() throws Exception {
         if (dataFactory != null) {
-          datas = dataFactory.getDatas(skip, ONE_PAGE_SIZE, adapter.getDatas());
+          datas = dataFactory.getDatasInBackground(skip, ONE_PAGE_SIZE, adapter.getDatas());
         } else {
           datas = new ArrayList<T>();
         }
@@ -131,7 +131,7 @@ public class BaseListView<T> extends XListView implements XListView.IXListViewLi
 
 
   public static class DataFactory<T> {
-    public List<T> getDatas(int skip, int limit, List<T> currentDatas) throws Exception {
+    public List<T> getDatasInBackground(int skip, int limit, List<T> currentDatas) throws Exception {
       return new ArrayList<T>();
     }
   }

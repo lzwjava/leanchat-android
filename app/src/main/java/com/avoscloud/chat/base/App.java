@@ -7,11 +7,11 @@ import android.graphics.BitmapFactory;
 import android.os.StrictMode;
 import com.avos.avoscloud.*;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.avobject.AddRequest;
-import com.avoscloud.chat.avobject.UpdateInfo;
+import com.avoscloud.chat.entity.avobject.AddRequest;
+import com.avoscloud.chat.entity.avobject.UpdateInfo;
 import com.avoscloud.chat.service.UpdateService;
-import com.avoscloud.chat.service.chat.IM;
-import com.avoscloud.chat.ui.activity.EntrySplashActivity;
+import com.avoscloud.chat.chat.controller.ChatManager;
+import com.avoscloud.chat.ui.entry.EntrySplashActivity;
 import com.avoscloud.chat.util.Logger;
 import com.avoscloud.chat.util.PhotoUtils;
 import com.avoscloud.chat.util.Utils;
@@ -104,10 +104,10 @@ public class App extends Application {
     AVOSCloud.setDebugLogEnabled(debug);
     AVAnalytics.enableCrashReport(this, !debug);
 
-    IM im = IM.getInstance();
-    im.init();
+    ChatManager chatManager = ChatManager.getInstance();
+    chatManager.init();
     if (AVUser.getCurrentUser() != null) {
-      im.setupWithCurrentUser();
+      chatManager.setupWithCurrentUser();
     }
 
     if (App.debug) {

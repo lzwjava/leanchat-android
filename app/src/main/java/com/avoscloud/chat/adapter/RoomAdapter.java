@@ -7,12 +7,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.entity.ConvType;
-import com.avoscloud.chat.entity.Room;
+import com.avoscloud.chat.chat.adapter.BaseListAdapter;
+import com.avoscloud.chat.chat.model.ConvType;
+import com.avoscloud.chat.chat.model.Room;
 import com.avoscloud.chat.service.CacheService;
 import com.avoscloud.chat.service.UserService;
-import com.avoscloud.chat.service.chat.ConvManager;
-import com.avoscloud.chat.service.chat.MsgUtils;
+import com.avoscloud.chat.chat.controller.ConvManager;
+import com.avoscloud.chat.chat.controller.MsgUtils;
 import com.avoscloud.chat.ui.view.ViewHolder;
 import com.avoscloud.chat.util.TimeUtils;
 

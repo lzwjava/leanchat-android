@@ -19,5 +19,4 @@ public class C {
   public static final String CONV = "conv";
   public static final String TYPE = "type";
   public static String FROM_NAME = "fromName";
-
 }

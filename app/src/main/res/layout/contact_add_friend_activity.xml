@@ -35,7 +35,7 @@
             android:textSize="14sp" />
     </LinearLayout>
 
-    <com.avoscloud.chat.ui.view.xlist.XListView
+    <com.avoscloud.chat.ui.view.BaseListView
         android:id="@+id/searchList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

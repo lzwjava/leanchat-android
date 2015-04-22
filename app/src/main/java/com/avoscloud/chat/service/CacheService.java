@@ -10,8 +10,8 @@ import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
 import com.avos.avoscloud.im.v2.messages.AVIMAudioMessage;
 import com.avoscloud.chat.base.C;
-import com.avoscloud.chat.service.chat.ConvManager;
-import com.avoscloud.chat.service.chat.MsgUtils;
+import com.avoscloud.chat.chat.controller.ConvManager;
+import com.avoscloud.chat.chat.controller.MsgUtils;
 import com.avoscloud.chat.util.Utils;
 
 import java.io.File;

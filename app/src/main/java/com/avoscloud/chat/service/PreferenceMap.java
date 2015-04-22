@@ -6,7 +6,7 @@ import android.preference.PreferenceManager;
 import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.avobject.User;
+import com.avoscloud.chat.entity.avobject.User;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.util.Logger;
 

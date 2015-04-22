@@ -4,11 +4,14 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.TextView;
 import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
+import com.avoscloud.chat.entity.avobject.User;
 import com.avoscloud.chat.service.CacheService;
+import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.view.ViewHolder;
-import com.avoscloud.chat.util.ChatUtils;
 
 import java.util.List;
 
@@ -28,7 +31,10 @@ public class GroupAddMembersAdapter extends BaseCheckListAdapter<String> {
     }
     String userId = datas.get(position);
     AVUser user = CacheService.lookupUser(userId);
-    ChatUtils.setUserView(conView, user);
+    ImageView avatarView = ViewHolder.findViewById(conView, R.id.avatar);
+    TextView nameView = ViewHolder.findViewById(conView, R.id.username);
+    UserService.displayAvatar(User.getAvatarUrl(user), avatarView);
+    nameView.setText(user.getUsername());
     CheckBox checkBox = ViewHolder.findViewById(conView, R.id.checkbox);
     setCheckBox(checkBox, position);
     checkBox.setOnCheckedChangeListener(new CheckListener(position));

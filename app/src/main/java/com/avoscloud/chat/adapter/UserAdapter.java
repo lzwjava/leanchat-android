@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.avobject.User;
+import com.avoscloud.chat.entity.avobject.User;
 import com.avoscloud.chat.base.C;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.view.ViewHolder;

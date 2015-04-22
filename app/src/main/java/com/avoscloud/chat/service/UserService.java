@@ -3,9 +3,9 @@ package com.avoscloud.chat.service;
 import android.text.TextUtils;
 import android.widget.ImageView;
 import com.avos.avoscloud.*;
-import com.avoscloud.chat.avobject.User;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.base.C;
+import com.avoscloud.chat.entity.avobject.User;
 import com.avoscloud.chat.util.Logger;
 import com.avoscloud.chat.util.PhotoUtils;
 import com.avoscloud.chat.util.Utils;
@@ -44,6 +44,7 @@ public class UserService {
           es[0] = parseException;
         } else {
           friends.addAll(parseObjects);
+          CacheService.registerUsers(parseObjects);
         }
         latch.countDown();
       }

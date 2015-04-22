@@ -6,7 +6,7 @@
     android:layout_height="@dimen/chatBottomHeight"
     android:orientation="horizontal">
 
-    <com.avoscloud.chat.ui.view.RecordButton
+    <com.avoscloud.chat.chat.view.RecordButton
         android:id="@+id/recordBtn"
         android:layout_width="0dp"
         android:layout_height="40dp"

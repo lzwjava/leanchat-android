@@ -5,64 +5,34 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.avobject.User;
+import com.avoscloud.chat.chat.adapter.BaseListAdapter;
 import com.avoscloud.chat.entity.SortUser;
+import com.avoscloud.chat.entity.avobject.User;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.view.ViewHolder;
 
-import java.util.List;
-
 @SuppressLint("DefaultLocale")
-public class UserFriendAdapter extends BaseAdapter implements SectionIndexer {
-  private Context ct;
-  private List<SortUser> data;
+public class UserFriendAdapter extends BaseListAdapter<SortUser> implements SectionIndexer {
 
-  public UserFriendAdapter(Context ct, List<SortUser> datas) {
-    this.ct = ct;
-    this.data = datas;
-  }
-
-  public void updateDatas(List<SortUser> list) {
-    this.data = list;
-    notifyDataSetChanged();
-  }
-
-  public void remove(SortUser user) {
-    this.data.remove(user);
-    notifyDataSetChanged();
-  }
-
-  @Override
-  public int getCount() {
-    return data.size();
-  }
-
-  @Override
-  public Object getItem(int position) {
-    return data.get(position);
-  }
-
-  @Override
-  public long getItemId(int position) {
-    return 0;
+  public UserFriendAdapter(Context ctx) {
+    super(ctx);
   }
 
   @Override
   public View getView(int position, View convertView, ViewGroup parent) {
     if (convertView == null) {
-      convertView = LayoutInflater.from(ct).inflate(
+      convertView = LayoutInflater.from(ctx).inflate(
           R.layout.item_user_friend, null);
     }
     TextView alpha = ViewHolder.findViewById(convertView, R.id.alpha);
     TextView nameView = ViewHolder.findViewById(convertView, R.id.tv_friend_name);
     ImageView avatarView = ViewHolder.findViewById(convertView, R.id.img_friend_avatar);
 
-    SortUser friend = data.get(position);
+    SortUser friend = datas.get(position);
     final String name = friend.getInnerUser().getUsername();
     final String avatarUrl = User.getAvatarUrl(friend.getInnerUser());
 
@@ -81,20 +51,19 @@ public class UserFriendAdapter extends BaseAdapter implements SectionIndexer {
   }
 
   public int getSectionForPosition(int position) {
-    return data.get(position).getSortLetters().charAt(0);
+    return datas.get(position).getSortLetters().charAt(0);
   }
 
 
   @SuppressLint("DefaultLocale")
   public int getPositionForSection(int section) {
     for (int i = 0; i < getCount(); i++) {
-      String sortStr = data.get(i).getSortLetters();
+      String sortStr = datas.get(i).getSortLetters();
       char firstChar = sortStr.toUpperCase().charAt(0);
       if (firstChar == section) {
         return i;
       }
     }
-
     return -1;
   }
 

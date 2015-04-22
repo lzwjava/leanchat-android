@@ -3,9 +3,14 @@ package com.avoscloud.chat.adapter;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.util.ChatUtils;
+import com.avoscloud.chat.chat.adapter.BaseListAdapter;
+import com.avoscloud.chat.entity.avobject.User;
+import com.avoscloud.chat.service.UserService;
+import com.avoscloud.chat.ui.view.ViewHolder;
 
 import java.util.List;
 
@@ -23,7 +28,10 @@ public class GroupUsersAdapter extends BaseListAdapter<AVUser> {
       conView = View.inflate(ctx, R.layout.group_user_item, null);
     }
     AVUser user = datas.get(position);
-    ChatUtils.setUserView(conView, user);
+    ImageView avatarView = ViewHolder.findViewById(conView, R.id.avatar);
+    TextView nameView = ViewHolder.findViewById(conView, R.id.username);
+    UserService.displayAvatar(User.getAvatarUrl(user), avatarView);
+    nameView.setText(user.getUsername());
     return conView;
   }
 }

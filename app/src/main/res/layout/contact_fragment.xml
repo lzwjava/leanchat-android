@@ -33,7 +33,7 @@
             android:layout_toLeftOf="@+id/right_letter"
             android:orientation="horizontal">
 
-            <com.avoscloud.chat.ui.view.xlist.XListView
+            <com.avoscloud.chat.ui.view.BaseListView
                 android:id="@+id/list_friends"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

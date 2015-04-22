@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/fragment"
-        android:name="com.avoscloud.chat.ui.activity.NotifySettingFragment"
+        android:name="com.avoscloud.chat.ui.profile.NotifySettingFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
