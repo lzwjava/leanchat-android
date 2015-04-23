@@ -9,11 +9,10 @@ import android.view.ViewGroup;
 import butterknife.InjectView;
 import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.adapter.NearPeopleAdapter;
 import com.avoscloud.chat.service.PreferenceMap;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.base_activity.BaseFragment;
-import com.avoscloud.chat.ui.profile.PersonInfoActivity;
+import com.avoscloud.chat.ui.contact.ContactPersonInfoActivity;
 import com.avoscloud.chat.ui.view.BaseListView;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 
@@ -29,7 +28,7 @@ public class DiscoverFragment extends BaseFragment {
   private final SortDialogListener updatedAtListener = new SortDialogListener(UserService.ORDER_UPDATED_AT);
   @InjectView(R.id.list_near)
   BaseListView<AVUser> listView;
-  NearPeopleAdapter adapter;
+  DiscoverFragmentUserAdapter adapter;
   List<AVUser> nears = new ArrayList<AVUser>();
   int orderType;
   PreferenceMap preferenceMap;
@@ -44,13 +43,13 @@ public class DiscoverFragment extends BaseFragment {
     super.onActivityCreated(savedInstanceState);
     preferenceMap = PreferenceMap.getCurUserPrefDao(getActivity());
     orderType = preferenceMap.getNearbyOrder();
-    headerLayout.showTitle(R.string.discover);
+    headerLayout.showTitle(R.string.discover_title);
     headerLayout.showRightImageButton(R.drawable.nearby_order, new View.OnClickListener() {
       @Override
       public void onClick(View v) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.sort).setPositiveButton(R.string.loginTime,
-            updatedAtListener).setNegativeButton(R.string.distance, distanceListener).show();
+        builder.setTitle(R.string.discover_fragment_sort).setPositiveButton(R.string.discover_fragment_loginTime,
+            updatedAtListener).setNegativeButton(R.string.discover_fragment_distance, distanceListener).show();
       }
     });
     initXListView();
@@ -58,7 +57,7 @@ public class DiscoverFragment extends BaseFragment {
   }
 
   private void initXListView() {
-    adapter = new NearPeopleAdapter(ctx, nears);
+    adapter = new DiscoverFragmentUserAdapter(ctx, nears);
     listView = (BaseListView<AVUser>) getView().findViewById(R.id.list_near);
     listView.init(new BaseListView.DataFactory<AVUser>() {
       @Override
@@ -70,7 +69,7 @@ public class DiscoverFragment extends BaseFragment {
     listView.setItemListener(new BaseListView.ItemListener<AVUser>() {
       @Override
       public void onItemSelected(AVUser item) {
-        PersonInfoActivity.goPersonInfo(ctx, item.getObjectId());
+        ContactPersonInfoActivity.goPersonInfo(ctx, item.getObjectId());
       }
     });
 

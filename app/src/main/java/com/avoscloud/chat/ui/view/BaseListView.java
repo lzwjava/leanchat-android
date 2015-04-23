@@ -83,7 +83,7 @@ public class BaseListView<T> extends XListView implements XListView.IXListViewLi
           if (datas.size() < ONE_PAGE_SIZE) {
             if (isToastIfEmpty()) {
               if (datas.size() == 0) {
-                Utils.toast(getContext(), R.string.listEmptyHint);
+                Utils.toast(getContext(), R.string.base_list_view_listEmptyHint);
               }
             }
             //setPullLoadEnable(false);
@@ -94,7 +94,7 @@ public class BaseListView<T> extends XListView implements XListView.IXListViewLi
           stopLoadMore();
           adapter.addAll(datas);
           if (datas.size() == 0) {
-            Utils.toast(getContext(), R.string.noMore);
+            Utils.toast(getContext(), R.string.base_list_view_noMore);
           }
         }
       }

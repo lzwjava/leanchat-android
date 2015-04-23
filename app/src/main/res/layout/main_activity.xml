@@ -28,7 +28,7 @@
                 android:paddingBottom="2dip"
                 android:paddingTop="7dip"
                 android:scaleType="matrix"
-                android:text="@string/messages"
+                android:text="@string/conversation_messages"
                 android:textColor="@drawable/tab_textcolor"
                 android:textSize="12sp" />
 
@@ -40,8 +40,8 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginRight="30dp"
                 android:layout_marginTop="3dp"
-                android:background="@drawable/msg_tips"
-                android:contentDescription="@string/action_settings"
+                android:background="@drawable/common_msg_tips"
+                android:contentDescription="@string/profile_settings"
                 android:gravity="center"
                 android:textColor="@android:color/white"
                 android:textSize="12sp"
@@ -75,8 +75,8 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginRight="30dp"
                 android:layout_marginTop="7dp"
-                android:background="@drawable/msg_tips"
-                android:contentDescription="@string/action_settings"
+                android:background="@drawable/common_msg_tips"
+                android:contentDescription="@string/profile_settings"
                 android:gravity="center"
                 android:textColor="@android:color/white"
                 android:textSize="12sp"
@@ -94,7 +94,7 @@
             android:paddingBottom="2dip"
             android:paddingTop="7dip"
             android:scaleType="matrix"
-            android:text="@string/discover"
+            android:text="@string/discover_title"
             android:textColor="@drawable/tab_textcolor"
             android:textSize="12sp" />
 
@@ -109,7 +109,7 @@
             android:paddingBottom="2dip"
             android:paddingTop="7dip"
             android:scaleType="matrix"
-            android:text="@string/me"
+            android:text="@string/profile_title"
             android:textColor="@drawable/tab_textcolor"
             android:textSize="12sp" />
     </LinearLayout>

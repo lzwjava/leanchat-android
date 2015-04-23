@@ -10,13 +10,13 @@
     <View
         android:layout_width="fill_parent"
         android:layout_height="1px"
-        android:background="@color/msg_emote_divider"
+        android:background="@color/chat_msg_emote_divider"
         android:focusable="false" />
 
     <LinearLayout
         android:id="@+id/chatEmotionLayout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/chatBottomMoreHeight"
+        android:layout_height="@dimen/chat_bottom_more_height"
         android:orientation="vertical"
         android:visibility="gone">
 

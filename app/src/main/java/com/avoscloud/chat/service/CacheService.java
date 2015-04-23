@@ -10,8 +10,8 @@ import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
 import com.avos.avoscloud.im.v2.messages.AVIMAudioMessage;
 import com.avoscloud.chat.base.C;
-import com.avoscloud.chat.chat.controller.ConvManager;
-import com.avoscloud.chat.chat.controller.MsgUtils;
+import com.avoscloud.chat.chat.controller.ConversationManager;
+import com.avoscloud.chat.chat.controller.MessageUtils;
 import com.avoscloud.chat.util.Utils;
 
 import java.io.File;
@@ -117,7 +117,7 @@ public class CacheService {
         uncachedIds.add(id);
       }
     }
-    ConvManager.getInstance().findConvs(new ArrayList<String>(uncachedIds), new AVIMConversationQueryCallback() {
+    ConversationManager.getInstance().findConvs(new ArrayList<String>(uncachedIds), new AVIMConversationQueryCallback() {
       @Override
       public void done(List<AVIMConversation> conversations, AVException e) {
         if (e != null) {
@@ -135,7 +135,7 @@ public class CacheService {
     for (AVIMTypedMessage msg : msgs) {
       AVIMReservedMessageType type = AVIMReservedMessageType.getAVIMReservedMessageType(msg.getMessageType());
       if (type == AVIMReservedMessageType.AudioMessageType) {
-        File file = new File(MsgUtils.getFilePath(msg));
+        File file = new File(MessageUtils.getFilePath(msg));
         if (!file.exists()) {
           AVIMAudioMessage audioMsg = (AVIMAudioMessage) msg;
           String url = audioMsg.getFileUrl();

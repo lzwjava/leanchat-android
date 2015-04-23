@@ -84,33 +84,33 @@
             android:theme="@style/MainTheme" />
 
         <activity
-            android:name=".ui.contact.NewFriendActivity"
+            android:name=".ui.contact.ContactNewFriendActivity"
             android:theme="@style/MainTheme" />
 
         <activity
-            android:name=".ui.contact.AddFriendActivity"
+            android:name=".ui.contact.ContactAddFriendActivity"
             android:theme="@style/MainTheme" />
 
         <activity
-            android:name=".ui.profile.PersonInfoActivity"
+            android:name=".ui.contact.ContactPersonInfoActivity"
             android:theme="@style/MainTheme" />
 
         <activity
-            android:name=".ui.profile.NotifySettingActivity"
+            android:name=".ui.profile.ProfileNotifySettingActivity"
             android:theme="@style/MainTheme" />
 
         <activity
-            android:name=".ui.contact.GroupConvListActivity"
-            android:label="@string/group"
+            android:name=".ui.conversation.ConversationListActivity"
+            android:label="@string/conversation_group"
             android:theme="@style/MainTheme" />
 
         <activity
-            android:name=".ui.conversation.ConvDetailActivity"
+            android:name=".ui.conversation.ConversationDetailActivity"
             android:theme="@style/MainTheme" />
 
         <activity
-            android:name=".ui.conversation.ConvAddMembersActivity"
-            android:label="@string/inviteMembers"
+            android:name=".ui.conversation.ConversationAddMembersActivity"
+            android:label="@string/conversation_inviteMembers"
             android:theme="@style/MainTheme" />
 
         <service

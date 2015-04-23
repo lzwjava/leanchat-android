@@ -27,14 +27,14 @@ import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMLocationMessage;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.chat.adapter.ChatMsgAdapter;
-import com.avoscloud.chat.chat.adapter.EmotionGridAdapter;
-import com.avoscloud.chat.chat.adapter.EmotionPagerAdapter;
+import com.avoscloud.chat.chat.adapter.ChatEmotionGridAdapter;
+import com.avoscloud.chat.chat.adapter.ChatEmotionPagerAdapter;
+import com.avoscloud.chat.chat.adapter.ChatMessageAdapter;
 import com.avoscloud.chat.chat.controller.*;
 import com.avoscloud.chat.chat.db.MsgsTable;
 import com.avoscloud.chat.chat.db.RoomsTable;
-import com.avoscloud.chat.chat.model.ConvType;
-import com.avoscloud.chat.chat.model.MsgEvent;
+import com.avoscloud.chat.chat.model.ConversationType;
+import com.avoscloud.chat.chat.model.MessageEvent;
 import com.avoscloud.chat.chat.view.EmotionEditText;
 import com.avoscloud.chat.chat.view.RecordButton;
 import com.avoscloud.chat.chat.view.xlist.XListView;
@@ -42,8 +42,8 @@ import com.avoscloud.chat.entity.AVIMUserInfoMessage;
 import com.avoscloud.chat.service.CacheService;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.service.event.FinishEvent;
-import com.avoscloud.chat.ui.conversation.ConvBaseActivity;
-import com.avoscloud.chat.ui.conversation.ConvDetailActivity;
+import com.avoscloud.chat.ui.conversation.ConversationBaseActivity;
+import com.avoscloud.chat.ui.conversation.ConversationDetailActivity;
 import com.avoscloud.chat.util.*;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 
@@ -53,7 +53,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ChatActivity extends ConvBaseActivity implements OnClickListener,
+public class ChatActivity extends ConversationBaseActivity implements OnClickListener,
     XListView.IXListViewListener {
   public static final int LOCATION_REQUEST = 1;
   public static final int PAGE_SIZE = 20;
@@ -65,7 +65,7 @@ public class ChatActivity extends ConvBaseActivity implements OnClickListener,
   private static ChatActivity chatInstance;
   //用来判断是否弹出通知
   public static String currentChattingConvid;
-  private ChatMsgAdapter adapter;
+  private ChatMessageAdapter adapter;
   private RoomsTable roomsTable;
 
   private View chatTextLayout, chatAudioLayout, chatAddLayout, chatEmotionLayout;
@@ -76,11 +76,11 @@ public class ChatActivity extends ConvBaseActivity implements OnClickListener,
   private RecordButton recordBtn;
   private String localCameraPath = PathUtils.getTmpPath();
   private View addCameraBtn;
-  private ConvType convType;
+  private ConversationType conversationType;
   private AVIMConversation conv;
   private MsgsTable msgsTable;
-  private MsgAgent msgAgent;
-  private MsgAgent.SendCallback defaultSendCallback = new DefaultSendCallback();
+  private MessageAgent messageAgent;
+  private MessageAgent.SendCallback defaultSendCallback = new DefaultSendCallback();
 
   public static void goByConv(Context from, AVIMConversation conv) {
     CacheService.registerConv(conv);
@@ -91,7 +91,7 @@ public class ChatActivity extends ConvBaseActivity implements OnClickListener,
 
   public static void goByUserId(final Activity from, String userId) {
     final ProgressDialog dialog = Utils.showSpinnerDialog(from);
-    ConvManager.getInstance().fetchConvWithUserId(userId, new AVIMConversationCreatedCallback() {
+    ConversationManager.getInstance().fetchConvWithUserId(userId, new AVIMConversationCreatedCallback() {
       @Override
       public void done(AVIMConversation conversation, AVException e) {
         dialog.dismiss();
@@ -166,7 +166,7 @@ public class ChatActivity extends ConvBaseActivity implements OnClickListener,
     for (int i = 0; i < EmotionUtils.emojiGroups.size(); i++) {
       views.add(getEmotionGridView(i));
     }
-    EmotionPagerAdapter pagerAdapter = new EmotionPagerAdapter(views);
+    ChatEmotionPagerAdapter pagerAdapter = new ChatEmotionPagerAdapter(views);
     emotionPager.setOffscreenPageLimit(3);
     emotionPager.setAdapter(pagerAdapter);
   }
@@ -175,10 +175,10 @@ public class ChatActivity extends ConvBaseActivity implements OnClickListener,
     LayoutInflater inflater = LayoutInflater.from(ctx);
     View emotionView = inflater.inflate(R.layout.chat_emotion_gridview, null, false);
     GridView gridView = (GridView) emotionView.findViewById(R.id.gridview);
-    final EmotionGridAdapter emotionGridAdapter = new EmotionGridAdapter(ctx);
+    final ChatEmotionGridAdapter chatEmotionGridAdapter = new ChatEmotionGridAdapter(ctx);
     List<String> pageEmotions = EmotionUtils.emojiGroups.get(pos);
-    emotionGridAdapter.setDatas(pageEmotions);
-    gridView.setAdapter(emotionGridAdapter);
+    chatEmotionGridAdapter.setDatas(pageEmotions);
+    gridView.setAdapter(chatEmotionGridAdapter);
     gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -203,7 +203,7 @@ public class ChatActivity extends ConvBaseActivity implements OnClickListener,
     recordBtn.setRecordEventListener(new RecordButton.RecordEventListener() {
       @Override
       public void onFinishedRecord(final String audioPath, int secs) {
-        msgAgent.sendAudio(audioPath);
+        messageAgent.sendAudio(audioPath);
       }
 
       @Override
@@ -284,22 +284,22 @@ public class ChatActivity extends ConvBaseActivity implements OnClickListener,
     if (conv == null) {
       throw new NullPointerException("conv is null");
     }
-    initActionBar(ConvManager.titleOfConv(conv));
-    msgAgent = new MsgAgent(conv);
-    msgAgent.setSendCallback(defaultSendCallback);
+    initActionBar(ConversationManager.titleOfConv(conv));
+    messageAgent = new MessageAgent(conv);
+    messageAgent.setSendCallback(defaultSendCallback);
     CacheService.setCurConv(conv);
     roomsTable.insertRoom(convid);
     roomsTable.clearUnread(conv.getConversationId());
-    convType = ConvManager.typeOfConv(conv);
-    bindAdapterToListView(convType);
+    conversationType = ConversationManager.typeOfConv(conv);
+    bindAdapterToListView(conversationType);
   }
 
-  private void bindAdapterToListView(ConvType convType) {
-    adapter = new ChatMsgAdapter(this, convType);
-    adapter.setClickListener(new ChatMsgAdapter.ClickListener() {
+  private void bindAdapterToListView(ConversationType conversationType) {
+    adapter = new ChatMessageAdapter(this, conversationType);
+    adapter.setClickListener(new ChatMessageAdapter.ClickListener() {
       @Override
       public void onFailButtonClick(AVIMTypedMessage msg) {
-        msgAgent.resendMsg(msg, defaultSendCallback);
+        messageAgent.resendMsg(msg, defaultSendCallback);
       }
 
       @Override
@@ -314,7 +314,7 @@ public class ChatActivity extends ConvBaseActivity implements OnClickListener,
       @Override
       public void onImageViewClick(AVIMImageMessage imageMsg) {
         ImageBrowserActivity.go(ChatActivity.this,
-            MsgUtils.getFilePath(imageMsg),
+            MessageUtils.getFilePath(imageMsg),
             imageMsg.getFileUrl());
       }
     });
@@ -332,7 +332,7 @@ public class ChatActivity extends ConvBaseActivity implements OnClickListener,
   public boolean onMenuItemSelected(int featureId, MenuItem item) {
     int menuId = item.getItemId();
     if (menuId == R.id.people) {
-      Utils.goActivity(ctx, ConvDetailActivity.class);
+      Utils.goActivity(ctx, ConversationDetailActivity.class);
     }
     return super.onMenuItemSelected(featureId, item);
   }
@@ -451,7 +451,7 @@ public class ChatActivity extends ConvBaseActivity implements OnClickListener,
       Intent intent = new Intent();
       intent.setType("image/*");
       intent.setAction(Intent.ACTION_GET_CONTENT);
-      startActivityForResult(Intent.createChooser(intent, getResources().getString(R.string.select_picture)),
+      startActivityForResult(Intent.createChooser(intent, getResources().getString(R.string.chat_activity_select_picture)),
           GALLERY_REQUEST);
     } else {
       Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
@@ -472,7 +472,7 @@ public class ChatActivity extends ConvBaseActivity implements OnClickListener,
   private void sendText() {
     final String content = contentEdit.getText().toString();
     if (!TextUtils.isEmpty(content)) {
-      msgAgent.sendText(content);
+      messageAgent.sendText(content);
       contentEdit.setText("");
     }
   }
@@ -499,19 +499,19 @@ public class ChatActivity extends ConvBaseActivity implements OnClickListener,
             getContentResolver().takePersistableUriPermission(uri, takeFlags);
           }
           String localSelectPath = ProviderPathUtils.getPath(ctx, uri);
-          msgAgent.sendImage(localSelectPath);
+          messageAgent.sendImage(localSelectPath);
           break;
         case TAKE_CAMERA_REQUEST:
-          msgAgent.sendImage(localCameraPath);
+          messageAgent.sendImage(localCameraPath);
           break;
         case LOCATION_REQUEST:
           final double latitude = data.getDoubleExtra(LocationActivity.LATITUDE, 0);
           final double longitude = data.getDoubleExtra(LocationActivity.LONGITUDE, 0);
           final String address = data.getStringExtra(LocationActivity.ADDRESS);
           if (!TextUtils.isEmpty(address)) {
-            msgAgent.sendLocation(latitude, longitude, address);
+            messageAgent.sendLocation(latitude, longitude, address);
           } else {
-            Utils.toast(ctx, R.string.cannotGetYourAddressInfo);
+            Utils.toast(ctx, R.string.chat_cannotGetYourAddressInfo);
           }
           break;
       }
@@ -540,8 +540,8 @@ public class ChatActivity extends ConvBaseActivity implements OnClickListener,
     super.onDestroy();
   }
 
-  public void onEvent(MsgEvent msgEvent) {
-    AVIMTypedMessage msg = msgEvent.getMsg();
+  public void onEvent(MessageEvent messageEvent) {
+    AVIMTypedMessage msg = messageEvent.getMsg();
     if (msg.getConversationId().equals(conv.getConversationId())) {
       roomsTable.clearUnread(conv.getConversationId());
       refreshMsgsFromDB();
@@ -549,7 +549,7 @@ public class ChatActivity extends ConvBaseActivity implements OnClickListener,
   }
 
   @Override
-  public void onEvent(ConvChangeEvent convChangeEvent) {
+  public void onEvent(ConversationChangeEvent conversationChangeEvent) {
 
   }
 
@@ -557,7 +557,7 @@ public class ChatActivity extends ConvBaseActivity implements OnClickListener,
   protected void onConvChanged(AVIMConversation conv) {
     this.conv = conv;
     ActionBar actionBar = getActionBar();
-    actionBar.setTitle(ConvManager.titleOfConv(this.conv));
+    actionBar.setTitle(ConversationManager.titleOfConv(this.conv));
   }
 
   @Override
@@ -638,14 +638,14 @@ public class ChatActivity extends ConvBaseActivity implements OnClickListener,
           if (msgs.size() > 0) {
             xListView.setSelection(msgs.size() - 1);
           } else {
-            Utils.toast(R.string.loadMessagesFinish);
+            Utils.toast(R.string.chat_activity_loadMessagesFinish);
           }
         }
       }
     }
   }
 
-  class DefaultSendCallback implements MsgAgent.SendCallback {
+  class DefaultSendCallback implements MessageAgent.SendCallback {
 
     @Override
     public void onError(Exception e) {

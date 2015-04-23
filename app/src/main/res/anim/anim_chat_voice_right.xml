@@ -2,15 +2,15 @@
 <animation-list xmlns:android="http://schemas.android.com/apk/res/android"
     android:oneshot="false">
     <item
-        android:drawable="@drawable/voice_left"
+        android:drawable="@drawable/chat_voice_left"
         android:duration="200" />
     <item
-        android:drawable="@drawable/voice_left1"
+        android:drawable="@drawable/chat_voice_left1"
         android:duration="200" />
     <item
-        android:drawable="@drawable/voice_left2"
+        android:drawable="@drawable/chat_voice_left2"
         android:duration="200" />
     <item
-        android:drawable="@drawable/voice_left3"
+        android:drawable="@drawable/chat_voice_left3"
         android:duration="200" />
 </animation-list>

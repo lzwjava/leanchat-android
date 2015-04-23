@@ -108,15 +108,15 @@ public class UpdateService {
             if (isPromptedUpdate() == false) {
               setPromptedUpdate(true);
               AlertDialog.Builder builder = new AlertDialog.Builder(UpdateService.this.activity);
-              builder.setTitle(R.string.haveNewVersion)
+              builder.setTitle(R.string.update_service_haveNewVersion)
                   .setMessage(info.getDesc())
-                  .setPositiveButton(R.string.installNewVersion, new DialogInterface.OnClickListener() {
+                  .setPositiveButton(R.string.update_service_installNewVersion, new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                       openUrlInBrowser(info.getApkUrl());
                     }
-                  }).setNegativeButton(R.string.laterNotify, null).show();
+                  }).setNegativeButton(R.string.update_service_laterNotify, null).show();
             }
           } else {
             if (curVer == ver) {
@@ -126,7 +126,7 @@ public class UpdateService {
                 setPromptedUpdate(false);
                 setLastVersion(curVer);
                 String msg = info.getDesc();
-                String title = UpdateService.this.activity.getString(R.string.updateLog);
+                String title = UpdateService.this.activity.getString(R.string.update_service_updateLog);
                 Utils.showInfoDialog(UpdateService.this.activity, msg, title);
               }
             }
@@ -159,20 +159,20 @@ public class UpdateService {
         if (e == null) {
           if (info.getVersion() > getVersionCode(ctx)) {
             AlertDialog.Builder builder = Utils.getBaseDialogBuilder((Activity) ctx);
-            builder.setTitle(R.string.sureToUpdate)
+            builder.setTitle(R.string.update_service_sureToUpdate)
                 .setMessage(info.getDesc())
-                .setPositiveButton(R.string.right, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.utils_right, new DialogInterface.OnClickListener() {
                   @Override
                   public void onClick(DialogInterface dialog, int which) {
                     openUrlInBrowser(info.getApkUrl());
                   }
-                }).setNegativeButton(R.string.cancel, null).show();
+                }).setNegativeButton(R.string.common_cancel, null).show();
           } else {
-            Utils.toast(ctx, R.string.versionIsAlreadyNew);
+            Utils.toast(ctx, R.string.update_service_versionIsAlreadyNew);
           }
         } else {
           e.printStackTrace();
-          Utils.toast(ctx, R.string.failedToGetData);
+          Utils.toast(ctx, R.string.update_service_failedToGetData);
         }
       }
     }.execute();

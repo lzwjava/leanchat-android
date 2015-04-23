@@ -20,13 +20,13 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.SaveCallback;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.adapter.UserFriendAdapter;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.chat.activity.ChatActivity;
 import com.avoscloud.chat.entity.SortUser;
 import com.avoscloud.chat.service.AddRequestService;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.base_activity.BaseFragment;
+import com.avoscloud.chat.ui.conversation.ConversationListActivity;
 import com.avoscloud.chat.ui.view.BaseListView;
 import com.avoscloud.chat.ui.view.ClearEditText;
 import com.avoscloud.chat.ui.view.EnLetterView;
@@ -57,12 +57,12 @@ public class ContactFragment extends BaseFragment {
 
     @OnClick(R.id.layout_new)
     void goNewFriend() {
-      Utils.goActivity(ctx, NewFriendActivity.class);
+      Utils.goActivity(ctx, ContactNewFriendActivity.class);
     }
 
     @OnClick(R.id.layout_group)
     void goGroupConvList() {
-      Utils.goActivity(ctx, GroupConvListActivity.class);
+      Utils.goActivity(ctx, ConversationListActivity.class);
     }
 
     public ImageView getMsgTipsView() {
@@ -72,7 +72,7 @@ public class ContactFragment extends BaseFragment {
 
   private static CharacterParser characterParser;
   private static PinyinComparator pinyinComparator;
-  private UserFriendAdapter userAdapter;
+  private ContactFragmentAdapter userAdapter;
   private ListHeaderViewHolder listHeaderViewHolder = new ListHeaderViewHolder();
 
   @Override
@@ -82,7 +82,7 @@ public class ContactFragment extends BaseFragment {
     View view = inflater.inflate(R.layout.contact_fragment, container, false);
     ButterKnife.inject(this, view);
 
-    listHeaderView = inflater.inflate(R.layout.contact_include_new_friend, null, false);
+    listHeaderView = inflater.inflate(R.layout.contact_fragment_header_layout, null, false);
     ButterKnife.inject(listHeaderViewHolder, listHeaderView);
     return view;
   }
@@ -117,7 +117,7 @@ public class ContactFragment extends BaseFragment {
     headerLayout.showRightImageButton(R.drawable.base_action_bar_add_bg_selector, new OnClickListener() {
       @Override
       public void onClick(View v) {
-        Utils.goActivity(ctx, AddFriendActivity.class);
+        Utils.goActivity(ctx, ContactAddFriendActivity.class);
       }
     });
   }
@@ -168,7 +168,7 @@ public class ContactFragment extends BaseFragment {
   }
 
   private void initListView() {
-    userAdapter = new UserFriendAdapter(getActivity());
+    userAdapter = new ContactFragmentAdapter(getActivity());
     friendsList.init(new BaseListView.DataFactory<SortUser>() {
       @Override
       public List<SortUser> getDatasInBackground(int skip, int limit, List<SortUser> currentDatas) throws Exception {
@@ -232,8 +232,8 @@ public class ContactFragment extends BaseFragment {
   }
 
   public void showDeleteDialog(final SortUser user) {
-    new AlertDialog.Builder(ctx).setMessage(R.string.deleteContact)
-        .setPositiveButton(R.string.sure, new DialogInterface.OnClickListener() {
+    new AlertDialog.Builder(ctx).setMessage(R.string.contact_deleteContact)
+        .setPositiveButton(R.string.common_sure, new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
             final ProgressDialog dialog1 = Utils.showSpinnerDialog(getActivity());
@@ -247,7 +247,7 @@ public class ContactFragment extends BaseFragment {
               }
             });
           }
-        }).setNegativeButton(R.string.cancel, null).show();
+        }).setNegativeButton(R.string.common_cancel, null).show();
   }
 
   private class LetterListViewListener implements

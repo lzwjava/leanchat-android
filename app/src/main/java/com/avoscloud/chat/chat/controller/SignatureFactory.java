@@ -89,7 +89,7 @@ public class SignatureFactory implements com.avos.avoscloud.SignatureFactory {
 
   public static void checkCloudCodeDeploy(AVException e) {
     if (e.getCode() == AVException.INVALID_JSON) {
-      Utils.toast(App.ctx.getString(R.string.cloudCodeNotDeployTips));
+      Utils.toast(App.ctx.getString(R.string.chat_cloudCodeNotDeployTips));
     }
   }
 }

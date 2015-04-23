@@ -85,9 +85,9 @@ public class PlayButton extends ImageView implements View.OnClickListener {
 
   private void stopRecordAnimation() {
     if (leftSide) {
-      setImageResource(R.drawable.voice_right3);
+      setImageResource(R.drawable.chat_voice_right3);
     } else {
-      setImageResource(R.drawable.voice_left3);
+      setImageResource(R.drawable.chat_voice_left3);
     }
     if (anim != null) {
       anim.stop();

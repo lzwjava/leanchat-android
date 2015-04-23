@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/home_bg_bottombar"
+        android:background="@drawable/chat_layout_home_bg_bottombar"
         android:orientation="vertical">
 
         <LinearLayout
@@ -41,14 +41,14 @@
                     android:layout_width="@dimen/chatBottomBtnSize"
                     android:layout_height="@dimen/chatBottomBtnSize"
                     android:layout_marginLeft="3dp"
-                    android:background="@drawable/btn_chat_add_selector" />
+                    android:background="@drawable/chat_btn_add_selector" />
 
                 <Button
                     android:id="@+id/showEmotionBtn"
                     android:layout_width="@dimen/chatBottomBtnSize"
                     android:layout_height="@dimen/chatBottomBtnSize"
                     android:layout_marginLeft="3dp"
-                    android:background="@drawable/btn_chat_emo_selector"
+                    android:background="@drawable/chat_btn_emo_selector"
                     android:gravity="center" />
 
             </LinearLayout>

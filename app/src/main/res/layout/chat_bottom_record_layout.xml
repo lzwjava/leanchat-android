@@ -14,7 +14,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_weight="1"
-        android:text="@string/pressToRecord" />
+        android:text="@string/chat_bottom_record_layout_pressToRecord" />
 
     <Button
         android:id="@+id/turnToTextBtn"
@@ -23,4 +23,5 @@
         android:layout_gravity="center_vertical"
         android:layout_margin="@dimen/chatBottomBtnMargin"
         android:background="@drawable/btn_keyboard" />
+
 </LinearLayout>

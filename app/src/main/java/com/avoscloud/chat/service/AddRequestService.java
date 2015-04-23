@@ -88,7 +88,7 @@ public class AddRequestService {
       }
     }
     if (count > 0) {
-      throw new Exception(App.ctx.getString(R.string.alreadyCreateAddRequest));
+      throw new Exception(App.ctx.getString(R.string.contact_alreadyCreateAddRequest));
     } else {
       AddRequest add = new AddRequest();
       add.setFromUser(curUser);
@@ -107,7 +107,7 @@ public class AddRequestService {
 
       @Override
       protected void onSucceed() {
-        Utils.toast(R.string.sendRequestSucceed);
+        Utils.toast(R.string.contact_sendRequestSucceed);
       }
     }.execute();
   }

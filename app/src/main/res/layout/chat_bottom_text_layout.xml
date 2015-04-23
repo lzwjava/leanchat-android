@@ -30,7 +30,7 @@
             android:layout_width="@dimen/chatBottomBtnSize"
             android:layout_height="@dimen/chatBottomBtnSize"
             android:layout_margin="5dp"
-            android:background="@drawable/btn_chat_send_selector"
+            android:background="@drawable/chat_btn_send_selector"
             android:gravity="center"
             android:text=""
             android:textColor="#000"
@@ -42,8 +42,8 @@
             android:layout_height="@dimen/chatBottomBtnSize"
             android:layout_gravity="center"
             android:layout_margin="@dimen/chatBottomBtnMargin"
-            android:background="@drawable/btn_chat_voice_selector"
-            android:textColor="@color/base_color_text_black"
+            android:background="@drawable/chat_btn_voice_selector"
+            android:textColor="@color/chat_base_color_text_black"
             android:visibility="visible" />
     </LinearLayout>
 

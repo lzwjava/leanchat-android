@@ -21,6 +21,11 @@ android {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
     }
+
+    lintOptions {
+        // set to true to turn off analysis progress reporting by lint
+        quiet false
+    }
 }
 
 dependencies {

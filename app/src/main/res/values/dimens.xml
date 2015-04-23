@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="radius">5dp</dimen>
     <dimen name="chatBottomHeight">50dp</dimen>
-    <dimen name="userHead">45dp</dimen>
+    <dimen name="style_chat_avatar_userHead">45dp</dimen>
     <dimen name="chatItemMarginTop">5dp</dimen>
     <dimen name="chatContentMaxWidth">200dp</dimen>
-    <dimen name="marginToUsername">5dp</dimen>
-    <dimen name="chatImageMaxSize">200dp</dimen>
-    <dimen name="chatTextMinWidth">60dp</dimen>
+    <dimen name="chat_item_base_left_marginToUsername">5dp</dimen>
     <dimen name="avatarSize">50dp</dimen>
     <dimen name="playBtnWidth">30dp</dimen>
     <dimen name="chatBottomBtnSize">30dp</dimen>
@@ -26,7 +23,7 @@
     <dimen name="group_detail_text_height">80dp</dimen>
     <dimen name="chatBottomBtnMargin">5dp</dimen>
     <dimen name="tip_icon_size">10dp</dimen>
-    <dimen name="chatBottomMoreHeight">140dp</dimen>
+    <dimen name="chat_bottom_more_height">140dp</dimen>
     <dimen name="chatMaxNameWidth">50dp</dimen>
     <dimen name="chatImageWidth">100dp</dimen>
     <dimen name="myspace_margin_left">10dp</dimen>

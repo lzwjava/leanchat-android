@@ -10,7 +10,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/input_bg"
+        android:background="@drawable/common_input_bg"
         android:orientation="horizontal">
 
         <TextView
@@ -20,7 +20,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:gravity="center_vertical"
-            android:text="@string/nickname"
+            android:text="nickname"
             android:textSize="20sp" />
 
         <EditText
@@ -28,9 +28,9 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1.0"
-            android:background="@color/transparent"
+            android:background="@color/chat_transparent"
             android:gravity="center_vertical"
-            android:hint="@string/please_input_hint" />
+            android:hint="@string/common_please_input_hint" />
     </LinearLayout>
 
 </LinearLayout>

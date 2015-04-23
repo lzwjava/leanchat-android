@@ -119,10 +119,10 @@ public class RecordButton extends Button {
   private void setTextViewByStatus() {
     if (status == RELEASE_TO_CANCEL) {
       textView.setTextColor(getColor(R.color.red));
-      textView.setText(R.string.releaseToCancel);
+      textView.setText(R.string.chat_record_button_releaseToCancel);
     } else if (status == SLIDE_UP_TO_CANCEL) {
       textView.setTextColor(getColor(R.color.white));
-      textView.setText(R.string.slideUpToCancel);
+      textView.setText(R.string.chat_record_button_slideUpToCancel);
     }
   }
 
@@ -135,9 +135,9 @@ public class RecordButton extends Button {
 
   private void initRecordDialog() {
     recordIndicator = new Dialog(getContext(),
-        R.style.like_toast_dialog_style);
+        R.style.record_button_toast_dialog_style);
 
-    view = inflate(getContext(), R.layout.record_layout, null);
+    view = inflate(getContext(), R.layout.chat_record_layout, null);
     imageView = (ImageView) view.findViewById(R.id.imageView);
     textView = (TextView) view.findViewById(R.id.textView);
     recordIndicator.setContentView(view, new LayoutParams(
@@ -156,7 +156,7 @@ public class RecordButton extends Button {
 
     long intervalTime = System.currentTimeMillis() - startTime;
     if (intervalTime < MIN_INTERVAL_TIME) {
-      Toast.makeText(getContext(), getContext().getString(R.string.pleaseSayMore), Toast.LENGTH_SHORT).show();
+      Toast.makeText(getContext(), getContext().getString(R.string.record_button_pleaseSayMore), Toast.LENGTH_SHORT).show();
       File file = new File(outputPath);
       file.delete();
       return;
@@ -172,7 +172,7 @@ public class RecordButton extends Button {
     stopRecording();
     setBackgroundResource(BACK_IDLE);
     recordIndicator.dismiss();
-    Toast.makeText(getContext(), App.ctx.getString(R.string.cancelRecord),
+    Toast.makeText(getContext(), App.ctx.getString(R.string.chat_cancelRecord),
         Toast.LENGTH_SHORT).show();
     File file = new File(outputPath);
     if (file.exists()) {

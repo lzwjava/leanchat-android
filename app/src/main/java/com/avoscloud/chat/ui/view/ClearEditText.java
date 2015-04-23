@@ -42,7 +42,7 @@ public class ClearEditText extends EditText implements
   private void init() {
     mClearDrawable = getCompoundDrawables()[2];
     if (mClearDrawable == null) {
-      mClearDrawable = getResources().getDrawable(R.drawable.search_clear);
+      mClearDrawable = getResources().getDrawable(R.drawable.clear_edittext_search_clear);
     }
     mClearDrawable.setBounds(0, 0, mClearDrawable.getIntrinsicWidth(), mClearDrawable.getIntrinsicHeight());
     setClearIconVisible(false);

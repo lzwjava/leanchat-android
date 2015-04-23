@@ -81,7 +81,7 @@ public class EnLetterView extends View {
         break;
 
       default:
-        setBackgroundResource(R.drawable.v2_sortlistview_sidebar_background);
+        setBackgroundResource(R.drawable.contact_fragment_sortlistview_sidebar_background);
         if (oldChoose != c) {
           if (c >= 0 && c < letters.length) {
             if (listener != null) {

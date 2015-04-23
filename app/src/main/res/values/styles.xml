@@ -1,26 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="btn_green">
-        <item name="android:background">@drawable/btn_green</item>
-        <item name="android:textColor">#fff</item>
-    </style>
-
-    <style name="btn_small" parent="btn_green">
-        <item name="android:padding">2dp</item>
-    </style>
-
-    <style name="btn_blue_pad" parent="btn_green">
-        <item name="android:padding">10dp</item>
-    </style>
-
-    <style name="btn_blue_no_corner">
-        <item name="android:background">@drawable/btn_green_no_corner</item>
-        <item name="android:textColor">#fff</item>
-    </style>
-
     <style name="transparentDialog" parent="@android:style/Theme.Holo.Light.Dialog.NoActionBar">
-        <item name="android:windowBackground">@color/tranparent</item>
+        <item name="android:windowBackground">@color/my_transparent</item>
         <item name="android:backgroundDimEnabled">false</item>
         <item name="android:background">@null</item>
     </style>
@@ -110,11 +92,6 @@
         <item name="android:textSize">18sp</item>
     </style>
 
-    <style name="My.Button">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/base_action_bar_height</item>
-    </style>
-
     <style name="My.View_margin">
         <item name="android:layout_marginLeft">10dp</item>
         <item name="android:layout_marginRight">10dp</item>
@@ -142,10 +119,6 @@
         <item name="android:background">@drawable/btn_logout_selector</item>
     </style>
 
-    <style name="My.TextView._Orange">
-        <item name="android:textColor">@color/dialog_color_title</item>
-    </style>
-
     <style name="My.TextView._White">
         <item name="android:textColor">@color/base_color_text_white</item>
     </style>
@@ -155,15 +128,10 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_weight">1.0</item>
         <item name="android:layout_marginLeft">@dimen/register_margin</item>
-        <item name="android:background">@color/transparent</item>
+        <item name="android:background">@color/chat_transparent</item>
     </style>
 
     <style name="Animations" />
-
-    <style name="Animations.GrowFromBottom">
-        <item name="@android:windowEnterAnimation">@anim/grow_from_bottom</item>
-        <item name="@android:windowExitAnimation">@anim/shrink_from_top</item>
-    </style>
 
     <!-- dialog -->
     <style name="TextAppearance">
@@ -206,11 +174,7 @@
     </style>
 
     <style name="My.TextView._Black">
-        <item name="android:textColor">@color/base_color_text_black</item>
-    </style>
-
-    <style name="My.TextView._Blue">
-        <item name="android:textColor">@color/common_blue</item>
+        <item name="android:textColor">@color/chat_base_color_text_black</item>
     </style>
 
     <style name="My.Button.theme" parent="My.TextView._White">
@@ -244,14 +208,14 @@
         <item name="android:textColor">@color/base_color_text_gray</item>
     </style>
 
-    <style name="like_toast_dialog_style">
+    <style name="record_button_toast_dialog_style">
         <item name="android:windowFrame">@null</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:backgroundDimEnabled">false</item>
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowBackground">@drawable/round_background</item>
+        <item name="android:windowBackground">@drawable/chat_record_button_round_background</item>
     </style>
 
 
@@ -260,23 +224,13 @@
         <item name="android:windowExitAnimation">@anim/push_top_out2</item>
     </style>
 
-    <style name="MyDialogStyleTop" parent="android:Theme.Dialog">
-        <item name="android:windowAnimationStyle">@style/AnimStyle2</item>
-        <item name="android:backgroundDimEnabled">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowFrame">@null</item>
-        <item name="android:windowIsFloating">true</item>
-    </style>
-
     <style name="ChatAvatar">
-        <item name="android:layout_width">@dimen/userHead</item>
-        <item name="android:layout_height">@dimen/userHead</item>
+        <item name="android:layout_width">@dimen/style_chat_avatar_userHead</item>
+        <item name="android:layout_height">@dimen/style_chat_avatar_userHead</item>
         <item name="android:clickable">true</item>
         <item name="android:visibility">visible</item>
         <item name="android:layout_gravity">bottom</item>
-        <item name="android:src">@drawable/default_user_avatar</item>
+        <item name="android:src">@drawable/chat_default_user_avatar</item>
     </style>
 
 
@@ -292,7 +246,7 @@
 
     <style name="MainTheme" parent="android:Theme.Holo.Light">
         <item name="android:actionBarStyle">@style/ActionBarStyle</item>
-        <item name="android:homeAsUpIndicator">@drawable/back_btn</item>
+        <item name="android:homeAsUpIndicator">@drawable/common_base_header_back_btn</item>
         <item name="android:actionMenuTextColor">@color/white</item>
     </style>
 
@@ -301,21 +255,21 @@
         <item name="android:layout_height">@dimen/avatarSize</item>
     </style>
 
-    <style name="myspace_left_text">
+    <style name="profile_fragment_left_text">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginLeft">@dimen/myspace_margin_left</item>
         <item name="android:layout_centerVertical">true</item>
     </style>
 
-    <style name="group_detail_base_left_style">
+    <style name="conversation_detail_base_left_style">
         <item name="android:layout_marginLeft">30dp</item>
         <item name="android:textSize">20sp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
 
-    <style name="group_detail_base_left_layout">
+    <style name="conversation_detail_base_left_layout">
         <item name="android:padding">10dp</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

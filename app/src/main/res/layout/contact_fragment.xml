@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/base_header_layout" />
+    <include layout="@layout/common_header_layout" />
 
     <RelativeLayout
         android:id="@+id/layout_list"
@@ -19,9 +19,9 @@
             android:layout_margin="10dp"
             android:layout_toLeftOf="@+id/right_letter"
             android:background="@drawable/base_edit_input"
-            android:drawableLeft="@drawable/icon_msg_search"
+            android:drawableLeft="@drawable/contact_fragment_icon_msg_search"
             android:drawablePadding="10dp"
-            android:hint="@string/search"
+            android:hint="@string/contact_search"
             android:padding="5dp"
             android:singleLine="true" />
 
@@ -46,10 +46,10 @@
                 android:layout_height="80.0dip"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center"
-                android:background="@drawable/v2_gallery_contacts_dialog_background"
+                android:background="@drawable/contact_fragment_gallery_contacts_dialog_background"
                 android:gravity="center"
                 android:padding="5dip"
-                android:textColor="@color/base_actionbar_bg"
+                android:textColor="@color/contact_base_actionbar_bg"
                 android:textSize="35.0dip"
                 android:visibility="invisible" />
         </RelativeLayout>
@@ -59,7 +59,7 @@
             android:layout_width="25dip"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:background="@color/transparent" />
+            android:background="@color/chat_transparent" />
     </RelativeLayout>
 
 </LinearLayout>

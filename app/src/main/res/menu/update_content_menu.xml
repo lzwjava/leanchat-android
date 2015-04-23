@@ -4,5 +4,5 @@
     <item
         android:id="@+id/sure"
         android:showAsAction="always"
-        android:title="@string/sure" />
+        android:title="@string/common_sure" />
 </menu>

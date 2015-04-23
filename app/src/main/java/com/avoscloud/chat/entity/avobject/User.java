@@ -15,8 +15,8 @@ public class User {
   public static final String GENDER = "gender";
   public static final String INSTALLATION = "installation";
 
-  public static String[] genderStrings = new String[]{App.ctx.getString(R.string.male),
-      App.ctx.getString(R.string.female)};
+  public static String[] genderStrings = new String[]{App.ctx.getString(R.string.contact_male),
+      App.ctx.getString(R.string.contact_female)};
 
   public static String getCurrentUserId() {
     AVUser user = AVUser.getCurrentUser();

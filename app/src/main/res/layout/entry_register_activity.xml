@@ -29,7 +29,7 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:paddingLeft="10dp"
-            android:text="@string/password" />
+            android:text="@string/entry_register_activity_password" />
 
         <EditText
             android:id="@+id/passwordEdit"
@@ -63,7 +63,7 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:paddingLeft="10dp"
-            android:text="@string/sex" />
+            android:text="@string/profile_sex" />
 
         <RadioGroup
             android:id="@+id/sexRadio"
@@ -77,13 +77,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:text="@string/male" />
+                android:text="@string/contact_male" />
 
             <RadioButton
                 android:id="@+id/female"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/female" />
+                android:text="@string/contact_female" />
         </RadioGroup>
 
 

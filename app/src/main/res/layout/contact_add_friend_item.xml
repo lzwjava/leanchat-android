@@ -16,7 +16,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="11dp"
             android:scaleType="fitXY"
-            android:src="@drawable/default_user_avatar" />
+            android:src="@drawable/chat_default_user_avatar" />
 
         <TextView
             android:id="@+id/name"
@@ -55,7 +55,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="已同意"
-                android:textColor="@color/base_color_text_black" />
+                android:textColor="@color/chat_base_color_text_black" />
         </LinearLayout>
 
     </RelativeLayout>

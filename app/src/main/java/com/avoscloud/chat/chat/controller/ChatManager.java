@@ -11,7 +11,7 @@ import com.avos.avoscloud.im.v2.*;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.chat.activity.ChatActivity;
-import com.avoscloud.chat.chat.model.MsgEvent;
+import com.avoscloud.chat.chat.model.MessageEvent;
 import com.avoscloud.chat.chat.db.MsgsTable;
 import com.avoscloud.chat.chat.db.RoomsTable;
 import com.avoscloud.chat.service.CacheService;
@@ -74,7 +74,7 @@ public class ChatManager extends AVIMClientEventHandler {
     PendingIntent pend = PendingIntent.getActivity(context, new Random().nextInt(),
         intent, 0);
     Notification.Builder builder = new Notification.Builder(context);
-    CharSequence notifyContent = MsgUtils.outlineOfMsg(msg);
+    CharSequence notifyContent = MessageUtils.outlineOfMsg(msg);
     CharSequence username = "username";
     AVUser from = CacheService.lookupUser(msg.getFrom());
     if (from != null) {
@@ -108,7 +108,7 @@ public class ChatManager extends AVIMClientEventHandler {
 //      e.printStackTrace();
 //    }
 
-    AVIMMessageManager.setConversationEventHandler(ConvManager.getConvHandler());
+    AVIMMessageManager.setConversationEventHandler(ConversationManager.getConvHandler());
     AVIMClient.setClientEventHandler(this);
     //签名
     //AVIMClient.setSignatureFactory(new SignatureFactory());
@@ -165,8 +165,8 @@ public class ChatManager extends AVIMClientEventHandler {
       throw new NullPointerException("message id is null");
     }
     msgsTable.updateStatus(message.getMessageId(), message.getMessageStatus());
-    MsgEvent msgEvent = new MsgEvent(message);
-    eventBus.post(msgEvent);
+    MessageEvent messageEvent = new MessageEvent(message);
+    eventBus.post(messageEvent);
   }
 
   private void onMessage(final AVIMTypedMessage message, final AVIMConversation conversation) {
@@ -174,15 +174,15 @@ public class ChatManager extends AVIMClientEventHandler {
     if (message.getMessageId() == null) {
       throw new NullPointerException("message id is null");
     }
-    if (!ConvManager.isValidConv(conversation)) {
+    if (!ConversationManager.isValidConv(conversation)) {
       throw new IllegalStateException("receive msg from invalid conversation");
     }
     CacheService.registerConvIfNone(conversation);
     msgsTable.insertMsg(message);
     roomsTable.insertRoom(message.getConversationId());
     roomsTable.increaseUnreadCount(message.getConversationId());
-    MsgEvent msgEvent = new MsgEvent(message);
-    eventBus.post(msgEvent);
+    MessageEvent messageEvent = new MessageEvent(message);
+    eventBus.post(messageEvent);
     new NetAsyncTask(App.ctx, false) {
       @Override
       protected void doInBack() throws Exception {

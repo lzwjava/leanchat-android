@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <CheckBoxPreference
+        android:defaultValue="@bool/defaultNotifyWhenNews"
+        android:key="notifyWhenNews"
+        android:title="@string/profile_notifyWhenNews" />
+
+    <CheckBoxPreference
+        android:defaultValue="@bool/defaultVoiceNotify"
+        android:dependency="notifyWhenNews"
+        android:key="voiceNotify"
+        android:title="@string/setting_preference_voice" />
+
+    <CheckBoxPreference
+        android:defaultValue="@bool/defaultVibrateNotify"
+        android:dependency="notifyWhenNews"
+        android:key="vibrateNotify"
+        android:title="@string/profile_vibrate" />
+</PreferenceScreen>

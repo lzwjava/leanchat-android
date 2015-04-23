@@ -24,9 +24,9 @@ import java.io.IOException;
 public class PhotoUtils {
 
   public static DisplayImageOptions avatarImageOptions = new DisplayImageOptions.Builder()
-      .showImageOnLoading(R.drawable.default_user_avatar)
-      .showImageForEmptyUri(R.drawable.default_user_avatar)
-      .showImageOnFail(R.drawable.default_user_avatar)
+      .showImageOnLoading(R.drawable.chat_default_user_avatar)
+      .showImageForEmptyUri(R.drawable.chat_default_user_avatar)
+      .showImageOnFail(R.drawable.chat_default_user_avatar)
       .cacheInMemory(true)
       .cacheOnDisc(true)
       .considerExifParams(true)
@@ -37,9 +37,9 @@ public class PhotoUtils {
           //.displayer(new FadeInBitmapDisplayer(100))// 淡入
       .build();
   public static DisplayImageOptions normalImageOptions = new DisplayImageOptions.Builder()
-      .showImageOnLoading(R.drawable.empty_photo)
-      .showImageForEmptyUri(R.drawable.empty_photo)
-      .showImageOnFail(R.drawable.image_load_fail)
+      .showImageOnLoading(R.drawable.common_empty_photo)
+      .showImageForEmptyUri(R.drawable.common_empty_photo)
+      .showImageOnFail(R.drawable.common_image_load_fail)
       .cacheInMemory(true)
       .cacheOnDisc(true)
       .considerExifParams(true)

@@ -38,7 +38,7 @@ public class LocationActivity extends BaseActivity implements
   private BaiduMap baiduMap;
   private BaiduReceiver receiver;
   private GeoCoder geoCoder = null;
-  private BitmapDescriptor descriptor = BitmapDescriptorFactory.fromResource(R.drawable.icon_geo);
+  private BitmapDescriptor descriptor = BitmapDescriptorFactory.fromResource(R.drawable.location_activity_icon_geo);
 
   private String intentType;
 
@@ -64,7 +64,7 @@ public class LocationActivity extends BaseActivity implements
 
     Intent intent = getIntent();
     intentType = intent.getStringExtra(TYPE);
-    initActionBar(R.string.position);
+    initActionBar(R.string.chat_position);
     if (intentType.equals(TYPE_SELECT)) {// 选择发送位置
       //		 开启定位图层
       baiduMap.setMyLocationEnabled(true);
@@ -105,7 +105,7 @@ public class LocationActivity extends BaseActivity implements
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     if (intentType != null && intentType.equals(TYPE_SELECT)) {
-      MenuItem add = menu.add(0, SEND, 0, R.string.send);
+      MenuItem add = menu.add(0, SEND, 0, R.string.location_activity_send);
       alwaysShowMenuItem(add);
     }
     return super.onCreateOptionsMenu(menu);
@@ -129,7 +129,7 @@ public class LocationActivity extends BaseActivity implements
       setResult(RESULT_OK, intent);
       this.finish();
     } else {
-      Utils.toast(App.ctx, R.string.getGeoInfoFailed);
+      Utils.toast(App.ctx, R.string.chat_getGeoInfoFailed);
     }
   }
 
@@ -143,10 +143,10 @@ public class LocationActivity extends BaseActivity implements
   public void onGetReverseGeoCodeResult(ReverseGeoCodeResult result) {
     // TODO Auto-generated method stub
     if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
-      Utils.toast(ctx, App.ctx.getString(R.string.cannotFindResult));
+      Utils.toast(ctx, App.ctx.getString(R.string.chat_cannotFindResult));
       return;
     }
-    Logger.d(App.ctx.getString(R.string.reverseGeoCodeResultIs) + result.getAddress());
+    Logger.d(App.ctx.getString(R.string.chat_reverseGeoCodeResultIs) + result.getAddress());
     lastLocation.setAddrStr(result.getAddress());
   }
 
@@ -195,7 +195,7 @@ public class LocationActivity extends BaseActivity implements
         if (lastLocation.getLatitude() == location.getLatitude()
             && lastLocation.getLongitude() == location
             .getLongitude()) {
-          Logger.d(App.ctx.getString(R.string.geoIsSame));// 若两次请求获取到的地理位置坐标是相同的，则不再定位
+          Logger.d(App.ctx.getString(R.string.chat_geoIsSame));// 若两次请求获取到的地理位置坐标是相同的，则不再定位
           locClient.stop();
           return;
         }
@@ -203,7 +203,7 @@ public class LocationActivity extends BaseActivity implements
       lastLocation = location;
 
       Logger.d("lontitude = " + location.getLongitude() + ",latitude = "
-          + location.getLatitude() + "," + App.ctx.getString(R.string.position) + " = "
+          + location.getLatitude() + "," + App.ctx.getString(R.string.chat_position) + " = "
           + lastLocation.getAddrStr());
 
       MyLocationData locData = new MyLocationData.Builder()
@@ -235,10 +235,10 @@ public class LocationActivity extends BaseActivity implements
     public void onReceive(Context context, Intent intent) {
       String s = intent.getAction();
       if (s.equals(SDKInitializer.SDK_BROADTCAST_ACTION_STRING_PERMISSION_CHECK_ERROR)) {
-        Utils.toast(ctx, App.ctx.getString(R.string.mapKeyErrorTips));
+        Utils.toast(ctx, App.ctx.getString(R.string.chat_mapKeyErrorTips));
       } else if (s
           .equals(SDKInitializer.SDK_BROADCAST_ACTION_STRING_NETWORK_ERROR)) {
-        Utils.toast(ctx, App.ctx.getString(R.string.badNetwork));
+        Utils.toast(ctx, App.ctx.getString(R.string.chat_pleaseCheckNetwork));
       }
     }
   }

@@ -30,7 +30,7 @@ public class HeaderLayout extends LinearLayout {
 
   private void init() {
     mInflater = LayoutInflater.from(getContext());
-    header = (RelativeLayout) mInflater.inflate(R.layout.base_common_header, null, false);
+    header = (RelativeLayout) mInflater.inflate(R.layout.common_base_header, null, false);
     titleView = (TextView) header.findViewById(R.id.titleView);
     leftContainer = (LinearLayout) header.findViewById(R.id.leftContainer);
     rightContainer = (LinearLayout) header.findViewById(R.id.rightContainer);
@@ -47,7 +47,7 @@ public class HeaderLayout extends LinearLayout {
   }
 
   public void showLeftBackButton(OnClickListener listener) {
-    showLeftBackButton(R.string.emptyStr, listener);
+    showLeftBackButton(R.string.common_emptyStr, listener);
   }
 
   public void showLeftBackButton() {
@@ -69,7 +69,7 @@ public class HeaderLayout extends LinearLayout {
   }
 
   public void showRightImageButton(int rightResId, OnClickListener listener) {
-    View imageViewLayout = mInflater.inflate(R.layout.base_common_header_right_image_btn, null, false);
+    View imageViewLayout = mInflater.inflate(R.layout.common_base_header_right_image_btn, null, false);
     ImageButton rightButton = (ImageButton) imageViewLayout.findViewById(R.id.imageBtn);
     rightButton.setImageResource(rightResId);
     rightButton.setOnClickListener(listener);
@@ -77,7 +77,7 @@ public class HeaderLayout extends LinearLayout {
   }
 
   public void showRightTextButton(int rightResId, OnClickListener listener) {
-    View imageViewLayout = mInflater.inflate(R.layout.base_common_header_right_btn, null, false);
+    View imageViewLayout = mInflater.inflate(R.layout.common_base_header_right_btn, null, false);
     Button rightButton = (Button) imageViewLayout.findViewById(R.id.textBtn);
     rightButton.setText(rightResId);
     rightButton.setOnClickListener(listener);

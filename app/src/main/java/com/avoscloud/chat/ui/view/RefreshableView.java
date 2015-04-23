@@ -37,7 +37,7 @@ public class RefreshableView extends LinearLayout implements View.OnTouchListene
   public RefreshableView(Context context, AttributeSet attrs) {
     super(context, attrs);
     touchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
-    header = inflate(getContext(), R.layout.pull_to_refresh_header, null);
+    header = inflate(getContext(), R.layout.refreshable_view_pull_to_refresh_header, null);
     tipsView = (TextView) header.findViewById(R.id.tips);
     arrow = (ImageView) header.findViewById(R.id.arrow);
     progressBar = (ProgressBar) header.findViewById(R.id.progressBar);
@@ -128,17 +128,17 @@ public class RefreshableView extends LinearLayout implements View.OnTouchListene
       return;
     }
     if (status == PULL_TO_REFRESH) {
-      tipsView.setText(R.string.pull_to_refresh);
+      tipsView.setText(R.string.refreshable_view_pull_to_refresh);
       progressBar.setVisibility(View.GONE);
       arrow.setVisibility(View.VISIBLE);
       rotateArrow();
     } else if (status == RELEASE_TO_REFRESH) {
-      tipsView.setText(R.string.release_to_refresh);
+      tipsView.setText(R.string.refreshable_view_release_to_refresh);
       progressBar.setVisibility(View.GONE);
       arrow.setVisibility(View.VISIBLE);
       rotateArrow();
     } else if (status == REFRESHING) {
-      tipsView.setText(R.string.refreshing);
+      tipsView.setText(R.string.refreshable_view_refreshing);
       arrow.clearAnimation();
       arrow.setVisibility(GONE);
       progressBar.setVisibility(View.VISIBLE);

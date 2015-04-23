@@ -16,7 +16,7 @@
             android:layout_centerVertical="true"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
-            android:src="@drawable/default_user_avatar" />
+            android:src="@drawable/chat_default_user_avatar" />
 
         <TextView
             android:id="@+id/recent_unread"
@@ -26,7 +26,7 @@
             android:layout_marginBottom="-18dp"
             android:layout_marginLeft="-10dp"
             android:layout_toRightOf="@+id/iv_recent_avatar"
-            android:background="@drawable/msg_tips"
+            android:background="@drawable/common_msg_tips"
             android:gravity="center"
             android:textColor="#ffffffff"
             android:textSize="10.0dip" />

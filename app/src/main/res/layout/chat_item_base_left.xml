@@ -22,7 +22,7 @@
             android:id="@+id/contentLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/marginToUsername"
+            android:layout_marginLeft="@dimen/chat_item_base_left_marginToUsername"
             android:background="@drawable/chat_left_qp"
             android:gravity="center"
             android:maxWidth="@dimen/chatContentMaxWidth"

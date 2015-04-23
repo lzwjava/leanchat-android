@@ -19,9 +19,9 @@ import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.service.event.LoginFinishEvent;
 import com.avoscloud.chat.ui.base_activity.BaseActivity;
 import com.avoscloud.chat.ui.contact.ContactFragment;
-import com.avoscloud.chat.ui.conversation.ConvFragment;
+import com.avoscloud.chat.ui.conversation.ConversationRecentFragment;
 import com.avoscloud.chat.ui.discover.DiscoverFragment;
-import com.avoscloud.chat.ui.profile.MySpaceFragment;
+import com.avoscloud.chat.ui.profile.ProfileFragment;
 import com.avoscloud.chat.util.Logger;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -45,8 +45,8 @@ public class MainActivity extends BaseActivity {
   View fragmentContainer;
   ContactFragment contactFragment;
   DiscoverFragment discoverFragment;
-  ConvFragment convFragment;
-  MySpaceFragment mySpaceFragment;
+  ConversationRecentFragment conversationRecentFragment;
+  ProfileFragment profileFragment;
   Button[] tabs;
   View recentTips, contactTips;
 
@@ -116,11 +116,11 @@ public class MainActivity extends BaseActivity {
     hideFragments(transaction);
     setNormalBackgrounds();
     if (id == R.id.btn_message) {
-      if (convFragment == null) {
-        convFragment = new ConvFragment();
-        transaction.add(R.id.fragment_container, convFragment);
+      if (conversationRecentFragment == null) {
+        conversationRecentFragment = new ConversationRecentFragment();
+        transaction.add(R.id.fragment_container, conversationRecentFragment);
       }
-      transaction.show(convFragment);
+      transaction.show(conversationRecentFragment);
     } else if (id == R.id.btn_contact) {
       if (contactFragment == null) {
         contactFragment = new ContactFragment();
@@ -134,11 +134,11 @@ public class MainActivity extends BaseActivity {
       }
       transaction.show(discoverFragment);
     } else if (id == R.id.btn_my_space) {
-      if (mySpaceFragment == null) {
-        mySpaceFragment = new MySpaceFragment();
-        transaction.add(R.id.fragment_container, mySpaceFragment);
+      if (profileFragment == null) {
+        profileFragment = new ProfileFragment();
+        transaction.add(R.id.fragment_container, profileFragment);
       }
-      transaction.show(mySpaceFragment);
+      transaction.show(profileFragment);
     }
     int pos;
     for (pos = 0; pos < FRAGMENT_N; pos++) {
@@ -163,8 +163,8 @@ public class MainActivity extends BaseActivity {
 
   private void hideFragments(FragmentTransaction transaction) {
     Fragment[] fragments = new Fragment[]{
-        convFragment, contactFragment,
-        discoverFragment, mySpaceFragment
+        conversationRecentFragment, contactFragment,
+        discoverFragment, profileFragment
     };
     for (Fragment f : fragments) {
       if (f != null) {

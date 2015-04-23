@@ -13,7 +13,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginLeft="30dp"
-        android:src="@drawable/message_send_fail" />
+        android:src="@drawable/chat_message_send_fail" />
 
     <TextView
         android:layout_width="wrap_content"
