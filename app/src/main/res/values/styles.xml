@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="chat_content_date_style">
         <item name="android:minHeight">30dp</item>
         <item name="android:textColor">#000000</item>
@@ -45,44 +46,8 @@
         <item name="android:contentDescription">@string/app_name</item>
     </style>
 
-    <style name="ActionBar">
-        <item name="android:orientation">horizontal</item>
-        <item name="android:background">@drawable/top_bar</item>
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:layout_height">@dimen/base_action_bar_height</item>
-    </style>
-
-    <style name="ActionBarTitle">
-        <item name="android:textSize">@dimen/base_action_bar_title_size</item>
-        <item name="android:textColor">@color/base_color_text_white</item>
-        <item name="android:gravity">left|center</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">fill_parent</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:drawablePadding">1.0dip</item>
-    </style>
-
-
     <style name="My.TextView">
         <item name="android:textSize">18sp</item>
-    </style>
-
-    <style name="My.View_margin">
-        <item name="android:layout_marginLeft">10dp</item>
-        <item name="android:layout_marginRight">10dp</item>
-    </style>
-
-    <style name="My.ImageView.Photo_Large">
-        <item name="android:layout_width">75dp</item>
-        <item name="android:layout_height">75dp</item>
-        <item name="android:scaleType">fitXY</item>
-    </style>
-
-    <style name="My.ImageView.Photo_Small">
-        <item name="android:layout_width">40dp</item>
-        <item name="android:layout_height">40dp</item>
-        <item name="android:scaleType">fitXY</item>
     </style>
 
     <style name="My.ImageView.Photo_Avatar">
