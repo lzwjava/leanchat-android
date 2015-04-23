@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <style name="transparentDialog" parent="@android:style/Theme.Holo.Light.Dialog.NoActionBar">
-        <item name="android:windowBackground">@color/my_transparent</item>
-        <item name="android:backgroundDimEnabled">false</item>
-        <item name="android:background">@null</item>
-    </style>
-
     <style name="chat_content_date_style">
         <item name="android:minHeight">30dp</item>
         <item name="android:textColor">#000000</item>
@@ -43,7 +36,7 @@
         <item name="android:layout_marginRight">5dp</item>
     </style>
 
-    <style name="play_btn">
+    <style name="chat_play_btn">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
@@ -51,23 +44,6 @@
     <style name="My.ImageView">
         <item name="android:contentDescription">@string/app_name</item>
     </style>
-    <!--
-      Base application theme, dependent on API level. This theme is replaced
-      by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
-  -->
-    <style name="AppBaseTheme" parent="@android:style/Theme.Light.NoTitleBar">
-        <!--
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-        -->
-    </style>
-
-    <!-- Application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme">
-        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
-    </style>
-
 
     <style name="ActionBar">
         <item name="android:orientation">horizontal</item>
@@ -247,7 +223,7 @@
     <style name="MainTheme" parent="android:Theme.Holo.Light">
         <item name="android:actionBarStyle">@style/ActionBarStyle</item>
         <item name="android:homeAsUpIndicator">@drawable/common_base_header_back_btn</item>
-        <item name="android:actionMenuTextColor">@color/white</item>
+        <item name="android:actionMenuTextColor">@color/common_white</item>
     </style>
 
     <style name="Avatar">

@@ -13,7 +13,7 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:paddingLeft="10dp"
-            android:text="@string/username" />
+            android:text="@string/common_username" />
 
         <EditText
             android:id="@+id/usernameEdit"

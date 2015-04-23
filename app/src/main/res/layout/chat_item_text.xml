@@ -6,4 +6,4 @@
     android:gravity="left"
     android:maxWidth="@dimen/chatContentMaxWidth"
     android:text="chat_content"
-    android:textColor="@color/chatLeftText" />
+    android:textColor="@color/chat_LeftText" />

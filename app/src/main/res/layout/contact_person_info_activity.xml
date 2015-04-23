@@ -20,7 +20,7 @@
             style="@style/My.TextView._Black"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:text="@string/contact_avatar" />
+            android:text="@string/common_avatar" />
 
         <LinearLayout
             android:layout_width="wrap_content"

@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:background="#e3e3e3"
         android:padding="2dp"
-        android:textColor="@color/guide_color"
+        android:textColor="@color/common_guide_color"
         android:textSize="18sp" />
 
     <RelativeLayout

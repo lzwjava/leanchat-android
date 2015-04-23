@@ -118,10 +118,10 @@ public class RecordButton extends Button {
 
   private void setTextViewByStatus() {
     if (status == RELEASE_TO_CANCEL) {
-      textView.setTextColor(getColor(R.color.red));
+      textView.setTextColor(getColor(R.color.chat_record_btn_red));
       textView.setText(R.string.chat_record_button_releaseToCancel);
     } else if (status == SLIDE_UP_TO_CANCEL) {
-      textView.setTextColor(getColor(R.color.white));
+      textView.setTextColor(getColor(R.color.common_white));
       textView.setText(R.string.chat_record_button_slideUpToCancel);
     }
   }
