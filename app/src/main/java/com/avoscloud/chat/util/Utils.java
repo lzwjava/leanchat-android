@@ -18,13 +18,12 @@ import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
+import com.avoscloud.chat.im.utils.Logger;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -581,18 +580,6 @@ public class Utils {
     Toast.makeText(cxt, id, Toast.LENGTH_LONG).show();
   }
 
-  public static ProgressDialog showSpinnerDialog(Activity activity) {
-    //activity = modifyDialogContext(activity);
-    ProgressDialog dialog = new ProgressDialog(activity);
-    dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-    dialog.setCancelable(true);
-    dialog.setMessage(App.ctx.getString(R.string.utils_hardLoading));
-    if (activity.isFinishing() == false) {
-      dialog.show();
-    }
-    return dialog;
-  }
-
   public static ProgressDialog showHorizontalDialog(Activity activity) {
     //activity = modifyDialogContext(activity);
     ProgressDialog dialog = new ProgressDialog(activity);
@@ -695,18 +682,6 @@ public class Utils {
     return App.ctx.getResources().getColor(resId);
   }
 
-  public static void hideSoftInputView(Activity activity) {
-    if (activity.getWindow().getAttributes().softInputMode !=
-        WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN) {
-      InputMethodManager manager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-      View currentFocus = activity.getCurrentFocus();
-      if (currentFocus != null) {
-        manager.hideSoftInputFromWindow(currentFocus.getWindowToken(),
-            InputMethodManager.HIDE_NOT_ALWAYS);
-      }
-    }
-  }
-
   public static boolean doubleEqual(double a, double b) {
     return Math.abs(a - b) < 1E-8;
   }
@@ -727,15 +702,6 @@ public class Utils {
     }
   }
 
-  public static boolean filterException(Exception e) {
-    if (e != null) {
-      Utils.toast(e.getMessage());
-      return false;
-    } else {
-      return true;
-    }
-  }
-
   public static byte[] getBytesFromBitmap(Bitmap bitmap) {
     ByteArrayOutputStream stream = new ByteArrayOutputStream();
     bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
@@ -743,5 +709,25 @@ public class Utils {
     return byteArray;
   }
 
+  public static ProgressDialog showSpinnerDialog(Activity activity) {
+    //activity = modifyDialogContext(activity);
+    ProgressDialog dialog = new ProgressDialog(activity);
+    dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+    dialog.setCancelable(true);
+    dialog.setMessage(App.ctx.getString(R.string.utils_hardLoading));
+    if (!activity.isFinishing()) {
+      dialog.show();
+    }
+    return dialog;
+  }
+
+  public static boolean filterException(Exception e) {
+    if (e != null) {
+      toast(e.getMessage());
+      return false;
+    } else {
+      return true;
+    }
+  }
 
 }

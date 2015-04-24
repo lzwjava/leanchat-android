@@ -11,17 +11,17 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.chat.activity.ChatActivity;
-import com.avoscloud.chat.chat.adapter.BaseListAdapter;
-import com.avoscloud.chat.chat.controller.ChatManager;
-import com.avoscloud.chat.chat.controller.ConversationManager;
-import com.avoscloud.chat.chat.controller.MessageUtils;
-import com.avoscloud.chat.chat.model.ConversationType;
-import com.avoscloud.chat.chat.model.MessageEvent;
-import com.avoscloud.chat.chat.model.Room;
+import com.avoscloud.chat.im.adapter.BaseListAdapter;
+import com.avoscloud.chat.im.controller.ChatManager;
+import com.avoscloud.chat.im.controller.ConversationManager;
+import com.avoscloud.chat.im.controller.MessageUtils;
+import com.avoscloud.chat.im.model.ConversationType;
+import com.avoscloud.chat.im.model.MessageEvent;
+import com.avoscloud.chat.im.model.Room;
 import com.avoscloud.chat.service.CacheService;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.base_activity.BaseFragment;
+import com.avoscloud.chat.ui.chat.ChatRoomActivity;
 import com.avoscloud.chat.ui.view.BaseListView;
 import com.avoscloud.chat.ui.view.ViewHolder;
 import com.avoscloud.chat.util.TimeUtils;
@@ -78,7 +78,7 @@ public class ConversationRecentFragment extends BaseFragment implements ChatMana
     listView.setItemListener(new BaseListView.ItemListener<Room>() {
       @Override
       public void onItemSelected(Room item) {
-        ChatActivity.goByConv(getActivity(), item.getConv());
+        ChatRoomActivity.chatByConversation(getActivity(), item.getConv());
       }
     });
     listView.setToastIfEmpty(false);

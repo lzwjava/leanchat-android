@@ -1,7 +1,7 @@
 package com.avoscloud.chat.ui.conversation;
 
 import com.avos.avoscloud.im.v2.AVIMConversation;
-import com.avoscloud.chat.chat.controller.ConversationChangeEvent;
+import com.avoscloud.chat.im.controller.ConversationChangeEvent;
 import com.avoscloud.chat.service.CacheService;
 
 /**

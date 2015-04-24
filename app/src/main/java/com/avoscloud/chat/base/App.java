@@ -9,11 +9,11 @@ import com.avos.avoscloud.*;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.entity.avobject.AddRequest;
 import com.avoscloud.chat.entity.avobject.UpdateInfo;
+import com.avoscloud.chat.im.utils.CommonUtils;
 import com.avoscloud.chat.service.UpdateService;
-import com.avoscloud.chat.chat.controller.ChatManager;
+import com.avoscloud.chat.im.controller.ChatManager;
 import com.avoscloud.chat.ui.entry.EntrySplashActivity;
-import com.avoscloud.chat.util.Logger;
-import com.avoscloud.chat.util.PhotoUtils;
+import com.avoscloud.chat.im.utils.Logger;
 import com.avoscloud.chat.util.Utils;
 import com.baidu.mapapi.SDKInitializer;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -39,7 +39,7 @@ public class App extends Application {
   public static void initImageLoader(Context context) {
     File cacheDir = StorageUtils.getOwnCacheDirectory(context,
         "leanchat/Cache");
-    ImageLoaderConfiguration config = PhotoUtils.getImageLoaderConfig(context, cacheDir);
+    ImageLoaderConfiguration config = CommonUtils.getImageLoaderConfig(context, cacheDir);
     // Initialize ImageLoader with configuration.
     ImageLoader.getInstance().init(config);
   }

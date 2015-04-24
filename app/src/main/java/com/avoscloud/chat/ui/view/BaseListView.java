@@ -5,8 +5,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.chat.adapter.BaseListAdapter;
-import com.avoscloud.chat.chat.view.xlist.XListView;
+import com.avoscloud.chat.im.adapter.BaseListAdapter;
+import com.avoscloud.chat.im.view.xlist.XListView;
 import com.avoscloud.chat.util.SimpleNetTask;
 import com.avoscloud.chat.util.Utils;
 

@@ -9,7 +9,7 @@ import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
-import com.avoscloud.chat.chat.adapter.BaseListAdapter;
+import com.avoscloud.chat.im.adapter.BaseListAdapter;
 import com.avoscloud.chat.entity.avobject.User;
 import com.avoscloud.chat.service.PreferenceMap;
 import com.avoscloud.chat.service.UserService;

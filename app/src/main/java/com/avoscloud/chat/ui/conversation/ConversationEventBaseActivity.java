@@ -1,9 +1,9 @@
 package com.avoscloud.chat.ui.conversation;
 
 import android.os.Bundle;
-import com.avoscloud.chat.chat.controller.ConversationChangeEvent;
+import com.avoscloud.chat.im.controller.ConversationChangeEvent;
 import com.avoscloud.chat.service.event.FinishEvent;
-import com.avoscloud.chat.ui.base_activity.BaseActivity;
+import com.avoscloud.chat.im.activity.BaseActivity;
 import de.greenrobot.event.EventBus;
 
 /**

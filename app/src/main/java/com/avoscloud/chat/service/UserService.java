@@ -6,7 +6,7 @@ import com.avos.avoscloud.*;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.base.C;
 import com.avoscloud.chat.entity.avobject.User;
-import com.avoscloud.chat.util.Logger;
+import com.avoscloud.chat.im.utils.Logger;
 import com.avoscloud.chat.util.PhotoUtils;
 import com.avoscloud.chat.util.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -22,7 +22,6 @@ import java.util.concurrent.CountDownLatch;
 public class UserService {
   public static final int ORDER_UPDATED_AT = 1;
   public static final int ORDER_DISTANCE = 0;
-  public static ImageLoader imageLoader = ImageLoader.getInstance();
 
   public static AVUser findUser(String id) throws AVException {
     AVQuery<AVUser> q = AVUser.getQuery(AVUser.class);
@@ -58,7 +57,7 @@ public class UserService {
   }
 
   public static void displayAvatar(String imageUrl, ImageView avatarView) {
-    imageLoader.displayImage(imageUrl, avatarView, PhotoUtils.avatarImageOptions);
+    ImageLoader.getInstance().displayImage(imageUrl, avatarView, PhotoUtils.avatarImageOptions);
   }
 
   public static void displayAvatar(AVUser user, ImageView avatarView) {

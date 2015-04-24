@@ -14,6 +14,7 @@ import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.base_activity.BaseFragment;
 import com.avoscloud.chat.ui.contact.ContactPersonInfoActivity;
 import com.avoscloud.chat.ui.view.BaseListView;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 
 import java.util.ArrayList;
@@ -73,7 +74,7 @@ public class DiscoverFragment extends BaseFragment {
       }
     });
 
-    PauseOnScrollListener listener = new PauseOnScrollListener(UserService.imageLoader,
+    PauseOnScrollListener listener = new PauseOnScrollListener(ImageLoader.getInstance(),
         true, true);
     listView.setOnScrollListener(listener);
   }

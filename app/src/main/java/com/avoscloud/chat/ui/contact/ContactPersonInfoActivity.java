@@ -9,12 +9,12 @@ import android.view.View.OnClickListener;
 import android.widget.*;
 import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.chat.activity.ChatActivity;
 import com.avoscloud.chat.entity.avobject.User;
 import com.avoscloud.chat.service.AddRequestService;
 import com.avoscloud.chat.service.CacheService;
 import com.avoscloud.chat.service.UserService;
-import com.avoscloud.chat.ui.base_activity.BaseActivity;
+import com.avoscloud.chat.im.activity.BaseActivity;
+import com.avoscloud.chat.ui.chat.ChatRoomActivity;
 
 import java.util.List;
 
@@ -108,7 +108,7 @@ public class ContactPersonInfoActivity extends BaseActivity implements OnClickLi
     // TODO Auto-generated method stub
     switch (v.getId()) {
       case R.id.chatBtn:// 发起聊天
-        ChatActivity.goByUserId(this, user.getObjectId());
+        ChatRoomActivity.chatByUserId(this, user.getObjectId());
         finish();
         break;
       case R.id.addFriendBtn:// 添加好友

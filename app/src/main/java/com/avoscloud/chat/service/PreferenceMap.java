@@ -8,7 +8,7 @@ import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.entity.avobject.User;
 import com.avoscloud.chat.base.App;
-import com.avoscloud.chat.util.Logger;
+import com.avoscloud.chat.im.utils.Logger;
 
 /**
  * Created by lzw on 14-6-19.

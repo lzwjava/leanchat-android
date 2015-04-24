@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.avoscloud.chat"
+<manifest
+    package="com.avoscloud.chat"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:versionCode="12"
     android:versionName="2.0">
@@ -41,7 +42,7 @@
         android:theme="@android:style/Theme.Holo.Light.NoActionBar">
 
         <activity
-            android:name=".chat.activity.ChatActivity"
+            android:name=".ui.chat.ChatRoomActivity"
             android:launchMode="singleTask"
             android:theme="@style/MainTheme" />
 
@@ -71,10 +72,10 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".chat.activity.ImageBrowserActivity" />
+        <activity android:name=".im.activity.ImageBrowserActivity" />
 
         <activity
-            android:name=".chat.activity.LocationActivity"
+            android:name=".im.activity.LocationActivity"
             android:theme="@style/MainTheme" />
 
         <activity android:name=".ui.entry.EntryLoginActivity" />

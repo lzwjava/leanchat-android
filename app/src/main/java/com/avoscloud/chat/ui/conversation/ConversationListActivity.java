@@ -12,12 +12,12 @@ import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
-import com.avoscloud.chat.chat.activity.ChatActivity;
-import com.avoscloud.chat.chat.adapter.BaseListAdapter;
-import com.avoscloud.chat.chat.controller.ConversationChangeEvent;
-import com.avoscloud.chat.chat.controller.ConversationManager;
+import com.avoscloud.chat.im.adapter.BaseListAdapter;
+import com.avoscloud.chat.im.controller.ConversationChangeEvent;
+import com.avoscloud.chat.im.controller.ConversationManager;
 import com.avoscloud.chat.service.CacheService;
 import com.avoscloud.chat.service.event.FinishEvent;
+import com.avoscloud.chat.ui.chat.ChatRoomActivity;
 import com.avoscloud.chat.ui.view.BaseListView;
 import com.avoscloud.chat.ui.view.ViewHolder;
 
@@ -86,7 +86,7 @@ public class ConversationListActivity extends ConversationEventBaseActivity {
     groupListView.setItemListener(new BaseListView.ItemListener<AVIMConversation>() {
       @Override
       public void onItemSelected(AVIMConversation item) {
-        ChatActivity.goByConv(ConversationListActivity.this, item);
+        ChatRoomActivity.chatByConversation(ConversationListActivity.this, item);
       }
     });
   }

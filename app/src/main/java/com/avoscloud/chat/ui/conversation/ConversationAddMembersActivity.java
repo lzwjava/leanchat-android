@@ -17,14 +17,13 @@ import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.chat.activity.ChatActivity;
-import com.avoscloud.chat.chat.controller.ConversationManager;
-import com.avoscloud.chat.chat.model.ConversationType;
 import com.avoscloud.chat.entity.avobject.User;
+import com.avoscloud.chat.im.controller.ConversationManager;
+import com.avoscloud.chat.im.model.ConversationType;
 import com.avoscloud.chat.service.CacheService;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.service.event.FinishEvent;
-import com.avoscloud.chat.ui.base_activity.BaseActivity;
+import com.avoscloud.chat.ui.chat.ChatRoomActivity;
 import com.avoscloud.chat.ui.view.BaseCheckListAdapter;
 import com.avoscloud.chat.ui.view.ViewHolder;
 import com.avoscloud.chat.util.Utils;
@@ -68,7 +67,7 @@ public class ConversationAddMembersActivity extends ConversationBaseActivity {
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     MenuItem add = menu.add(0, OK, 0, R.string.common_sure);
-    BaseActivity.alwaysShowMenuItem(add);
+    alwaysShowMenuItem(add);
     return super.onCreateOptionsMenu(menu);
   }
 
@@ -83,7 +82,7 @@ public class ConversationAddMembersActivity extends ConversationBaseActivity {
 
   private void addMembers() {
     final List<String> checkedUsers = adapter.getCheckedDatas();
-    final ProgressDialog dialog = Utils.showSpinnerDialog(this);
+    final ProgressDialog dialog = showSpinnerDialog();
     if (checkedUsers.size() == 0) {
       finish();
     } else {
@@ -94,11 +93,11 @@ public class ConversationAddMembersActivity extends ConversationBaseActivity {
         conversationManager.createGroupConv(members, new AVIMConversationCreatedCallback() {
           @Override
           public void done(final AVIMConversation conversation, AVException e) {
-            if (Utils.filterException(e)) {
+            if (filterException(e)) {
               EventBus eventBus = EventBus.getDefault();
               FinishEvent finishEvent = new FinishEvent();
               eventBus.post(finishEvent);
-              ChatActivity.goByConv(ConversationAddMembersActivity.this, conversation);
+              ChatRoomActivity.chatByConversation(ConversationAddMembersActivity.this, conversation);
             }
           }
         });
@@ -107,7 +106,7 @@ public class ConversationAddMembersActivity extends ConversationBaseActivity {
           @Override
           public void done(AVException e) {
             dialog.dismiss();
-            if (Utils.filterException(e)) {
+            if (filterException(e)) {
               Utils.toast(R.string.conversation_inviteSucceed);
               conversationManager.postConvChanged(conv());
               finish();

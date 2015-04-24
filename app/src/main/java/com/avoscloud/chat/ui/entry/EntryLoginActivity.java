@@ -62,12 +62,12 @@ public class EntryLoginActivity extends EntryBaseActivity implements OnClickList
       return;
     }
 
-    final ProgressDialog spinner = Utils.showSpinnerDialog(this);
+    final ProgressDialog spinner = showSpinnerDialog();
     AVUser.logInInBackground(name, password, new LogInCallback<AVUser>() {
       @Override
       public void done(AVUser avUser, AVException e) {
         spinner.dismiss();
-        if (Utils.filterException(e)) {
+        if (filterException(e)) {
           UserService.updateUserLocation();
           MainActivity.goMainActivity(EntryLoginActivity.this);
         }

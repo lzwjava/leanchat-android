@@ -22,11 +22,11 @@ import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
-import com.avoscloud.chat.chat.activity.ChatActivity;
-import com.avoscloud.chat.chat.adapter.BaseListAdapter;
-import com.avoscloud.chat.chat.controller.ConversationManager;
-import com.avoscloud.chat.chat.db.RoomsTable;
-import com.avoscloud.chat.chat.model.ConversationType;
+import com.avoscloud.chat.im.activity.ChatActivity;
+import com.avoscloud.chat.im.adapter.BaseListAdapter;
+import com.avoscloud.chat.im.controller.ConversationManager;
+import com.avoscloud.chat.im.db.RoomsTable;
+import com.avoscloud.chat.im.model.ConversationType;
 import com.avoscloud.chat.entity.avobject.User;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.base_activity.UpdateContentActivity;
@@ -153,12 +153,12 @@ public class ConversationDetailActivity extends ConversationBaseActivity impleme
           .setPositiveButton(R.string.common_sure, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-              final ProgressDialog progress = Utils.showSpinnerDialog(ConversationDetailActivity.this);
+              final ProgressDialog progress = showSpinnerDialog();
               conv().kickMembers(Arrays.asList(user.getObjectId()), new AVIMConversationCallback() {
                 @Override
                 public void done(AVException e) {
                   progress.dismiss();
-                  if (Utils.filterException(e)) {
+                  if (filterException(e)) {
                     Utils.toast(R.string.conversation_detail_kickSucceed);
                   }
                 }
@@ -180,7 +180,7 @@ public class ConversationDetailActivity extends ConversationBaseActivity impleme
     conv().quit(new AVIMConversationCallback() {
       @Override
       public void done(AVException e) {
-        if (Utils.filterException(e)) {
+        if (filterException(e)) {
           RoomsTable roomsTable = RoomsTable.getCurrentUserInstance();
           roomsTable.deleteRoom(convid);
           Utils.toast(R.string.conversation_alreadyQuitConv);
@@ -202,7 +202,7 @@ public class ConversationDetailActivity extends ConversationBaseActivity impleme
         conversationManager.updateName(conv(), newName, new AVIMConversationCallback() {
           @Override
           public void done(AVException e) {
-            if (Utils.filterException(e)) {
+            if (filterException(e)) {
               ConversationDetailActivity.this.refresh();
             }
           }

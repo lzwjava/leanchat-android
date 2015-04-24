@@ -2,15 +2,14 @@ package com.avoscloud.chat.ui.contact;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.ButterKnife;
@@ -21,11 +20,11 @@ import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.SaveCallback;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
-import com.avoscloud.chat.chat.activity.ChatActivity;
 import com.avoscloud.chat.entity.SortUser;
 import com.avoscloud.chat.service.AddRequestService;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.base_activity.BaseFragment;
+import com.avoscloud.chat.ui.chat.ChatRoomActivity;
 import com.avoscloud.chat.ui.conversation.ConversationListActivity;
 import com.avoscloud.chat.ui.view.BaseListView;
 import com.avoscloud.chat.ui.view.ClearEditText;
@@ -181,14 +180,22 @@ public class ContactFragment extends BaseFragment {
 
       @Override
       public boolean onTouch(View v, MotionEvent event) {
-        Utils.hideSoftInputView(getActivity());
+        if (getActivity().getWindow().getAttributes().softInputMode !=
+            WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN) {
+          InputMethodManager manager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+          View currentFocus = getActivity().getCurrentFocus();
+          if (currentFocus != null) {
+            manager.hideSoftInputFromWindow(currentFocus.getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
+          }
+        }
         return false;
       }
     });
     friendsList.setItemListener(new BaseListView.ItemListener<SortUser>() {
       @Override
       public void onItemSelected(SortUser item) {
-        ChatActivity.goByUserId(getActivity(), item.getInnerUser().getObjectId());
+        ChatRoomActivity.chatByUserId(getActivity(), item.getInnerUser().getObjectId());
       }
 
       @Override
@@ -219,7 +226,7 @@ public class ContactFragment extends BaseFragment {
 
       @Override
       protected void onPost(Exception e) {
-        if (Utils.filterException(e)) {
+        if (filterException(e)) {
           listHeaderViewHolder.getMsgTipsView().setVisibility(haveAddRequest ? View.VISIBLE : View.GONE);
         }
       }
@@ -236,12 +243,12 @@ public class ContactFragment extends BaseFragment {
         .setPositiveButton(R.string.common_sure, new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
-            final ProgressDialog dialog1 = Utils.showSpinnerDialog(getActivity());
+            final ProgressDialog dialog1 = showSpinnerDialog();
             UserService.removeFriend(user.getInnerUser().getObjectId(), new SaveCallback() {
               @Override
               public void done(AVException e) {
                 dialog1.dismiss();
-                if (Utils.filterException(e)) {
+                if (filterException(e)) {
                   refresh();
                 }
               }

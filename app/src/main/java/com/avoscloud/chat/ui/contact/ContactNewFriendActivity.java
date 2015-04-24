@@ -16,18 +16,17 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.SaveCallback;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.chat.adapter.BaseListAdapter;
+import com.avoscloud.chat.im.adapter.BaseListAdapter;
 import com.avoscloud.chat.entity.avobject.AddRequest;
 import com.avoscloud.chat.entity.avobject.User;
 import com.avoscloud.chat.service.AddRequestService;
 import com.avoscloud.chat.service.PreferenceMap;
 import com.avoscloud.chat.service.UserService;
-import com.avoscloud.chat.ui.base_activity.BaseActivity;
+import com.avoscloud.chat.im.activity.BaseActivity;
 import com.avoscloud.chat.ui.view.BaseListView;
 import com.avoscloud.chat.ui.view.ViewHolder;
 import com.avoscloud.chat.util.RefreshTask;
 import com.avoscloud.chat.util.Refreshable;
-import com.avoscloud.chat.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,12 +57,12 @@ public class ContactNewFriendActivity extends BaseActivity implements
     adapter.setListener(new NewFriendListAdapter.Listener() {
       @Override
       public void onAgreeAddRequest(AddRequest addRequest) {
-        final ProgressDialog dialog = Utils.showSpinnerDialog(ContactNewFriendActivity.this);
+        final ProgressDialog dialog = showSpinnerDialog();
         AddRequestService.agreeAddRequest(addRequest, new SaveCallback() {
           @Override
           public void done(AVException e) {
             dialog.dismiss();
-            if (Utils.filterException(e)) {
+            if (filterException(e)) {
               refresh();
             }
           }

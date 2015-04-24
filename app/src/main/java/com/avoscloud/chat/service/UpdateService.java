@@ -14,7 +14,7 @@ import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.entity.avobject.UpdateInfo;
-import com.avoscloud.chat.util.Logger;
+import com.avoscloud.chat.im.utils.Logger;
 import com.avoscloud.chat.util.NetAsyncTask;
 import com.avoscloud.chat.util.Utils;
 

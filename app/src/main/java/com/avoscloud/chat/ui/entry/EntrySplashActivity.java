@@ -6,7 +6,7 @@ import android.os.Message;
 import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.service.UserService;
-import com.avoscloud.chat.ui.base_activity.BaseActivity;
+import com.avoscloud.chat.im.activity.BaseActivity;
 import com.avoscloud.chat.ui.MainActivity;
 import com.avoscloud.chat.util.Utils;
 
