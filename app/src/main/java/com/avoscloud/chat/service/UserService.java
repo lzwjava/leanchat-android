@@ -28,21 +28,31 @@ public class UserService {
     return q.get(id);
   }
 
-  public static List<AVUser> findFriends() throws Exception {
+  public static void findFriendsWithCachePolicy(AVQuery.CachePolicy cachePolicy, FindCallback<AVUser> findCallback) {
     AVUser curUser = AVUser.getCurrentUser();
-    AVQuery<AVUser> q = curUser.followeeQuery(AVUser.class);
+    AVQuery<AVUser> q = null;
+    try {
+      q = curUser.followeeQuery(AVUser.class);
+    } catch (Exception e) {
+      throw new NullPointerException();
+    }
+    q.setCachePolicy(cachePolicy);
     q.include("followee");
+    q.findInBackground(findCallback);
+  }
+
+  public static List<AVUser> findFriends() throws Exception {
     final CountDownLatch latch = new CountDownLatch(1);
     final List<AVUser> friends = new ArrayList<AVUser>();
     final AVException[] es = new AVException[1];
-    q.findInBackground(new FindCallback<AVUser>() {
+    findFriendsWithCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE, new FindCallback<AVUser>() {
       @Override
-      public void done(List<AVUser> parseObjects, AVException parseException) {
-        if (parseException != null) {
-          es[0] = parseException;
+      public void done(List<AVUser> avUsers, AVException e) {
+        if (e != null) {
+          es[0] = e;
         } else {
-          friends.addAll(parseObjects);
-          CacheService.registerUsers(parseObjects);
+          friends.addAll(avUsers);
+          CacheService.registerUsers(avUsers);
         }
         latch.countDown();
       }

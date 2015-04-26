@@ -177,7 +177,7 @@ public class ContactFragment extends BaseFragment {
       }
     }, userAdapter);
 
-    friendsList.addHeaderView(listHeaderView);
+    friendsList.addHeaderView(listHeaderView,null,false);
     friendsList.setOnTouchListener(new OnTouchListener() {
 
       @Override

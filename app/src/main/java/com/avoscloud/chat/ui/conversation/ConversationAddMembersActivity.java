@@ -12,21 +12,23 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.entity.avobject.User;
 import com.avoscloud.chat.im.controller.ConversationHelper;
-import com.avoscloud.chat.service.ConversationManager;
 import com.avoscloud.chat.im.model.ConversationType;
+import com.avoscloud.chat.im.view.ViewHolder;
 import com.avoscloud.chat.service.CacheService;
+import com.avoscloud.chat.service.ConversationManager;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.service.event.FinishEvent;
 import com.avoscloud.chat.ui.chat.ChatRoomActivity;
 import com.avoscloud.chat.ui.view.BaseCheckListAdapter;
-import com.avoscloud.chat.im.view.ViewHolder;
 import com.avoscloud.chat.util.Utils;
 import de.greenrobot.event.EventBus;
 
@@ -58,11 +60,18 @@ public class ConversationAddMembersActivity extends ConversationBaseActivity {
   }
 
   private void setListData() {
-    List<String> ids = new ArrayList<String>();
-    ids.addAll(CacheService.getFriendIds());
-    ids.removeAll(conv().getMembers());
-    adapter.setDatas(ids);
-    adapter.notifyDataSetChanged();
+    UserService.findFriendsWithCachePolicy(AVQuery.CachePolicy.CACHE_ELSE_NETWORK, new FindCallback<AVUser>() {
+      @Override
+      public void done(List<AVUser> users, AVException e) {
+        List<String> userIds = new ArrayList<String>();
+        for (AVUser user : users) {
+          userIds.add(user.getObjectId());
+        }
+        userIds.removeAll(conv().getMembers());
+        adapter.setDatas(userIds);
+        adapter.notifyDataSetChanged();
+      }
+    });
   }
 
   @Override
