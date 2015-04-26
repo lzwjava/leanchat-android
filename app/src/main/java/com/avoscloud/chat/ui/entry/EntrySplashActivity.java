@@ -20,7 +20,7 @@ public class EntrySplashActivity extends BaseActivity {
     public void handleMessage(Message msg) {
       switch (msg.what) {
         case GO_MAIN_MSG:
-          MainActivity.goMainActivity(EntrySplashActivity.this);
+          MainActivity.goMainActivityFromActivity(EntrySplashActivity.this);
           finish();
           break;
         case GO_LOGIN_MSG:

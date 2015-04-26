@@ -1,4 +1,4 @@
-package com.avoscloud.chat.ui.view;
+package com.avoscloud.chat.im.view;
 
 import android.util.SparseArray;
 import android.view.View;

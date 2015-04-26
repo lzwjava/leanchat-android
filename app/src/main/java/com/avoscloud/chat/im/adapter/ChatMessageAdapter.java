@@ -7,27 +7,29 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.im.v2.AVIMReservedMessageType;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMLocationMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.base.App;
-import com.avoscloud.chat.entity.avobject.User;
 import com.avoscloud.chat.im.controller.AudioHelper;
-import com.avoscloud.chat.im.controller.EmotionUtils;
-import com.avoscloud.chat.im.controller.MessageUtils;
+import com.avoscloud.chat.im.controller.ChatManager;
+import com.avoscloud.chat.im.controller.EmotionHelper;
+import com.avoscloud.chat.im.controller.MessageHelper;
+import com.avoscloud.chat.im.model.ChatUser;
 import com.avoscloud.chat.im.model.ConversationType;
-import com.avoscloud.chat.im.utils.CommonUtils;
+import com.avoscloud.chat.im.utils.PhotoUtils;
 import com.avoscloud.chat.im.view.PlayButton;
-import com.avoscloud.chat.service.CacheService;
-import com.avoscloud.chat.service.UserService;
-import com.avoscloud.chat.ui.view.ViewHolder;
-import com.avoscloud.chat.util.TimeUtils;
+import com.avoscloud.chat.im.view.ViewHolder;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import org.ocpsoft.prettytime.PrettyTime;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class ChatMessageAdapter extends BaseListAdapter<AVIMTypedMessage> {
+  private static PrettyTime prettyTime = new PrettyTime();
   private ConversationType conversationType;
   private int msgViewTypes = 8;
   private ClickListener clickListener;
@@ -73,7 +75,7 @@ public class ChatMessageAdapter extends BaseListAdapter<AVIMTypedMessage> {
   }
 
   boolean isComeMsg(AVIMTypedMessage msg) {
-    return !MessageUtils.fromMe(msg);
+    return !MessageHelper.fromMe(msg);
   }
 
   public View getView(int position, View conView, ViewGroup parent) {
@@ -96,15 +98,15 @@ public class ChatMessageAdapter extends BaseListAdapter<AVIMTypedMessage> {
     View statusSendStart = ViewHolder.findViewById(conView, R.id.status_send_start);
 
     // timestamp
-    if (position == 0 || TimeUtils.haveTimeGap(datas.get(position - 1).getTimestamp(),
+    if (position == 0 || haveTimeGap(datas.get(position - 1).getTimestamp(),
         msg.getTimestamp())) {
       sendTimeView.setVisibility(View.VISIBLE);
-      sendTimeView.setText(TimeUtils.millisecs2DateString(msg.getTimestamp()));
+      sendTimeView.setText(millisecsToDateString(msg.getTimestamp()));
     } else {
       sendTimeView.setVisibility(View.GONE);
     }
 
-    AVUser user = CacheService.lookupUser(msg.getFrom());
+    ChatUser user=ChatManager.getInstance().getChatUserFactory().getChatUserById(msg.getFrom());
     if (user == null) {
       throw new NullPointerException("user is null");
     }
@@ -119,18 +121,18 @@ public class ChatMessageAdapter extends BaseListAdapter<AVIMTypedMessage> {
         usernameView.setText(user.getUsername());
       }
     }
-    UserService.displayAvatar(User.getAvatarUrl(user), avatarView);
+    ImageLoader.getInstance().displayImage(user.getAvatarUrl(), avatarView, PhotoUtils.avatarImageOptions);
 
     AVIMReservedMessageType type = AVIMReservedMessageType.getAVIMReservedMessageType(msg.getMessageType());
     switch (type) {
       case TextMessageType:
         AVIMTextMessage textMsg = (AVIMTextMessage) msg;
-        contentView.setText(EmotionUtils.replace(App.ctx, textMsg.getText()));
+        contentView.setText(EmotionHelper.replace(ChatManager.getContext(), textMsg.getText()));
         contentLayout.requestLayout();
         break;
       case ImageMessageType:
         AVIMImageMessage imageMsg = (AVIMImageMessage) msg;
-        CommonUtils.displayImageCacheElseNetwork(imageView, MessageUtils.getFilePath(imageMsg),
+        PhotoUtils.displayImageCacheElseNetwork(imageView, MessageHelper.getFilePath(imageMsg),
             imageMsg.getFileUrl());
         setImageOnClickListener(imageView, imageMsg);
         break;
@@ -200,7 +202,7 @@ public class ChatMessageAdapter extends BaseListAdapter<AVIMTypedMessage> {
     playBtn.setLeftSide(isComeMsg(msg));
     AudioHelper audioHelper = AudioHelper.getInstance();
     playBtn.setAudioHelper(audioHelper);
-    playBtn.setPath(MessageUtils.getFilePath(msg));
+    playBtn.setPath(MessageHelper.getFilePath(msg));
   }
 
   private void setImageOnClickListener(ImageView imageView, final AVIMImageMessage imageMsg) {
@@ -275,5 +277,23 @@ public class ChatMessageAdapter extends BaseListAdapter<AVIMTypedMessage> {
     void onLocationViewClick(AVIMLocationMessage locMsg);
 
     void onImageViewClick(AVIMImageMessage imageMsg);
+  }
+
+  // time
+  public static String millisecsToDateString(long timestamp) {
+    long gap = System.currentTimeMillis() - timestamp;
+    if (gap < 1000 * 60 * 60 * 24) {
+      String s = prettyTime.format(new Date(timestamp));
+      //return s.replace(" ", "");
+      return s;
+    } else {
+      SimpleDateFormat format = new SimpleDateFormat("MM-dd HH:mm");
+      return format.format(new Date(timestamp));
+    }
+  }
+
+  public static boolean haveTimeGap(long lastTime, long time) {
+    int gap = 1000 * 60 * 3;
+    return time - lastTime > gap;
   }
 }

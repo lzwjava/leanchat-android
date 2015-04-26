@@ -18,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.base.App;
 
 import java.io.File;
 import java.io.IOException;
@@ -172,7 +171,7 @@ public class RecordButton extends Button {
     stopRecording();
     setBackgroundResource(BACK_IDLE);
     recordIndicator.dismiss();
-    Toast.makeText(getContext(), App.ctx.getString(R.string.chat_cancelRecord),
+    Toast.makeText(getContext(), getContext().getString(R.string.chat_cancelRecord),
         Toast.LENGTH_SHORT).show();
     File file = new File(outputPath);
     if (file.exists()) {

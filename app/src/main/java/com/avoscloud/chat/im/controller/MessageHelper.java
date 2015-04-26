@@ -1,25 +1,22 @@
 package com.avoscloud.chat.im.controller;
 
-import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.im.v2.AVIMReservedMessageType;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMLocationMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.base.App;
-import com.avoscloud.chat.service.CacheService;
-import com.avoscloud.chat.util.PathUtils;
+import com.avoscloud.chat.im.model.ChatUser;
 
 import java.util.List;
 
 /**
  * Created by lzw on 15/2/13.
  */
-public class MessageUtils {
+public class MessageHelper {
   public static final String ADDRESS = "address";
 
   public static String getFilePath(AVIMTypedMessage msg) {
-    return PathUtils.getChatFilePath(msg.getMessageId());
+    return com.avoscloud.chat.im.utils.PathUtils.getChatFilePath(msg.getMessageId());
   }
 
   public static boolean fromMe(AVIMTypedMessage msg) {
@@ -36,37 +33,19 @@ public class MessageUtils {
     AVIMReservedMessageType type = AVIMReservedMessageType.getAVIMReservedMessageType(msg.getMessageType());
     switch (type) {
       case TextMessageType:
-        return EmotionUtils.replace(App.ctx, ((AVIMTextMessage) msg).getText());
+        return EmotionHelper.replace(ChatManager.getContext(), ((AVIMTextMessage) msg).getText());
       case ImageMessageType:
-        return bracket(App.ctx.getString(R.string.chat_image));
+        return bracket(ChatManager.getContext().getString(R.string.chat_image));
       case LocationMessageType:
         AVIMLocationMessage locMsg = (AVIMLocationMessage) msg;
         String address = locMsg.getText();
         if (address == null) {
           address = "";
         }
-        return bracket(App.ctx.getString(R.string.chat_position)) + address;
+        return bracket(ChatManager.getContext().getString(R.string.chat_position)) + address;
       case AudioMessageType:
-        return bracket(App.ctx.getString(R.string.chat_audio));
+        return bracket(ChatManager.getContext().getString(R.string.chat_audio));
     }
-    return null;
-  }
-
-
-  public static String getStatusDesc() {
-/*    if (status == Status.SendStart) {
-      return App.ctx.getString(R.string.sending);
-    } else if (status == Status.SendReceived) {
-      return App.ctx.getString(R.string.received);
-    } else if (status == Status.SendSucceed) {
-      return App.ctx.getString(R.string.sent);
-    } else if (status == Status.SendFailed) {
-      return App.ctx.getString(R.string.failed);
-    } else if (status == Status.HaveRead) {
-      return App.ctx.getString(R.string.haveRead);
-    } else {
-      throw new IllegalArgumentException("unknown status");
-    }*/
     return null;
   }
 
@@ -83,7 +62,7 @@ public class MessageUtils {
   }
 
   public static String nameByUserId(String id) {
-    AVUser user = CacheService.lookupUser(id);
+    ChatUser user = ChatManager.getInstance().getChatUserFactory().getChatUserById(id);
     if (user != null) {
       return user.getUsername();
     } else {

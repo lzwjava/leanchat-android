@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
-import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.im.model.Room;
 
 import java.util.ArrayList;
@@ -30,7 +29,7 @@ public class RoomsTable {
 
   public synchronized static RoomsTable getCurrentUserInstance() {
     if (roomsTable == null) {
-      roomsTable = new RoomsTable(DBHelper.getCurrentUserInstance(App.ctx));
+      roomsTable = new RoomsTable(DBHelper.getCurrentUserInstance());
     }
     return roomsTable;
   }

@@ -16,10 +16,11 @@ import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.entity.AVIMUserInfoMessage;
 import com.avoscloud.chat.im.activity.ChatActivity;
-import com.avoscloud.chat.im.controller.ConversationChangeEvent;
-import com.avoscloud.chat.im.controller.ConversationManager;
+import com.avoscloud.chat.im.controller.ChatManager;
+import com.avoscloud.chat.im.controller.ConversationHelper;
 import com.avoscloud.chat.im.utils.Logger;
 import com.avoscloud.chat.service.CacheService;
+import com.avoscloud.chat.service.ConversationChangeEvent;
 import com.avoscloud.chat.service.event.FinishEvent;
 import com.avoscloud.chat.ui.conversation.ConversationDetailActivity;
 import com.avoscloud.chat.util.Utils;
@@ -38,12 +39,20 @@ public class ChatRoomActivity extends ChatActivity {
   }
 
   @Override
+  protected void onResume() {
+    CacheService.setCurConv(conversation);
+    super.onResume();
+  }
+
+  @Override
   protected void onDestroy() {
+    CacheService.setCurConv(null);
     super.onDestroy();
   }
 
   public static void chatByConversation(Context from, AVIMConversation conv) {
     CacheService.registerConv(conv);
+    ChatManager.getInstance().registerConversation(conv);
     Intent intent = new Intent(from, ChatRoomActivity.class);
     intent.putExtra(CONVID, conv.getConversationId());
     from.startActivity(intent);
@@ -51,7 +60,7 @@ public class ChatRoomActivity extends ChatActivity {
 
   public static void chatByUserId(final Activity from, String userId) {
     final ProgressDialog dialog = Utils.showSpinnerDialog(from);
-    ConversationManager.getInstance().fetchConvWithUserId(userId, new AVIMConversationCreatedCallback() {
+    ChatManager.getInstance().fetchConversationWithUserId(userId, new AVIMConversationCreatedCallback() {
       @Override
       public void done(AVIMConversation conversation, AVException e) {
         dialog.dismiss();
@@ -82,7 +91,7 @@ public class ChatRoomActivity extends ChatActivity {
         equals(conversationChangeEvent.getConv().getConversationId())) {
       this.conversation = conversationChangeEvent.getConv();
       ActionBar actionBar = getActionBar();
-      actionBar.setTitle(ConversationManager.titleOfConv(this.conversation));
+      actionBar.setTitle(ConversationHelper.titleOfConv(this.conversation));
     }
   }
 

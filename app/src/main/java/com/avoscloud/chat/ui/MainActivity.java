@@ -11,18 +11,18 @@ import android.widget.Button;
 import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
+import com.avoscloud.chat.im.activity.BaseActivity;
 import com.avoscloud.chat.im.controller.ChatManager;
+import com.avoscloud.chat.im.utils.Logger;
 import com.avoscloud.chat.service.CacheService;
 import com.avoscloud.chat.service.PreferenceMap;
 import com.avoscloud.chat.service.UpdateService;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.service.event.LoginFinishEvent;
-import com.avoscloud.chat.im.activity.BaseActivity;
 import com.avoscloud.chat.ui.contact.ContactFragment;
 import com.avoscloud.chat.ui.conversation.ConversationRecentFragment;
 import com.avoscloud.chat.ui.discover.DiscoverFragment;
 import com.avoscloud.chat.ui.profile.ProfileFragment;
-import com.avoscloud.chat.im.utils.Logger;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -50,13 +50,13 @@ public class MainActivity extends BaseActivity {
   Button[] tabs;
   View recentTips, contactTips;
 
-  public static void goMainActivity(Activity fromActivity) {
+  public static void goMainActivityFromActivity(Activity fromActivity) {
     EventBus eventBus = EventBus.getDefault();
     eventBus.post(new LoginFinishEvent());
 
     ChatManager chatManager = ChatManager.getInstance();
-    chatManager.setupWithCurrentUser();
-    chatManager.open(AVUser.getCurrentUser().getObjectId());
+    chatManager.setupDatabaseWithSelfId(AVUser.getCurrentUser().getObjectId());
+    chatManager.openClientWithSelfId(AVUser.getCurrentUser().getObjectId());
     Intent intent = new Intent(fromActivity, MainActivity.class);
     fromActivity.startActivity(intent);
   }

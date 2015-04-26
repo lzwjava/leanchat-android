@@ -4,7 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.EditText;
-import com.avoscloud.chat.im.controller.EmotionUtils;
+import com.avoscloud.chat.im.controller.EmotionHelper;
 
 public class EmotionEditText extends EditText {
 
@@ -23,7 +23,7 @@ public class EmotionEditText extends EditText {
   @Override
   public void setText(CharSequence text, BufferType type) {
     if (!TextUtils.isEmpty(text)) {
-      super.setText(EmotionUtils.replace(getContext(), text.toString()), type);
+      super.setText(EmotionHelper.replace(getContext(), text.toString()), type);
     } else {
       super.setText(text, type);
     }

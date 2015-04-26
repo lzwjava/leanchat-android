@@ -21,7 +21,20 @@ import java.io.IOException;
 /**
  * Created by lzw on 15/4/24.
  */
-public class CommonUtils {
+public class PhotoUtils {
+  public static DisplayImageOptions avatarImageOptions = new DisplayImageOptions.Builder()
+      .showImageOnLoading(R.drawable.chat_default_user_avatar)
+      .showImageForEmptyUri(R.drawable.chat_default_user_avatar)
+      .showImageOnFail(R.drawable.chat_default_user_avatar)
+      .cacheInMemory(true)
+      .cacheOnDisc(true)
+      .considerExifParams(true)
+      .imageScaleType(ImageScaleType.EXACTLY)
+      .bitmapConfig(Bitmap.Config.RGB_565)
+      .resetViewBeforeLoading(true)// 设置图片在下载前是否重置，复位
+          //.displayer(new RoundedBitmapDisplayer(20))
+          //.displayer(new FadeInBitmapDisplayer(100))// 淡入
+      .build();
   private static DisplayImageOptions normalImageOptions = new DisplayImageOptions.Builder()
       .showImageOnLoading(R.drawable.common_empty_photo)
       .showImageForEmptyUri(R.drawable.common_empty_photo)

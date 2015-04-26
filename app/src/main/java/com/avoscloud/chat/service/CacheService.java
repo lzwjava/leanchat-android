@@ -4,18 +4,10 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.im.v2.AVIMConversation;
-import com.avos.avoscloud.im.v2.AVIMReservedMessageType;
-import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
-import com.avos.avoscloud.im.v2.messages.AVIMAudioMessage;
 import com.avoscloud.chat.base.C;
-import com.avoscloud.chat.im.controller.ConversationManager;
-import com.avoscloud.chat.im.controller.MessageUtils;
-import com.avoscloud.chat.util.Utils;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -117,7 +109,7 @@ public class CacheService {
         uncachedIds.add(id);
       }
     }
-    ConversationManager.getInstance().findConvs(new ArrayList<String>(uncachedIds), new AVIMConversationQueryCallback() {
+    ConversationManager.getInstance().findConversationsByConversationIds(new ArrayList<String>(uncachedIds), new AVIMConversationQueryCallback() {
       @Override
       public void done(List<AVIMConversation> conversations, AVException e) {
         if (e != null) {
@@ -128,23 +120,6 @@ public class CacheService {
         }
       }
     });
-  }
-
-  public static void cacheMsgs(List<AVIMTypedMessage> msgs) throws IOException, AVException {
-    Set<String> userIds = new HashSet<String>();
-    for (AVIMTypedMessage msg : msgs) {
-      AVIMReservedMessageType type = AVIMReservedMessageType.getAVIMReservedMessageType(msg.getMessageType());
-      if (type == AVIMReservedMessageType.AudioMessageType) {
-        File file = new File(MessageUtils.getFilePath(msg));
-        if (!file.exists()) {
-          AVIMAudioMessage audioMsg = (AVIMAudioMessage) msg;
-          String url = audioMsg.getFileUrl();
-          Utils.downloadFileIfNotExists(url, file);
-        }
-      }
-      userIds.add(msg.getFrom());
-    }
-    cacheUsers(new ArrayList<String>(userIds));
   }
 
   public static void cacheUserIfNone(String userId) throws AVException {

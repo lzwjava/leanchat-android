@@ -20,7 +20,7 @@ import com.avoscloud.chat.service.AddRequestService;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.im.activity.BaseActivity;
 import com.avoscloud.chat.ui.view.BaseListView;
-import com.avoscloud.chat.ui.view.ViewHolder;
+import com.avoscloud.chat.im.view.ViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;

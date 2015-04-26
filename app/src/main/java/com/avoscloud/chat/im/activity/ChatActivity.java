@@ -18,7 +18,9 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.AVIMReservedMessageType;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
+import com.avos.avoscloud.im.v2.messages.AVIMAudioMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMLocationMessage;
 import com.avoscloud.chat.R;
@@ -30,18 +32,19 @@ import com.avoscloud.chat.im.db.MsgsTable;
 import com.avoscloud.chat.im.db.RoomsTable;
 import com.avoscloud.chat.im.model.ConversationType;
 import com.avoscloud.chat.im.model.MessageEvent;
+import com.avoscloud.chat.im.utils.*;
 import com.avoscloud.chat.im.view.EmotionEditText;
 import com.avoscloud.chat.im.view.RecordButton;
 import com.avoscloud.chat.im.view.xlist.XListView;
-import com.avoscloud.chat.service.CacheService;
-import com.avoscloud.chat.util.*;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 import de.greenrobot.event.EventBus;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ChatActivity extends BaseActivity implements OnClickListener,
     XListView.IXListViewListener {
@@ -73,6 +76,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
   protected MessageAgent messageAgent;
   protected MessageAgent.SendCallback defaultSendCallback = new DefaultSendCallback();
   protected EventBus eventBus;
+  protected ChatManager chatManager = ChatManager.getInstance();
 
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -90,7 +94,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
   public static ChatActivity getChatInstance() {
     return chatInstance;
   }
-
 
   public static String getCurrentChattingConvid() {
     return currentChattingConvid;
@@ -153,7 +156,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 
   private void initEmotionPager() {
     List<View> views = new ArrayList<View>();
-    for (int i = 0; i < EmotionUtils.emojiGroups.size(); i++) {
+    for (int i = 0; i < EmotionHelper.emojiGroups.size(); i++) {
       views.add(getEmotionGridView(i));
     }
     ChatEmotionPagerAdapter pagerAdapter = new ChatEmotionPagerAdapter(views);
@@ -166,7 +169,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
     View emotionView = inflater.inflate(R.layout.chat_emotion_gridview, null, false);
     GridView gridView = (GridView) emotionView.findViewById(R.id.gridview);
     final ChatEmotionGridAdapter chatEmotionGridAdapter = new ChatEmotionGridAdapter(ctx);
-    List<String> pageEmotions = EmotionUtils.emojiGroups.get(pos);
+    List<String> pageEmotions = EmotionHelper.emojiGroups.get(pos);
     chatEmotionGridAdapter.setDatas(pageEmotions);
     gridView.setAdapter(chatEmotionGridAdapter);
     gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -189,7 +192,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
   }
 
   public void initRecordBtn() {
-    recordBtn.setSavePath(PathUtils.getRecordTmpPath());
+    recordBtn.setSavePath(com.avoscloud.chat.im.utils.PathUtils.getRecordTmpPath());
     recordBtn.setRecordEventListener(new RecordButton.RecordEventListener() {
       @Override
       public void onFinishedRecord(final String audioPath, int secs) {
@@ -241,17 +244,16 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 
   public void initData(Intent intent) {
     String convid = intent.getStringExtra(CONVID);
-    conversation = CacheService.lookupConv(convid);
+    conversation = chatManager.lookUpConversationById(convid);
     if (conversation == null) {
       throw new NullPointerException("conv is null");
     }
-    initActionBar(ConversationManager.titleOfConv(conversation));
+    initActionBar(ConversationHelper.titleOfConv(conversation));
     messageAgent = new MessageAgent(conversation);
     messageAgent.setSendCallback(defaultSendCallback);
-    CacheService.setCurConv(conversation);
     roomsTable.insertRoom(convid);
     roomsTable.clearUnread(conversation.getConversationId());
-    conversationType = ConversationManager.typeOfConv(conversation);
+    conversationType = ConversationHelper.typeOfConv(conversation);
     bindAdapterToListView(conversationType);
   }
 
@@ -275,7 +277,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
       @Override
       public void onImageViewClick(AVIMImageMessage imageMsg) {
         ImageBrowserActivity.go(ChatActivity.this,
-            MessageUtils.getFilePath(imageMsg),
+            MessageHelper.getFilePath(imageMsg),
             imageMsg.getFileUrl());
       }
     });
@@ -430,7 +432,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
         case GALLERY_REQUEST:
         case GALLERY_KITKAT_REQUEST:
           if (data == null) {
-            Utils.toast("return data is null");
+            toast("return data is null");
             return;
           }
           Uri uri;
@@ -456,7 +458,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
           if (!TextUtils.isEmpty(address)) {
             messageAgent.sendLocation(latitude, longitude, address);
           } else {
-            Utils.toast(ctx, R.string.chat_cannotGetYourAddressInfo);
+            toast(R.string.chat_cannotGetYourAddressInfo);
           }
           break;
       }
@@ -480,7 +482,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 
   @Override
   protected void onDestroy() {
-    CacheService.setCurConv(null);
     chatInstance = null;
     eventBus.unregister(this);
     super.onDestroy();
@@ -501,7 +502,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
       throw new IllegalStateException("conv is null");
     }
     setCurrentChattingConvid(conversation.getConversationId());
-    ChatManager.getInstance().cancelNotification();
+    chatManager.cancelNotification();
   }
 
   @Override
@@ -545,7 +546,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
       }
       msgs = msgsTable.selectMsgs(conversation.getConversationId(), time, limit);
       //msgs = ConvManager.getInstance().queryHistoryMessage(conv, msgId, time, limit);
-      CacheService.cacheMsgs(msgs);
+      cacheMsgs(msgs);
     }
 
     @Override
@@ -567,11 +568,31 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
           if (msgs.size() > 0) {
             xListView.setSelection(msgs.size() - 1);
           } else {
-            Utils.toast(R.string.chat_activity_loadMessagesFinish);
+            toast(R.string.chat_activity_loadMessagesFinish);
           }
         }
       }
     }
+  }
+
+  void cacheMsgs(List<AVIMTypedMessage> msgs) throws Exception {
+    Set<String> userIds = new HashSet<String>();
+    for (AVIMTypedMessage msg : msgs) {
+      AVIMReservedMessageType type = AVIMReservedMessageType.getAVIMReservedMessageType(msg.getMessageType());
+      if (type == AVIMReservedMessageType.AudioMessageType) {
+        File file = new File(MessageHelper.getFilePath(msg));
+        if (!file.exists()) {
+          AVIMAudioMessage audioMsg = (AVIMAudioMessage) msg;
+          String url = audioMsg.getFileUrl();
+          DownloadUtils.downloadFileIfNotExists(url, file);
+        }
+      }
+      userIds.add(msg.getFrom());
+    }
+    if (chatManager.getChatUserFactory() == null) {
+      throw new NullPointerException("chat user factory is null");
+    }
+    chatManager.getChatUserFactory().cacheUserByIdsInBackground(new ArrayList<String>(userIds));
   }
 
   class DefaultSendCallback implements MessageAgent.SendCallback {

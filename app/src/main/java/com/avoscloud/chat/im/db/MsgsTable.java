@@ -5,8 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
-import com.avoscloud.chat.base.App;
-import com.avoscloud.chat.util.ParcelableUtil;
+import com.avoscloud.chat.im.utils.ParcelableUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,7 +34,7 @@ public class MsgsTable {
 
   public synchronized static MsgsTable getCurrentUserInstance() {
     if (msgsTable == null) {
-      msgsTable = new MsgsTable(DBHelper.getCurrentUserInstance(App.ctx));
+      msgsTable = new MsgsTable(DBHelper.getCurrentUserInstance());
     }
     return msgsTable;
   }

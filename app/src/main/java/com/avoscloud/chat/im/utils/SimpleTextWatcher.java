@@ -1,4 +1,4 @@
-package com.avoscloud.chat.util;
+package com.avoscloud.chat.im.utils;
 
 import android.text.Editable;
 import android.text.TextWatcher;

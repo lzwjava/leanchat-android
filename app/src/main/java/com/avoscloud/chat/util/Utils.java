@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
+import com.avoscloud.chat.im.utils.DownloadUtils;
 import com.avoscloud.chat.im.utils.Logger;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -74,33 +75,12 @@ public class Utils {
 
   public static Bitmap urlToBitmap(String url) throws ClientProtocolException,
       IOException {
-    return BitmapFactory.decodeStream(inputStreamFromUrl(url));
-  }
-
-  public static InputStream inputStreamFromUrl(String url) throws IOException,
-      ClientProtocolException {
-    DefaultHttpClient client = new DefaultHttpClient();
-    HttpGet get = new HttpGet(url);
-    HttpResponse response = client.execute(get);
-    HttpEntity entity = response.getEntity();
-    InputStream stream = entity.getContent();
-    return stream;
+    return BitmapFactory.decodeStream(DownloadUtils.inputStreamFromUrl(url));
   }
 
   public static Bitmap bitmapFromFile(File file) throws FileNotFoundException {
     return BitmapFactory.decodeStream(new BufferedInputStream(
         new FileInputStream(file)));
-  }
-
-  public static void inputToOutput(FileOutputStream outputStream,
-                                   InputStream inputStream) throws IOException {
-    byte[] buffer = new byte[1024];
-    int len;
-    while ((len = inputStream.read(buffer)) != -1) {
-      outputStream.write(buffer, 0, len);
-    }
-    outputStream.close();
-    inputStream.close();
   }
 
   public static byte[] readStream(InputStream inStream) throws Exception {
@@ -116,30 +96,16 @@ public class Utils {
   }
 
   public static byte[] getBytesFromUrl(String url) throws Exception {
-    InputStream in = inputStreamFromUrl(url);
+    InputStream in = DownloadUtils.inputStreamFromUrl(url);
     return readStream(in);
   }
 
   public static Bitmap saveBitmapLocal(String bitmapUrl, File bitmapFile)
       throws IOException, FileNotFoundException, ClientProtocolException {
     Bitmap resultBitmap;
-    downloadFileIfNotExists(bitmapUrl, bitmapFile);
+    DownloadUtils.downloadFileIfNotExists(bitmapUrl, bitmapFile);
     resultBitmap = Utils.bitmapFromFile(bitmapFile);
     return resultBitmap;
-  }
-
-  public static void downloadFileIfNotExists(String url, File toFile) throws IOException {
-    if (toFile.exists()) {
-    } else {
-      downloadFile(url, toFile);
-    }
-  }
-
-  public static void downloadFile(String url, File toFile) throws IOException {
-    toFile.createNewFile();
-    FileOutputStream outputStream = new FileOutputStream(toFile);
-    InputStream inputStream = Utils.inputStreamFromUrl(url);
-    Utils.inputToOutput(outputStream, inputStream);
   }
 
   public static Bitmap getBitmapFromUrl(String logoUrl, String filmEnName,
@@ -297,12 +263,6 @@ public class Utils {
 
     NotificationManager man = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     man.notify(notifyId, builder.getNotification());
-  }
-
-  public static void cancelNotification(Context ctx, int notifyId) {
-    String ns = Context.NOTIFICATION_SERVICE;
-    NotificationManager nMgr = (NotificationManager) ctx.getSystemService(ns);
-    nMgr.cancel(notifyId);
   }
 
   public static String getStringByFile(File f) throws IOException {

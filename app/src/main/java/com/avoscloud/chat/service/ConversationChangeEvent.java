@@ -1,4 +1,4 @@
-package com.avoscloud.chat.im.controller;
+package com.avoscloud.chat.service;
 
 import com.avos.avoscloud.im.v2.AVIMConversation;
 

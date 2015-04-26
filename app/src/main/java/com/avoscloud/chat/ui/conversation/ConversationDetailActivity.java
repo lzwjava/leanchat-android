@@ -24,15 +24,17 @@ import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.im.activity.ChatActivity;
 import com.avoscloud.chat.im.adapter.BaseListAdapter;
-import com.avoscloud.chat.im.controller.ConversationManager;
+import com.avoscloud.chat.im.controller.ConversationHelper;
+import com.avoscloud.chat.service.ConversationManager;
 import com.avoscloud.chat.im.db.RoomsTable;
 import com.avoscloud.chat.im.model.ConversationType;
 import com.avoscloud.chat.entity.avobject.User;
+import com.avoscloud.chat.service.CacheService;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.base_activity.UpdateContentActivity;
 import com.avoscloud.chat.ui.contact.ContactPersonInfoActivity;
 import com.avoscloud.chat.ui.view.ExpandGridView;
-import com.avoscloud.chat.ui.view.ViewHolder;
+import com.avoscloud.chat.im.view.ViewHolder;
 import com.avoscloud.chat.util.SimpleNetTask;
 import com.avoscloud.chat.util.Utils;
 
@@ -111,7 +113,9 @@ public class ConversationDetailActivity extends ConversationBaseActivity impleme
 
       @Override
       protected void doInBack() throws Exception {
-        subMembers = conversationManager.findGroupMembers(conv());
+        List<AVUser> users = CacheService.findUsers(conv().getMembers());
+        CacheService.registerUsers(users);
+        subMembers = users;
       }
 
       @Override
@@ -132,7 +136,7 @@ public class ConversationDetailActivity extends ConversationBaseActivity impleme
   private void initData() {
     conversationManager = ConversationManager.getInstance();
     isOwner = conv().getCreator().equals(AVUser.getCurrentUser().getObjectId());
-    conversationType = ConversationManager.typeOfConv(conv());
+    conversationType = ConversationHelper.typeOfConv(conv());
   }
 
   @Override

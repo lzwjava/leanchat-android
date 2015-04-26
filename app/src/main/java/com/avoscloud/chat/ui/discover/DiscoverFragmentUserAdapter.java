@@ -13,7 +13,7 @@ import com.avoscloud.chat.im.adapter.BaseListAdapter;
 import com.avoscloud.chat.entity.avobject.User;
 import com.avoscloud.chat.service.PreferenceMap;
 import com.avoscloud.chat.service.UserService;
-import com.avoscloud.chat.ui.view.ViewHolder;
+import com.avoscloud.chat.im.view.ViewHolder;
 import com.avoscloud.chat.util.Utils;
 import org.ocpsoft.prettytime.PrettyTime;
 

@@ -17,15 +17,17 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.SaveCallback;
 import com.avoscloud.chat.R;
+import com.avoscloud.chat.entity.avobject.User;
 import com.avoscloud.chat.im.controller.ChatManager;
 import com.avoscloud.chat.im.db.DBHelper;
 import com.avoscloud.chat.im.utils.Logger;
-import com.avoscloud.chat.util.PhotoUtils;
-import com.avoscloud.chat.entity.avobject.User;
 import com.avoscloud.chat.service.UpdateService;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.base_activity.BaseFragment;
-import com.avoscloud.chat.util.*;
+import com.avoscloud.chat.util.PathUtils;
+import com.avoscloud.chat.util.PhotoUtils;
+import com.avoscloud.chat.util.SimpleNetTask;
+import com.avoscloud.chat.util.Utils;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -98,7 +100,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
       startActivityForResult(intent, IMAGE_PICK_REQUEST);
     } else if (id == R.id.logoutLayout) {
       chatManager.close();
-      DBHelper.getCurrentUserInstance(ctx).closeHelper();
+      DBHelper.getCurrentUserInstance().closeHelper();
       AVUser.logOut();
       getActivity().finish();
     } else if (id == R.id.sexLayout) {

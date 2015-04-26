@@ -18,14 +18,15 @@ import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.entity.avobject.User;
-import com.avoscloud.chat.im.controller.ConversationManager;
+import com.avoscloud.chat.im.controller.ConversationHelper;
+import com.avoscloud.chat.service.ConversationManager;
 import com.avoscloud.chat.im.model.ConversationType;
 import com.avoscloud.chat.service.CacheService;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.service.event.FinishEvent;
 import com.avoscloud.chat.ui.chat.ChatRoomActivity;
 import com.avoscloud.chat.ui.view.BaseCheckListAdapter;
-import com.avoscloud.chat.ui.view.ViewHolder;
+import com.avoscloud.chat.im.view.ViewHolder;
 import com.avoscloud.chat.util.Utils;
 import de.greenrobot.event.EventBus;
 
@@ -86,11 +87,11 @@ public class ConversationAddMembersActivity extends ConversationBaseActivity {
     if (checkedUsers.size() == 0) {
       finish();
     } else {
-      if (ConversationManager.typeOfConv(conv()) == ConversationType.Single) {
+      if (ConversationHelper.typeOfConv(conv()) == ConversationType.Single) {
         List<String> members = new ArrayList<String>();
         members.addAll(checkedUsers);
         members.addAll(conv().getMembers());
-        conversationManager.createGroupConv(members, new AVIMConversationCreatedCallback() {
+        conversationManager.createGroupConversation(members, new AVIMConversationCreatedCallback() {
           @Override
           public void done(final AVIMConversation conversation, AVException e) {
             if (filterException(e)) {

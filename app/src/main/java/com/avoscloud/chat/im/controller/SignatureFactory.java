@@ -1,12 +1,11 @@
 package com.avoscloud.chat.im.controller;
 
+import android.widget.Toast;
 import com.avos.avoscloud.AVCloud;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.Signature;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.im.utils.Logger;
-import com.avoscloud.chat.util.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,7 +19,7 @@ import java.util.Map;
  */
 public class SignatureFactory implements com.avos.avoscloud.SignatureFactory {
   /**
-   * imClient.open() ,create conv
+   * imClient.openWithUserId() ,create conv
    */
   @Override
   public Signature createSignature(String peerId, List<String> watchIds) throws SignatureException {
@@ -81,15 +80,12 @@ public class SignatureFactory implements com.avos.avoscloud.SignatureFactory {
     try {
       result = AVCloud.callFunction("conv_sign", map1);
     } catch (AVException e) {
+      if (e.getCode() == AVException.INVALID_JSON) {
+        Toast.makeText(ChatManager.getContext(), R.string.chat_cloudCodeNotDeployTips, Toast.LENGTH_SHORT).show();
+      }
       throw new SignatureException(e.getCode(), e.getMessage());
     }
     HashMap<String, Object> map = result;
     return createSignatureByResult(map, targetIds);
-  }
-
-  public static void checkCloudCodeDeploy(AVException e) {
-    if (e.getCode() == AVException.INVALID_JSON) {
-      Utils.toast(App.ctx.getString(R.string.chat_cloudCodeNotDeployTips));
-    }
   }
 }

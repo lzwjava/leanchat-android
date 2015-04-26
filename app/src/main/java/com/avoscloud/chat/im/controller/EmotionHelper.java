@@ -7,7 +7,6 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.ImageSpan;
-import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.im.utils.Logger;
 
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ import java.util.regex.Pattern;
 /**
  * Created by lzw on 14-9-25.
  */
-public class EmotionUtils {
+public class EmotionHelper {
   public static List<List<String>> emojiGroups;
   private static final int ONE_PAGE_SIZE = 21;
   private static Pattern pattern;
@@ -110,7 +109,7 @@ public class EmotionUtils {
     return false;
   }
 
-  public static CharSequence replace(Context ctx, String text) {
+  public static CharSequence replace(Context context, String text) {
     if (TextUtils.isEmpty(text)) {
       return text;
     }
@@ -120,8 +119,8 @@ public class EmotionUtils {
       String factText = matcher.group();
       String key = factText.substring(1, factText.length() - 1);
       if (contain(emojiCodes, factText)) {
-        Bitmap bitmap = getEmojiDrawable(ctx, key);
-        ImageSpan image = new ImageSpan(ctx, bitmap);
+        Bitmap bitmap = getEmojiDrawable(context, key);
+        ImageSpan image = new ImageSpan(context, bitmap);
         int start = matcher.start();
         int end = matcher.end();
         spannableString.setSpan(image, start, end,
@@ -134,7 +133,7 @@ public class EmotionUtils {
   public static void isEmojiDrawableAvailable() {
     for (String emojiCode : emojiCodes) {
       String code = emojiCode.substring(1, emojiCode.length() - 1);
-      Bitmap bitmap = getDrawableByName(App.ctx, code);
+      Bitmap bitmap = getDrawableByName(ChatManager.getContext(), code);
       if (bitmap == null) {
         Logger.d("not available test " + code);
       }

@@ -3,7 +3,7 @@ package com.avoscloud.chat.im.db;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import com.avos.avoscloud.AVUser;
+import com.avoscloud.chat.im.controller.ChatManager;
 
 /**
  * Created by lzw on 14-5-28.
@@ -20,13 +20,13 @@ public class DBHelper extends SQLiteOpenHelper {
     this(context, "chat_" + userId + ".db3", DB_VER);
   }
 
-  public synchronized static DBHelper getCurrentUserInstance(Context context) {
-    AVUser user = AVUser.getCurrentUser();
-    if (user == null) {
-      throw new NullPointerException("current user is null");
+  public synchronized static DBHelper getCurrentUserInstance() {
+    String selfId = ChatManager.getInstance().getSelfId();
+    if (selfId == null) {
+      throw new NullPointerException("selfId is null");
     }
     if (currentUserDBHelper == null) {
-      currentUserDBHelper = new DBHelper(context, user.getObjectId());
+      currentUserDBHelper = new DBHelper(ChatManager.getContext(), selfId);
     }
     return currentUserDBHelper;
   }

@@ -24,7 +24,7 @@ import com.avoscloud.chat.service.PreferenceMap;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.im.activity.BaseActivity;
 import com.avoscloud.chat.ui.view.BaseListView;
-import com.avoscloud.chat.ui.view.ViewHolder;
+import com.avoscloud.chat.im.view.ViewHolder;
 import com.avoscloud.chat.util.RefreshTask;
 import com.avoscloud.chat.util.Refreshable;
 

@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.im.utils.CommonUtils;
+import com.avoscloud.chat.im.utils.PhotoUtils;
 
 /**
  * Created by lzw on 14-9-21.
@@ -30,6 +30,6 @@ public class ImageBrowserActivity extends BaseActivity {
     Intent intent = getIntent();
     String path = intent.getStringExtra(PATH);
     String url = intent.getStringExtra(URL);
-    CommonUtils.displayImageCacheElseNetwork(imageView, path, url);
+    PhotoUtils.displayImageCacheElseNetwork(imageView, path, url);
   }
 }

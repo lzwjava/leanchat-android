@@ -6,22 +6,22 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.im.v2.*;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
-import com.avoscloud.chat.base.App;
+import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
+import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
 import com.avoscloud.chat.im.activity.ChatActivity;
 import com.avoscloud.chat.im.db.MsgsTable;
 import com.avoscloud.chat.im.db.RoomsTable;
+import com.avoscloud.chat.im.model.ChatUser;
+import com.avoscloud.chat.im.model.ConversationType;
 import com.avoscloud.chat.im.model.MessageEvent;
+import com.avoscloud.chat.im.model.Room;
 import com.avoscloud.chat.im.utils.Logger;
-import com.avoscloud.chat.service.CacheService;
-import com.avoscloud.chat.service.PreferenceMap;
-import com.avoscloud.chat.util.NetAsyncTask;
-import com.avoscloud.chat.util.Utils;
+import com.avoscloud.chat.im.utils.NetAsyncTask;
 import de.greenrobot.event.EventBus;
 
-import java.util.Random;
+import java.util.*;
 
 /**
  * Created by lzw on 15/2/10.
@@ -29,8 +29,11 @@ import java.util.Random;
 public class ChatManager extends AVIMClientEventHandler {
   private static final long NOTIFY_PERIOD = 1000;
   private static final int REPLY_NOTIFY_ID = 1;
+  public static final String KEY_UPDATED_AT = "updatedAt";
   private static ChatManager chatManager;
   private static long lastNotifyTime = 0;
+  private static Context context;
+  private Map<String, AVIMConversation> cachedConversations = new HashMap<>();
 
   private static ConnectionListener defaultConnectListener = new ConnectionListener() {
     @Override
@@ -40,7 +43,7 @@ public class ChatManager extends AVIMClientEventHandler {
   };
 
   private ConnectionListener connectionListener = defaultConnectListener;
-  private static boolean setupWithCurrentUser = false;
+  private static boolean setupDatabase = false;
   private AVIMClient imClient;
   private String selfId;
   private boolean connect = false;
@@ -48,6 +51,7 @@ public class ChatManager extends AVIMClientEventHandler {
   private MsgsTable msgsTable;
   private RoomsTable roomsTable;
   private EventBus eventBus = EventBus.getDefault();
+  private ChatUserFactory chatUserFactory;
 
   private ChatManager() {
   }
@@ -59,7 +63,38 @@ public class ChatManager extends AVIMClientEventHandler {
     return chatManager;
   }
 
-  public static void notifyMsg(Context context, AVIMConversation conv, AVIMTypedMessage msg) {
+  public static Context getContext() {
+    return context;
+  }
+
+  // fetchConversation
+  public void fetchConversationWithUserId(String userId, final AVIMConversationCreatedCallback callback) {
+    final List<String> members = new ArrayList<>();
+    members.add(userId);
+    members.add(selfId);
+    AVIMConversationQuery query = imClient.getQuery();
+    query.withMembers(members);
+    query.whereEqualTo(ConversationType.ATTR_TYPE_KEY, ConversationType.Single.getValue());
+    query.orderByDescending(KEY_UPDATED_AT);
+    query.findInBackground(new AVIMConversationQueryCallback() {
+      @Override
+      public void done(List<AVIMConversation> conversations, AVException e) {
+        if (e != null) {
+          callback.done(null, e);
+        } else {
+          if (conversations.size() > 0) {
+            callback.done(conversations.get(0), null);
+          } else {
+            Map<String, Object> attrs = new HashMap<>();
+            attrs.put(ConversationType.TYPE_KEY, ConversationType.Single.getValue());
+            imClient.createConversation(members, attrs, callback);
+          }
+        }
+      }
+    });
+  }
+
+  public void showMessageNotification(Context context, AVIMConversation conv, AVIMTypedMessage msg) {
     if (System.currentTimeMillis() - lastNotifyTime < NOTIFY_PERIOD) {
       return;
     } else {
@@ -74,9 +109,9 @@ public class ChatManager extends AVIMClientEventHandler {
     PendingIntent pend = PendingIntent.getActivity(context, new Random().nextInt(),
         intent, 0);
     Notification.Builder builder = new Notification.Builder(context);
-    CharSequence notifyContent = MessageUtils.outlineOfMsg(msg);
+    CharSequence notifyContent = MessageHelper.outlineOfMsg(msg);
     CharSequence username = "username";
-    AVUser from = CacheService.lookupUser(msg.getFrom());
+    ChatUser from = getChatUserFactory().getChatUserById(msg.getFrom());
     if (from != null) {
       username = from.getUsername();
     }
@@ -89,17 +124,12 @@ public class ChatManager extends AVIMClientEventHandler {
         .setAutoCancel(true);
     NotificationManager man = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     Notification notification = builder.getNotification();
-    PreferenceMap preferenceMap = PreferenceMap.getCurUserPrefDao(context);
-    if (preferenceMap.isVoiceNotify()) {
-      notification.defaults |= Notification.DEFAULT_SOUND;
-    }
-    if (preferenceMap.isVibrateNotify()) {
-      notification.defaults |= Notification.DEFAULT_VIBRATE;
-    }
+    getChatUserFactory().configureNotification(notification);
     man.notify(REPLY_NOTIFY_ID, notification);
   }
 
-  public void init() {
+  public void init(Context context) {
+    this.context = context;
     msgHandler = new MsgHandler();
     AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class, msgHandler);
 //    try {
@@ -108,20 +138,21 @@ public class ChatManager extends AVIMClientEventHandler {
 //      e.printStackTrace();
 //    }
 
-    AVIMMessageManager.setConversationEventHandler(ConversationManager.getConvHandler());
     AVIMClient.setClientEventHandler(this);
     //签名
     //AVIMClient.setSignatureFactory(new SignatureFactory());
   }
 
-  public void setupWithCurrentUser() {
-    if (setupWithCurrentUser) {
+  public void setConversationEventHandler(AVIMConversationEventHandler eventHandler) {
+    AVIMMessageManager.setConversationEventHandler(eventHandler);
+  }
+
+  public void setupDatabaseWithSelfId(String selfId) {
+    this.selfId = selfId;
+    if (setupDatabase) {
       return;
     }
-    if (AVUser.getCurrentUser() == null) {
-      throw new NullPointerException("current user is null");
-    }
-    setupWithCurrentUser = true;
+    setupDatabase = true;
     msgsTable = MsgsTable.getCurrentUserInstance();
     roomsTable = RoomsTable.getCurrentUserInstance();
   }
@@ -131,7 +162,8 @@ public class ChatManager extends AVIMClientEventHandler {
   }
 
   public void cancelNotification() {
-    Utils.cancelNotification(App.ctx, REPLY_NOTIFY_ID);
+    NotificationManager nMgr = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+    nMgr.cancel(REPLY_NOTIFY_ID);
   }
 
   public AVIMClient getImClient() {
@@ -142,9 +174,14 @@ public class ChatManager extends AVIMClientEventHandler {
     return selfId;
   }
 
-  public void open(String selfId) {
+  public void openClientWithSelfId(String selfId) {
+    if (this.selfId == null) {
+      throw new IllegalStateException("please call setupDatabaseWithSelfId() first");
+    }
+    if (!this.selfId.equals(selfId)) {
+      throw new IllegalStateException("setupDatabaseWithSelfId and openClient's selfId should be equal");
+    }
     imClient = AVIMClient.getInstance(selfId);
-    this.selfId = selfId;
     imClient.open(new AVIMClientCallback() {
       @Override
       public void done(AVIMClient client, AVException e) {
@@ -158,7 +195,6 @@ public class ChatManager extends AVIMClientEventHandler {
       }
     });
   }
-
 
   private void onMessageReceipt(AVIMTypedMessage message, AVIMConversation conv) {
     if (message.getMessageId() == null) {
@@ -174,28 +210,29 @@ public class ChatManager extends AVIMClientEventHandler {
     if (message.getMessageId() == null) {
       throw new NullPointerException("message id is null");
     }
-    if (!ConversationManager.isValidConv(conversation)) {
+    if (!ConversationHelper.isValidConv(conversation)) {
       throw new IllegalStateException("receive msg from invalid conversation");
     }
-    CacheService.registerConvIfNone(conversation);
+    if (lookUpConversationById(conversation.getConversationId()) == null) {
+      registerConversation(conversation);
+    }
     msgsTable.insertMsg(message);
     roomsTable.insertRoom(message.getConversationId());
     roomsTable.increaseUnreadCount(message.getConversationId());
     MessageEvent messageEvent = new MessageEvent(message);
     eventBus.post(messageEvent);
-    new NetAsyncTask(App.ctx, false) {
+    new NetAsyncTask(getContext(), false) {
       @Override
       protected void doInBack() throws Exception {
-        CacheService.cacheUserIfNone(message.getFrom());
+        getChatUserFactory().cacheUserByIdsInBackground(Arrays.asList(message.getFrom()));
       }
 
       @Override
       protected void onPost(Exception exception) {
-        if (ChatActivity.getCurrentChattingConvid() != null && ChatActivity.getCurrentChattingConvid().equals(message
-            .getConversationId()) && AVUser.getCurrentUser() != null) {
-          PreferenceMap preferenceMap = PreferenceMap.getCurUserPrefDao(App.ctx);
-          if (preferenceMap.isNotifyWhenNews()) {
-            notifyMsg(App.ctx, conversation, message);
+        if (ChatActivity.getCurrentChattingConvid() != null && !ChatActivity.getCurrentChattingConvid().equals(message
+            .getConversationId()) && selfId != null) {
+          if (getChatUserFactory().showNotificationWhenNewMessageCome(selfId)) {
+            showMessageNotification(getContext(), conversation, message);
           }
         }
       }
@@ -207,8 +244,8 @@ public class ChatManager extends AVIMClientEventHandler {
 
       @Override
       public void done(AVIMClient client, AVException e) {
-        if (Utils.filterException(e)) {
-
+        if (e != null) {
+          Logger.d(e.getMessage());
         }
       }
     });
@@ -255,5 +292,29 @@ public class ChatManager extends AVIMClientEventHandler {
                                  AVIMClient client) {
       chatManager.onMessageReceipt(message, conversation);
     }
+  }
+
+  //cache
+  public void registerConversation(AVIMConversation conversation) {
+    cachedConversations.put(conversation.getConversationId(), conversation);
+  }
+
+  public AVIMConversation lookUpConversationById(String conversationId) {
+    return cachedConversations.get(conversationId);
+  }
+
+  //ChatUser
+
+  public ChatUserFactory getChatUserFactory() {
+    return chatUserFactory;
+  }
+
+  public void setChatUserFactory(ChatUserFactory chatUserFactory) {
+    this.chatUserFactory = chatUserFactory;
+  }
+
+  public List<Room> findRecentRooms() {
+    RoomsTable roomsTable = RoomsTable.getCurrentUserInstance();
+    return roomsTable.selectRooms();
   }
 }

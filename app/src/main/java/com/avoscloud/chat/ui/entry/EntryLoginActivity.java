@@ -69,7 +69,7 @@ public class EntryLoginActivity extends EntryBaseActivity implements OnClickList
         spinner.dismiss();
         if (filterException(e)) {
           UserService.updateUserLocation();
-          MainActivity.goMainActivity(EntryLoginActivity.this);
+          MainActivity.goMainActivityFromActivity(EntryLoginActivity.this);
         }
       }
     });

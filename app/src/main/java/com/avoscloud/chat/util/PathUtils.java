@@ -34,26 +34,4 @@ public class PathUtils {
     return getAvatarDir() + "tmp";
   }
 
-  public static String getChatFileDir() {
-    String dir = getAppPath() + "files/";
-    return checkAndMkdirs(dir);
-  }
-
-  public static String getChatFilePath(String id) {
-    String dir = getChatFileDir();
-    String path = dir + id;
-    return path;
-  }
-
-  public static String getRecordTmpPath() {
-    return getChatFileDir() + "record_tmp";
-  }
-
-  public static String getUUIDFilePath() {
-    return getChatFilePath(Utils.uuid());
-  }
-
-  public static String getTmpPath() {
-    return getAppPath() + "tmp";
-  }
 }

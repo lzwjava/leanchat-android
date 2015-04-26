@@ -13,13 +13,14 @@ import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.im.adapter.BaseListAdapter;
-import com.avoscloud.chat.im.controller.ConversationChangeEvent;
-import com.avoscloud.chat.im.controller.ConversationManager;
+import com.avoscloud.chat.service.ConversationChangeEvent;
+import com.avoscloud.chat.im.controller.ConversationHelper;
+import com.avoscloud.chat.service.ConversationManager;
 import com.avoscloud.chat.service.CacheService;
 import com.avoscloud.chat.service.event.FinishEvent;
 import com.avoscloud.chat.ui.chat.ChatRoomActivity;
 import com.avoscloud.chat.ui.view.BaseListView;
-import com.avoscloud.chat.ui.view.ViewHolder;
+import com.avoscloud.chat.im.view.ViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +67,7 @@ public class ConversationListActivity extends ConversationEventBaseActivity {
       @Override
       public List<AVIMConversation> getDatasInBackground(int skip, int limit, List<AVIMConversation> currentDatas) throws Exception {
         final CountDownLatch latch = new CountDownLatch(1);
-        conversationManager.findGroupConvsIncludeMe(new AVIMConversationQueryCallback() {
+        conversationManager.findGroupConversationsIncludeMe(new AVIMConversationQueryCallback() {
           @Override
           public void done(List<AVIMConversation> conversations, AVException e) {
             convs = conversations;
@@ -107,7 +108,7 @@ public class ConversationListActivity extends ConversationEventBaseActivity {
       }
       TextView nameView = ViewHolder.findViewById(conView, R.id.name);
       AVIMConversation conv = datas.get(position);
-      nameView.setText(ConversationManager.titleOfConv(conv));
+      nameView.setText(ConversationHelper.titleOfConv(conv));
       return conView;
     }
   }

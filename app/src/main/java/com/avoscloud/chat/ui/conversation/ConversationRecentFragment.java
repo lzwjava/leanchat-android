@@ -13,8 +13,9 @@ import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.im.adapter.BaseListAdapter;
 import com.avoscloud.chat.im.controller.ChatManager;
-import com.avoscloud.chat.im.controller.ConversationManager;
-import com.avoscloud.chat.im.controller.MessageUtils;
+import com.avoscloud.chat.im.controller.ConversationHelper;
+import com.avoscloud.chat.service.ConversationManager;
+import com.avoscloud.chat.im.controller.MessageHelper;
 import com.avoscloud.chat.im.model.ConversationType;
 import com.avoscloud.chat.im.model.MessageEvent;
 import com.avoscloud.chat.im.model.Room;
@@ -23,7 +24,7 @@ import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.base_activity.BaseFragment;
 import com.avoscloud.chat.ui.chat.ChatRoomActivity;
 import com.avoscloud.chat.ui.view.BaseListView;
-import com.avoscloud.chat.ui.view.ViewHolder;
+import com.avoscloud.chat.im.view.ViewHolder;
 import com.avoscloud.chat.util.TimeUtils;
 import de.greenrobot.event.EventBus;
 
@@ -138,14 +139,14 @@ public class ConversationRecentFragment extends BaseFragment implements ChatMana
       TextView recentTimeView = ViewHolder.findViewById(convertView, R.id.recent_teim_text);
       TextView recentUnreadView = ViewHolder.findViewById(convertView, R.id.recent_unread);
 
-      if (ConversationManager.typeOfConv(room.getConv()) == ConversationType.Single) {
-        AVUser user = CacheService.lookupUser(ConversationManager.otherIdOfConv(room.getConv()));
+      if (ConversationHelper.typeOfConv(room.getConv()) == ConversationType.Single) {
+        AVUser user = CacheService.lookupUser(ConversationHelper.otherIdOfConv(room.getConv()));
         UserService.displayAvatar(user, recentAvatarView);
       } else {
         recentAvatarView.setImageResource(R.drawable.contact_group_icon);
       }
 
-      recentNameView.setText(ConversationManager.nameOfConv(room.getConv()));
+      recentNameView.setText(ConversationHelper.nameOfConv(room.getConv()));
 
       int num = room.getUnreadCount();
       if (num > 0) {
@@ -158,7 +159,7 @@ public class ConversationRecentFragment extends BaseFragment implements ChatMana
       if (room.getLastMsg() != null) {
         Date date = new Date(room.getLastMsg().getTimestamp());
         recentTimeView.setText(TimeUtils.getDate(date));
-        recentMsgView.setText(MessageUtils.outlineOfMsg(room.getLastMsg()));
+        recentMsgView.setText(MessageHelper.outlineOfMsg(room.getLastMsg()));
       }
       return convertView;
     }

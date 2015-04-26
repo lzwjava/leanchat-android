@@ -10,9 +10,8 @@ import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMLocationMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.avoscloud.chat.im.db.MsgsTable;
-import com.avoscloud.chat.im.utils.CommonUtils;
+import com.avoscloud.chat.im.utils.PhotoUtils;
 import com.avoscloud.chat.im.utils.Logger;
-import com.avoscloud.chat.util.PathUtils;
 import com.avoscloud.chat.util.Utils;
 
 import java.io.File;
@@ -53,7 +52,7 @@ public class MessageAgent {
 
         if (e == null && originPath != null) {
           File tmpFile = new File(originPath);
-          File newFile = new File(PathUtils.getChatFilePath(msg.getMessageId()));
+          File newFile = new File(com.avoscloud.chat.im.utils.PathUtils.getChatFilePath(msg.getMessageId()));
           boolean result = tmpFile.renameTo(newFile);
           if (!result) {
             throw new IllegalStateException("move file failed, can't use local cache");
@@ -92,8 +91,8 @@ public class MessageAgent {
   }
 
   public void sendImage(String imagePath) {
-    final String newPath = PathUtils.getChatFilePath(Utils.uuid());
-    CommonUtils.compressImage(imagePath, newPath);
+    final String newPath = com.avoscloud.chat.im.utils.PathUtils.getChatFilePath(Utils.uuid());
+    PhotoUtils.compressImage(imagePath, newPath);
     try {
       AVIMImageMessage imageMsg = new AVIMImageMessage(newPath);
       sendMsg(imageMsg, newPath, sendCallback);
