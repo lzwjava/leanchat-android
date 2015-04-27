@@ -16,15 +16,15 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.SaveCallback;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.im.adapter.BaseListAdapter;
+import com.avoscloud.leanchatlib.adapter.BaseListAdapter;
 import com.avoscloud.chat.entity.avobject.AddRequest;
 import com.avoscloud.chat.entity.avobject.User;
 import com.avoscloud.chat.service.AddRequestService;
 import com.avoscloud.chat.service.PreferenceMap;
 import com.avoscloud.chat.service.UserService;
-import com.avoscloud.chat.im.activity.BaseActivity;
+import com.avoscloud.leanchatlib.activity.BaseActivity;
 import com.avoscloud.chat.ui.view.BaseListView;
-import com.avoscloud.chat.im.view.ViewHolder;
+import com.avoscloud.leanchatlib.view.ViewHolder;
 import com.avoscloud.chat.util.RefreshTask;
 import com.avoscloud.chat.util.Refreshable;
 
@@ -96,7 +96,7 @@ public class ContactNewFriendActivity extends BaseActivity implements
               public void onClick(DialogInterface dialog, int which) {
                 deleteAddRequest(item);
               }
-            }).setNegativeButton(R.string.common_cancel, null).show();
+            }).setNegativeButton(R.string.chat_common_cancel, null).show();
       }
     });
   }

@@ -14,8 +14,8 @@ import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.entity.avobject.UpdateInfo;
-import com.avoscloud.chat.im.utils.Logger;
-import com.avoscloud.chat.im.utils.NetAsyncTask;
+import com.avoscloud.leanchatlib.utils.Logger;
+import com.avoscloud.leanchatlib.utils.NetAsyncTask;
 import com.avoscloud.chat.util.Utils;
 
 import java.util.List;
@@ -161,12 +161,12 @@ public class UpdateService {
             AlertDialog.Builder builder = Utils.getBaseDialogBuilder((Activity) ctx);
             builder.setTitle(R.string.update_service_sureToUpdate)
                 .setMessage(info.getDesc())
-                .setPositiveButton(R.string.utils_right, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.chat_utils_right, new DialogInterface.OnClickListener() {
                   @Override
                   public void onClick(DialogInterface dialog, int which) {
                     openUrlInBrowser(info.getApkUrl());
                   }
-                }).setNegativeButton(R.string.common_cancel, null).show();
+                }).setNegativeButton(R.string.chat_common_cancel, null).show();
           } else {
             Utils.toast(ctx, R.string.update_service_versionIsAlreadyNew);
           }

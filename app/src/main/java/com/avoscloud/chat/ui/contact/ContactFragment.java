@@ -5,7 +5,9 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
@@ -21,8 +23,6 @@ import com.avos.avoscloud.SaveCallback;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.entity.SortUser;
-import com.avoscloud.chat.im.utils.NetAsyncTask;
-import com.avoscloud.chat.im.utils.SimpleTextWatcher;
 import com.avoscloud.chat.service.AddRequestService;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.base_activity.BaseFragment;
@@ -31,7 +31,10 @@ import com.avoscloud.chat.ui.conversation.ConversationListActivity;
 import com.avoscloud.chat.ui.view.BaseListView;
 import com.avoscloud.chat.ui.view.ClearEditText;
 import com.avoscloud.chat.ui.view.EnLetterView;
-import com.avoscloud.chat.util.*;
+import com.avoscloud.chat.util.CharacterParser;
+import com.avoscloud.chat.util.PinyinComparator;
+import com.avoscloud.chat.util.Utils;
+import com.avoscloud.leanchatlib.utils.NetAsyncTask;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -105,10 +108,20 @@ public class ContactFragment extends BaseFragment {
     rightLetter.setTextView(dialogTextView);
     rightLetter.setOnTouchingLetterChangedListener(new LetterListViewListener());
     clearEditText = (ClearEditText) getView().findViewById(R.id.et_msg_search);
-    clearEditText.addTextChangedListener(new SimpleTextWatcher() {
+    clearEditText.addTextChangedListener(new TextWatcher() {
       @Override
-      public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-        filterData(charSequence.toString());
+      public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+      }
+
+      @Override
+      public void onTextChanged(CharSequence s, int start, int before, int count) {
+        filterData(s.toString());
+      }
+
+      @Override
+      public void afterTextChanged(Editable s) {
+
       }
     });
   }
@@ -177,7 +190,7 @@ public class ContactFragment extends BaseFragment {
       }
     }, userAdapter);
 
-    friendsList.addHeaderView(listHeaderView,null,false);
+    friendsList.addHeaderView(listHeaderView, null, false);
     friendsList.setOnTouchListener(new OnTouchListener() {
 
       @Override
@@ -256,7 +269,7 @@ public class ContactFragment extends BaseFragment {
               }
             });
           }
-        }).setNegativeButton(R.string.common_cancel, null).show();
+        }).setNegativeButton(R.string.chat_common_cancel, null).show();
   }
 
   private class LetterListViewListener implements

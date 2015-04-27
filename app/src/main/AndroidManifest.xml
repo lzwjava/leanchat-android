@@ -72,10 +72,10 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".im.activity.ImageBrowserActivity" />
+        <activity android:name="com.avoscloud.leanchatlib.activity.ImageBrowserActivity" />
 
         <activity
-            android:name=".im.activity.LocationActivity"
+            android:name="com.avoscloud.leanchatlib.activity.LocationActivity"
             android:theme="@style/MainTheme" />
 
         <activity android:name=".ui.entry.EntryLoginActivity" />

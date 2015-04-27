@@ -17,7 +17,7 @@
             android:layout_margin="10dp"
             android:layout_weight="1.0"
             android:background="@drawable/button_normal_shape"
-            android:hint="@string/common_username"
+            android:hint="@string/chat_common_username"
             android:paddingLeft="5dp"
             android:singleLine="true"
             android:textColorHint="#b3b3b3"

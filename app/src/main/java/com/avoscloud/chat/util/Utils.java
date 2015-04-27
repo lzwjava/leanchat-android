@@ -23,8 +23,8 @@ import android.widget.Toast;
 import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
-import com.avoscloud.chat.im.utils.DownloadUtils;
-import com.avoscloud.chat.im.utils.Logger;
+import com.avoscloud.leanchatlib.utils.DownloadUtils;
+import com.avoscloud.leanchatlib.utils.Logger;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -323,7 +323,7 @@ public class Utils {
   public static void showInfoDialog(Activity cxt, String msg, String title) {
     AlertDialog.Builder builder = getBaseDialogBuilder(cxt);
     builder.setMessage(msg)
-        .setPositiveButton(cxt.getString(R.string.utils_right), null)
+        .setPositiveButton(cxt.getString(R.string.chat_utils_right), null)
         .setTitle(title)
         .show();
   }
@@ -338,7 +338,7 @@ public class Utils {
   }
 
   public static AlertDialog.Builder getBaseDialogBuilder(Activity ctx) {
-    return new AlertDialog.Builder(ctx).setTitle(R.string.utils_tips).setIcon(R.drawable.utils_icon_info_2);
+    return new AlertDialog.Builder(ctx).setTitle(R.string.chat_utils_tips).setIcon(R.drawable.utils_icon_info_2);
   }
 
   public static String getStrByRawId(Context ctx, int id) throws UnsupportedEncodingException {
@@ -505,11 +505,11 @@ public class Utils {
   public static void intentShare(Context context, String title, String shareContent) {
     Intent intent = new Intent(Intent.ACTION_SEND);
     intent.setType("text/plain");
-    intent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.utils_share));
+    intent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.chat_utils_share));
     intent.putExtra(Intent.EXTRA_TEXT, shareContent);
     intent.putExtra(Intent.EXTRA_TITLE, title);
     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    context.startActivity(Intent.createChooser(intent, context.getString(R.string.utils_please_choose)));
+    context.startActivity(Intent.createChooser(intent, context.getString(R.string.chat_utils_please_choose)));
   }
 
   public static void toast(int id) {
@@ -555,34 +555,6 @@ public class Utils {
     int l;
     l = (int) (new Date().getTime() / 1000);
     return l;
-  }
-
-  public static String uuid() {
-    //return UUID.randomUUID().toString().substring(0, 24);
-    return myUUID();
-  }
-
-  public static String myUUID() {
-    StringBuilder sb = new StringBuilder();
-    int start = 48, end = 58;
-    appendChar(sb, start, end);
-    appendChar(sb, 65, 90);
-    appendChar(sb, 97, 123);
-    String charSet = sb.toString();
-    StringBuilder sb1 = new StringBuilder();
-    for (int i = 0; i < 24; i++) {
-      int len = charSet.length();
-      int pos = new Random().nextInt(len);
-      sb1.append(charSet.charAt(pos));
-    }
-    return sb1.toString();
-  }
-
-  public static void appendChar(StringBuilder sb, int start, int end) {
-    int i;
-    for (i = start; i < end; i++) {
-      sb.append((char) i);
-    }
   }
 
   public static String md5(String string) {
@@ -674,7 +646,7 @@ public class Utils {
     ProgressDialog dialog = new ProgressDialog(activity);
     dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
     dialog.setCancelable(true);
-    dialog.setMessage(App.ctx.getString(R.string.utils_hardLoading));
+    dialog.setMessage(App.ctx.getString(R.string.chat_utils_hardLoading));
     if (!activity.isFinishing()) {
       dialog.show();
     }

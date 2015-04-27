@@ -5,9 +5,6 @@ import android.graphics.Bitmap.Config;
 import android.graphics.PorterDuff.Mode;
 import android.media.ExifInterface;
 import android.media.ThumbnailUtils;
-import com.avoscloud.chat.R;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -277,7 +274,7 @@ public class PhotoUtils {
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }
-    com.avoscloud.chat.im.utils.PhotoUtils.recycle(bitmap);
+    com.avoscloud.leanchatlib.utils.PhotoUtils.recycle(bitmap);
     return newPath;
   }
 

@@ -5,8 +5,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.im.adapter.BaseListAdapter;
-import com.avoscloud.chat.im.view.xlist.XListView;
+import com.avoscloud.leanchatlib.adapter.BaseListAdapter;
+import com.avoscloud.leanchatlib.view.xlist.XListView;
 import com.avoscloud.chat.util.SimpleNetTask;
 import com.avoscloud.chat.util.Utils;
 
@@ -83,7 +83,7 @@ public class BaseListView<T> extends XListView implements XListView.IXListViewLi
           if (datas.size() < ONE_PAGE_SIZE) {
             if (isToastIfEmpty()) {
               if (datas.size() == 0) {
-                Utils.toast(getContext(), R.string.base_list_view_listEmptyHint);
+                Utils.toast(getContext(), R.string.chat_base_list_view_listEmptyHint);
               }
             }
             //setPullLoadEnable(false);
@@ -94,7 +94,7 @@ public class BaseListView<T> extends XListView implements XListView.IXListViewLi
           stopLoadMore();
           adapter.addAll(datas);
           if (datas.size() == 0) {
-            Utils.toast(getContext(), R.string.base_list_view_noMore);
+            Utils.toast(getContext(), R.string.chat_base_list_view_noMore);
           }
         }
       }

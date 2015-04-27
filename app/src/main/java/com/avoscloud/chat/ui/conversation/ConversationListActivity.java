@@ -12,15 +12,15 @@ import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
-import com.avoscloud.chat.im.adapter.BaseListAdapter;
+import com.avoscloud.leanchatlib.adapter.BaseListAdapter;
 import com.avoscloud.chat.service.ConversationChangeEvent;
-import com.avoscloud.chat.im.controller.ConversationHelper;
+import com.avoscloud.leanchatlib.controller.ConversationHelper;
 import com.avoscloud.chat.service.ConversationManager;
 import com.avoscloud.chat.service.CacheService;
 import com.avoscloud.chat.service.event.FinishEvent;
 import com.avoscloud.chat.ui.chat.ChatRoomActivity;
 import com.avoscloud.chat.ui.view.BaseListView;
-import com.avoscloud.chat.im.view.ViewHolder;
+import com.avoscloud.leanchatlib.view.ViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;

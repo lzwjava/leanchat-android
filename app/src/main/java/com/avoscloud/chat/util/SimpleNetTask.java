@@ -1,7 +1,7 @@
 package com.avoscloud.chat.util;
 
 import android.content.Context;
-import com.avoscloud.chat.im.utils.NetAsyncTask;
+import com.avoscloud.leanchatlib.utils.NetAsyncTask;
 
 /**
  * Created by lzw on 14-9-27.

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="chat_text_date_style">
+        <item name="android:padding">2dp</item>
+        <item name="android:paddingTop">2dip</item>
+        <item name="android:paddingBottom">2dip</item>
+        <item name="android:paddingLeft">12dip</item>
+        <item name="android:paddingRight">12dip</item>
+        <item name="android:textColor">@color/chat_base_color_text_white</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:background">@drawable/chat_time_block</item>
+    </style>
+
+    <style name="chat_text_name_style">
+        <item name="android:textColor">#818181</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+
+    <style name="chat_record_button_toast_dialog_style">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowBackground">@drawable/chat_record_button_round_background</item>
+    </style>
+
+    <style name="chat_avatar">
+        <item name="android:layout_width">@dimen/chat_style_avatar_userHead</item>
+        <item name="android:layout_height">@dimen/chat_style_avatar_userHead</item>
+        <item name="android:clickable">true</item>
+        <item name="android:visibility">visible</item>
+        <item name="android:layout_gravity">bottom</item>
+        <item name="android:src">@drawable/chat_default_user_avatar</item>
+    </style>
+
+    <style name="chat_item_layout">
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <style name="chat_item_inner_layout">
+        <item name="android:orientation">horizontal</item>
+        <item name="android:layout_marginTop">3dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="chat_item_inner_left_layout" parent="chat_item_inner_layout">
+        <item name="android:layout_marginLeft">5dp</item>
+    </style>
+
+    <style name="chat_item_inner_right_layout" parent="chat_item_inner_layout">
+        <item name="android:layout_marginRight">5dp</item>
+    </style>
+
+    <style name="chat_play_btn">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+</resources>

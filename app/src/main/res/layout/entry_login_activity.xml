@@ -64,7 +64,7 @@
             android:background="@drawable/common_btn"
             android:gravity="center"
             android:text="@string/login"
-            android:textColor="@color/base_color_text_white"
+            android:textColor="@color/chat_base_color_text_white"
             android:textSize="@dimen/text_size_large" />
     </LinearLayout>
 

@@ -3,51 +3,6 @@
 
     <string name="app_name">LeanChat</string>
 
-    <string name="base_list_view_listEmptyHint">无数据</string>
-    <string name="base_list_view_noMore">已无更多</string>
-    <string name="utils_tips">提示</string>
-    <string name="utils_please_choose">请选择</string>
-    <string name="utils_share">分享</string>
-    <string name="utils_right">好的</string>
-    <string name="utils_hardLoading">努力加载中...</string>
-    <string name="common_cancel">取消</string>
-    <string name="chat_bottom_record_layout_pressToRecord">按住录音</string>
-    <string name="chat_sending">发送中</string>
-    <string name="chat_received">已接收</string>
-    <string name="common_emptyStr" />
-    <string name="common_avatar">头像</string>
-    <string name="common_username">用户名</string>
-    <string name="common_nickname">昵称</string>
-    <string name="common_please_input_hint">请输入{0}</string>
-    <string name="common_change_title">{0}</string>
-    <string name="chat_sent">已发送</string>
-    <string name="chat_failed">失败</string>
-    <string name="chat_newMessage">新的消息</string>
-    <string name="chat_image">图片</string>
-    <string name="chat_cancelRecord">取消录音</string>
-    <string name="chat_audio">语音</string>
-    <string name="chat_getGeoInfoFailed">获取地理位置信息失败!</string>
-    <string name="chat_position">位置</string>
-    <string name="chat_geoIsSame">获取坐标相同</string>
-    <string name="chat_mapKeyErrorTips">key 验证出错! 请在 AndroidManifest.xml 文件中检查 key 设置</string>
-    <string name="chat_cannotFindResult">抱歉，未能找到结果</string>
-    <string name="chat_reverseGeoCodeResultIs">反编码得到的地址：</string>
-    <string name="chat_bottom_picture">照片</string>
-    <string name="chat_bottom_camera">拍摄</string>
-    <string name="chat_bottom_location">位置</string>
-    <string name="chat_cannotGetYourAddressInfo">无法获取到您的位置信息！</string>
-    <string name="chat_emotion">表情</string>
-    <string name="chat_pleaseCheckNetwork">请检查网络</string>
-    <string name="chat_activity_loadMessagesFinish">聊天记录加载完毕</string>
-    <string name="xlistview_footer_hint_normal">查看更多</string>
-    <string name="xlistview_footer_hint_ready">松开载入更多</string>
-    <string name="chat_record_button_haveRead">已阅读</string>
-    <string name="chat_record_button_slideUpToCancel">手指上滑，取消发送</string>
-    <string name="chat_record_button_releaseToCancel">松开手指，取消录音</string>
-    <string name="chat_sessionPausedTips">会话暂停，等网络良好</string>
-    <string name="chat_activity_select_picture">选择图片</string>
-    <string name="chat_cloudCodeNotDeployTips">云代码未部署，请到项目主页根据说明来部署</string>
-
 
     <string name="update_service_versionIsAlreadyNew">已经是最新版本了</string>
     <string name="update_service_sureToUpdate">确定更新版本吗</string>
@@ -58,7 +13,6 @@
 
     <string name="setting_preference_voice">语音</string>
 
-    <string name="record_button_pleaseSayMore">说多点吧～</string>
     <string name="update_service_failedToGetData">获取数据失败</string>
     <string name="entry_register_activity_password">密码</string>
     <string name="login">登录</string>
@@ -68,7 +22,6 @@
     <string name="profile_settings">Settings</string>
     <string name="profile_title">我</string>
     <string name="discover_title">发现</string>
-    <string name="chat_location_activity_send">发送</string>
 
     <string name="login_username_hint">请输入用户名</string>
     <string name="ensurePasswordHint">请在此输入密码</string>

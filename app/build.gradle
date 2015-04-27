@@ -8,6 +8,7 @@ android {
         applicationId "com.avoscloud.chat"
         minSdkVersion 15
         targetSdkVersion 15
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -35,6 +36,8 @@ dependencies {
     //compile 'cn.leancloud.android:avoscloud-sdk:v3.0+'
     //compile 'cn.leancloud.android:avoscloud-push:v3.0+@aar'
     //compile 'cn.leancloud.android:avoscloud-statistics:v2.6.+@aar'
+
+    compile project (':leanchatlib')
 
     compile files('libs/avoscloud-push-v3.1.4.jar')
     compile files('libs/avoscloud-sdk-v3.1.4.jar')

@@ -25,7 +25,7 @@
 
                 <TextView
                     style="@style/profile_fragment_left_text"
-                    android:text="@string/common_avatar" />
+                    android:text="@string/chat_common_avatar" />
 
                 <ImageView
                     android:id="@+id/avatar"
@@ -47,7 +47,7 @@
 
                 <TextView
                     style="@style/profile_fragment_left_text"
-                    android:text="@string/common_username" />
+                    android:text="@string/chat_common_username" />
 
                 <TextView
                     android:id="@+id/username"

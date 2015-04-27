@@ -14,13 +14,13 @@ import butterknife.OnClick;
 import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
-import com.avoscloud.chat.im.adapter.BaseListAdapter;
+import com.avoscloud.leanchatlib.adapter.BaseListAdapter;
 import com.avoscloud.chat.entity.avobject.User;
 import com.avoscloud.chat.service.AddRequestService;
 import com.avoscloud.chat.service.UserService;
-import com.avoscloud.chat.im.activity.BaseActivity;
+import com.avoscloud.leanchatlib.activity.BaseActivity;
 import com.avoscloud.chat.ui.view.BaseListView;
-import com.avoscloud.chat.im.view.ViewHolder;
+import com.avoscloud.leanchatlib.view.ViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;

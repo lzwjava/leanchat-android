@@ -2,4 +2,6 @@
 //project(':avoscloud-sdk').projectDir = new File('/Users/lzw/clojure/AndroidSDK/avoscloud-sdk')
 //include ':avoscloud-push'
 //project(':avoscloud-push').projectDir = new File('/Users/lzw/clojure/AndroidSDK/avoscloud-push')
+
+include ':leanchatlib'
 include ':app'

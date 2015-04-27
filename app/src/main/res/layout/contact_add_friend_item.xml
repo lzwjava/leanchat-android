@@ -45,7 +45,7 @@
                 android:background="@drawable/common_btn"
                 android:gravity="center"
                 android:text="同意"
-                android:textColor="@color/base_color_text_white"
+                android:textColor="@color/chat_base_color_text_white"
                 android:textSize="14sp"
                 android:visibility="visible" />
 

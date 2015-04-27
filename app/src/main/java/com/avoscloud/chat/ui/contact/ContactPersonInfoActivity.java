@@ -13,7 +13,7 @@ import com.avoscloud.chat.entity.avobject.User;
 import com.avoscloud.chat.service.AddRequestService;
 import com.avoscloud.chat.service.CacheService;
 import com.avoscloud.chat.service.UserService;
-import com.avoscloud.chat.im.activity.BaseActivity;
+import com.avoscloud.leanchatlib.activity.BaseActivity;
 import com.avoscloud.chat.ui.chat.ChatRoomActivity;
 
 import java.util.List;

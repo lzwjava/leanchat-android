@@ -3,7 +3,7 @@ package com.avoscloud.chat.ui.conversation;
 import android.os.Bundle;
 import com.avoscloud.chat.service.ConversationChangeEvent;
 import com.avoscloud.chat.service.event.FinishEvent;
-import com.avoscloud.chat.im.activity.BaseActivity;
+import com.avoscloud.leanchatlib.activity.BaseActivity;
 import de.greenrobot.event.EventBus;
 
 /**

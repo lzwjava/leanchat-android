@@ -41,7 +41,7 @@ public class BaseFragment extends Fragment {
     ProgressDialog dialog = new ProgressDialog(getActivity());
     dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
     dialog.setCancelable(true);
-    dialog.setMessage(getString(R.string.utils_hardLoading));
+    dialog.setMessage(getString(R.string.chat_utils_hardLoading));
     if (!getActivity().isFinishing()) {
       dialog.show();
     }

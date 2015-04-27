@@ -18,9 +18,9 @@ import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.SaveCallback;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.entity.avobject.User;
-import com.avoscloud.chat.im.controller.ChatManager;
-import com.avoscloud.chat.im.db.DBHelper;
-import com.avoscloud.chat.im.utils.Logger;
+import com.avoscloud.leanchatlib.controller.ChatManager;
+import com.avoscloud.leanchatlib.db.DBHelper;
+import com.avoscloud.leanchatlib.utils.Logger;
 import com.avoscloud.chat.service.UpdateService;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.base_activity.BaseFragment;
@@ -129,7 +129,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             UserService.saveSex(gender, saveCallback);
             dialog.dismiss();
           }
-        }).setNegativeButton(R.string.common_cancel, null).show();
+        }).setNegativeButton(R.string.chat_common_cancel, null).show();
   }
 
   @Override

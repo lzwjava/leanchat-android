@@ -2,7 +2,7 @@ package com.avoscloud.chat.ui.profile;
 
 import android.os.Bundle;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.im.activity.BaseActivity;
+import com.avoscloud.leanchatlib.activity.BaseActivity;
 
 /**
  * Created by lzw on 14-9-24.

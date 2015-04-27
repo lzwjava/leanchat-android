@@ -22,19 +22,19 @@ import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
-import com.avoscloud.chat.im.activity.ChatActivity;
-import com.avoscloud.chat.im.adapter.BaseListAdapter;
-import com.avoscloud.chat.im.controller.ConversationHelper;
+import com.avoscloud.leanchatlib.activity.ChatActivity;
+import com.avoscloud.leanchatlib.adapter.BaseListAdapter;
+import com.avoscloud.leanchatlib.controller.ConversationHelper;
 import com.avoscloud.chat.service.ConversationManager;
-import com.avoscloud.chat.im.db.RoomsTable;
-import com.avoscloud.chat.im.model.ConversationType;
+import com.avoscloud.leanchatlib.db.RoomsTable;
+import com.avoscloud.leanchatlib.model.ConversationType;
 import com.avoscloud.chat.entity.avobject.User;
 import com.avoscloud.chat.service.CacheService;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.base_activity.UpdateContentActivity;
 import com.avoscloud.chat.ui.contact.ContactPersonInfoActivity;
 import com.avoscloud.chat.ui.view.ExpandGridView;
-import com.avoscloud.chat.im.view.ViewHolder;
+import com.avoscloud.leanchatlib.view.ViewHolder;
 import com.avoscloud.chat.util.SimpleNetTask;
 import com.avoscloud.chat.util.Utils;
 
@@ -168,7 +168,7 @@ public class ConversationDetailActivity extends ConversationBaseActivity impleme
                 }
               });
             }
-          }).setNegativeButton(R.string.common_cancel, null).show();
+          }).setNegativeButton(R.string.chat_common_cancel, null).show();
     }
     return true;
   }

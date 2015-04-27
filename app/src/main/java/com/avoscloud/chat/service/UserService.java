@@ -6,7 +6,7 @@ import com.avos.avoscloud.*;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.base.C;
 import com.avoscloud.chat.entity.avobject.User;
-import com.avoscloud.chat.im.utils.Logger;
+import com.avoscloud.leanchatlib.utils.Logger;
 import com.avoscloud.chat.util.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -66,7 +66,7 @@ public class UserService {
   }
 
   public static void displayAvatar(String imageUrl, ImageView avatarView) {
-    ImageLoader.getInstance().displayImage(imageUrl, avatarView, com.avoscloud.chat.im.utils.PhotoUtils.avatarImageOptions);
+    ImageLoader.getInstance().displayImage(imageUrl, avatarView, com.avoscloud.leanchatlib.utils.PhotoUtils.avatarImageOptions);
   }
 
   public static void displayAvatar(AVUser user, ImageView avatarView) {

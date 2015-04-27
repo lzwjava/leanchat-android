@@ -19,7 +19,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:src="@drawable/xlistview_arrow" />
+                android:src="@drawable/chat_xlistview_arrow" />
 
             <ProgressBar
                 android:id="@+id/progressBar"

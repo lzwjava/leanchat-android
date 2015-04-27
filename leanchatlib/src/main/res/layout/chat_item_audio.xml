@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.avoscloud.leanchatlib.view.PlayButton
+    android:id="@+id/playBtn"
+    style="@style/chat_play_btn"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    custom:left="true" />

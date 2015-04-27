@@ -30,7 +30,7 @@
             android:layout_weight="1.0"
             android:background="@color/chat_transparent"
             android:gravity="center_vertical"
-            android:hint="@string/common_please_input_hint" />
+            android:hint="@string/chat_common_please_input_hint" />
     </LinearLayout>
 
 </LinearLayout>

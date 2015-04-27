@@ -8,7 +8,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.im.activity.BaseActivity;
+import com.avoscloud.leanchatlib.activity.BaseActivity;
 
 /**
  * Created by lzw on 14-9-17.
@@ -46,8 +46,8 @@ public class UpdateContentActivity extends BaseActivity {
   private void init() {
     Intent intent = getIntent();
     String fieldName = intent.getStringExtra(FIELD_NAME);
-    String editHint = ctx.getString(R.string.common_please_input_hint);
-    String changeTitle = ctx.getString(R.string.common_change_title);
+    String editHint = ctx.getString(R.string.chat_common_please_input_hint);
+    String changeTitle = ctx.getString(R.string.chat_common_change_title);
     editHint = editHint.replace("{0}", fieldName);
     changeTitle = changeTitle.replace("{0}", fieldName);
     fieldNameView.setText(fieldName);
