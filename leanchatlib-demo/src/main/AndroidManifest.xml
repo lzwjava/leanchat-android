@@ -46,7 +46,7 @@
         <service android:name="com.avos.avoscloud.PushService" />
 
         <activity
-            android:name="com.avoscloud.leanchatlib.activity.LocationActivity"
+            android:name="com.avoscloud.chat.ui.chat.LocationActivity"
             android:theme="@style/ChatMainTheme" />
     </application>
 </manifest>

@@ -6,9 +6,11 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
@@ -21,6 +23,7 @@ import com.avoscloud.chat.service.event.FinishEvent;
 import com.avoscloud.chat.ui.conversation.ConversationDetailActivity;
 import com.avoscloud.chat.util.Utils;
 import com.avoscloud.leanchatlib.activity.ChatActivity;
+import com.avoscloud.leanchatlib.activity.LocationHandler;
 import com.avoscloud.leanchatlib.controller.ChatManager;
 import com.avoscloud.leanchatlib.controller.ConversationHelper;
 import com.avoscloud.leanchatlib.utils.Logger;
@@ -57,6 +60,34 @@ public class ChatRoomActivity extends ChatActivity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    initLocation();
+  }
+
+  private void initLocation() {
+    addLocationBtn.setVisibility(View.VISIBLE);
+    setLocationHandler(new LocationHandler() {
+      @Override
+      public void selectLocationByRequestCode(Activity activity, int requestCode) {
+        LocationActivity.startToSelectLocationForResult(activity, requestCode);
+      }
+
+      @Override
+      public void seeLocationDetail(Activity activity, double latitude, double longitude) {
+        LocationActivity.startToSeeLocationDetail(activity, latitude, longitude);
+      }
+
+      @Override
+      public void handleLocationResultIntent(Intent intent) {
+        final double latitude = intent.getDoubleExtra(LocationActivity.LATITUDE, 0);
+        final double longitude = intent.getDoubleExtra(LocationActivity.LONGITUDE, 0);
+        final String address = intent.getStringExtra(LocationActivity.ADDRESS);
+        if (!TextUtils.isEmpty(address)) {
+          messageAgent.sendLocation(latitude, longitude, address);
+        } else {
+          toast(R.string.chat_cannotGetYourAddressInfo);
+        }
+      }
+    });
   }
 
   @Override

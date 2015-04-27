@@ -23,16 +23,14 @@
     <string name="chat_image">图片</string>
     <string name="chat_cancelRecord">取消录音</string>
     <string name="chat_audio">语音</string>
-    <string name="chat_getGeoInfoFailed">获取地理位置信息失败!</string>
     <string name="chat_position">位置</string>
-    <string name="chat_geoIsSame">获取坐标相同</string>
-    <string name="chat_mapKeyErrorTips">key 验证出错! 请在 AndroidManifest.xml 文件中检查 key 设置</string>
+
+
     <string name="chat_cannotFindResult">抱歉，未能找到结果</string>
-    <string name="chat_reverseGeoCodeResultIs">反编码得到的地址：</string>
     <string name="chat_bottom_picture">照片</string>
     <string name="chat_bottom_camera">拍摄</string>
     <string name="chat_bottom_location">位置</string>
-    <string name="chat_cannotGetYourAddressInfo">无法获取到您的位置信息！</string>
+
     <string name="chat_emotion">表情</string>
     <string name="chat_pleaseCheckNetwork">请检查网络</string>
     <string name="chat_activity_loadMessagesFinish">聊天记录加载完毕</string>
@@ -45,6 +43,5 @@
     <string name="chat_activity_select_picture">选择图片</string>
     <string name="chat_cloudCodeNotDeployTips">云代码未部署，请到项目主页根据说明来部署</string>
     <string name="chat_record_button_pleaseSayMore">说多点吧～</string>
-    <string name="chat_location_activity_send">发送</string>
 
 </resources>

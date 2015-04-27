@@ -50,8 +50,7 @@ import java.util.Set;
 public class ChatActivity extends BaseActivity implements OnClickListener,
     XListView.IXListViewListener {
   public static final String CONVID = "convid";
-
-  private static final int LOCATION_REQUEST = 1;
+  public static final int LOCATION_REQUEST = 1;
   private static final int PAGE_SIZE = 20;
   private static final int TAKE_CAMERA_REQUEST = 2;
   private static final int GALLERY_REQUEST = 0;
@@ -77,6 +76,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
   protected RecordButton recordBtn;
   protected String localCameraPath = PathUtils.getTmpPath();
   protected View addCameraBtn;
+  private LocationHandler locationHandler;
 
   public static ChatActivity getChatInstance() {
     return chatInstance;
@@ -88,6 +88,10 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 
   public static void setCurrentChattingConvid(String currentChattingConvid) {
     ChatActivity.currentChattingConvid = currentChattingConvid;
+  }
+
+  public void setLocationHandler(LocationHandler locationHandler) {
+    this.locationHandler = locationHandler;
   }
 
   public void onCreate(Bundle savedInstanceState) {
@@ -132,6 +136,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
     showAddBtn.setOnClickListener(this);
     showEmotionBtn.setOnClickListener(this);
     addCameraBtn.setOnClickListener(this);
+
+    addLocationBtn.setVisibility(View.GONE);
   }
 
   private void initByIntent(Intent intent) {
@@ -274,11 +280,10 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 
       @Override
       public void onLocationViewClick(AVIMLocationMessage locMsg) {
-        Intent intent = new Intent(ctx, LocationActivity.class);
-        intent.putExtra(LocationActivity.TYPE, LocationActivity.TYPE_SCAN);
-        intent.putExtra(LocationActivity.LATITUDE, locMsg.getLocation().getLatitude());
-        intent.putExtra(LocationActivity.LONGITUDE, locMsg.getLocation().getLongitude());
-        ctx.startActivity(intent);
+        if (locationHandler != null) {
+          locationHandler.seeLocationDetail(ChatActivity.this, locMsg.getLocation().getLatitude(),
+              locMsg.getLocation().getLongitude());
+        }
       }
 
       @Override
@@ -311,7 +316,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 
   @Override
   public void onClick(View v) {
-    // TODO Auto-generated method stub
     if (v.getId() == R.id.sendBtn) {
       sendText();
     } else if (v.getId() == R.id.addImageBtn) {
@@ -325,7 +329,9 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
     } else if (v.getId() == R.id.showEmotionBtn) {
       toggleEmotionLayout();
     } else if (v.getId() == R.id.addLocationBtn) {
-      selectLocationFromMap();
+      if (locationHandler != null) {
+        locationHandler.selectLocationByRequestCode(this, LOCATION_REQUEST);
+      }
     } else if (v.getId() == R.id.textEdit) {
       hideBottomLayoutAndScrollToLast();
     } else if (v.getId() == R.id.addCameraBtn) {
@@ -341,12 +347,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
   private void hideBottomLayout() {
     hideAddLayout();
     chatEmotionLayout.setVisibility(View.GONE);
-  }
-
-  private void selectLocationFromMap() {
-    Intent intent = new Intent(this, LocationActivity.class);
-    intent.putExtra(LocationActivity.TYPE, LocationActivity.TYPE_SELECT);
-    startActivityForResult(intent, LOCATION_REQUEST);
   }
 
   private void toggleEmotionLayout() {
@@ -424,6 +424,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
   @TargetApi(Build.VERSION_CODES.KITKAT)
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
     if (resultCode == RESULT_OK) {
       switch (requestCode) {
         case GALLERY_REQUEST:
@@ -444,24 +445,20 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
           }
           String localSelectPath = ProviderPathUtils.getPath(ctx, uri);
           messageAgent.sendImage(localSelectPath);
+          hideBottomLayout();
           break;
         case TAKE_CAMERA_REQUEST:
           messageAgent.sendImage(localCameraPath);
+          hideBottomLayout();
           break;
         case LOCATION_REQUEST:
-          final double latitude = data.getDoubleExtra(LocationActivity.LATITUDE, 0);
-          final double longitude = data.getDoubleExtra(LocationActivity.LONGITUDE, 0);
-          final String address = data.getStringExtra(LocationActivity.ADDRESS);
-          if (!TextUtils.isEmpty(address)) {
-            messageAgent.sendLocation(latitude, longitude, address);
-          } else {
-            toast(R.string.chat_cannotGetYourAddressInfo);
+          if (locationHandler != null) {
+            locationHandler.handleLocationResultIntent(data);
+            hideBottomLayout();
           }
           break;
       }
     }
-    hideBottomLayout();
-    super.onActivityResult(requestCode, resultCode, data);
   }
 
   public void scrollToLast() {

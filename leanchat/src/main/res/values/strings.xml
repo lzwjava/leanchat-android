@@ -83,4 +83,11 @@
     <string name="conversation_detail_kickSucceed">已踢走该成员</string>
     <string name="conversation_detail_title">详情</string>
 
+    <string name="chat_location_activity_send">发送</string>
+    <string name="chat_getGeoInfoFailed">获取地理位置信息失败!</string>
+    <string name="chat_geoIsSame">获取坐标相同</string>
+    <string name="chat_location_mapKeyErrorTips">key 验证出错! 请在 AndroidManifest.xml 文件中检查 key 设置</string>
+    <string name="chat_reverseGeoCodeResultIs">反编码得到的地址：</string>
+    <string name="chat_cannotGetYourAddressInfo">无法获取到您的位置信息！</string>
+
 </resources>

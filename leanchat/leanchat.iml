@@ -85,6 +85,8 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 21 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" exported="" name="locSDK_4.2" level="project" />
+    <orderEntry type="library" exported="" name="baidumapapi_v3_0_0" level="project" />
     <orderEntry type="library" exported="" name="avoscloud-statistics-v3.1.4" level="project" />
     <orderEntry type="library" exported="" name="multidex-1.0.0" level="project" />
     <orderEntry type="module" module-name="leanchatlib" exported="" />

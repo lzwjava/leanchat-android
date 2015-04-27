@@ -1,5 +1,6 @@
-package com.avoscloud.leanchatlib.activity;
+package com.avoscloud.chat.ui.chat;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -7,7 +8,8 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import com.avoscloud.leanchatlib.R;
+import com.avoscloud.chat.R;
+import com.avoscloud.leanchatlib.activity.BaseActivity;
 import com.avoscloud.leanchatlib.utils.Logger;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -176,6 +178,20 @@ public class LocationActivity extends BaseActivity implements
     descriptor.recycle();
   }
 
+  public static void startToSeeLocationDetail(Context ctx, double latitude, double longitude) {
+    Intent intent = new Intent(ctx, LocationActivity.class);
+    intent.putExtra(LocationActivity.TYPE, LocationActivity.TYPE_SCAN);
+    intent.putExtra(LocationActivity.LATITUDE, latitude);
+    intent.putExtra(LocationActivity.LONGITUDE, longitude);
+    ctx.startActivity(intent);
+  }
+
+  public static void startToSelectLocationForResult(Activity from, int requestCode) {
+    Intent intent = new Intent(from, LocationActivity.class);
+    intent.putExtra(LocationActivity.TYPE, LocationActivity.TYPE_SELECT);
+    from.startActivityForResult(intent, requestCode);
+  }
+
   /**
    * 定位SDK监听函数
    */
@@ -231,7 +247,7 @@ public class LocationActivity extends BaseActivity implements
     public void onReceive(Context context, Intent intent) {
       String s = intent.getAction();
       if (s.equals(SDKInitializer.SDK_BROADTCAST_ACTION_STRING_PERMISSION_CHECK_ERROR)) {
-        toast(getString(R.string.chat_mapKeyErrorTips));
+        toast(getString(R.string.chat_location_mapKeyErrorTips));
       } else if (s
           .equals(SDKInitializer.SDK_BROADCAST_ACTION_STRING_NETWORK_ERROR)) {
         toast(getString(R.string.chat_pleaseCheckNetwork));

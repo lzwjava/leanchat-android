@@ -77,7 +77,7 @@
         <activity android:name="com.avoscloud.leanchatlib.activity.ImageBrowserActivity" />
 
         <activity
-            android:name="com.avoscloud.leanchatlib.activity.LocationActivity"
+            android:name=".ui.chat.LocationActivity"
             android:theme="@style/ChatMainTheme" />
 
         <activity android:name=".ui.entry.EntryLoginActivity" />
