@@ -174,7 +174,7 @@ public class ChatManager extends AVIMClientEventHandler {
     return selfId;
   }
 
-  public void openClientWithSelfId(String selfId) {
+  public void openClientWithSelfId(String selfId, final AVIMClientCallback callback) {
     if (this.selfId == null) {
       throw new IllegalStateException("please call setupDatabaseWithSelfId() first");
     }
@@ -191,6 +191,9 @@ public class ChatManager extends AVIMClientEventHandler {
         } else {
           connect = true;
           connectionListener.onConnectionChanged(connect);
+        }
+        if (callback != null) {
+          callback.done(client, e);
         }
       }
     });
@@ -229,8 +232,8 @@ public class ChatManager extends AVIMClientEventHandler {
 
       @Override
       protected void onPost(Exception exception) {
-        if (ChatActivity.getCurrentChattingConvid() != null && !ChatActivity.getCurrentChattingConvid().equals(message
-            .getConversationId()) && selfId != null) {
+        if (selfId != null && ChatActivity.getCurrentChattingConvid() == null || !ChatActivity.getCurrentChattingConvid().equals(message
+            .getConversationId())) {
           if (getChatUserFactory().showNotificationWhenNewMessageCome(selfId)) {
             showMessageNotification(getContext(), conversation, message);
           }
@@ -239,13 +242,16 @@ public class ChatManager extends AVIMClientEventHandler {
     }.execute();
   }
 
-  public void close() {
+  public void closeWithCallback(final AVIMClientCallback callback) {
     imClient.close(new AVIMClientCallback() {
 
       @Override
       public void done(AVIMClient client, AVException e) {
         if (e != null) {
           Logger.d(e.getMessage());
+        }
+        if (callback != null) {
+          callback.done(client, e);
         }
       }
     });

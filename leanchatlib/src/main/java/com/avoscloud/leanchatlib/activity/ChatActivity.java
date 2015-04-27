@@ -67,16 +67,16 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
   protected MessageAgent.SendCallback defaultSendCallback = new DefaultSendCallback();
   protected EventBus eventBus;
   protected ChatManager chatManager = ChatManager.getInstance();
-  private ChatMessageAdapter adapter;
-  private RoomsTable roomsTable;
-  private View chatTextLayout, chatAudioLayout, chatAddLayout, chatEmotionLayout;
-  private View turnToTextBtn, turnToAudioBtn, sendBtn, addImageBtn, showAddBtn, addLocationBtn, showEmotionBtn;
-  private ViewPager emotionPager;
-  private EmotionEditText contentEdit;
-  private XListView xListView;
-  private RecordButton recordBtn;
-  private String localCameraPath = PathUtils.getTmpPath();
-  private View addCameraBtn;
+  protected ChatMessageAdapter adapter;
+  protected RoomsTable roomsTable;
+  protected View chatTextLayout, chatAudioLayout, chatAddLayout, chatEmotionLayout;
+  protected View turnToTextBtn, turnToAudioBtn, sendBtn, addImageBtn, showAddBtn, addLocationBtn, showEmotionBtn;
+  protected ViewPager emotionPager;
+  protected EmotionEditText contentEdit;
+  protected XListView xListView;
+  protected RecordButton recordBtn;
+  protected String localCameraPath = PathUtils.getTmpPath();
+  protected View addCameraBtn;
 
   public static ChatActivity getChatInstance() {
     return chatInstance;

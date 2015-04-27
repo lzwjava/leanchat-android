@@ -62,21 +62,6 @@ public class PhotoUtils {
     imageLoader.displayImage(url, imageView, normalImageOptions);
   }
 
-  public static ImageLoaderConfiguration getImageLoaderConfig(Context context, File cacheDir) {
-    return new ImageLoaderConfiguration.Builder(
-        context)
-        .threadPoolSize(3).threadPriority(Thread.NORM_PRIORITY - 2)
-            //.memoryCache(new WeakMemoryCache())
-        .denyCacheImageMultipleSizesInMemory()
-        .discCacheFileNameGenerator(new Md5FileNameGenerator())
-            // 将保存的时候的URI名称用MD5 加密
-        .tasksProcessingOrder(QueueProcessingType.LIFO)
-        .discCache(new UnlimitedDiscCache(cacheDir))// 自定义缓存路径
-            // .defaultDisplayImageOptions(DisplayImageOptions.createSimple())
-            //.writeDebugLogs() // Remove for release app
-        .build();
-  }
-
   public static String compressImage(String path, String newPath) {
     BitmapFactory.Options options = new BitmapFactory.Options();
     options.inJustDecodeBounds = true;

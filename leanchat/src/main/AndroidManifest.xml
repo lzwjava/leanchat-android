@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest
+    package="com.avoscloud.chat"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:versionCode="12"
+    android:versionName="2.0">
+
+    <uses-sdk android:minSdkVersion="15" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+
+
+    <!-- baidumap 所需的权限 -start -->
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+
+    <!--location-->
+    <!-- 这个权限用于进行网络定位-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- 这个权限用于访问GPS定位-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- SD卡读取权限，用户写入离线定位数据-->
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <!-- baidumap 所需的权限 -end -->
+
+    <application
+        android:name=".base.App"
+        android:icon="@drawable/icon"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.Holo.Light.NoActionBar">
+
+        <activity
+            android:name=".ui.chat.ChatRoomActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/ChatMainTheme" />
+
+        <service android:name="com.avos.avoscloud.PushService" />
+
+        <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".ui.MainActivity"
+            android:launchMode="singleTask" />
+
+        <activity
+            android:name=".ui.base_activity.UpdateContentActivity"
+            android:theme="@style/ChatMainTheme" />
+
+        <activity
+            android:name=".ui.entry.EntrySplashActivity"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name="com.avoscloud.leanchatlib.activity.ImageBrowserActivity" />
+
+        <activity
+            android:name="com.avoscloud.leanchatlib.activity.LocationActivity"
+            android:theme="@style/ChatMainTheme" />
+
+        <activity android:name=".ui.entry.EntryLoginActivity" />
+
+        <activity
+            android:name=".ui.entry.EntryRegisterActivity"
+            android:theme="@style/ChatMainTheme" />
+
+        <activity
+            android:name=".ui.contact.ContactNewFriendActivity"
+            android:theme="@style/ChatMainTheme" />
+
+        <activity
+            android:name=".ui.contact.ContactAddFriendActivity"
+            android:theme="@style/ChatMainTheme" />
+
+        <activity
+            android:name=".ui.contact.ContactPersonInfoActivity"
+            android:theme="@style/ChatMainTheme" />
+
+        <activity
+            android:name=".ui.profile.ProfileNotifySettingActivity"
+            android:theme="@style/ChatMainTheme" />
+
+        <activity
+            android:name=".ui.conversation.ConversationListActivity"
+            android:label="@string/conversation_group"
+            android:theme="@style/ChatMainTheme" />
+
+        <activity
+            android:name=".ui.conversation.ConversationDetailActivity"
+            android:theme="@style/ChatMainTheme" />
+
+        <activity
+            android:name=".ui.conversation.ConversationAddMembersActivity"
+            android:label="@string/conversation_inviteMembers"
+            android:theme="@style/ChatMainTheme" />
+
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote" />
+
+        <!-- Don't forgot InitActivity -->
+
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="qdgGT2wl1aOFbeZfQwruDDY8" />
+
+        <!--prod-->
+        <!--<meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="PUT3u7lIPY49Ck0bqceFA3ue" />-->
+    </application>
+</manifest>
