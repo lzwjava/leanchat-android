@@ -6,9 +6,9 @@ import android.os.Message;
 import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.service.UserService;
-import com.avoscloud.leanchatlib.activity.BaseActivity;
 import com.avoscloud.chat.ui.MainActivity;
 import com.avoscloud.chat.util.Utils;
+import com.avoscloud.leanchatlib.activity.BaseActivity;
 
 public class EntrySplashActivity extends BaseActivity {
   public static final int SPLASH_DURATION = 2000;

@@ -75,6 +75,9 @@ public class BaseActivity extends FragmentActivity {
 
   protected void initActionBar(String title) {
     ActionBar actionBar = getActionBar();
+    if (actionBar == null) {
+      throw new NullPointerException("action bar is null");
+    }
     if (title != null) {
       actionBar.setTitle(title);
     }

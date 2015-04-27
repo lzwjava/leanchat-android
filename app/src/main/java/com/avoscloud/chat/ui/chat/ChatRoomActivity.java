@@ -15,15 +15,15 @@ import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.entity.AVIMUserInfoMessage;
-import com.avoscloud.leanchatlib.activity.ChatActivity;
-import com.avoscloud.leanchatlib.controller.ChatManager;
-import com.avoscloud.leanchatlib.controller.ConversationHelper;
-import com.avoscloud.leanchatlib.utils.Logger;
 import com.avoscloud.chat.service.CacheService;
 import com.avoscloud.chat.service.ConversationChangeEvent;
 import com.avoscloud.chat.service.event.FinishEvent;
 import com.avoscloud.chat.ui.conversation.ConversationDetailActivity;
 import com.avoscloud.chat.util.Utils;
+import com.avoscloud.leanchatlib.activity.ChatActivity;
+import com.avoscloud.leanchatlib.controller.ChatManager;
+import com.avoscloud.leanchatlib.controller.ConversationHelper;
+import com.avoscloud.leanchatlib.utils.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,23 +32,6 @@ import java.util.Map;
  * Created by lzw on 15/4/24.
  */
 public class ChatRoomActivity extends ChatActivity {
-
-  @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-  }
-
-  @Override
-  protected void onResume() {
-    CacheService.setCurConv(conversation);
-    super.onResume();
-  }
-
-  @Override
-  protected void onDestroy() {
-    CacheService.setCurConv(null);
-    super.onDestroy();
-  }
 
   public static void chatByConversation(Context from, AVIMConversation conv) {
     CacheService.registerConv(conv);
@@ -69,6 +52,23 @@ public class ChatRoomActivity extends ChatActivity {
         }
       }
     });
+  }
+
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+  }
+
+  @Override
+  protected void onResume() {
+    CacheService.setCurConv(conversation);
+    super.onResume();
+  }
+
+  @Override
+  protected void onDestroy() {
+    CacheService.setCurConv(null);
+    super.onDestroy();
   }
 
   private void testSendCustomMessage() {

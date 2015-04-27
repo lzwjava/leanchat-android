@@ -9,10 +9,10 @@ import android.widget.ImageView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 import com.avoscloud.chat.R;
-import com.avoscloud.leanchatlib.adapter.BaseListAdapter;
 import com.avoscloud.chat.entity.SortUser;
 import com.avoscloud.chat.entity.avobject.User;
 import com.avoscloud.chat.service.UserService;
+import com.avoscloud.leanchatlib.adapter.BaseListAdapter;
 import com.avoscloud.leanchatlib.view.ViewHolder;
 
 @SuppressLint("DefaultLocale")

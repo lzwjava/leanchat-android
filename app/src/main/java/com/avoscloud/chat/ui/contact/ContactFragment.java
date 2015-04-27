@@ -41,41 +41,17 @@ import java.util.Collections;
 import java.util.List;
 
 public class ContactFragment extends BaseFragment {
-  @InjectView(R.id.et_msg_search)
-  ClearEditText clearEditText;
-
-  @InjectView(R.id.dialog)
-  TextView dialogTextView;
-
-  @InjectView(R.id.list_friends)
-  BaseListView<SortUser> friendsList;
-
-  @InjectView(R.id.right_letter)
-  EnLetterView rightLetter;
-
-  View listHeaderView;
-
-  class ListHeaderViewHolder {
-    @InjectView(R.id.iv_msg_tips)
-    ImageView msgTipsView;
-
-    @OnClick(R.id.layout_new)
-    void goNewFriend() {
-      Utils.goActivity(ctx, ContactNewFriendActivity.class);
-    }
-
-    @OnClick(R.id.layout_group)
-    void goGroupConvList() {
-      Utils.goActivity(ctx, ConversationListActivity.class);
-    }
-
-    public ImageView getMsgTipsView() {
-      return msgTipsView;
-    }
-  }
-
   private static CharacterParser characterParser;
   private static PinyinComparator pinyinComparator;
+  @InjectView(R.id.et_msg_search)
+  ClearEditText clearEditText;
+  @InjectView(R.id.dialog)
+  TextView dialogTextView;
+  @InjectView(R.id.list_friends)
+  BaseListView<SortUser> friendsList;
+  @InjectView(R.id.right_letter)
+  EnLetterView rightLetter;
+  View listHeaderView;
   private ContactFragmentAdapter userAdapter;
   private ListHeaderViewHolder listHeaderViewHolder = new ListHeaderViewHolder();
 
@@ -270,6 +246,25 @@ public class ContactFragment extends BaseFragment {
             });
           }
         }).setNegativeButton(R.string.chat_common_cancel, null).show();
+  }
+
+  class ListHeaderViewHolder {
+    @InjectView(R.id.iv_msg_tips)
+    ImageView msgTipsView;
+
+    @OnClick(R.id.layout_new)
+    void goNewFriend() {
+      Utils.goActivity(ctx, ContactNewFriendActivity.class);
+    }
+
+    @OnClick(R.id.layout_group)
+    void goGroupConvList() {
+      Utils.goActivity(ctx, ConversationListActivity.class);
+    }
+
+    public ImageView getMsgTipsView() {
+      return msgTipsView;
+    }
   }
 
   private class LetterListViewListener implements

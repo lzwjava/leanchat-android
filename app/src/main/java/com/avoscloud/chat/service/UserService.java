@@ -6,8 +6,8 @@ import com.avos.avoscloud.*;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.base.C;
 import com.avoscloud.chat.entity.avobject.User;
-import com.avoscloud.leanchatlib.utils.Logger;
 import com.avoscloud.chat.util.Utils;
+import com.avoscloud.leanchatlib.utils.Logger;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.IOException;

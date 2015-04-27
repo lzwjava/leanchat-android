@@ -9,12 +9,12 @@ import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
-import com.avoscloud.leanchatlib.adapter.BaseListAdapter;
 import com.avoscloud.chat.entity.avobject.User;
 import com.avoscloud.chat.service.PreferenceMap;
 import com.avoscloud.chat.service.UserService;
-import com.avoscloud.leanchatlib.view.ViewHolder;
 import com.avoscloud.chat.util.Utils;
+import com.avoscloud.leanchatlib.adapter.BaseListAdapter;
+import com.avoscloud.leanchatlib.view.ViewHolder;
 import org.ocpsoft.prettytime.PrettyTime;
 
 import java.util.Date;

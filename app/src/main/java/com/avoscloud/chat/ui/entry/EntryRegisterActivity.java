@@ -8,12 +8,12 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.entity.avobject.User;
 import com.avoscloud.chat.base.App;
+import com.avoscloud.chat.entity.avobject.User;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.MainActivity;
-import com.avoscloud.leanchatlib.utils.NetAsyncTask;
 import com.avoscloud.chat.util.Utils;
+import com.avoscloud.leanchatlib.utils.NetAsyncTask;
 
 public class EntryRegisterActivity extends EntryBaseActivity {
   View registerButton;

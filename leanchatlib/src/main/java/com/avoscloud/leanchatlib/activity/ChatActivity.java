@@ -30,7 +30,10 @@ import com.avoscloud.leanchatlib.db.MsgsTable;
 import com.avoscloud.leanchatlib.db.RoomsTable;
 import com.avoscloud.leanchatlib.model.ConversationType;
 import com.avoscloud.leanchatlib.model.MessageEvent;
-import com.avoscloud.leanchatlib.utils.*;
+import com.avoscloud.leanchatlib.utils.DownloadUtils;
+import com.avoscloud.leanchatlib.utils.NetAsyncTask;
+import com.avoscloud.leanchatlib.utils.PathUtils;
+import com.avoscloud.leanchatlib.utils.ProviderPathUtils;
 import com.avoscloud.leanchatlib.view.EmotionEditText;
 import com.avoscloud.leanchatlib.view.RecordButton;
 import com.avoscloud.leanchatlib.view.xlist.XListView;
@@ -57,9 +60,15 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
   private static ChatActivity chatInstance;
   //用来判断是否弹出通知
   private static String currentChattingConvid;
+  protected ConversationType conversationType;
+  protected AVIMConversation conversation;
+  protected MsgsTable msgsTable;
+  protected MessageAgent messageAgent;
+  protected MessageAgent.SendCallback defaultSendCallback = new DefaultSendCallback();
+  protected EventBus eventBus;
+  protected ChatManager chatManager = ChatManager.getInstance();
   private ChatMessageAdapter adapter;
   private RoomsTable roomsTable;
-
   private View chatTextLayout, chatAudioLayout, chatAddLayout, chatEmotionLayout;
   private View turnToTextBtn, turnToAudioBtn, sendBtn, addImageBtn, showAddBtn, addLocationBtn, showEmotionBtn;
   private ViewPager emotionPager;
@@ -68,26 +77,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
   private RecordButton recordBtn;
   private String localCameraPath = PathUtils.getTmpPath();
   private View addCameraBtn;
-  protected ConversationType conversationType;
-  protected AVIMConversation conversation;
-  protected MsgsTable msgsTable;
-  protected MessageAgent messageAgent;
-  protected MessageAgent.SendCallback defaultSendCallback = new DefaultSendCallback();
-  protected EventBus eventBus;
-  protected ChatManager chatManager = ChatManager.getInstance();
-
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.chat_layout);
-    commonInit();
-    findView();
-    initEmotionPager();
-    initRecordBtn();
-    setEditTextChangeListener();
-    initListView();
-    setSoftInputMode();
-    initByIntent(getIntent());
-  }
 
   public static ChatActivity getChatInstance() {
     return chatInstance;
@@ -101,6 +90,18 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
     ChatActivity.currentChattingConvid = currentChattingConvid;
   }
 
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.chat_layout);
+    commonInit();
+    findView();
+    initEmotionPager();
+    initRecordBtn();
+    setEditTextChangeListener();
+    initListView();
+    setSoftInputMode();
+    initByIntent(getIntent());
+  }
 
   private void findView() {
     xListView = (XListView) findViewById(R.id.listview);
@@ -507,6 +508,26 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
     setCurrentChattingConvid(null);
   }
 
+  void cacheMsgs(List<AVIMTypedMessage> msgs) throws Exception {
+    Set<String> userIds = new HashSet<String>();
+    for (AVIMTypedMessage msg : msgs) {
+      AVIMReservedMessageType type = AVIMReservedMessageType.getAVIMReservedMessageType(msg.getMessageType());
+      if (type == AVIMReservedMessageType.AudioMessageType) {
+        File file = new File(MessageHelper.getFilePath(msg));
+        if (!file.exists()) {
+          AVIMAudioMessage audioMsg = (AVIMAudioMessage) msg;
+          String url = audioMsg.getFileUrl();
+          DownloadUtils.downloadFileIfNotExists(url, file);
+        }
+      }
+      userIds.add(msg.getFrom());
+    }
+    if (chatManager.getChatUserFactory() == null) {
+      throw new NullPointerException("chat user factory is null");
+    }
+    chatManager.getChatUserFactory().cacheUserByIdsInBackground(new ArrayList<String>(userIds));
+  }
+
   class GetDataTask extends NetAsyncTask {
     private List<AVIMTypedMessage> msgs;
     private boolean loadHistory;
@@ -569,26 +590,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
         }
       }
     }
-  }
-
-  void cacheMsgs(List<AVIMTypedMessage> msgs) throws Exception {
-    Set<String> userIds = new HashSet<String>();
-    for (AVIMTypedMessage msg : msgs) {
-      AVIMReservedMessageType type = AVIMReservedMessageType.getAVIMReservedMessageType(msg.getMessageType());
-      if (type == AVIMReservedMessageType.AudioMessageType) {
-        File file = new File(MessageHelper.getFilePath(msg));
-        if (!file.exists()) {
-          AVIMAudioMessage audioMsg = (AVIMAudioMessage) msg;
-          String url = audioMsg.getFileUrl();
-          DownloadUtils.downloadFileIfNotExists(url, file);
-        }
-      }
-      userIds.add(msg.getFrom());
-    }
-    if (chatManager.getChatUserFactory() == null) {
-      throw new NullPointerException("chat user factory is null");
-    }
-    chatManager.getChatUserFactory().cacheUserByIdsInBackground(new ArrayList<String>(userIds));
   }
 
   class DefaultSendCallback implements MessageAgent.SendCallback {

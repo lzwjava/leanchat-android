@@ -7,12 +7,12 @@ import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMMessagesQueryCallback;
 import com.avoscloud.chat.base.C;
+import com.avoscloud.chat.util.Utils;
 import com.avoscloud.leanchatlib.controller.ChatManager;
 import com.avoscloud.leanchatlib.controller.ConversationHelper;
 import com.avoscloud.leanchatlib.controller.MessageHelper;
 import com.avoscloud.leanchatlib.model.ConversationType;
 import com.avoscloud.leanchatlib.model.Room;
-import com.avoscloud.chat.util.Utils;
 import de.greenrobot.event.EventBus;
 
 import java.util.*;
