@@ -18,6 +18,17 @@ import java.util.List;
  * Created by lzw on 15/4/27.
  */
 public class App extends Application {
+  public static void initImageLoader(Context context) {
+    ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
+        context)
+        .threadPoolSize(3).threadPriority(Thread.NORM_PRIORITY - 2)
+            //.memoryCache(new WeakMemoryCache())
+        .denyCacheImageMultipleSizesInMemory()
+        .tasksProcessingOrder(QueueProcessingType.LIFO)
+        .build();
+    ImageLoader.getInstance().init(config);
+  }
+
   @Override
   public void onCreate() {
     super.onCreate();
@@ -52,16 +63,5 @@ public class App extends Application {
       }
     });
     initImageLoader(this);
-  }
-
-  public static void initImageLoader(Context context) {
-    ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
-        context)
-        .threadPoolSize(3).threadPriority(Thread.NORM_PRIORITY - 2)
-            //.memoryCache(new WeakMemoryCache())
-        .denyCacheImageMultipleSizesInMemory()
-        .tasksProcessingOrder(QueueProcessingType.LIFO)
-        .build();
-    ImageLoader.getInstance().init(config);
   }
 }

@@ -56,7 +56,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/base_line_width_1"
         android:layout_below="@id/layout_new"
-        android:background="@drawable/base_horizontal_line"/>
+        android:background="@drawable/base_horizontal_line" />
 
     <LinearLayout
         android:id="@+id/layout_group"

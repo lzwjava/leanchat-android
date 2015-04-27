@@ -39,6 +39,24 @@ public class ChatMessageAdapter extends BaseListAdapter<AVIMTypedMessage> {
     this.conversationType = conversationType;
   }
 
+  // time
+  public static String millisecsToDateString(long timestamp) {
+    long gap = System.currentTimeMillis() - timestamp;
+    if (gap < 1000 * 60 * 60 * 24) {
+      String s = prettyTime.format(new Date(timestamp));
+      //return s.replace(" ", "");
+      return s;
+    } else {
+      SimpleDateFormat format = new SimpleDateFormat("MM-dd HH:mm");
+      return format.format(new Date(timestamp));
+    }
+  }
+
+  public static boolean haveTimeGap(long lastTime, long time) {
+    int gap = 1000 * 60 * 3;
+    return time - lastTime > gap;
+  }
+
   public void setClickListener(ClickListener clickListener) {
     this.clickListener = clickListener;
   }
@@ -106,7 +124,7 @@ public class ChatMessageAdapter extends BaseListAdapter<AVIMTypedMessage> {
       sendTimeView.setVisibility(View.GONE);
     }
 
-    ChatUser user=ChatManager.getInstance().getChatUserFactory().getChatUserById(msg.getFrom());
+    ChatUser user = ChatManager.getInstance().getChatUserFactory().getChatUserById(msg.getFrom());
     if (user == null) {
       throw new NullPointerException("user is null");
     }
@@ -277,23 +295,5 @@ public class ChatMessageAdapter extends BaseListAdapter<AVIMTypedMessage> {
     void onLocationViewClick(AVIMLocationMessage locMsg);
 
     void onImageViewClick(AVIMImageMessage imageMsg);
-  }
-
-  // time
-  public static String millisecsToDateString(long timestamp) {
-    long gap = System.currentTimeMillis() - timestamp;
-    if (gap < 1000 * 60 * 60 * 24) {
-      String s = prettyTime.format(new Date(timestamp));
-      //return s.replace(" ", "");
-      return s;
-    } else {
-      SimpleDateFormat format = new SimpleDateFormat("MM-dd HH:mm");
-      return format.format(new Date(timestamp));
-    }
-  }
-
-  public static boolean haveTimeGap(long lastTime, long time) {
-    int gap = 1000 * 60 * 3;
-    return time - lastTime > gap;
   }
 }

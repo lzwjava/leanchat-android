@@ -27,23 +27,21 @@ import java.util.*;
  * Created by lzw on 15/2/10.
  */
 public class ChatManager extends AVIMClientEventHandler {
+  public static final String KEY_UPDATED_AT = "updatedAt";
   private static final long NOTIFY_PERIOD = 1000;
   private static final int REPLY_NOTIFY_ID = 1;
-  public static final String KEY_UPDATED_AT = "updatedAt";
   private static ChatManager chatManager;
   private static long lastNotifyTime = 0;
   private static Context context;
-  private Map<String, AVIMConversation> cachedConversations = new HashMap<>();
-
   private static ConnectionListener defaultConnectListener = new ConnectionListener() {
     @Override
     public void onConnectionChanged(boolean connect) {
       Logger.d("default connect listener");
     }
   };
-
   private ConnectionListener connectionListener = defaultConnectListener;
   private static boolean setupDatabase = false;
+  private Map<String, AVIMConversation> cachedConversations = new HashMap<>();
   private AVIMClient imClient;
   private String selfId;
   private boolean connect = false;
@@ -281,6 +279,30 @@ public class ChatManager extends AVIMClientEventHandler {
     return connect;
   }
 
+  //cache
+  public void registerConversation(AVIMConversation conversation) {
+    cachedConversations.put(conversation.getConversationId(), conversation);
+  }
+
+  public AVIMConversation lookUpConversationById(String conversationId) {
+    return cachedConversations.get(conversationId);
+  }
+
+  public ChatUserFactory getChatUserFactory() {
+    return chatUserFactory;
+  }
+
+  public void setChatUserFactory(ChatUserFactory chatUserFactory) {
+    this.chatUserFactory = chatUserFactory;
+  }
+
+  //ChatUser
+
+  public List<Room> findRecentRooms() {
+    RoomsTable roomsTable = RoomsTable.getCurrentUserInstance();
+    return roomsTable.selectRooms();
+  }
+
   public interface ConnectionListener {
     void onConnectionChanged(boolean connect);
   }
@@ -298,29 +320,5 @@ public class ChatManager extends AVIMClientEventHandler {
                                  AVIMClient client) {
       chatManager.onMessageReceipt(message, conversation);
     }
-  }
-
-  //cache
-  public void registerConversation(AVIMConversation conversation) {
-    cachedConversations.put(conversation.getConversationId(), conversation);
-  }
-
-  public AVIMConversation lookUpConversationById(String conversationId) {
-    return cachedConversations.get(conversationId);
-  }
-
-  //ChatUser
-
-  public ChatUserFactory getChatUserFactory() {
-    return chatUserFactory;
-  }
-
-  public void setChatUserFactory(ChatUserFactory chatUserFactory) {
-    this.chatUserFactory = chatUserFactory;
-  }
-
-  public List<Room> findRecentRooms() {
-    RoomsTable roomsTable = RoomsTable.getCurrentUserInstance();
-    return roomsTable.selectRooms();
   }
 }

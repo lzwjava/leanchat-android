@@ -18,8 +18,8 @@ import java.util.regex.Pattern;
  * Created by lzw on 14-9-25.
  */
 public class EmotionHelper {
-  public static List<List<String>> emojiGroups;
   private static final int ONE_PAGE_SIZE = 21;
+  public static List<List<String>> emojiGroups;
   private static Pattern pattern;
   private static String[] emojiCodes = new String[]{
       ":smile:",

@@ -41,7 +41,7 @@ public class PlayButton extends ImageView implements View.OnClickListener {
     boolean left = true;
     for (int i = 0; i < typedArray.getIndexCount(); i++) {
       int attr = typedArray.getIndex(i);
-      if(attr==R.styleable.ChatPlayBtn_left){
+      if (attr == R.styleable.ChatPlayBtn_left) {
         left = typedArray.getBoolean(attr, true);
       }
     }

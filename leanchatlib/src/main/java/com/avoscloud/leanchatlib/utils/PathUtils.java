@@ -17,7 +17,7 @@ public class PathUtils {
   }
 
   public static String getCacheDir() {
-    return ChatManager.getContext().getCacheDir().getAbsolutePath()+"/";
+    return ChatManager.getContext().getCacheDir().getAbsolutePath() + "/";
   }
 
   public static String getChatFileDir() {

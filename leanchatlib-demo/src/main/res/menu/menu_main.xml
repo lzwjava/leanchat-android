@@ -3,6 +3,6 @@
     tools:context="com.avoscloud.leanchatlib_demo.MainActivity">
     <item
         android:id="@+id/action_settings"
-        android:title="注销"
-        android:showAsAction="always" />
+        android:showAsAction="always"
+        android:title="注销" />
 </menu>
