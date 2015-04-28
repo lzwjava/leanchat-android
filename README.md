@@ -10,7 +10,14 @@ LeanChat 是 [LeanCloud](http://leancloud.cn) [实时通信](https://leancloud.c
 
 ![leanchat-android1](https://cloud.githubusercontent.com/assets/5022872/7362725/665a7f14-eda0-11e4-8fc5-e7ea5dea0618.gif)
 
-## Leanchat 项目构成
+## LeanChat Android 项目构成
+
+* leanchatlib，核心的聊天逻辑和聊天界面库。有了它，可以快速集成聊天功能，支持文字、音频、图片、表情消息，消息通知。同时也有相应的 [iOS版本](https://github.com/leancloud/leanchat-ios/tree/master/LeanChatLib) 。
+* leancahtlib-demo，leanchatlib 最简单的使用例子。可以看到配置一下 AndroidManifest，以及额外配置一下 user 信息，即可集成聊天，不管是用 LeanCloud 的用户系统还是自己的用户系统。
+* leanchat ，为整个聊天应用。它包含好友管理、群组管理、地理消息、附近的人、个人页面、登录注册的功能，完全基于 LeanCloud 的存储和通信功能。
+
+
+## LeanChat 项目构成
 
 * [Leanchat-android](https://github.com/leancloud/leanchat-android)：Android 客户端
 * [Leanchat-ios](https://github.com/leancloud/leanchat-ios)：iOS 客户端
@@ -19,11 +26,11 @@ LeanChat 是 [LeanCloud](http://leancloud.cn) [实时通信](https://leancloud.c
 ## Eclipse 运行需知
 1. 用到了 [ButterKnife](https://github.com/JakeWharton/butterknife) 开源库，Eclipse需要设置一下来支持 ButterKnife 的注解，具体如何设置见 http://jakewharton.github.io/butterknife/ide-eclipse.html 。否则会因为 view 没有绑定上，导致崩溃。
 
-### 相关文档
+## 相关文档
 
 [实时通信服务开发指南](https://leancloud.cn/docs/realtime_v2.html)
 
-### 依赖组件
+## 依赖组件
 
 LeanChat Android 客户端依赖 LeanCloud Android SDK 如下组件：
 
@@ -33,7 +40,7 @@ LeanChat Android 客户端依赖 LeanCloud Android SDK 如下组件：
 
 如果需要这些模块 SDK，可以到 [这里](https://cn.avoscloud.com/docs/sdk_down.html) 下载。
 
-### 其他文档
+## 其他文档
 
 * [wiki](https://github.com/leancloud/leanchat-android/wiki)
 
