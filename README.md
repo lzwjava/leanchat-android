@@ -8,8 +8,7 @@ LeanChat 是 [LeanCloud](http://leancloud.cn) [实时通信](https://leancloud.c
 
 ## 效果
 
-![leanchat-android](https://cloud.githubusercontent.com/assets/5022872/7362675/83f5bde6-ed9f-11e4-9800-a2318129260b.gif)
-
+![leanchat-android1](https://cloud.githubusercontent.com/assets/5022872/7362725/665a7f14-eda0-11e4-8fc5-e7ea5dea0618.gif)
 
 ## Leanchat 项目构成
 
