@@ -6,11 +6,10 @@ LeanChat 是 [LeanCloud](http://leancloud.cn) [实时通信](https://leancloud.c
 
 应用体验下载地址：[http://fir.im/leanchat](http://fir.im/leanchat)
 
-## 效果截图
+## 效果
 
-![img](https://raw.githubusercontent.com/lzwjava/plan/master/im361.png)
+![leanchat-android](https://cloud.githubusercontent.com/assets/5022872/7362675/83f5bde6-ed9f-11e4-9800-a2318129260b.gif)
 
-![img](https://raw.githubusercontent.com/lzwjava/plan/master/im362.png)
 
 ## Leanchat 项目构成
 
