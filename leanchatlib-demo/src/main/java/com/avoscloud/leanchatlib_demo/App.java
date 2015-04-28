@@ -5,8 +5,8 @@ import android.app.Notification;
 import android.content.Context;
 import com.avos.avoscloud.AVOSCloud;
 import com.avoscloud.leanchatlib.controller.ChatManager;
-import com.avoscloud.leanchatlib.controller.ChatUserFactory;
-import com.avoscloud.leanchatlib.model.ChatUser;
+import com.avoscloud.leanchatlib.controller.UserInfoFactory;
+import com.avoscloud.leanchatlib.model.UserInfo;
 import com.avoscloud.leanchatlib.utils.Logger;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -38,18 +38,17 @@ public class App extends Application {
     AVOSCloud.setDebugLogEnabled(true);  // set false when release
     final ChatManager chatManager = ChatManager.getInstance();
     chatManager.init(this);
-    chatManager.setChatUserFactory(new ChatUserFactory() {
+    chatManager.setUserInfoFactory(new UserInfoFactory() {
       @Override
-      public ChatUser getChatUserById(String userId) {
-        ChatUser chatUser = new ChatUser();
-        chatUser.setUserId(userId);
-        chatUser.setUsername(userId);
-        chatUser.setAvatarUrl("http://ac-x3o016bx.clouddn.com/86O7RAPx2BtTW5zgZTPGNwH9RZD5vNDtPm1YbIcu");
-        return chatUser;
+      public UserInfo getUserInfoById(String userId) {
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUsername(userId);
+        userInfo.setAvatarUrl("http://ac-x3o016bx.clouddn.com/86O7RAPx2BtTW5zgZTPGNwH9RZD5vNDtPm1YbIcu");
+        return userInfo;
       }
 
       @Override
-      public void cacheUserByIdsInBackground(List<String> userIds) throws Exception {
+      public void cacheUserInfoByIdsInBackground(List<String> userIds) throws Exception {
       }
 
       @Override

@@ -17,7 +17,7 @@ import com.avoscloud.leanchatlib.controller.AudioHelper;
 import com.avoscloud.leanchatlib.controller.ChatManager;
 import com.avoscloud.leanchatlib.controller.EmotionHelper;
 import com.avoscloud.leanchatlib.controller.MessageHelper;
-import com.avoscloud.leanchatlib.model.ChatUser;
+import com.avoscloud.leanchatlib.model.UserInfo;
 import com.avoscloud.leanchatlib.model.ConversationType;
 import com.avoscloud.leanchatlib.utils.PhotoUtils;
 import com.avoscloud.leanchatlib.view.PlayButton;
@@ -124,7 +124,7 @@ public class ChatMessageAdapter extends BaseListAdapter<AVIMTypedMessage> {
       sendTimeView.setVisibility(View.GONE);
     }
 
-    ChatUser user = ChatManager.getInstance().getChatUserFactory().getChatUserById(msg.getFrom());
+    UserInfo user = ChatManager.getInstance().getUserInfoFactory().getUserInfoById(msg.getFrom());
     if (user == null) {
       throw new NullPointerException("user is null");
     }

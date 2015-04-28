@@ -13,7 +13,7 @@ import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
 import com.avoscloud.leanchatlib.activity.ChatActivity;
 import com.avoscloud.leanchatlib.db.MsgsTable;
 import com.avoscloud.leanchatlib.db.RoomsTable;
-import com.avoscloud.leanchatlib.model.ChatUser;
+import com.avoscloud.leanchatlib.model.UserInfo;
 import com.avoscloud.leanchatlib.model.ConversationType;
 import com.avoscloud.leanchatlib.model.MessageEvent;
 import com.avoscloud.leanchatlib.model.Room;
@@ -49,7 +49,7 @@ public class ChatManager extends AVIMClientEventHandler {
   private MsgsTable msgsTable;
   private RoomsTable roomsTable;
   private EventBus eventBus = EventBus.getDefault();
-  private ChatUserFactory chatUserFactory;
+  private UserInfoFactory userInfoFactory;
 
   private ChatManager() {
   }
@@ -109,7 +109,7 @@ public class ChatManager extends AVIMClientEventHandler {
     Notification.Builder builder = new Notification.Builder(context);
     CharSequence notifyContent = MessageHelper.outlineOfMsg(msg);
     CharSequence username = "username";
-    ChatUser from = getChatUserFactory().getChatUserById(msg.getFrom());
+    UserInfo from = getUserInfoFactory().getUserInfoById(msg.getFrom());
     if (from != null) {
       username = from.getUsername();
     }
@@ -122,7 +122,7 @@ public class ChatManager extends AVIMClientEventHandler {
         .setAutoCancel(true);
     NotificationManager man = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     Notification notification = builder.getNotification();
-    getChatUserFactory().configureNotification(notification);
+    getUserInfoFactory().configureNotification(notification);
     man.notify(REPLY_NOTIFY_ID, notification);
   }
 
@@ -225,14 +225,14 @@ public class ChatManager extends AVIMClientEventHandler {
     new NetAsyncTask(getContext(), false) {
       @Override
       protected void doInBack() throws Exception {
-        getChatUserFactory().cacheUserByIdsInBackground(Arrays.asList(message.getFrom()));
+        getUserInfoFactory().cacheUserInfoByIdsInBackground(Arrays.asList(message.getFrom()));
       }
 
       @Override
       protected void onPost(Exception exception) {
         if (selfId != null && ChatActivity.getCurrentChattingConvid() == null || !ChatActivity.getCurrentChattingConvid().equals(message
             .getConversationId())) {
-          if (getChatUserFactory().showNotificationWhenNewMessageCome(selfId)) {
+          if (getUserInfoFactory().showNotificationWhenNewMessageCome(selfId)) {
             showMessageNotification(getContext(), conversation, message);
           }
         }
@@ -288,12 +288,12 @@ public class ChatManager extends AVIMClientEventHandler {
     return cachedConversations.get(conversationId);
   }
 
-  public ChatUserFactory getChatUserFactory() {
-    return chatUserFactory;
+  public UserInfoFactory getUserInfoFactory() {
+    return userInfoFactory;
   }
 
-  public void setChatUserFactory(ChatUserFactory chatUserFactory) {
-    this.chatUserFactory = chatUserFactory;
+  public void setUserInfoFactory(UserInfoFactory userInfoFactory) {
+    this.userInfoFactory = userInfoFactory;
   }
 
   //ChatUser

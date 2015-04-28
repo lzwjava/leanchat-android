@@ -1,7 +1,7 @@
 package com.avoscloud.leanchatlib.controller;
 
 import com.avos.avoscloud.im.v2.AVIMConversation;
-import com.avoscloud.leanchatlib.model.ChatUser;
+import com.avoscloud.leanchatlib.model.UserInfo;
 import com.avoscloud.leanchatlib.model.ConversationType;
 
 import java.util.List;
@@ -59,7 +59,7 @@ public class ConversationHelper {
     }
     if (typeOfConv(conv) == ConversationType.Single) {
       String otherId = otherIdOfConv(conv);
-      ChatUser user = ChatManager.getInstance().getChatUserFactory().getChatUserById(otherId);
+      UserInfo user = ChatManager.getInstance().getUserInfoFactory().getUserInfoById(otherId);
       return user.getUsername();
     } else {
       return conv.getName();

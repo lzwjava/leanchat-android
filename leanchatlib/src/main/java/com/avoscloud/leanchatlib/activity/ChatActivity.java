@@ -512,10 +512,10 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
       }
       userIds.add(msg.getFrom());
     }
-    if (chatManager.getChatUserFactory() == null) {
+    if (chatManager.getUserInfoFactory() == null) {
       throw new NullPointerException("chat user factory is null");
     }
-    chatManager.getChatUserFactory().cacheUserByIdsInBackground(new ArrayList<String>(userIds));
+    chatManager.getUserInfoFactory().cacheUserInfoByIdsInBackground(new ArrayList<String>(userIds));
   }
 
   class GetDataTask extends NetAsyncTask {

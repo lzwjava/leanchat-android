@@ -5,7 +5,7 @@ import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMLocationMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.avoscloud.leanchatlib.R;
-import com.avoscloud.leanchatlib.model.ChatUser;
+import com.avoscloud.leanchatlib.model.UserInfo;
 
 import java.util.List;
 
@@ -62,7 +62,7 @@ public class MessageHelper {
   }
 
   public static String nameByUserId(String id) {
-    ChatUser user = ChatManager.getInstance().getChatUserFactory().getChatUserById(id);
+    UserInfo user = ChatManager.getInstance().getUserInfoFactory().getUserInfoById(id);
     if (user != null) {
       return user.getUsername();
     } else {

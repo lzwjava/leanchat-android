@@ -14,8 +14,8 @@ import com.avoscloud.chat.service.PreferenceMap;
 import com.avoscloud.chat.ui.entry.EntrySplashActivity;
 import com.avoscloud.chat.util.Utils;
 import com.avoscloud.leanchatlib.controller.ChatManager;
-import com.avoscloud.leanchatlib.controller.ChatUserFactory;
-import com.avoscloud.leanchatlib.model.ChatUser;
+import com.avoscloud.leanchatlib.controller.UserInfoFactory;
+import com.avoscloud.leanchatlib.model.UserInfo;
 import com.avoscloud.leanchatlib.utils.Logger;
 import com.baidu.mapapi.SDKInitializer;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -88,20 +88,20 @@ public class App extends Application {
       chatManager.setupDatabaseWithSelfId(AVUser.getCurrentUser().getObjectId());
     }
     chatManager.setConversationEventHandler(ConversationManager.getConversationHandler());
-    chatManager.setChatUserFactory(new ChatUserFactory() {
+    chatManager.setUserInfoFactory(new UserInfoFactory() {
       PreferenceMap preferenceMap = PreferenceMap.getCurUserPrefDao(App.this);
 
       @Override
-      public ChatUser getChatUserById(String userId) {
+      public UserInfo getUserInfoById(String userId) {
         AVUser user = CacheService.lookupUser(userId);
-        ChatUser chatUser = new ChatUser();
-        chatUser.setUsername(user.getUsername());
-        chatUser.setAvatarUrl(User.getAvatarUrl(user));
-        return chatUser;
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUsername(user.getUsername());
+        userInfo.setAvatarUrl(User.getAvatarUrl(user));
+        return userInfo;
       }
 
       @Override
-      public void cacheUserByIdsInBackground(List<String> userIds) throws Exception {
+      public void cacheUserInfoByIdsInBackground(List<String> userIds) throws Exception {
         CacheService.cacheUsers(userIds);
       }
 
