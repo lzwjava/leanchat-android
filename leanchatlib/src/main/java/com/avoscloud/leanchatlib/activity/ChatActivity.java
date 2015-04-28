@@ -50,7 +50,6 @@ import java.util.Set;
 public class ChatActivity extends BaseActivity implements OnClickListener,
     XListView.IXListViewListener {
   public static final String CONVID = "convid";
-  public static final int LOCATION_REQUEST = 1;
   private static final int PAGE_SIZE = 20;
   private static final int TAKE_CAMERA_REQUEST = 2;
   private static final int GALLERY_REQUEST = 0;
@@ -281,8 +280,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
       @Override
       public void onLocationViewClick(AVIMLocationMessage locMsg) {
         if (locationHandler != null) {
-          locationHandler.seeLocationDetail(ChatActivity.this, locMsg.getLocation().getLatitude(),
-              locMsg.getLocation().getLongitude());
+          locationHandler.onLocationMessageViewClicked(ChatActivity.this,
+              locMsg);
         }
       }
 
@@ -330,7 +329,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
       toggleEmotionLayout();
     } else if (v.getId() == R.id.addLocationBtn) {
       if (locationHandler != null) {
-        locationHandler.selectLocationByRequestCode(this, LOCATION_REQUEST);
+        locationHandler.onAddLocationButtonClicked(this);
       }
     } else if (v.getId() == R.id.textEdit) {
       hideBottomLayoutAndScrollToLast();
@@ -344,7 +343,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
     scrollToLast();
   }
 
-  private void hideBottomLayout() {
+  protected void hideBottomLayout() {
     hideAddLayout();
     chatEmotionLayout.setVisibility(View.GONE);
   }
@@ -450,12 +449,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
         case TAKE_CAMERA_REQUEST:
           messageAgent.sendImage(localCameraPath);
           hideBottomLayout();
-          break;
-        case LOCATION_REQUEST:
-          if (locationHandler != null) {
-            locationHandler.handleLocationResultIntent(data);
-            hideBottomLayout();
-          }
           break;
       }
     }

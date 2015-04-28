@@ -15,6 +15,7 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
+import com.avos.avoscloud.im.v2.messages.AVIMLocationMessage;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.entity.AVIMUserInfoMessage;
 import com.avoscloud.chat.service.CacheService;
@@ -35,6 +36,7 @@ import java.util.Map;
  * Created by lzw on 15/4/24.
  */
 public class ChatRoomActivity extends ChatActivity {
+  public static final int LOCATION_REQUEST = 100;
 
   public static void chatByConversation(Context from, AVIMConversation conv) {
     CacheService.registerConv(conv);
@@ -67,25 +69,14 @@ public class ChatRoomActivity extends ChatActivity {
     addLocationBtn.setVisibility(View.VISIBLE);
     setLocationHandler(new LocationHandler() {
       @Override
-      public void selectLocationByRequestCode(Activity activity, int requestCode) {
-        LocationActivity.startToSelectLocationForResult(activity, requestCode);
+      public void onAddLocationButtonClicked(Activity activity) {
+        LocationActivity.startToSelectLocationForResult(activity, LOCATION_REQUEST);
       }
 
       @Override
-      public void seeLocationDetail(Activity activity, double latitude, double longitude) {
-        LocationActivity.startToSeeLocationDetail(activity, latitude, longitude);
-      }
-
-      @Override
-      public void handleLocationResultIntent(Intent intent) {
-        final double latitude = intent.getDoubleExtra(LocationActivity.LATITUDE, 0);
-        final double longitude = intent.getDoubleExtra(LocationActivity.LONGITUDE, 0);
-        final String address = intent.getStringExtra(LocationActivity.ADDRESS);
-        if (!TextUtils.isEmpty(address)) {
-          messageAgent.sendLocation(latitude, longitude, address);
-        } else {
-          toast(R.string.chat_cannotGetYourAddressInfo);
-        }
+      public void onLocationMessageViewClicked(Activity activity, AVIMLocationMessage locationMessage) {
+        LocationActivity.startToSeeLocationDetail(activity, locationMessage.getLocation().getLatitude(),
+            locationMessage.getLocation().getLongitude());
       }
     });
   }
@@ -144,5 +135,26 @@ public class ChatRoomActivity extends ChatActivity {
       Utils.goActivity(ctx, ConversationDetailActivity.class);
     }
     return super.onMenuItemSelected(featureId, item);
+  }
+
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if (resultCode == RESULT_OK) {
+      switch (requestCode) {
+        case LOCATION_REQUEST:
+          final double latitude = data.getDoubleExtra(LocationActivity.LATITUDE, 0);
+          final double longitude = data.getDoubleExtra(LocationActivity.LONGITUDE, 0);
+          final String address = data.getStringExtra(LocationActivity.ADDRESS);
+          if (!TextUtils.isEmpty(address)) {
+            messageAgent.sendLocation(latitude, longitude, address);
+          } else {
+            toast(R.string.chat_cannotGetYourAddressInfo);
+          }
+          hideBottomLayout();
+          break;
+      }
+    }
+
   }
 }

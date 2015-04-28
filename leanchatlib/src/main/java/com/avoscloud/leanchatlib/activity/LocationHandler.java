@@ -1,15 +1,13 @@
 package com.avoscloud.leanchatlib.activity;
 
 import android.app.Activity;
-import android.content.Intent;
+import com.avos.avoscloud.im.v2.messages.AVIMLocationMessage;
 
 /**
  * Created by lzw on 15/4/27.
  */
 public interface LocationHandler {
-  public void selectLocationByRequestCode(Activity activity, int requestCode);
+  public void onAddLocationButtonClicked(Activity activity);
 
-  public void seeLocationDetail(Activity activity, double latitude, double longitude);
-
-  public void handleLocationResultIntent(Intent intent);
+  public void onLocationMessageViewClicked(Activity activity, AVIMLocationMessage locationMessage);
 }

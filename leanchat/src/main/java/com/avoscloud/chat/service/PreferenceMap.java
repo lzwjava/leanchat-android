@@ -134,7 +134,7 @@ public class PreferenceMap {
 
 
   public int getNearbyOrder() {
-    return pref.getInt(NEARBY_ORDER, UserService.ORDER_DISTANCE);
+    return pref.getInt(NEARBY_ORDER, UserService.ORDER_UPDATED_AT);
   }
 
   public void setNearbyOrder(int nearbyOrder) {
