@@ -5,7 +5,6 @@ import com.avos.avoscloud.im.v2.*;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
-import com.avos.avoscloud.im.v2.callback.AVIMMessagesQueryCallback;
 import com.avoscloud.chat.base.C;
 import com.avoscloud.chat.util.Utils;
 import com.avoscloud.leanchatlib.controller.ChatManager;
@@ -90,12 +89,12 @@ public class ConversationManager {
     List<String> userIds = new ArrayList<String>();
     for (Room room : rooms) {
       AVIMConversation conv = CacheService.lookupConv(room.getConvid());
-      room.setConv(conv);
-      if (ConversationHelper.typeOfConv(conv) == ConversationType.Single) {
-        userIds.add(ConversationHelper.otherIdOfConv(conv));
+      room.setConversation(conv);
+      if (ConversationHelper.typeOfConversation(conv) == ConversationType.Single) {
+        userIds.add(ConversationHelper.otherIdOfConversation(conv));
       }
     }
-    CacheService.cacheUsers(new ArrayList<String>(userIds));
+    CacheService.cacheUsers(new ArrayList<>(userIds));
   }
 
   public void updateName(final AVIMConversation conv, String newName, final AVIMConversationCallback callback) {
@@ -147,35 +146,4 @@ public class ConversationManager {
     chatManager.getImClient().createConversation(members, map, callback);
   }
 
-  /**
-   * msgId 、time 共同使用，防止某毫秒时刻有重复消息
-   */
-  public List<AVIMTypedMessage> queryHistoryMessage(AVIMConversation conv, String msgId, long time, int limit) throws Exception {
-    final AVException[] es = new AVException[1];
-    final List<AVIMMessage> msgs = new ArrayList<AVIMMessage>();
-    final CountDownLatch latch = new CountDownLatch(1);
-    conv.queryMessages(msgId, time, limit, new AVIMMessagesQueryCallback() {
-      @Override
-      public void done(List<AVIMMessage> avimMessages, AVException e) {
-        if (e != null) {
-          es[0] = e;
-        } else {
-          msgs.addAll(avimMessages);
-        }
-        latch.countDown();
-      }
-    });
-    latch.await();
-    if (es[0] != null) {
-      throw es[0];
-    } else {
-      List<AVIMTypedMessage> resultMsgs = new ArrayList<AVIMTypedMessage>();
-      for (AVIMMessage msg : msgs) {
-        if (msg instanceof AVIMTypedMessage) {
-          resultMsgs.add((AVIMTypedMessage) msg);
-        }
-      }
-      return resultMsgs;
-    }
-  }
 }

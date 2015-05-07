@@ -113,7 +113,7 @@ public class ChatRoomActivity extends ChatActivity {
         equals(conversationChangeEvent.getConv().getConversationId())) {
       this.conversation = conversationChangeEvent.getConv();
       ActionBar actionBar = getActionBar();
-      actionBar.setTitle(ConversationHelper.titleOfConv(this.conversation));
+      actionBar.setTitle(ConversationHelper.titleOfConversation(this.conversation));
     }
   }
 

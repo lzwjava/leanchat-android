@@ -1,12 +1,10 @@
 package com.avoscloud.leanchatlib.activity;
 
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.view.ViewPager;
 import android.text.*;
@@ -15,6 +13,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMReservedMessageType;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
@@ -26,14 +25,10 @@ import com.avoscloud.leanchatlib.adapter.ChatEmotionGridAdapter;
 import com.avoscloud.leanchatlib.adapter.ChatEmotionPagerAdapter;
 import com.avoscloud.leanchatlib.adapter.ChatMessageAdapter;
 import com.avoscloud.leanchatlib.controller.*;
-import com.avoscloud.leanchatlib.db.MsgsTable;
 import com.avoscloud.leanchatlib.db.RoomsTable;
 import com.avoscloud.leanchatlib.model.ConversationType;
 import com.avoscloud.leanchatlib.model.MessageEvent;
-import com.avoscloud.leanchatlib.utils.DownloadUtils;
-import com.avoscloud.leanchatlib.utils.NetAsyncTask;
-import com.avoscloud.leanchatlib.utils.PathUtils;
-import com.avoscloud.leanchatlib.utils.ProviderPathUtils;
+import com.avoscloud.leanchatlib.utils.*;
 import com.avoscloud.leanchatlib.view.EmotionEditText;
 import com.avoscloud.leanchatlib.view.RecordButton;
 import com.avoscloud.leanchatlib.view.xlist.XListView;
@@ -60,7 +55,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
   private static String currentChattingConvid;
   protected ConversationType conversationType;
   protected AVIMConversation conversation;
-  protected MsgsTable msgsTable;
   protected MessageAgent messageAgent;
   protected MessageAgent.SendCallback defaultSendCallback = new DefaultSendCallback();
   protected EventBus eventBus;
@@ -141,7 +135,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 
   private void initByIntent(Intent intent) {
     initData(intent);
-    refreshMsgsFromDB();
+    loadMessagesWhenInit();
   }
 
   @Override
@@ -248,7 +242,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
   void commonInit() {
     ctx = this;
     chatInstance = this;
-    msgsTable = MsgsTable.getCurrentUserInstance();
     roomsTable = RoomsTable.getCurrentUserInstance();
     eventBus = EventBus.getDefault();
     eventBus.register(this);
@@ -260,12 +253,12 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
     if (conversation == null) {
       throw new NullPointerException("conv is null");
     }
-    initActionBar(ConversationHelper.titleOfConv(conversation));
+    initActionBar(ConversationHelper.titleOfConversation(conversation));
     messageAgent = new MessageAgent(conversation);
     messageAgent.setSendCallback(defaultSendCallback);
     roomsTable.insertRoom(convid);
     roomsTable.clearUnread(conversation.getConversationId());
-    conversationType = ConversationHelper.typeOfConv(conversation);
+    conversationType = ConversationHelper.typeOfConversation(conversation);
     bindAdapterToListView(conversationType);
   }
 
@@ -295,18 +288,10 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
     xListView.setAdapter(adapter);
   }
 
-  public void refreshMsgsFromDB() {
-    new GetDataTask(ctx, false).execute();
-  }
 
   @Override
   public void onRefresh() {
-    new Handler().postDelayed(new Runnable() {
-      @Override
-      public void run() {
-        new GetDataTask(ctx, true).execute();
-      }
-    }, 1000);
+    loadOldMessages();
   }
 
   @Override
@@ -475,10 +460,11 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
   }
 
   public void onEvent(MessageEvent messageEvent) {
-    AVIMTypedMessage msg = messageEvent.getMsg();
-    if (msg.getConversationId().equals(conversation.getConversationId())) {
+    AVIMTypedMessage message = messageEvent.getMsg();
+    if (messageEvent.getType() == MessageEvent.Type.Come && message.getConversationId().equals(conversation
+        .getConversationId())) {
       roomsTable.clearUnread(conversation.getConversationId());
-      refreshMsgsFromDB();
+      addMessageAndScroll(message);
     }
   }
 
@@ -518,80 +504,81 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
     chatManager.getUserInfoFactory().cacheUserInfoByIdsInBackground(new ArrayList<String>(userIds));
   }
 
-  class GetDataTask extends NetAsyncTask {
-    private List<AVIMTypedMessage> msgs;
-    private boolean loadHistory;
+  public void loadMessagesWhenInit() {
+    ChatManager.getInstance().queryMessages(conversation, null, System.currentTimeMillis(), PAGE_SIZE, new
+        AVIMTypedMessagesArrayCallback() {
+          @Override
+          public void done(final List<AVIMTypedMessage> typedMessages, AVException e) {
+            if (filterException(e)) {
+              new NetAsyncTask(ctx, false) {
+                @Override
+                protected void doInBack() throws Exception {
+                  cacheMsgs(typedMessages);
+                }
 
-    GetDataTask(Context ctx, boolean loadHistory) {
-      super(ctx, false);
-      this.loadHistory = loadHistory;
+                @Override
+                protected void onPost(Exception e) {
+                  if (filterException(e)) {
+                    adapter.setDatas(typedMessages);
+                    adapter.notifyDataSetChanged();
+                    scrollToLast();
+                  }
+                }
+              }.execute();
+            }
+          }
+        });
+  }
+
+  public void loadOldMessages() {
+    String msgId;
+    long time;
+    if (adapter.getDatas().size() == 0) {
+      return;
+    } else {
+      msgId = adapter.getDatas().get(0).getMessageId();
+      AVIMTypedMessage firstMsg = adapter.getDatas().get(0);
+      time = firstMsg.getTimestamp();
     }
-
-    @Override
-    protected void doInBack() throws Exception {
-      String msgId = null;
-      long maxTime = System.currentTimeMillis() + 10 * 1000;
-      int limit;
-      long time;
-      if (loadHistory == false) {
-        time = maxTime;
-        int count = adapter.getCount();
-        if (count > PAGE_SIZE) {
-          limit = count;
-        } else {
-          limit = PAGE_SIZE;
-        }
-      } else {
-        if (adapter.getDatas().size() > 0) {
-          msgId = adapter.getDatas().get(0).getMessageId();
-          AVIMTypedMessage firstMsg = adapter.getDatas().get(0);
-          time = firstMsg.getTimestamp();
-        } else {
-          time = maxTime;
-        }
-        limit = PAGE_SIZE;
-      }
-      msgs = msgsTable.selectMsgs(conversation.getConversationId(), time, limit);
-      //msgs = ConvManager.getInstance().queryHistoryMessage(conv, msgId, time, limit);
-      cacheMsgs(msgs);
-    }
-
-    @Override
-    protected void onPost(Exception e) {
-      if (filterException(e)) {
+    ChatManager.getInstance().queryMessages(conversation, msgId, time, PAGE_SIZE, new AVIMTypedMessagesArrayCallback() {
+      @Override
+      public void done(List<AVIMTypedMessage> typedMessages, AVException e) {
         if (xListView.getPullRefreshing()) {
           xListView.stopRefresh();
         }
-        if (loadHistory == false) {
-          adapter.setDatas(msgs);
+        if (filterException(e)) {
+          List<AVIMTypedMessage> newMessages = new ArrayList<>();
+          newMessages.addAll(typedMessages);
+          newMessages.addAll(adapter.getDatas());
+          adapter.setDatas(newMessages);
           adapter.notifyDataSetChanged();
-          scrollToLast();
-        } else {
-          List<AVIMTypedMessage> newMsgs = new ArrayList<AVIMTypedMessage>();
-          newMsgs.addAll(msgs);
-          newMsgs.addAll(adapter.getDatas());
-          adapter.setDatas(newMsgs);
-          adapter.notifyDataSetChanged();
-          if (msgs.size() > 0) {
-            xListView.setSelection(msgs.size() - 1);
+          if (typedMessages.size() > 0) {
+            xListView.setSelection(typedMessages.size() - 1);
           } else {
             toast(R.string.chat_activity_loadMessagesFinish);
           }
         }
       }
-    }
+    });
   }
 
   class DefaultSendCallback implements MessageAgent.SendCallback {
 
     @Override
     public void onError(Exception e) {
-      refreshMsgsFromDB();
+      if (filterException(e)) {
+
+      }
     }
 
     @Override
-    public void onSuccess(AVIMTypedMessage msg) {
-      refreshMsgsFromDB();
+    public void onSuccess(AVIMTypedMessage message) {
+      addMessageAndScroll(message);
     }
+  }
+
+  public void addMessageAndScroll(AVIMTypedMessage message) {
+    adapter.add(message);
+    scrollToLast();
   }
 }

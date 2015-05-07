@@ -4,6 +4,7 @@ import android.app.Application;
 import android.app.Notification;
 import android.content.Context;
 import com.avos.avoscloud.AVOSCloud;
+import com.avos.avoscloud.AVUser;
 import com.avoscloud.leanchatlib.controller.ChatManager;
 import com.avoscloud.leanchatlib.controller.UserInfoFactory;
 import com.avoscloud.leanchatlib.model.UserInfo;

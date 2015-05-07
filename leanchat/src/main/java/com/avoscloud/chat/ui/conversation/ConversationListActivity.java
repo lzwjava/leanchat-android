@@ -108,7 +108,7 @@ public class ConversationListActivity extends ConversationEventBaseActivity {
       }
       TextView nameView = ViewHolder.findViewById(conView, R.id.name);
       AVIMConversation conv = datas.get(position);
-      nameView.setText(ConversationHelper.titleOfConv(conv));
+      nameView.setText(ConversationHelper.titleOfConversation(conv));
       return conView;
     }
   }

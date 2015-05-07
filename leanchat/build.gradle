@@ -55,4 +55,5 @@ dependencies {
     compile files('libs/baidumapapi_v3_0_0.jar')
     compile files('libs/locSDK_4.2.jar')
 //    compile files('libs/prettytime-3.2.5.Final.jar')
+
 }

@@ -8,7 +8,7 @@ import com.avos.avoscloud.im.v2.AVIMTypedMessage;
  */
 public class Room {
   private AVIMTypedMessage lastMsg;
-  private AVIMConversation conv;
+  private AVIMConversation conversation;
   private String convid;
   private int unreadCount;
 
@@ -20,12 +20,12 @@ public class Room {
     this.lastMsg = lastMsg;
   }
 
-  public AVIMConversation getConv() {
-    return conv;
+  public AVIMConversation getConversation() {
+    return conversation;
   }
 
-  public void setConv(AVIMConversation conv) {
-    this.conv = conv;
+  public void setConversation(AVIMConversation conversation) {
+    this.conversation = conversation;
   }
 
   public String getConvid() {

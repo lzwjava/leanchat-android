@@ -9,11 +9,11 @@ import java.util.List;
  * Created by lzw on 15/4/26.
  */
 public interface UserInfoFactory {
-  public UserInfo getUserInfoById(String userId);
+  UserInfo getUserInfoById(String userId);
 
-  public void cacheUserInfoByIdsInBackground(List<String> userIds) throws Exception;
+  void cacheUserInfoByIdsInBackground(List<String> userIds) throws Exception;
 
-  public boolean showNotificationWhenNewMessageCome(String selfId);
+  boolean showNotificationWhenNewMessageCome(String selfId);
 
-  public void configureNotification(Notification notification);
+  void configureNotification(Notification notification);
 }

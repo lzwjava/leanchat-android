@@ -16,6 +16,8 @@ import android.widget.TextView;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.SaveCallback;
+import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.entity.avobject.User;
 import com.avoscloud.chat.service.UpdateService;
@@ -99,8 +101,12 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
       intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
       startActivityForResult(intent, IMAGE_PICK_REQUEST);
     } else if (id == R.id.logoutLayout) {
-      chatManager.closeWithCallback(null);
       DBHelper.getCurrentUserInstance().closeHelper();
+      chatManager.closeWithCallback(new AVIMClientCallback() {
+        @Override
+        public void done(AVIMClient avimClient, AVException e) {
+        }
+      });
       AVUser.logOut();
       getActivity().finish();
     } else if (id == R.id.sexLayout) {

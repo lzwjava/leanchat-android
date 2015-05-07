@@ -25,7 +25,7 @@ public class MessageHelper {
     return msg.getFrom().equals(selfId);
   }
 
-  static String bracket(String s) {
+  private static String bracket(String s) {
     return String.format("[%s]", s);
   }
 

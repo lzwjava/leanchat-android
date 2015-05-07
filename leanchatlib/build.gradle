@@ -9,7 +9,9 @@ android {
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -20,14 +22,18 @@ android {
 
 dependencies {
 
-    compile files('libs/avoscloud-push-v3.1.4.jar')
-    compile files('libs/avoscloud-sdk-v3.1.4.jar')
+    compile project(':avoscloud-push')
+    compile project(':avoscloud-sdk')
 
-    compile files('libs/support-v4-19.1.0.jar')
-    compile files('libs/android-async-http-1.4.6.jar')
-    compile files('libs/Java-WebSocket-1.2.0-leancloud.jar')
-    compile files('libs/fastjson-1.1.37-leancloud.jar');
-    compile files('libs/httpmime-4.2.4.jar')
+//    compile files('libs/avoscloud-push-v3.1.4.jar')
+//    compile files('libs/avoscloud-sdk-v3.1.4.jar')
+
+//    compile files('libs/support-v4-19.1.0.jar')
+    //compile files('libs/android-async-http-1.4.6.jar')
+
+    //compile files('libs/Java-WebSocket-1.2.0-leancloud.jar')
+    //compile files('libs/fastjson-1.1.37-leancloud.jar');
+    //compile files('libs/httpmime-4.2.4.jar')
 
     compile files('libs/eventbus-2.4.0.jar')
     compile files('libs/butterknife-6.1.0.jar')
@@ -35,6 +41,11 @@ dependencies {
     compile files('libs/baidumapapi_v3_0_0.jar')
     compile files('libs/locSDK_4.2.jar')
     compile files('libs/prettytime-3.2.5.Final.jar')
+
+    compile 'cn.leancloud.android:Java-WebSocket:1.2.0-leancloud'
+    compile 'com.loopj.android:android-async-http:1.4.6'
+    compile 'cn.leancloud.android:fastjson:1.1.37-leancloud'
+    compile 'org.apache.httpcomponents:httpmime:4.2.4'
 
     //compile fileTree(dir: 'libs', include: ['*.jar'])
 }

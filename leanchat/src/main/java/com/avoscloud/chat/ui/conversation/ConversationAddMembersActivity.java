@@ -96,7 +96,7 @@ public class ConversationAddMembersActivity extends ConversationBaseActivity {
     if (checkedUsers.size() == 0) {
       finish();
     } else {
-      if (ConversationHelper.typeOfConv(conv()) == ConversationType.Single) {
+      if (ConversationHelper.typeOfConversation(conv()) == ConversationType.Single) {
         List<String> members = new ArrayList<String>();
         members.addAll(checkedUsers);
         members.addAll(conv().getMembers());

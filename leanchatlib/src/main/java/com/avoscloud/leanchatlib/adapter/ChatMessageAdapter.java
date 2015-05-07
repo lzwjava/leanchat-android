@@ -17,8 +17,8 @@ import com.avoscloud.leanchatlib.controller.AudioHelper;
 import com.avoscloud.leanchatlib.controller.ChatManager;
 import com.avoscloud.leanchatlib.controller.EmotionHelper;
 import com.avoscloud.leanchatlib.controller.MessageHelper;
-import com.avoscloud.leanchatlib.model.UserInfo;
 import com.avoscloud.leanchatlib.model.ConversationType;
+import com.avoscloud.leanchatlib.model.UserInfo;
 import com.avoscloud.leanchatlib.utils.PhotoUtils;
 import com.avoscloud.leanchatlib.view.PlayButton;
 import com.avoscloud.leanchatlib.view.ViewHolder;
@@ -175,10 +175,10 @@ public class ChatMessageAdapter extends BaseListAdapter<AVIMTypedMessage> {
             statusSendSucceed.setVisibility(View.VISIBLE);
           }
           break;
-        case AVIMMessageStatusNone:
         case AVIMMessageStatusSending:
           statusSendStart.setVisibility(View.VISIBLE);
           break;
+        case AVIMMessageStatusNone:
         case AVIMMessageStatusReceipt:
           break;
       }

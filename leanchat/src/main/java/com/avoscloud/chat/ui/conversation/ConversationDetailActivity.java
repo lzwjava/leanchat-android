@@ -136,7 +136,7 @@ public class ConversationDetailActivity extends ConversationBaseActivity impleme
   private void initData() {
     conversationManager = ConversationManager.getInstance();
     isOwner = conv().getCreator().equals(AVUser.getCurrentUser().getObjectId());
-    conversationType = ConversationHelper.typeOfConv(conv());
+    conversationType = ConversationHelper.typeOfConversation(conv());
   }
 
   @Override

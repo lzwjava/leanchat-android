@@ -79,7 +79,7 @@ public class ConversationRecentFragment extends BaseFragment implements ChatMana
     listView.setItemListener(new BaseListView.ItemListener<Room>() {
       @Override
       public void onItemSelected(Room item) {
-        ChatRoomActivity.chatByConversation(getActivity(), item.getConv());
+        ChatRoomActivity.chatByConversation(getActivity(), item.getConversation());
       }
     });
     listView.setToastIfEmpty(false);
@@ -139,14 +139,14 @@ public class ConversationRecentFragment extends BaseFragment implements ChatMana
       TextView recentTimeView = ViewHolder.findViewById(convertView, R.id.recent_teim_text);
       TextView recentUnreadView = ViewHolder.findViewById(convertView, R.id.recent_unread);
 
-      if (ConversationHelper.typeOfConv(room.getConv()) == ConversationType.Single) {
-        AVUser user = CacheService.lookupUser(ConversationHelper.otherIdOfConv(room.getConv()));
+      if (ConversationHelper.typeOfConversation(room.getConversation()) == ConversationType.Single) {
+        AVUser user = CacheService.lookupUser(ConversationHelper.otherIdOfConversation(room.getConversation()));
         UserService.displayAvatar(user, recentAvatarView);
       } else {
         recentAvatarView.setImageResource(R.drawable.contact_group_icon);
       }
 
-      recentNameView.setText(ConversationHelper.nameOfConv(room.getConv()));
+      recentNameView.setText(ConversationHelper.nameOfConversation(room.getConversation()));
 
       int num = room.getUnreadCount();
       if (num > 0) {

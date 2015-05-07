@@ -99,6 +99,7 @@ public class BaseActivity extends FragmentActivity {
 
   protected boolean filterException(Exception e) {
     if (e != null) {
+      e.printStackTrace();
       toast(e.getMessage());
       return false;
     } else {

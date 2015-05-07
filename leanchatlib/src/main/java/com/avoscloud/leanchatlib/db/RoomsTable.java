@@ -58,8 +58,6 @@ public class RoomsTable {
     Room room = new Room();
     room.setConvid(c.getString(c.getColumnIndex(CONVID)));
     room.setUnreadCount(c.getInt(c.getColumnIndex(UNREAD_COUNT)));
-    AVIMTypedMessage lastMsg = MsgsTable.createMsgByCursor(c);
-    room.setLastMsg(lastMsg);
     return room;
   }
 

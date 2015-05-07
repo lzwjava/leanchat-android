@@ -10,13 +10,13 @@ import com.avos.avoscloud.im.v2.*;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
+import com.avos.avoscloud.im.v2.callback.AVIMMessagesQueryCallback;
 import com.avoscloud.leanchatlib.activity.ChatActivity;
-import com.avoscloud.leanchatlib.db.MsgsTable;
 import com.avoscloud.leanchatlib.db.RoomsTable;
-import com.avoscloud.leanchatlib.model.UserInfo;
 import com.avoscloud.leanchatlib.model.ConversationType;
 import com.avoscloud.leanchatlib.model.MessageEvent;
 import com.avoscloud.leanchatlib.model.Room;
+import com.avoscloud.leanchatlib.model.UserInfo;
 import com.avoscloud.leanchatlib.utils.Logger;
 import com.avoscloud.leanchatlib.utils.NetAsyncTask;
 import de.greenrobot.event.EventBus;
@@ -46,7 +46,6 @@ public class ChatManager extends AVIMClientEventHandler {
   private String selfId;
   private boolean connect = false;
   private MsgHandler msgHandler;
-  private MsgsTable msgsTable;
   private RoomsTable roomsTable;
   private EventBus eventBus = EventBus.getDefault();
   private UserInfoFactory userInfoFactory;
@@ -151,7 +150,6 @@ public class ChatManager extends AVIMClientEventHandler {
       return;
     }
     setupDatabase = true;
-    msgsTable = MsgsTable.getCurrentUserInstance();
     roomsTable = RoomsTable.getCurrentUserInstance();
   }
 
@@ -201,8 +199,7 @@ public class ChatManager extends AVIMClientEventHandler {
     if (message.getMessageId() == null) {
       throw new NullPointerException("message id is null");
     }
-    msgsTable.updateStatus(message.getMessageId(), message.getMessageStatus());
-    MessageEvent messageEvent = new MessageEvent(message);
+    MessageEvent messageEvent = new MessageEvent(message, MessageEvent.Type.Receipt);
     eventBus.post(messageEvent);
   }
 
@@ -211,16 +208,15 @@ public class ChatManager extends AVIMClientEventHandler {
     if (message.getMessageId() == null) {
       throw new NullPointerException("message id is null");
     }
-    if (!ConversationHelper.isValidConv(conversation)) {
+    if (!ConversationHelper.isValidConversation(conversation)) {
       throw new IllegalStateException("receive msg from invalid conversation");
     }
     if (lookUpConversationById(conversation.getConversationId()) == null) {
       registerConversation(conversation);
     }
-    msgsTable.insertMsg(message);
     roomsTable.insertRoom(message.getConversationId());
     roomsTable.increaseUnreadCount(message.getConversationId());
-    MessageEvent messageEvent = new MessageEvent(message);
+    MessageEvent messageEvent = new MessageEvent(message, MessageEvent.Type.Come);
     eventBus.post(messageEvent);
     new NetAsyncTask(getContext(), false) {
       @Override
@@ -297,7 +293,6 @@ public class ChatManager extends AVIMClientEventHandler {
   }
 
   //ChatUser
-
   public List<Room> findRecentRooms() {
     RoomsTable roomsTable = RoomsTable.getCurrentUserInstance();
     return roomsTable.selectRooms();
@@ -321,4 +316,29 @@ public class ChatManager extends AVIMClientEventHandler {
       chatManager.onMessageReceipt(message, conversation);
     }
   }
+
+  /**
+   * msgId 、time 共同使用，防止某毫秒时刻有重复消息
+   */
+  public void queryMessages(AVIMConversation conversation, String msgId, long time, int limit,
+                            final AVIMTypedMessagesArrayCallback callback) {
+    conversation.queryMessages(msgId, time, limit, new AVIMMessagesQueryCallback() {
+      @Override
+      public void done(List<AVIMMessage> imMessages, AVException e) {
+        if (e != null) {
+          callback.done(new ArrayList<AVIMTypedMessage>(), e);
+        } else {
+          List<AVIMTypedMessage> resultMessages = new ArrayList<>();
+          for (AVIMMessage msg : imMessages) {
+            if (msg instanceof AVIMTypedMessage) {
+              resultMessages.add((AVIMTypedMessage) msg);
+            }
+          }
+          Collections.reverse(resultMessages);
+          callback.done(resultMessages, null);
+        }
+      }
+    });
+  }
 }
+

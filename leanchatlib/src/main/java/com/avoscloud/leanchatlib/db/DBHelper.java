@@ -33,7 +33,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
   @Override
   public void onCreate(SQLiteDatabase db) {
-    MsgsTable.getCurrentUserInstance().createTable(db);
     RoomsTable.getCurrentUserInstance().createTable(db);
   }
 
@@ -46,9 +45,6 @@ public class DBHelper extends SQLiteOpenHelper {
   public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     switch (newVersion) {
       case 6:
-        MsgsTable msgsTable = MsgsTable.getCurrentUserInstance();
-        msgsTable.dropTable(db);
-        msgsTable.createTable(db);
         RoomsTable roomsTable = RoomsTable.getCurrentUserInstance();
         roomsTable.dropTable(db);
         roomsTable.createTable(db);
@@ -59,7 +55,6 @@ public class DBHelper extends SQLiteOpenHelper {
   }
 
   public synchronized void closeHelper() {
-    MsgsTable.getCurrentUserInstance().close();
     RoomsTable.getCurrentUserInstance().close();
     currentUserDBHelper = null;
   }
