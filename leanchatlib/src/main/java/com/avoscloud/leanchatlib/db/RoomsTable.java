@@ -3,7 +3,6 @@ package com.avoscloud.leanchatlib.db;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avoscloud.leanchatlib.model.Room;
 
 import java.util.ArrayList;
@@ -44,8 +43,8 @@ public class RoomsTable {
 
   public List<Room> selectRooms() {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
-    Cursor c = db.rawQuery("SELECT * FROM rooms LEFT JOIN (SELECT msgs.object,MAX(time) as time ,msgs.convid as msg_convid FROM msgs GROUP BY msgs.convid) ON rooms.convid=msg_convid ORDER BY time DESC", null);
-    List<Room> rooms = new ArrayList<Room>();
+    Cursor c = db.rawQuery("SELECT * FROM rooms", null);
+    List<Room> rooms = new ArrayList<>();
     while (c.moveToNext()) {
       Room room = createRoomByCursor(c);
       rooms.add(room);
@@ -61,15 +60,29 @@ public class RoomsTable {
     return room;
   }
 
-  public void insertRoom(String convid) {
+  public boolean isRoomExists(String convid) {
     SQLiteDatabase db = dbHelper.getWritableDatabase();
-    Cursor cursor = db.query(ROOMS_TABLE, null, "convid=?", new String[]{convid}, null, null, null);
-    if (!cursor.moveToNext()) {
-      ContentValues cv = new ContentValues();
-      cv.put(CONVID, convid);
-      db.insert(ROOMS_TABLE, null, cv);
-    }
+    Cursor cursor = db.query(ROOMS_TABLE, new String[]{CONVID}, CONVID + "=?", new String[]{convid}, null, null, null);
+    int count = cursor.getCount();
     cursor.close();
+    if (count > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public void insertRoom(String convid) {
+    if (!isRoomExists(convid)) {
+      SQLiteDatabase db = dbHelper.getWritableDatabase();
+      Cursor cursor = db.query(ROOMS_TABLE, null, "convid=?", new String[]{convid}, null, null, null);
+      if (!cursor.moveToNext()) {
+        ContentValues cv = new ContentValues();
+        cv.put(CONVID, convid);
+        db.insert(ROOMS_TABLE, null, cv);
+      }
+      cursor.close();
+    }
   }
 
   public void deleteRoom(String convid) {

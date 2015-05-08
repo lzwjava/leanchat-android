@@ -9,6 +9,7 @@ import com.avos.avoscloud.im.v2.messages.AVIMAudioMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMLocationMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
+import com.avoscloud.leanchatlib.db.RoomsTable;
 import com.avoscloud.leanchatlib.utils.Logger;
 import com.avoscloud.leanchatlib.utils.PathUtils;
 import com.avoscloud.leanchatlib.utils.PhotoUtils;
@@ -41,12 +42,6 @@ public class MessageAgent {
     conversation.sendMessage(msg, AVIMConversation.RECEIPT_MESSAGE_FLAG, new AVIMConversationCallback() {
       @Override
       public void done(AVException e) {
-        if (e != null) {
-          e.printStackTrace();
-          msg.setMessageId(Utils.uuid());
-          msg.setTimestamp(System.currentTimeMillis());
-        }
-
         if (e == null && originPath != null) {
           File tmpFile = new File(originPath);
           File newFile = new File(PathUtils.getChatFilePath(msg.getMessageId()));
@@ -57,8 +52,9 @@ public class MessageAgent {
         }
         if (callback != null) {
           if (e != null) {
-            callback.onError(e);
+            callback.onError(msg, e);
           } else {
+            RoomsTable.getCurrentUserInstance().insertRoom(conversation.getConversationId());
             callback.onSuccess(msg);
           }
         }
@@ -71,7 +67,7 @@ public class MessageAgent {
       @Override
       public void done(AVException e) {
         if (e != null) {
-          sendCallback.onError(e);
+          sendCallback.onError(msg, e);
         } else {
           sendCallback.onSuccess(msg);
         }
@@ -115,9 +111,9 @@ public class MessageAgent {
 
   public interface SendCallback {
 
-    void onError(Exception e);
+    void onError(AVIMTypedMessage message, Exception e);
 
-    void onSuccess(AVIMTypedMessage msg);
+    void onSuccess(AVIMTypedMessage message);
 
   }
 }

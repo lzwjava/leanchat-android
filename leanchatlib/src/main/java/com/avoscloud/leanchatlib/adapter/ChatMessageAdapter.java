@@ -19,6 +19,7 @@ import com.avoscloud.leanchatlib.controller.EmotionHelper;
 import com.avoscloud.leanchatlib.controller.MessageHelper;
 import com.avoscloud.leanchatlib.model.ConversationType;
 import com.avoscloud.leanchatlib.model.UserInfo;
+import com.avoscloud.leanchatlib.utils.Logger;
 import com.avoscloud.leanchatlib.utils.PhotoUtils;
 import com.avoscloud.leanchatlib.view.PlayButton;
 import com.avoscloud.leanchatlib.view.ViewHolder;

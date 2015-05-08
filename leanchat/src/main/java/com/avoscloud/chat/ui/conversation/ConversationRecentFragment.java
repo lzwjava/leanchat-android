@@ -156,10 +156,10 @@ public class ConversationRecentFragment extends BaseFragment implements ChatMana
         recentUnreadView.setVisibility(View.GONE);
       }
 
-      if (room.getLastMsg() != null) {
-        Date date = new Date(room.getLastMsg().getTimestamp());
+      if (room.getLastMessage() != null) {
+        Date date = new Date(room.getLastMessage().getTimestamp());
         recentTimeView.setText(TimeUtils.getDate(date));
-        recentMsgView.setText(MessageHelper.outlineOfMsg(room.getLastMsg()));
+        recentMsgView.setText(MessageHelper.outlineOfMsg(room.getLastMessage()));
       }
       return convertView;
     }

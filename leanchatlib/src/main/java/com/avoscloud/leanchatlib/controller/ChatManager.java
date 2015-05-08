@@ -294,8 +294,7 @@ public class ChatManager extends AVIMClientEventHandler {
 
   //ChatUser
   public List<Room> findRecentRooms() {
-    RoomsTable roomsTable = RoomsTable.getCurrentUserInstance();
-    return roomsTable.selectRooms();
+    return RoomsTable.getCurrentUserInstance().selectRooms();
   }
 
   public interface ConnectionListener {
@@ -334,11 +333,9 @@ public class ChatManager extends AVIMClientEventHandler {
               resultMessages.add((AVIMTypedMessage) msg);
             }
           }
-          Collections.reverse(resultMessages);
           callback.done(resultMessages, null);
         }
       }
     });
   }
 }
-

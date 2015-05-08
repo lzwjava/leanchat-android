@@ -28,7 +28,10 @@ import com.avoscloud.leanchatlib.controller.*;
 import com.avoscloud.leanchatlib.db.RoomsTable;
 import com.avoscloud.leanchatlib.model.ConversationType;
 import com.avoscloud.leanchatlib.model.MessageEvent;
-import com.avoscloud.leanchatlib.utils.*;
+import com.avoscloud.leanchatlib.utils.DownloadUtils;
+import com.avoscloud.leanchatlib.utils.NetAsyncTask;
+import com.avoscloud.leanchatlib.utils.PathUtils;
+import com.avoscloud.leanchatlib.utils.ProviderPathUtils;
 import com.avoscloud.leanchatlib.view.EmotionEditText;
 import com.avoscloud.leanchatlib.view.RecordButton;
 import com.avoscloud.leanchatlib.view.xlist.XListView;
@@ -135,7 +138,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 
   private void initByIntent(Intent intent) {
     initData(intent);
-    loadMessagesWhenInit();
+    loadMessagesWhenInit(PAGE_SIZE);
   }
 
   @Override
@@ -256,7 +259,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
     initActionBar(ConversationHelper.titleOfConversation(conversation));
     messageAgent = new MessageAgent(conversation);
     messageAgent.setSendCallback(defaultSendCallback);
-    roomsTable.insertRoom(convid);
     roomsTable.clearUnread(conversation.getConversationId());
     conversationType = ConversationHelper.typeOfConversation(conversation);
     bindAdapterToListView(conversationType);
@@ -267,7 +269,17 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
     adapter.setClickListener(new ChatMessageAdapter.ClickListener() {
       @Override
       public void onFailButtonClick(AVIMTypedMessage msg) {
-        messageAgent.resendMsg(msg, defaultSendCallback);
+        messageAgent.resendMsg(msg, new MessageAgent.SendCallback() {
+          @Override
+          public void onError(AVIMTypedMessage message, Exception e) {
+            loadMessagesWhenInit(adapter.getCount());
+          }
+
+          @Override
+          public void onSuccess(AVIMTypedMessage message) {
+            loadMessagesWhenInit(adapter.getCount());
+          }
+        });
       }
 
       @Override
@@ -454,6 +466,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 
   @Override
   protected void onDestroy() {
+    roomsTable.clearUnread(conversation.getConversationId());
     chatInstance = null;
     eventBus.unregister(this);
     super.onDestroy();
@@ -461,11 +474,28 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 
   public void onEvent(MessageEvent messageEvent) {
     AVIMTypedMessage message = messageEvent.getMsg();
-    if (messageEvent.getType() == MessageEvent.Type.Come && message.getConversationId().equals(conversation
+    if (message.getConversationId().equals(conversation
         .getConversationId())) {
-      roomsTable.clearUnread(conversation.getConversationId());
-      addMessageAndScroll(message);
+      if (messageEvent.getType() == MessageEvent.Type.Come) {
+        addMessageAndScroll(message);
+      } else if (messageEvent.getType() == MessageEvent.Type.Receipt) {
+        AVIMTypedMessage originMessage = findMessage(message.getMessageId());
+        if (originMessage != null) {
+          originMessage.setMessageStatus(message.getMessageStatus());
+          originMessage.setReceiptTimestamp(message.getReceiptTimestamp());
+          adapter.notifyDataSetChanged();
+        }
+      }
     }
+  }
+
+  private AVIMTypedMessage findMessage(String messageId) {
+    for (AVIMTypedMessage originMessage : adapter.getDatas()) {
+      if (originMessage.getMessageId() != null && originMessage.getMessageId().equals(messageId)) {
+        return originMessage;
+      }
+    }
+    return null;
   }
 
   @Override
@@ -504,8 +534,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
     chatManager.getUserInfoFactory().cacheUserInfoByIdsInBackground(new ArrayList<String>(userIds));
   }
 
-  public void loadMessagesWhenInit() {
-    ChatManager.getInstance().queryMessages(conversation, null, System.currentTimeMillis(), PAGE_SIZE, new
+  public void loadMessagesWhenInit(int limit) {
+    ChatManager.getInstance().queryMessages(conversation, null, System.currentTimeMillis(), limit, new
         AVIMTypedMessagesArrayCallback() {
           @Override
           public void done(final List<AVIMTypedMessage> typedMessages, AVException e) {
@@ -565,10 +595,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
   class DefaultSendCallback implements MessageAgent.SendCallback {
 
     @Override
-    public void onError(Exception e) {
-      if (filterException(e)) {
-
-      }
+    public void onError(AVIMTypedMessage message, Exception e) {
+      addMessageAndScroll(message);
     }
 
     @Override

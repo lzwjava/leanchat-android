@@ -5,6 +5,7 @@ import com.avos.avoscloud.im.v2.*;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
+import com.avos.avoscloud.im.v2.callback.AVIMMessagesQueryCallback;
 import com.avoscloud.chat.base.C;
 import com.avoscloud.chat.util.Utils;
 import com.avoscloud.leanchatlib.controller.ChatManager;
@@ -62,14 +63,38 @@ public class ConversationManager {
     return conversationHandler;
   }
 
-  public List<Room> findAndCacheRooms() throws AVException, InterruptedException {
-    List<Room> rooms = chatManager.findRecentRooms();
-    cacheAndFillRooms(rooms);
-    return rooms;
+  public static AVIMTypedMessage getLastMessage(AVIMConversation conversation) throws AVException, InterruptedException {
+    final CountDownLatch latch = new CountDownLatch(1);
+    final AVException[] es = new AVException[1];
+    final List<AVIMTypedMessage> foundMessages = new ArrayList<>();
+    conversation.queryMessages(1, new AVIMMessagesQueryCallback() {
+      @Override
+      public void done(List<AVIMMessage> messages, AVException e) {
+        es[0] = e;
+        if (e == null) {
+          for (AVIMMessage message : messages) {
+            if (message instanceof AVIMTypedMessage) {
+              foundMessages.add((AVIMTypedMessage) message);
+            }
+          }
+        }
+        latch.countDown();
+      }
+    });
+    latch.await();
+    if (es[0] != null) {
+      throw es[0];
+    }
+    if (foundMessages.size() > 0) {
+      return foundMessages.get(0);
+    } else {
+      return null;
+    }
   }
 
-  public void cacheAndFillRooms(List<Room> rooms) throws AVException, InterruptedException {
-    List<String> convids = new ArrayList<String>();
+  public List<Room> findAndCacheRooms() throws AVException, InterruptedException {
+    List<Room> rooms = chatManager.findRecentRooms();
+    List<String> convids = new ArrayList<>();
     for (Room room : rooms) {
       convids.add(room.getConvid());
     }
@@ -86,15 +111,31 @@ public class ConversationManager {
     if (es[0] != null) {
       throw es[0];
     }
-    List<String> userIds = new ArrayList<String>();
+    List<String> userIds = new ArrayList<>();
     for (Room room : rooms) {
-      AVIMConversation conv = CacheService.lookupConv(room.getConvid());
-      room.setConversation(conv);
-      if (ConversationHelper.typeOfConversation(conv) == ConversationType.Single) {
-        userIds.add(ConversationHelper.otherIdOfConversation(conv));
+      AVIMConversation conversation = CacheService.lookupConv(room.getConvid());
+      room.setConversation(conversation);
+      room.setLastMessage(getLastMessage(conversation));
+      if (ConversationHelper.typeOfConversation(conversation) == ConversationType.Single) {
+        userIds.add(ConversationHelper.otherIdOfConversation(conversation));
       }
     }
+    Collections.sort(rooms, new Comparator<Room>() {
+      @Override
+      public int compare(Room lhs, Room rhs) {
+        if (lhs.getLastMessage() != null && rhs.getLastMessage() != null) {
+          long value = lhs.getLastMessage().getTimestamp() - rhs.getLastMessage().getTimestamp();
+          if (value > 0) {
+            return -1;
+          } else if (value < 0) {
+            return 1;
+          }
+        }
+        return 0;
+      }
+    });
     CacheService.cacheUsers(new ArrayList<>(userIds));
+    return rooms;
   }
 
   public void updateName(final AVIMConversation conv, String newName, final AVIMConversationCallback callback) {
@@ -145,5 +186,4 @@ public class ConversationManager {
     map.put(ConversationType.NAME_KEY, name);
     chatManager.getImClient().createConversation(members, map, callback);
   }
-
 }

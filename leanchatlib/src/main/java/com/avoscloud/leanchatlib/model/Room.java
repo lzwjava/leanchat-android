@@ -7,17 +7,17 @@ import com.avos.avoscloud.im.v2.AVIMTypedMessage;
  * Created by lzw on 14-9-26.
  */
 public class Room {
-  private AVIMTypedMessage lastMsg;
+  private AVIMTypedMessage lastMessage;
   private AVIMConversation conversation;
   private String convid;
   private int unreadCount;
 
-  public AVIMTypedMessage getLastMsg() {
-    return lastMsg;
+  public AVIMTypedMessage getLastMessage() {
+    return lastMessage;
   }
 
-  public void setLastMsg(AVIMTypedMessage lastMsg) {
-    this.lastMsg = lastMsg;
+  public void setLastMessage(AVIMTypedMessage lastMessage) {
+    this.lastMessage = lastMessage;
   }
 
   public AVIMConversation getConversation() {
