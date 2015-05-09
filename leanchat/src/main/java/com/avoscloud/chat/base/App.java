@@ -12,11 +12,11 @@ import com.avoscloud.chat.service.CacheService;
 import com.avoscloud.chat.service.ConversationManager;
 import com.avoscloud.chat.service.PreferenceMap;
 import com.avoscloud.chat.ui.entry.EntrySplashActivity;
+import com.avoscloud.chat.util.Logger;
 import com.avoscloud.chat.util.Utils;
 import com.avoscloud.leanchatlib.controller.ChatManager;
 import com.avoscloud.leanchatlib.controller.UserInfoFactory;
 import com.avoscloud.leanchatlib.model.UserInfo;
-import com.avoscloud.leanchatlib.utils.Logger;
 import com.baidu.mapapi.SDKInitializer;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -120,6 +120,7 @@ public class App extends Application {
         }
       }
     });
+    ChatManager.setDebugEnabled(App.debug);
     if (App.debug) {
       Logger.level = Logger.VERBOSE;
     } else {

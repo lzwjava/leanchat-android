@@ -5,7 +5,7 @@ import com.avos.avoscloud.AVCloud;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.Signature;
 import com.avoscloud.leanchatlib.R;
-import com.avoscloud.leanchatlib.utils.Logger;
+import com.avoscloud.leanchatlib.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,11 +19,11 @@ import java.util.Map;
  */
 public class SignatureFactory implements com.avos.avoscloud.SignatureFactory {
   /**
-   * imClient.openWithUserId() ,create conv
+   * imClient.open() ,create conv
    */
   @Override
   public Signature createSignature(String peerId, List<String> watchIds) throws SignatureException {
-    Logger.d("selfId=" + peerId + " targetIds=" + watchIds);
+    Utils.log("selfId=" + peerId + " targetIds=" + watchIds);
     HashMap<String, Object> result;
     Map<String, Object> map1 = new HashMap<String, Object>();
     map1.put("self_id", peerId);
@@ -64,7 +64,7 @@ public class SignatureFactory implements com.avos.avoscloud.SignatureFactory {
 
   @Override
   public Signature createConversationSignature(String conversationId, String clientId, List<String> targetIds, String action) throws SignatureException {
-    Logger.d("convid=" + conversationId + " clientid=" + clientId + " targetIds=" + targetIds + " action=" + action);
+    Utils.log("convid=" + conversationId + " clientid=" + clientId + " targetIds=" + targetIds + " action=" + action);
     HashMap<String, Object> result;
     Map<String, Object> map1 = new HashMap<String, Object>();
     map1.put("self_id", clientId);

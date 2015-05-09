@@ -63,13 +63,13 @@ public class PhotoUtils {
     BitmapFactory.decodeFile(path, options);
     int inSampleSize = 1;
     int maxSize = 3000;
-    Logger.d("outWidth=" + options.outWidth + " outHeight=" + options.outHeight);
+    Utils.log("outWidth=" + options.outWidth + " outHeight=" + options.outHeight);
     if (options.outWidth > maxSize || options.outHeight > maxSize) {
       int widthScale = (int) Math.ceil(options.outWidth * 1.0 / maxSize);
       int heightScale = (int) Math.ceil(options.outHeight * 1.0 / maxSize);
       inSampleSize = Math.max(widthScale, heightScale);
     }
-    Logger.d("inSampleSize=" + inSampleSize);
+    Utils.log("inSampleSize=" + inSampleSize);
     options.inJustDecodeBounds = false;
     options.inSampleSize = inSampleSize;
     Bitmap bitmap = BitmapFactory.decodeFile(path, options);
@@ -87,8 +87,8 @@ public class PhotoUtils {
       }
     }
     Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, newW, newH, false);
-    //recycle(bitmap);
-    Logger.d("bitmap width=" + newBitmap.getWidth() + " h=" + newBitmap.getHeight());
+    recycle(bitmap);
+    Utils.log("bitmap width=" + newBitmap.getWidth() + " h=" + newBitmap.getHeight());
 
     FileOutputStream outputStream = null;
     try {

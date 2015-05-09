@@ -17,8 +17,8 @@ import com.avoscloud.leanchatlib.model.ConversationType;
 import com.avoscloud.leanchatlib.model.MessageEvent;
 import com.avoscloud.leanchatlib.model.Room;
 import com.avoscloud.leanchatlib.model.UserInfo;
-import com.avoscloud.leanchatlib.utils.Logger;
 import com.avoscloud.leanchatlib.utils.NetAsyncTask;
+import com.avoscloud.leanchatlib.utils.Utils;
 import de.greenrobot.event.EventBus;
 
 import java.util.*;
@@ -30,13 +30,17 @@ public class ChatManager extends AVIMClientEventHandler {
   public static final String KEY_UPDATED_AT = "updatedAt";
   private static final long NOTIFY_PERIOD = 1000;
   private static final int REPLY_NOTIFY_ID = 1;
+  public static final String LOGTAG = "leanchatlib";
   private static ChatManager chatManager;
   private static long lastNotifyTime = 0;
   private static Context context;
+
   private static ConnectionListener defaultConnectListener = new ConnectionListener() {
     @Override
     public void onConnectionChanged(boolean connect) {
-      Logger.d("default connect listener");
+      if (ChatManager.isDebugEnabled()) {
+        Utils.log();
+      }
     }
   };
   private ConnectionListener connectionListener = defaultConnectListener;
@@ -45,10 +49,11 @@ public class ChatManager extends AVIMClientEventHandler {
   private AVIMClient imClient;
   private String selfId;
   private boolean connect = false;
-  private MsgHandler msgHandler;
+  private MessageHandler messageHandler;
   private RoomsTable roomsTable;
   private EventBus eventBus = EventBus.getDefault();
   private UserInfoFactory userInfoFactory;
+  private static boolean debugEnabled;
 
   private ChatManager() {
   }
@@ -62,6 +67,14 @@ public class ChatManager extends AVIMClientEventHandler {
 
   public static Context getContext() {
     return context;
+  }
+
+  public static boolean isDebugEnabled() {
+    return debugEnabled;
+  }
+
+  public static void setDebugEnabled(boolean debugEnabled) {
+    ChatManager.debugEnabled = debugEnabled;
   }
 
   // fetchConversation
@@ -127,8 +140,8 @@ public class ChatManager extends AVIMClientEventHandler {
 
   public void init(Context context) {
     this.context = context;
-    msgHandler = new MsgHandler();
-    AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class, msgHandler);
+    messageHandler = new MessageHandler();
+    AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class, messageHandler);
 //    try {
 //      AVIMMessageManager.registerAVIMMessageType(AVIMUserInfoMessage.class);
 //    } catch (AVException e) {
@@ -204,7 +217,7 @@ public class ChatManager extends AVIMClientEventHandler {
   }
 
   private void onMessage(final AVIMTypedMessage message, final AVIMConversation conversation) {
-    Logger.d("receive message=" + message.getContent());
+    Utils.log("receive message=" + message.getContent());
     if (message.getMessageId() == null) {
       throw new NullPointerException("message id is null");
     }
@@ -242,7 +255,7 @@ public class ChatManager extends AVIMClientEventHandler {
       @Override
       public void done(AVIMClient client, AVException e) {
         if (e != null) {
-          Logger.d(e.getMessage());
+          Utils.logThrowable(e);
         }
         if (callback != null) {
           callback.done(client, e);
@@ -259,14 +272,14 @@ public class ChatManager extends AVIMClientEventHandler {
 
   @Override
   public void onConnectionPaused(AVIMClient client) {
-    Logger.d("connect paused");
+    Utils.log();
     connect = false;
     connectionListener.onConnectionChanged(connect);
   }
 
   @Override
   public void onConnectionResume(AVIMClient client) {
-    Logger.d("connect resume");
+    Utils.log();
     connect = true;
     connectionListener.onConnectionChanged(connect);
   }
@@ -301,7 +314,7 @@ public class ChatManager extends AVIMClientEventHandler {
     void onConnectionChanged(boolean connect);
   }
 
-  private static class MsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
+  private static class MessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
 
     @Override
     public void onMessage(AVIMTypedMessage message, AVIMConversation conversation,

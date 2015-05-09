@@ -22,7 +22,7 @@ import com.avoscloud.chat.ui.discover.DiscoverFragment;
 import com.avoscloud.chat.ui.profile.ProfileFragment;
 import com.avoscloud.leanchatlib.activity.BaseActivity;
 import com.avoscloud.leanchatlib.controller.ChatManager;
-import com.avoscloud.leanchatlib.utils.Logger;
+import com.avoscloud.chat.util.Logger;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;

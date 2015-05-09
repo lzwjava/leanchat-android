@@ -23,8 +23,6 @@ import android.widget.Toast;
 import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
-import com.avoscloud.leanchatlib.utils.DownloadUtils;
-import com.avoscloud.leanchatlib.utils.Logger;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -75,7 +73,7 @@ public class Utils {
 
   public static Bitmap urlToBitmap(String url) throws ClientProtocolException,
       IOException {
-    return BitmapFactory.decodeStream(DownloadUtils.inputStreamFromUrl(url));
+    return BitmapFactory.decodeStream(inputStreamFromUrl(url));
   }
 
   public static Bitmap bitmapFromFile(File file) throws FileNotFoundException {
@@ -95,15 +93,43 @@ public class Utils {
     return outStream.toByteArray();
   }
 
+  public static InputStream inputStreamFromUrl(String url) throws IOException {
+    DefaultHttpClient client = new DefaultHttpClient();
+    HttpGet get = new HttpGet(url);
+    HttpResponse response = client.execute(get);
+    HttpEntity entity = response.getEntity();
+    InputStream stream = entity.getContent();
+    return stream;
+  }
+
+  public static void downloadFileIfNotExists(String url, File toFile) throws IOException {
+    if (!toFile.exists()) {
+      downloadFile(url, toFile);
+    }
+  }
+
+  public static void downloadFile(String url, File toFile) throws IOException {
+    toFile.createNewFile();
+    FileOutputStream outputStream = new FileOutputStream(toFile);
+    InputStream inputStream = inputStreamFromUrl(url);
+    byte[] buffer = new byte[1024];
+    int len;
+    while ((len = inputStream.read(buffer)) != -1) {
+      outputStream.write(buffer, 0, len);
+    }
+    outputStream.close();
+    inputStream.close();
+  }
+
   public static byte[] getBytesFromUrl(String url) throws Exception {
-    InputStream in = DownloadUtils.inputStreamFromUrl(url);
+    InputStream in = inputStreamFromUrl(url);
     return readStream(in);
   }
 
   public static Bitmap saveBitmapLocal(String bitmapUrl, File bitmapFile)
       throws IOException, FileNotFoundException, ClientProtocolException {
     Bitmap resultBitmap;
-    DownloadUtils.downloadFileIfNotExists(bitmapUrl, bitmapFile);
+    downloadFileIfNotExists(bitmapUrl, bitmapFile);
     resultBitmap = Utils.bitmapFromFile(bitmapFile);
     return resultBitmap;
   }

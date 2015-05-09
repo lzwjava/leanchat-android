@@ -29,7 +29,7 @@ import com.avoscloud.chat.util.SimpleNetTask;
 import com.avoscloud.chat.util.Utils;
 import com.avoscloud.leanchatlib.controller.ChatManager;
 import com.avoscloud.leanchatlib.db.DBHelper;
-import com.avoscloud.leanchatlib.utils.Logger;
+import com.avoscloud.chat.util.Logger;
 
 import java.io.File;
 import java.text.SimpleDateFormat;

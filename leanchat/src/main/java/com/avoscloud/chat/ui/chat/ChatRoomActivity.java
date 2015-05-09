@@ -24,10 +24,9 @@ import com.avoscloud.chat.service.event.FinishEvent;
 import com.avoscloud.chat.ui.conversation.ConversationDetailActivity;
 import com.avoscloud.chat.util.Utils;
 import com.avoscloud.leanchatlib.activity.ChatActivity;
-import com.avoscloud.leanchatlib.activity.LocationHandler;
 import com.avoscloud.leanchatlib.controller.ChatManager;
 import com.avoscloud.leanchatlib.controller.ConversationHelper;
-import com.avoscloud.leanchatlib.utils.Logger;
+import com.avoscloud.chat.util.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -67,18 +66,6 @@ public class ChatRoomActivity extends ChatActivity {
 
   private void initLocation() {
     addLocationBtn.setVisibility(View.VISIBLE);
-    setLocationHandler(new LocationHandler() {
-      @Override
-      public void onAddLocationButtonClicked(Activity activity) {
-        LocationActivity.startToSelectLocationForResult(activity, LOCATION_REQUEST);
-      }
-
-      @Override
-      public void onLocationMessageViewClicked(Activity activity, AVIMLocationMessage locationMessage) {
-        LocationActivity.startToSeeLocationDetail(activity, locationMessage.getLocation().getLatitude(),
-            locationMessage.getLocation().getLongitude());
-      }
-    });
   }
 
   @Override
@@ -155,6 +142,16 @@ public class ChatRoomActivity extends ChatActivity {
           break;
       }
     }
+  }
 
+  @Override
+  protected void onAddLocationButtonClicked(View v) {
+    LocationActivity.startToSelectLocationForResult(this, LOCATION_REQUEST);
+  }
+
+  @Override
+  protected void onLocationMessageViewClicked(AVIMLocationMessage locationMessage) {
+    LocationActivity.startToSeeLocationDetail(this, locationMessage.getLocation().getLatitude(),
+        locationMessage.getLocation().getLongitude());
   }
 }

@@ -29,10 +29,10 @@ import com.avoscloud.leanchatlib.controller.*;
 import com.avoscloud.leanchatlib.db.RoomsTable;
 import com.avoscloud.leanchatlib.model.ConversationType;
 import com.avoscloud.leanchatlib.model.MessageEvent;
-import com.avoscloud.leanchatlib.utils.DownloadUtils;
 import com.avoscloud.leanchatlib.utils.NetAsyncTask;
 import com.avoscloud.leanchatlib.utils.PathUtils;
 import com.avoscloud.leanchatlib.utils.ProviderPathUtils;
+import com.avoscloud.leanchatlib.utils.Utils;
 import com.avoscloud.leanchatlib.view.EmotionEditText;
 import com.avoscloud.leanchatlib.view.RecordButton;
 import com.avoscloud.leanchatlib.view.RefreshableView;
@@ -41,10 +41,7 @@ import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 import de.greenrobot.event.EventBus;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class ChatActivity extends BaseActivity implements OnClickListener {
   public static final String CONVID = "convid";
@@ -73,7 +70,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
   protected RecordButton recordBtn;
   protected String localCameraPath = PathUtils.getTmpPath();
   protected View addCameraBtn;
-  private LocationHandler locationHandler;
 
   public static ChatActivity getChatInstance() {
     return chatInstance;
@@ -85,10 +81,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 
   public static void setCurrentChattingConvid(String currentChattingConvid) {
     ChatActivity.currentChattingConvid = currentChattingConvid;
-  }
-
-  public void setLocationHandler(LocationHandler locationHandler) {
-    this.locationHandler = locationHandler;
   }
 
   public void onCreate(Bundle savedInstanceState) {
@@ -273,7 +265,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
     adapter.setClickListener(new ChatMessageAdapter.ClickListener() {
       @Override
       public void onFailButtonClick(AVIMTypedMessage msg) {
-        messageAgent.resendMsg(msg, new MessageAgent.SendCallback() {
+        messageAgent.resendMessage(msg, new MessageAgent.SendCallback() {
           @Override
           public void onError(AVIMTypedMessage message, Exception e) {
             loadMessagesWhenInit(adapter.getCount());
@@ -288,10 +280,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 
       @Override
       public void onLocationViewClick(AVIMLocationMessage locMsg) {
-        if (locationHandler != null) {
-          locationHandler.onLocationMessageViewClicked(ChatActivity.this,
-              locMsg);
-        }
+        onLocationMessageViewClicked(locMsg);
       }
 
       @Override
@@ -319,9 +308,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
     } else if (v.getId() == R.id.showEmotionBtn) {
       toggleEmotionLayout();
     } else if (v.getId() == R.id.addLocationBtn) {
-      if (locationHandler != null) {
-        locationHandler.onAddLocationButtonClicked(this);
-      }
+      onAddLocationButtonClicked(v);
     } else if (v.getId() == R.id.textEdit) {
       hideBottomLayoutAndScrollToLast();
     } else if (v.getId() == R.id.addCameraBtn) {
@@ -463,11 +450,21 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
   }
 
   public void onEvent(MessageEvent messageEvent) {
-    AVIMTypedMessage message = messageEvent.getMsg();
+    final AVIMTypedMessage message = messageEvent.getMessage();
     if (message.getConversationId().equals(conversation
         .getConversationId())) {
       if (messageEvent.getType() == MessageEvent.Type.Come) {
-        addMessageAndScroll(message);
+        new NetAsyncTask(ctx, false) {
+          @Override
+          protected void doInBack() throws Exception {
+            cacheMessages(Arrays.asList(message));
+          }
+
+          @Override
+          protected void onPost(Exception e) {
+            addMessageAndScroll(message);
+          }
+        }.execute();
       } else if (messageEvent.getType() == MessageEvent.Type.Receipt) {
         AVIMTypedMessage originMessage = findMessage(message.getMessageId());
         if (originMessage != null) {
@@ -504,7 +501,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
     setCurrentChattingConvid(null);
   }
 
-  void cacheMsgs(List<AVIMTypedMessage> msgs) throws Exception {
+  void cacheMessages(List<AVIMTypedMessage> msgs) throws Exception {
     Set<String> userIds = new HashSet<String>();
     for (AVIMTypedMessage msg : msgs) {
       AVIMReservedMessageType type = AVIMReservedMessageType.getAVIMReservedMessageType(msg.getMessageType());
@@ -513,7 +510,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
         if (!file.exists()) {
           AVIMAudioMessage audioMsg = (AVIMAudioMessage) msg;
           String url = audioMsg.getFileUrl();
-          DownloadUtils.downloadFileIfNotExists(url, file);
+          Utils.downloadFileIfNotExists(url, file);
         }
       }
       userIds.add(msg.getFrom());
@@ -533,7 +530,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
               new NetAsyncTask(ctx, false) {
                 @Override
                 protected void doInBack() throws Exception {
-                  cacheMsgs(typedMessages);
+                  cacheMessages(typedMessages);
                 }
 
                 @Override
@@ -596,5 +593,13 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
   public void addMessageAndScroll(AVIMTypedMessage message) {
     adapter.add(message);
     scrollToLast();
+  }
+
+  protected void onAddLocationButtonClicked(View v) {
+
+  }
+
+  protected void onLocationMessageViewClicked(AVIMLocationMessage locationMessage) {
+
   }
 }

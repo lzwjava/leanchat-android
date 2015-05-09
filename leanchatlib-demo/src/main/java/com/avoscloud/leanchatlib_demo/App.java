@@ -4,11 +4,9 @@ import android.app.Application;
 import android.app.Notification;
 import android.content.Context;
 import com.avos.avoscloud.AVOSCloud;
-import com.avos.avoscloud.AVUser;
 import com.avoscloud.leanchatlib.controller.ChatManager;
 import com.avoscloud.leanchatlib.controller.UserInfoFactory;
 import com.avoscloud.leanchatlib.model.UserInfo;
-import com.avoscloud.leanchatlib.utils.Logger;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
@@ -35,7 +33,7 @@ public class App extends Application {
     super.onCreate();
     AVOSCloud.initialize(this, "xcalhck83o10dntwh8ft3z5kvv0xc25p6t3jqbe5zlkkdsib",
         "m9fzwse7od89gvcnk1dmdq4huprjvghjtiug1u2zu073zn99");
-    Logger.level = Logger.VERBOSE; // set Logger.NONE when release
+    ChatManager.setDebugEnabled(true);// tag leanchatlib
     AVOSCloud.setDebugLogEnabled(true);  // set false when release
     final ChatManager chatManager = ChatManager.getInstance();
     chatManager.init(this);

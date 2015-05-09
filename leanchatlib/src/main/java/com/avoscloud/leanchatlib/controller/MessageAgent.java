@@ -10,13 +10,13 @@ import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMLocationMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.avoscloud.leanchatlib.db.RoomsTable;
-import com.avoscloud.leanchatlib.utils.Logger;
 import com.avoscloud.leanchatlib.utils.PathUtils;
 import com.avoscloud.leanchatlib.utils.PhotoUtils;
 import com.avoscloud.leanchatlib.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 /**
  * Created by lzw on 14/11/23.
@@ -37,7 +37,7 @@ public class MessageAgent {
 
   private void sendMsg(final AVIMTypedMessage msg, final String originPath, final SendCallback callback) {
     if (!chatManager.isConnect()) {
-      Logger.d("im not connect");
+      Utils.log("im not connect");
     }
     conversation.sendMessage(msg, AVIMConversation.RECEIPT_MESSAGE_FLAG, new AVIMConversationCallback() {
       @Override
@@ -62,7 +62,7 @@ public class MessageAgent {
     });
   }
 
-  public void resendMsg(final AVIMTypedMessage msg, final SendCallback sendCallback) {
+  public void resendMessage(final AVIMTypedMessage msg, final SendCallback sendCallback) {
     conversation.sendMessage(msg, AVIMConversation.RECEIPT_MESSAGE_FLAG, new AVIMConversationCallback() {
       @Override
       public void done(AVException e) {

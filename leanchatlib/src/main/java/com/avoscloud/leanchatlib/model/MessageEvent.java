@@ -10,16 +10,16 @@ public class MessageEvent {
     Come, Receipt
   }
 
-  private AVIMTypedMessage msg;
+  private AVIMTypedMessage message;
   private Type type;
 
-  public MessageEvent(AVIMTypedMessage msg, Type type) {
-    this.msg = msg;
+  public MessageEvent(AVIMTypedMessage message, Type type) {
+    this.message = message;
     this.type = type;
   }
 
-  public AVIMTypedMessage getMsg() {
-    return msg;
+  public AVIMTypedMessage getMessage() {
+    return message;
   }
 
   public Type getType() {
