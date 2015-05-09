@@ -1,4 +1,4 @@
-package com.avoscloud.leanchatlib.view.xlist;
+package com.avoscloud.chat.ui.view.xlist;
 
 import android.content.Context;
 import android.text.format.Time;
@@ -12,7 +12,7 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Scroller;
-import com.avoscloud.leanchatlib.R;
+import com.avoscloud.chat.R;
 
 public class XListView extends ListView implements OnScrollListener {
   private final static int SCROLLBACK_HEADER = 0;

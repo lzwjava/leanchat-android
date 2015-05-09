@@ -1,0 +1,49 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pull_to_refresh_head"
+    android:layout_width="fill_parent"
+    android:layout_height="60dip">
+
+    <LinearLayout
+        android:layout_width="200dip"
+        android:layout_height="60dip"
+        android:layout_centerInParent="true"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="0dip"
+            android:layout_height="60dip"
+            android:layout_weight="3">
+
+            <ImageView
+                android:id="@+id/arrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/chat_xlistview_arrow" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="30dip"
+                android:layout_height="30dip"
+                android:layout_centerInParent="true"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="0dip"
+            android:layout_height="60dip"
+            android:layout_weight="12"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tips"
+                android:layout_width="fill_parent"
+                android:layout_height="0dip"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/chat_pull_to_refresh" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

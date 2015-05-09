@@ -4,18 +4,25 @@
     android:layout_height="fill_parent"
     android:background="#fff">
 
-    <com.avoscloud.leanchatlib.view.xlist.XListView
-        android:id="@+id/listview"
+    <com.avoscloud.leanchatlib.view.RefreshableView
+        android:id="@+id/refreshableView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_above="@+id/bottomLayout"
-        android:layout_below="@+id/headerLayout"
-        android:background="#fff"
-        android:cacheColorHint="#0000"
-        android:divider="@null"
-        android:dividerHeight="5dp"
-        android:scrollbarStyle="outsideOverlay"
-        android:stackFromBottom="true" />
+        android:orientation="vertical">
+
+        <ListView
+            android:id="@+id/messageListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#fff"
+            android:cacheColorHint="#0000"
+            android:divider="@null"
+            android:dividerHeight="5dp"
+            android:scrollbarStyle="outsideOverlay"
+            android:stackFromBottom="true"></ListView>
+
+    </com.avoscloud.leanchatlib.view.RefreshableView>
 
     <LinearLayout
         android:id="@+id/bottomLayout"

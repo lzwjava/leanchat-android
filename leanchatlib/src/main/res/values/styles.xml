@@ -63,20 +63,4 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
-
-
-    <style name="ActionBarTitleStyle">
-        <item name="android:textColor">#fff</item>
-    </style>
-
-    <style name="ActionBarStyle" parent="@android:style/Widget.Holo.ActionBar">
-        <item name="android:background">@color/chat_common_blue</item>
-        <item name="android:titleTextStyle">@style/ActionBarTitleStyle</item>
-    </style>
-
-    <style name="ChatMainTheme" parent="android:Theme.Holo.Light">
-        <item name="android:actionBarStyle">@style/ActionBarStyle</item>
-        <item name="android:homeAsUpIndicator">@drawable/chat_common_base_header_back_btn</item>
-        <item name="android:actionMenuTextColor">@color/chat_common_white</item>
-    </style>
 </resources>

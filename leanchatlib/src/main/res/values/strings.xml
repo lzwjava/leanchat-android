@@ -34,8 +34,6 @@
     <string name="chat_emotion">表情</string>
     <string name="chat_pleaseCheckNetwork">请检查网络</string>
     <string name="chat_activity_loadMessagesFinish">聊天记录加载完毕</string>
-    <string name="chat_xlistview_footer_hint_normal">查看更多</string>
-    <string name="chat_xlistview_footer_hint_ready">松开载入更多</string>
     <string name="chat_record_button_haveRead">已阅读</string>
     <string name="chat_record_button_slideUpToCancel">手指上滑，取消发送</string>
     <string name="chat_record_button_releaseToCancel">松开手指，取消录音</string>
@@ -43,5 +41,9 @@
     <string name="chat_activity_select_picture">选择图片</string>
     <string name="chat_cloudCodeNotDeployTips">云代码未部署，请到项目主页根据说明来部署</string>
     <string name="chat_record_button_pleaseSayMore">说多点吧～</string>
+
+    <string name="chat_pull_to_refresh">下拉可以刷新</string>
+    <string name="chat_release_to_refresh">释放立即刷新</string>
+    <string name="chat_refreshing">正在刷新…</string>
 
 </resources>

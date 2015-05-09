@@ -1,4 +1,4 @@
-package com.avoscloud.leanchatlib.view.xlist;
+package com.avoscloud.chat.ui.view.xlist;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -10,7 +10,7 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import com.avoscloud.leanchatlib.R;
+import com.avoscloud.chat.R;
 
 public class XListViewHeader extends LinearLayout {
   public final static int STATE_NORMAL = 0;

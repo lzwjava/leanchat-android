@@ -90,4 +90,7 @@
     <string name="chat_reverseGeoCodeResultIs">反编码得到的地址：</string>
     <string name="chat_cannotGetYourAddressInfo">无法获取到您的位置信息！</string>
 
+    <string name="chat_xlistview_footer_hint_normal">查看更多</string>
+    <string name="chat_xlistview_footer_hint_ready">松开载入更多</string>
+
 </resources>

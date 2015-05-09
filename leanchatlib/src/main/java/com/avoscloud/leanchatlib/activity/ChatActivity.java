@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ListView;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMReservedMessageType;
@@ -34,7 +35,7 @@ import com.avoscloud.leanchatlib.utils.PathUtils;
 import com.avoscloud.leanchatlib.utils.ProviderPathUtils;
 import com.avoscloud.leanchatlib.view.EmotionEditText;
 import com.avoscloud.leanchatlib.view.RecordButton;
-import com.avoscloud.leanchatlib.view.xlist.XListView;
+import com.avoscloud.leanchatlib.view.RefreshableView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 import de.greenrobot.event.EventBus;
@@ -45,8 +46,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class ChatActivity extends BaseActivity implements OnClickListener,
-    XListView.IXListViewListener {
+public class ChatActivity extends BaseActivity implements OnClickListener {
   public static final String CONVID = "convid";
   private static final int PAGE_SIZE = 20;
   private static final int TAKE_CAMERA_REQUEST = 2;
@@ -68,7 +68,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
   protected View turnToTextBtn, turnToAudioBtn, sendBtn, addImageBtn, showAddBtn, addLocationBtn, showEmotionBtn;
   protected ViewPager emotionPager;
   protected EmotionEditText contentEdit;
-  protected XListView xListView;
+  protected RefreshableView refreshableView;
+  protected ListView messageListView;
   protected RecordButton recordBtn;
   protected String localCameraPath = PathUtils.getTmpPath();
   protected View addCameraBtn;
@@ -104,7 +105,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
   }
 
   private void findView() {
-    xListView = (XListView) findViewById(R.id.listview);
+    refreshableView = (RefreshableView) findViewById(R.id.refreshableView);
+    messageListView = (ListView) findViewById(R.id.messageListView);
     addImageBtn = findViewById(R.id.addImageBtn);
 
     contentEdit = (EmotionEditText) findViewById(R.id.textEdit);
@@ -148,11 +150,13 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
   }
 
   private void initListView() {
-    xListView.setPullRefreshEnable(true);
-    xListView.setPullLoadEnable(false);
-    xListView.setXListViewListener(this);
-    xListView.setOnScrollListener(
-        new PauseOnScrollListener(ImageLoader.getInstance(), true, true));
+    refreshableView.setRefreshListener(new RefreshableView.ListRefreshListener(messageListView) {
+      @Override
+      public void onRefresh() {
+        loadOldMessages();
+      }
+    });
+    messageListView.setOnScrollListener(new PauseOnScrollListener(ImageLoader.getInstance(), true, true));
   }
 
   private void initEmotionPager() {
@@ -297,17 +301,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
             imageMsg.getFileUrl());
       }
     });
-    xListView.setAdapter(adapter);
-  }
-
-
-  @Override
-  public void onRefresh() {
-    loadOldMessages();
-  }
-
-  @Override
-  public void onLoadMore() {
+    messageListView.setAdapter(adapter);
   }
 
   @Override
@@ -452,14 +446,10 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
   }
 
   public void scrollToLast() {
-    xListView.post(new Runnable() {
+    messageListView.post(new Runnable() {
       @Override
       public void run() {
-        //fast scroll
-        /*xListView.requestFocusFromTouch();
-        xListView.setSelection(xListView.getAdapter().getCount() - 1);
-        contentEdit.requestFocusFromTouch();*/
-        xListView.smoothScrollToPosition(xListView.getAdapter().getCount() - 1);
+        messageListView.smoothScrollToPosition(messageListView.getAdapter().getCount() - 1);
       }
     });
   }
@@ -573,9 +563,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
     ChatManager.getInstance().queryMessages(conversation, msgId, time, PAGE_SIZE, new AVIMTypedMessagesArrayCallback() {
       @Override
       public void done(List<AVIMTypedMessage> typedMessages, AVException e) {
-        if (xListView.getPullRefreshing()) {
-          xListView.stopRefresh();
-        }
+        refreshableView.finishRefreshing();
         if (filterException(e)) {
           List<AVIMTypedMessage> newMessages = new ArrayList<>();
           newMessages.addAll(typedMessages);
@@ -583,7 +571,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
           adapter.setDatas(newMessages);
           adapter.notifyDataSetChanged();
           if (typedMessages.size() > 0) {
-            xListView.setSelection(typedMessages.size() - 1);
+            messageListView.setSelection(typedMessages.size() - 1);
           } else {
             toast(R.string.chat_activity_loadMessagesFinish);
           }

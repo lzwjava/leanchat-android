@@ -34,8 +34,7 @@
 
         <activity
             android:name=".ChatRoomActivity"
-            android:launchMode="singleTask"
-            android:theme="@style/ChatMainTheme" />
+            android:launchMode="singleTask" />
 
         <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">
             <intent-filter>
