@@ -268,11 +268,13 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
         messageAgent.resendMessage(msg, new MessageAgent.SendCallback() {
           @Override
           public void onError(AVIMTypedMessage message, Exception e) {
+            Utils.log();
             loadMessagesWhenInit(adapter.getCount());
           }
 
           @Override
           public void onSuccess(AVIMTypedMessage message) {
+            Utils.log();
             loadMessagesWhenInit(adapter.getCount());
           }
         });
@@ -462,10 +464,12 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 
           @Override
           protected void onPost(Exception e) {
+            Utils.log("message come");
             addMessageAndScroll(message);
           }
         }.execute();
       } else if (messageEvent.getType() == MessageEvent.Type.Receipt) {
+        Utils.log("receipt");
         AVIMTypedMessage originMessage = findMessage(message.getMessageId());
         if (originMessage != null) {
           originMessage.setMessageStatus(message.getMessageStatus());
@@ -581,18 +585,23 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 
     @Override
     public void onError(AVIMTypedMessage message, Exception e) {
+      Utils.log();
       addMessageAndScroll(message);
     }
 
     @Override
     public void onSuccess(AVIMTypedMessage message) {
+      Utils.log();
       addMessageAndScroll(message);
     }
   }
 
   public void addMessageAndScroll(AVIMTypedMessage message) {
-    adapter.add(message);
-    scrollToLast();
+    AVIMTypedMessage foundMessage = findMessage(message.getMessageId());
+    if (foundMessage == null) {
+      adapter.add(message);
+      scrollToLast();
+    }
   }
 
   protected void onAddLocationButtonClicked(View v) {
