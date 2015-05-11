@@ -6,6 +6,7 @@ import com.avos.avoscloud.im.v2.messages.AVIMLocationMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.avoscloud.leanchatlib.R;
 import com.avoscloud.leanchatlib.model.UserInfo;
+import com.avoscloud.leanchatlib.utils.PathUtils;
 
 import java.util.List;
 
@@ -13,10 +14,8 @@ import java.util.List;
  * Created by lzw on 15/2/13.
  */
 public class MessageHelper {
-  public static final String ADDRESS = "address";
-
   public static String getFilePath(AVIMTypedMessage msg) {
-    return com.avoscloud.leanchatlib.utils.PathUtils.getChatFilePath(msg.getMessageId());
+    return PathUtils.getChatFilePath(msg.getMessageId());
   }
 
   public static boolean fromMe(AVIMTypedMessage msg) {

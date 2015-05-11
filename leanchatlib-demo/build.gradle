@@ -27,6 +27,4 @@ android {
 dependencies {
     compile project(':leanchatlib')
 
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-
 }
