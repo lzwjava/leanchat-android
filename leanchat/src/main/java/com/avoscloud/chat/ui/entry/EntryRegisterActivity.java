@@ -13,7 +13,7 @@ import com.avoscloud.chat.entity.avobject.User;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.MainActivity;
 import com.avoscloud.chat.util.Utils;
-import com.avoscloud.leanchatlib.utils.NetAsyncTask;
+import com.avoscloud.chat.util.NetAsyncTask;
 
 public class EntryRegisterActivity extends EntryBaseActivity {
   View registerButton;

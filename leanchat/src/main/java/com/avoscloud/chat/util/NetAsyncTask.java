@@ -1,4 +1,4 @@
-package com.avoscloud.leanchatlib.utils;
+package com.avoscloud.chat.util;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -36,7 +36,7 @@ public abstract class NetAsyncTask extends AsyncTask<Void, Void, Void> {
   protected void onPreExecute() {
     super.onPreExecute();
     if (openDialog) {
-      dialog = Utils.showSpinnerDialog((Activity) ctx);
+      dialog = com.avoscloud.leanchatlib.utils.Utils.showSpinnerDialog((Activity) ctx);
     }
   }
 

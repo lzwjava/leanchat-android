@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.*;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
@@ -17,7 +18,6 @@ import com.avoscloud.leanchatlib.model.ConversationType;
 import com.avoscloud.leanchatlib.model.MessageEvent;
 import com.avoscloud.leanchatlib.model.Room;
 import com.avoscloud.leanchatlib.model.UserInfo;
-import com.avoscloud.leanchatlib.utils.NetAsyncTask;
 import com.avoscloud.leanchatlib.utils.Utils;
 import de.greenrobot.event.EventBus;
 
@@ -231,14 +231,20 @@ public class ChatManager extends AVIMClientEventHandler {
     roomsTable.increaseUnreadCount(message.getConversationId());
     MessageEvent messageEvent = new MessageEvent(message, MessageEvent.Type.Come);
     eventBus.post(messageEvent);
-    new NetAsyncTask(getContext(), false) {
+    new AsyncTask<Void, Void, Void>() {
       @Override
-      protected void doInBack() throws Exception {
-        getUserInfoFactory().cacheUserInfoByIdsInBackground(Arrays.asList(message.getFrom()));
+      protected Void doInBackground(Void... voids) {
+        try {
+          getUserInfoFactory().cacheUserInfoByIdsInBackground(Arrays.asList(message.getFrom()));
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+        return null;
       }
 
+
       @Override
-      protected void onPost(Exception exception) {
+      protected void onPostExecute(Void aVoid) {
         if (selfId != null && ChatActivity.getCurrentChattingConvid() == null || !ChatActivity.getCurrentChattingConvid().equals(message
             .getConversationId())) {
           if (getUserInfoFactory().showNotificationWhenNewMessageCome(selfId)) {

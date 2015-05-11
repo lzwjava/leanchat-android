@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -30,7 +31,6 @@ import com.avoscloud.leanchatlib.controller.*;
 import com.avoscloud.leanchatlib.db.RoomsTable;
 import com.avoscloud.leanchatlib.model.ConversationType;
 import com.avoscloud.leanchatlib.model.MessageEvent;
-import com.avoscloud.leanchatlib.utils.NetAsyncTask;
 import com.avoscloud.leanchatlib.utils.PathUtils;
 import com.avoscloud.leanchatlib.utils.ProviderPathUtils;
 import com.avoscloud.leanchatlib.utils.Utils;
@@ -519,37 +519,42 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
         });
   }
 
-  public abstract class CacheMessagesTask extends NetAsyncTask {
+  public abstract class CacheMessagesTask extends AsyncTask<Void, Void, Void> {
     private List<AVIMTypedMessage> messages;
+    private Exception e;
 
     public CacheMessagesTask(Context ctx, List<AVIMTypedMessage> messages) {
-      super(ctx, false);
       this.messages = messages;
     }
 
     @Override
-    protected void doInBack() throws Exception {
-      Set<String> userIds = new HashSet<String>();
-      for (AVIMTypedMessage msg : messages) {
-        AVIMReservedMessageType type = AVIMReservedMessageType.getAVIMReservedMessageType(msg.getMessageType());
-        if (type == AVIMReservedMessageType.AudioMessageType) {
-          File file = new File(MessageHelper.getFilePath(msg));
-          if (!file.exists()) {
-            AVIMAudioMessage audioMsg = (AVIMAudioMessage) msg;
-            String url = audioMsg.getFileUrl();
-            Utils.downloadFileIfNotExists(url, file);
+    protected Void doInBackground(Void... voids) {
+      try {
+        Set<String> userIds = new HashSet<String>();
+        for (AVIMTypedMessage msg : messages) {
+          AVIMReservedMessageType type = AVIMReservedMessageType.getAVIMReservedMessageType(msg.getMessageType());
+          if (type == AVIMReservedMessageType.AudioMessageType) {
+            File file = new File(MessageHelper.getFilePath(msg));
+            if (!file.exists()) {
+              AVIMAudioMessage audioMsg = (AVIMAudioMessage) msg;
+              String url = audioMsg.getFileUrl();
+              Utils.downloadFileIfNotExists(url, file);
+            }
           }
+          userIds.add(msg.getFrom());
         }
-        userIds.add(msg.getFrom());
+        if (chatManager.getUserInfoFactory() == null) {
+          throw new NullPointerException("chat user factory is null");
+        }
+        chatManager.getUserInfoFactory().cacheUserInfoByIdsInBackground(new ArrayList<String>(userIds));
+      } catch (Exception e) {
+        this.e = e;
       }
-      if (chatManager.getUserInfoFactory() == null) {
-        throw new NullPointerException("chat user factory is null");
-      }
-      chatManager.getUserInfoFactory().cacheUserInfoByIdsInBackground(new ArrayList<String>(userIds));
+      return null;
     }
 
     @Override
-    protected void onPost(Exception e) {
+    protected void onPostExecute(Void aVoid) {
       if (filterException(e)) {
         onSucceed(messages);
       }

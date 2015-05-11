@@ -34,7 +34,7 @@ import com.avoscloud.chat.ui.view.EnLetterView;
 import com.avoscloud.chat.util.CharacterParser;
 import com.avoscloud.chat.util.PinyinComparator;
 import com.avoscloud.chat.util.Utils;
-import com.avoscloud.leanchatlib.utils.NetAsyncTask;
+import com.avoscloud.chat.util.NetAsyncTask;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -16,7 +16,7 @@ import com.avoscloud.chat.R;
 import com.avoscloud.chat.entity.avobject.UpdateInfo;
 import com.avoscloud.chat.util.Utils;
 import com.avoscloud.chat.util.Logger;
-import com.avoscloud.leanchatlib.utils.NetAsyncTask;
+import com.avoscloud.chat.util.NetAsyncTask;
 
 import java.util.List;
 
