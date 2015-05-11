@@ -54,6 +54,8 @@ dependencies {
 //    compile files('libs/universal-image-loader-1.9.3.jar')
     compile files('libs/baidumapapi_v3_0_0.jar')
     compile files('libs/locSDK_4.2.jar')
+
+
 //    compile files('libs/prettytime-3.2.5.Final.jar')
 
 }
