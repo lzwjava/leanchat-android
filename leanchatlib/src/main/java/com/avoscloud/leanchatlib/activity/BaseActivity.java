@@ -93,6 +93,12 @@ public class BaseActivity extends FragmentActivity {
     Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
   }
 
+  protected void toast(Exception e){
+    if(e!=null){
+      toast(e.getMessage());
+    }
+  }
+
   protected void toast(int id) {
     Toast.makeText(this, id, Toast.LENGTH_SHORT).show();
   }

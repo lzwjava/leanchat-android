@@ -1,6 +1,7 @@
 package com.avoscloud.leanchatlib.activity;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -456,15 +457,9 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
     if (message.getConversationId().equals(conversation
         .getConversationId())) {
       if (messageEvent.getType() == MessageEvent.Type.Come) {
-        new NetAsyncTask(ctx, false) {
+        new CacheMessagesTask(ctx, Arrays.asList(message)) {
           @Override
-          protected void doInBack() throws Exception {
-            cacheMessages(Arrays.asList(message));
-          }
-
-          @Override
-          protected void onPost(Exception e) {
-            Utils.log("message come");
+          void onSucceed(List<AVIMTypedMessage> messages) {
             addMessageAndScroll(message);
           }
         }.execute();
@@ -505,50 +500,62 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
     setCurrentChattingConvid(null);
   }
 
-  void cacheMessages(List<AVIMTypedMessage> msgs) throws Exception {
-    Set<String> userIds = new HashSet<String>();
-    for (AVIMTypedMessage msg : msgs) {
-      AVIMReservedMessageType type = AVIMReservedMessageType.getAVIMReservedMessageType(msg.getMessageType());
-      if (type == AVIMReservedMessageType.AudioMessageType) {
-        File file = new File(MessageHelper.getFilePath(msg));
-        if (!file.exists()) {
-          AVIMAudioMessage audioMsg = (AVIMAudioMessage) msg;
-          String url = audioMsg.getFileUrl();
-          Utils.downloadFileIfNotExists(url, file);
-        }
-      }
-      userIds.add(msg.getFrom());
-    }
-    if (chatManager.getUserInfoFactory() == null) {
-      throw new NullPointerException("chat user factory is null");
-    }
-    chatManager.getUserInfoFactory().cacheUserInfoByIdsInBackground(new ArrayList<String>(userIds));
-  }
-
   public void loadMessagesWhenInit(int limit) {
     ChatManager.getInstance().queryMessages(conversation, null, System.currentTimeMillis(), limit, new
         AVIMTypedMessagesArrayCallback() {
           @Override
           public void done(final List<AVIMTypedMessage> typedMessages, AVException e) {
             if (filterException(e)) {
-              new NetAsyncTask(ctx, false) {
+              new CacheMessagesTask(ctx, typedMessages) {
                 @Override
-                protected void doInBack() throws Exception {
-                  cacheMessages(typedMessages);
-                }
-
-                @Override
-                protected void onPost(Exception e) {
-                  if (filterException(e)) {
-                    adapter.setDatas(typedMessages);
-                    adapter.notifyDataSetChanged();
-                    scrollToLast();
-                  }
+                void onSucceed(List<AVIMTypedMessage> messages) {
+                  adapter.setDatas(typedMessages);
+                  adapter.notifyDataSetChanged();
+                  scrollToLast();
                 }
               }.execute();
             }
           }
         });
+  }
+
+  public abstract class CacheMessagesTask extends NetAsyncTask {
+    private List<AVIMTypedMessage> messages;
+
+    public CacheMessagesTask(Context ctx, List<AVIMTypedMessage> messages) {
+      super(ctx, false);
+      this.messages = messages;
+    }
+
+    @Override
+    protected void doInBack() throws Exception {
+      Set<String> userIds = new HashSet<String>();
+      for (AVIMTypedMessage msg : messages) {
+        AVIMReservedMessageType type = AVIMReservedMessageType.getAVIMReservedMessageType(msg.getMessageType());
+        if (type == AVIMReservedMessageType.AudioMessageType) {
+          File file = new File(MessageHelper.getFilePath(msg));
+          if (!file.exists()) {
+            AVIMAudioMessage audioMsg = (AVIMAudioMessage) msg;
+            String url = audioMsg.getFileUrl();
+            Utils.downloadFileIfNotExists(url, file);
+          }
+        }
+        userIds.add(msg.getFrom());
+      }
+      if (chatManager.getUserInfoFactory() == null) {
+        throw new NullPointerException("chat user factory is null");
+      }
+      chatManager.getUserInfoFactory().cacheUserInfoByIdsInBackground(new ArrayList<String>(userIds));
+    }
+
+    @Override
+    protected void onPost(Exception e) {
+      if (filterException(e)) {
+        onSucceed(messages);
+      }
+    }
+
+    abstract void onSucceed(List<AVIMTypedMessage> messages);
   }
 
   public void loadOldMessages() {
