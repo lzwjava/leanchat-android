@@ -8,7 +8,6 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.avoscloud.chat.R;
-import com.avoscloud.leanchatlib.activity.BaseActivity;
 
 /**
  * Created by lzw on 14-9-17.

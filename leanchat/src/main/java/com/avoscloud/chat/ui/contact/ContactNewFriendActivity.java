@@ -24,7 +24,7 @@ import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.view.BaseListView;
 import com.avoscloud.chat.util.RefreshTask;
 import com.avoscloud.chat.util.Refreshable;
-import com.avoscloud.leanchatlib.activity.BaseActivity;
+import com.avoscloud.chat.ui.base_activity.BaseActivity;
 import com.avoscloud.leanchatlib.adapter.BaseListAdapter;
 import com.avoscloud.leanchatlib.view.ViewHolder;
 

@@ -1,11 +1,13 @@
 package com.avoscloud.leanchatlib_demo;
 
 import android.app.Application;
-import android.app.Notification;
 import android.content.Context;
+import android.widget.Toast;
 import com.avos.avoscloud.AVOSCloud;
+import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avoscloud.leanchatlib.controller.ChatManager;
-import com.avoscloud.leanchatlib.controller.UserInfoFactory;
+import com.avoscloud.leanchatlib.controller.ChatManagerAdapter;
 import com.avoscloud.leanchatlib.model.UserInfo;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -37,7 +39,7 @@ public class App extends Application {
     AVOSCloud.setDebugLogEnabled(true);  // set false when release
     final ChatManager chatManager = ChatManager.getInstance();
     chatManager.init(this);
-    chatManager.setUserInfoFactory(new UserInfoFactory() {
+    chatManager.setChatManagerAdapter(new ChatManagerAdapter() {
       @Override
       public UserInfo getUserInfoById(String userId) {
         UserInfo userInfo = new UserInfo();
@@ -50,14 +52,10 @@ public class App extends Application {
       public void cacheUserInfoByIdsInBackground(List<String> userIds) throws Exception {
       }
 
+      //关于这个方法请见 leanchat 应用中的 ChatManagerAdapterImpl.java
       @Override
-      public boolean showNotificationWhenNewMessageCome(String selfId) {
-        return true;
-      }
-
-      @Override
-      public void configureNotification(Notification notification) {
-        notification.defaults |= Notification.DEFAULT_ALL;
+      public void shouldShowNotification(Context context, String selfId, AVIMConversation conversation, AVIMTypedMessage message) {
+        Toast.makeText(context, "收到了一条消息但并未打开相应的对话。可以触发系统通知。", Toast.LENGTH_LONG).show();
       }
     });
     initImageLoader(this);

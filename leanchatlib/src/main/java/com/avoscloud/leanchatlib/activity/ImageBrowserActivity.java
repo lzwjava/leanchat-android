@@ -1,5 +1,6 @@
 package com.avoscloud.leanchatlib.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +11,7 @@ import com.avoscloud.leanchatlib.utils.PhotoUtils;
 /**
  * Created by lzw on 14-9-21.
  */
-public class ImageBrowserActivity extends BaseActivity {
+public class ImageBrowserActivity extends Activity {
   private static final String PATH = "path";
   private static final String URL = "url";
   private ImageView imageView;

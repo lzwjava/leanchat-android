@@ -20,7 +20,7 @@ import com.avoscloud.chat.ui.contact.ContactFragment;
 import com.avoscloud.chat.ui.conversation.ConversationRecentFragment;
 import com.avoscloud.chat.ui.discover.DiscoverFragment;
 import com.avoscloud.chat.ui.profile.ProfileFragment;
-import com.avoscloud.leanchatlib.activity.BaseActivity;
+import com.avoscloud.chat.ui.base_activity.BaseActivity;
 import com.avoscloud.leanchatlib.controller.ChatManager;
 import com.avoscloud.chat.util.Logger;
 import com.baidu.location.BDLocation;

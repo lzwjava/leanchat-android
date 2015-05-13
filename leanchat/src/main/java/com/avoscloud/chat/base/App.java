@@ -1,28 +1,21 @@
 package com.avoscloud.chat.base;
 
 import android.app.Application;
-import android.app.Notification;
 import android.content.Context;
 import android.os.StrictMode;
 import com.avos.avoscloud.*;
 import com.avoscloud.chat.entity.avobject.AddRequest;
 import com.avoscloud.chat.entity.avobject.UpdateInfo;
-import com.avoscloud.chat.entity.avobject.User;
-import com.avoscloud.chat.service.CacheService;
+import com.avoscloud.chat.service.ChatManagerAdapterImpl;
 import com.avoscloud.chat.service.ConversationManager;
-import com.avoscloud.chat.service.PreferenceMap;
 import com.avoscloud.chat.ui.entry.EntrySplashActivity;
 import com.avoscloud.chat.util.Logger;
 import com.avoscloud.chat.util.Utils;
 import com.avoscloud.leanchatlib.controller.ChatManager;
-import com.avoscloud.leanchatlib.controller.UserInfoFactory;
-import com.avoscloud.leanchatlib.model.UserInfo;
 import com.baidu.mapapi.SDKInitializer;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-
-import java.util.List;
 
 /**
  * Created by lzw on 14-5-29.
@@ -88,44 +81,20 @@ public class App extends Application {
       chatManager.setupDatabaseWithSelfId(AVUser.getCurrentUser().getObjectId());
     }
     chatManager.setConversationEventHandler(ConversationManager.getConversationHandler());
-    chatManager.setUserInfoFactory(new UserInfoFactory() {
-      PreferenceMap preferenceMap = PreferenceMap.getCurUserPrefDao(App.this);
-
-      @Override
-      public UserInfo getUserInfoById(String userId) {
-        AVUser user = CacheService.lookupUser(userId);
-        UserInfo userInfo = new UserInfo();
-        userInfo.setUsername(user.getUsername());
-        userInfo.setAvatarUrl(User.getAvatarUrl(user));
-        return userInfo;
-      }
-
-      @Override
-      public void cacheUserInfoByIdsInBackground(List<String> userIds) throws Exception {
-        CacheService.cacheUsers(userIds);
-      }
-
-      @Override
-      public boolean showNotificationWhenNewMessageCome(String selfId) {
-        return preferenceMap.isNotifyWhenNews();
-      }
-
-      @Override
-      public void configureNotification(Notification notification) {
-        if (preferenceMap.isVoiceNotify()) {
-          notification.defaults |= Notification.DEFAULT_SOUND;
-        }
-        if (preferenceMap.isVibrateNotify()) {
-          notification.defaults |= Notification.DEFAULT_VIBRATE;
-        }
-      }
-    });
+    ChatManagerAdapterImpl chatManagerAdapter = new ChatManagerAdapterImpl(App.ctx);
+    chatManager.setChatManagerAdapter(chatManagerAdapter);
     ChatManager.setDebugEnabled(App.debug);
     if (App.debug) {
       Logger.level = Logger.VERBOSE;
     } else {
       Logger.level = Logger.NONE;
     }
+//    AVNetworkHelper.amendDNS("leancloud.cn", new AVNetworkHelper.DNSUpdateCallback() {
+//      @Override
+//      public void done(AVException e) {
+//
+//      }
+//    });
   }
 
   public void openStrictMode() {

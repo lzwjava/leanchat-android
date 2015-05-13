@@ -19,14 +19,15 @@ import com.avos.avoscloud.im.v2.messages.AVIMLocationMessage;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.entity.AVIMUserInfoMessage;
 import com.avoscloud.chat.service.CacheService;
+import com.avoscloud.chat.service.ChatManagerAdapterImpl;
 import com.avoscloud.chat.service.ConversationChangeEvent;
 import com.avoscloud.chat.service.event.FinishEvent;
 import com.avoscloud.chat.ui.conversation.ConversationDetailActivity;
+import com.avoscloud.chat.util.Logger;
 import com.avoscloud.chat.util.Utils;
 import com.avoscloud.leanchatlib.activity.ChatActivity;
 import com.avoscloud.leanchatlib.controller.ChatManager;
 import com.avoscloud.leanchatlib.controller.ConversationHelper;
-import com.avoscloud.chat.util.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -71,6 +72,8 @@ public class ChatRoomActivity extends ChatActivity {
   @Override
   protected void onResume() {
     CacheService.setCurConv(conversation);
+    ChatManagerAdapterImpl chatManagerAdapter = (ChatManagerAdapterImpl) ChatManager.getInstance().getChatManagerAdapter();
+    chatManagerAdapter.cancelNotification();
     super.onResume();
   }
 
@@ -119,7 +122,7 @@ public class ChatRoomActivity extends ChatActivity {
   public boolean onMenuItemSelected(int featureId, MenuItem item) {
     int menuId = item.getItemId();
     if (menuId == R.id.people) {
-      Utils.goActivity(ctx, ConversationDetailActivity.class);
+      Utils.goActivity(this, ConversationDetailActivity.class);
     }
     return super.onMenuItemSelected(featureId, item);
   }

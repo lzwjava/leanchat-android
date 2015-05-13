@@ -124,7 +124,7 @@ public class ChatMessageAdapter extends BaseListAdapter<AVIMTypedMessage> {
       sendTimeView.setVisibility(View.GONE);
     }
 
-    UserInfo user = ChatManager.getInstance().getUserInfoFactory().getUserInfoById(msg.getFrom());
+    UserInfo user = ChatManager.getInstance().getChatManagerAdapter().getUserInfoById(msg.getFrom());
     if (user == null) {
       throw new NullPointerException("user is null");
     }

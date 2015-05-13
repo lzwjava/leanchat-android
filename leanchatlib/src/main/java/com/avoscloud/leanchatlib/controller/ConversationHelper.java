@@ -59,7 +59,7 @@ public class ConversationHelper {
     }
     if (typeOfConversation(conversation) == ConversationType.Single) {
       String otherId = otherIdOfConversation(conversation);
-      UserInfo user = ChatManager.getInstance().getUserInfoFactory().getUserInfoById(otherId);
+      UserInfo user = ChatManager.getInstance().getChatManagerAdapter().getUserInfoById(otherId);
       return user.getUsername();
     } else {
       return conversation.getName();

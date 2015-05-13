@@ -14,7 +14,7 @@ import com.avoscloud.chat.service.AddRequestService;
 import com.avoscloud.chat.service.CacheService;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.chat.ChatRoomActivity;
-import com.avoscloud.leanchatlib.activity.BaseActivity;
+import com.avoscloud.chat.ui.base_activity.BaseActivity;
 
 import java.util.List;
 

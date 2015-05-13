@@ -1,4 +1,4 @@
-package com.avoscloud.leanchatlib.activity;
+package com.avoscloud.chat.ui.base_activity;
 
 import android.app.ActionBar;
 import android.app.ProgressDialog;

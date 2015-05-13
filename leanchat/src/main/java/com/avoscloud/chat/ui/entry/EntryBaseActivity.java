@@ -2,7 +2,7 @@ package com.avoscloud.chat.ui.entry;
 
 import android.os.Bundle;
 import com.avoscloud.chat.service.event.LoginFinishEvent;
-import com.avoscloud.leanchatlib.activity.BaseActivity;
+import com.avoscloud.chat.ui.base_activity.BaseActivity;
 import de.greenrobot.event.EventBus;
 
 /**

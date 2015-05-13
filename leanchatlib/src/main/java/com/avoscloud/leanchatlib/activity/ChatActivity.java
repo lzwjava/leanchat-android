@@ -1,6 +1,8 @@
 package com.avoscloud.leanchatlib.activity;
 
 import android.annotation.TargetApi;
+import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -11,11 +13,15 @@ import android.provider.MediaStore;
 import android.support.v4.view.ViewPager;
 import android.text.*;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ListView;
+import android.widget.Toast;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMReservedMessageType;
@@ -44,7 +50,7 @@ import de.greenrobot.event.EventBus;
 import java.io.File;
 import java.util.*;
 
-public class ChatActivity extends BaseActivity implements OnClickListener {
+public class ChatActivity extends Activity implements OnClickListener {
   public static final String CONVID = "convid";
   private static final int PAGE_SIZE = 20;
   private static final int TAKE_CAMERA_REQUEST = 2;
@@ -93,7 +99,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
     initRecordBtn();
     setEditTextChangeListener();
     initListView();
-    setSoftInputMode();
+
     initByIntent(getIntent());
   }
 
@@ -163,10 +169,10 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
   }
 
   private View getEmotionGridView(int pos) {
-    LayoutInflater inflater = LayoutInflater.from(ctx);
+    LayoutInflater inflater = LayoutInflater.from(this);
     View emotionView = inflater.inflate(R.layout.chat_emotion_gridview, null, false);
     GridView gridView = (GridView) emotionView.findViewById(R.id.gridview);
-    final ChatEmotionGridAdapter chatEmotionGridAdapter = new ChatEmotionGridAdapter(ctx);
+    final ChatEmotionGridAdapter chatEmotionGridAdapter = new ChatEmotionGridAdapter(this);
     List<String> pageEmotions = EmotionHelper.emojiGroups.get(pos);
     chatEmotionGridAdapter.setDatas(pageEmotions);
     gridView.setAdapter(chatEmotionGridAdapter);
@@ -240,11 +246,11 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
   }
 
   void commonInit() {
-    ctx = this;
     chatInstance = this;
     roomsTable = RoomsTable.getCurrentUserInstance();
     eventBus = EventBus.getDefault();
     eventBus.register(this);
+    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
   }
 
   public void initData(Intent intent) {
@@ -259,6 +265,18 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
     roomsTable.clearUnread(conversation.getConversationId());
     conversationType = ConversationHelper.typeOfConversation(conversation);
     bindAdapterToListView(conversationType);
+  }
+
+  protected void initActionBar(String title) {
+    ActionBar actionBar = getActionBar();
+    if (actionBar == null) {
+      throw new NullPointerException("action bar is null");
+    }
+    if (title != null) {
+      actionBar.setTitle(title);
+    }
+    actionBar.setDisplayUseLogoEnabled(false);
+    actionBar.setDisplayHomeAsUpEnabled(true);
   }
 
   private void bindAdapterToListView(ConversationType conversationType) {
@@ -340,6 +358,18 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
     }
   }
 
+  protected void hideSoftInputView() {
+    if (getWindow().getAttributes().softInputMode !=
+        WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN) {
+      InputMethodManager manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+      View currentFocus = getCurrentFocus();
+      if (currentFocus != null) {
+        manager.hideSoftInputFromWindow(currentFocus.getWindowToken(),
+            InputMethodManager.HIDE_NOT_ALWAYS);
+      }
+    }
+  }
+
   private void toggleBottomAddLayout() {
     if (chatAddLayout.getVisibility() == View.VISIBLE) {
       hideAddLayout();
@@ -401,6 +431,16 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
     }
   }
 
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case android.R.id.home:
+        super.onBackPressed();
+        return true;
+    }
+    return super.onOptionsItemSelected(item);
+  }
+
   @TargetApi(Build.VERSION_CODES.KITKAT)
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -423,7 +463,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
                 | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             getContentResolver().takePersistableUriPermission(uri, takeFlags);
           }
-          String localSelectPath = ProviderPathUtils.getPath(ctx, uri);
+          String localSelectPath = ProviderPathUtils.getPath(this, uri);
           messageAgent.sendImage(localSelectPath);
           hideBottomLayout();
           break;
@@ -457,7 +497,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
     if (message.getConversationId().equals(conversation
         .getConversationId())) {
       if (messageEvent.getType() == MessageEvent.Type.Come) {
-        new CacheMessagesTask(ctx, Arrays.asList(message)) {
+        new CacheMessagesTask(this, Arrays.asList(message)) {
           @Override
           void onSucceed(List<AVIMTypedMessage> messages) {
             addMessageAndScroll(message);
@@ -491,7 +531,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
       throw new IllegalStateException("conv is null");
     }
     setCurrentChattingConvid(conversation.getConversationId());
-    chatManager.cancelNotification();
   }
 
   @Override
@@ -506,7 +545,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
           @Override
           public void done(final List<AVIMTypedMessage> typedMessages, AVException e) {
             if (filterException(e)) {
-              new CacheMessagesTask(ctx, typedMessages) {
+              new CacheMessagesTask(ChatActivity.this, typedMessages) {
                 @Override
                 void onSucceed(List<AVIMTypedMessage> messages) {
                   adapter.setDatas(typedMessages);
@@ -543,10 +582,10 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
           }
           userIds.add(msg.getFrom());
         }
-        if (chatManager.getUserInfoFactory() == null) {
+        if (chatManager.getChatManagerAdapter() == null) {
           throw new NullPointerException("chat user factory is null");
         }
-        chatManager.getUserInfoFactory().cacheUserInfoByIdsInBackground(new ArrayList<String>(userIds));
+        chatManager.getChatManagerAdapter().cacheUserInfoByIdsInBackground(new ArrayList<String>(userIds));
       } catch (Exception e) {
         this.e = e;
       }
@@ -614,6 +653,30 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
       adapter.add(message);
       scrollToLast();
     }
+  }
+
+  protected boolean filterException(Exception e) {
+    if (e != null) {
+      e.printStackTrace();
+      toast(e.getMessage());
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  protected void toast(String str) {
+    Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+  }
+
+  protected void toast(Exception e) {
+    if (e != null) {
+      toast(e.getMessage());
+    }
+  }
+
+  protected void toast(int id) {
+    Toast.makeText(this, id, Toast.LENGTH_SHORT).show();
   }
 
   protected void onAddLocationButtonClicked(View v) {

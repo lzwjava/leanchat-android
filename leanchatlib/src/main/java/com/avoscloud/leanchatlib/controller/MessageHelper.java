@@ -61,7 +61,7 @@ public class MessageHelper {
   }
 
   public static String nameByUserId(String id) {
-    UserInfo user = ChatManager.getInstance().getUserInfoFactory().getUserInfoById(id);
+    UserInfo user = ChatManager.getInstance().getChatManagerAdapter().getUserInfoById(id);
     if (user != null) {
       return user.getUsername();
     } else {

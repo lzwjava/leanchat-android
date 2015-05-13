@@ -1,11 +1,6 @@
 package com.avoscloud.leanchatlib.controller;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
-import android.os.AsyncTask;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.*;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
@@ -17,22 +12,22 @@ import com.avoscloud.leanchatlib.db.RoomsTable;
 import com.avoscloud.leanchatlib.model.ConversationType;
 import com.avoscloud.leanchatlib.model.MessageEvent;
 import com.avoscloud.leanchatlib.model.Room;
-import com.avoscloud.leanchatlib.model.UserInfo;
 import com.avoscloud.leanchatlib.utils.Utils;
 import de.greenrobot.event.EventBus;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lzw on 15/2/10.
  */
 public class ChatManager extends AVIMClientEventHandler {
   public static final String KEY_UPDATED_AT = "updatedAt";
-  private static final long NOTIFY_PERIOD = 1000;
-  private static final int REPLY_NOTIFY_ID = 1;
   public static final String LOGTAG = "leanchatlib";
   private static ChatManager chatManager;
-  private static long lastNotifyTime = 0;
+
   private static Context context;
 
   private static ConnectionListener defaultConnectListener = new ConnectionListener() {
@@ -52,7 +47,7 @@ public class ChatManager extends AVIMClientEventHandler {
   private MessageHandler messageHandler;
   private RoomsTable roomsTable;
   private EventBus eventBus = EventBus.getDefault();
-  private UserInfoFactory userInfoFactory;
+  private ChatManagerAdapter chatManagerAdapter;
   private static boolean debugEnabled;
 
   private ChatManager() {
@@ -104,39 +99,6 @@ public class ChatManager extends AVIMClientEventHandler {
     });
   }
 
-  public void showMessageNotification(Context context, AVIMConversation conv, AVIMTypedMessage msg) {
-    if (System.currentTimeMillis() - lastNotifyTime < NOTIFY_PERIOD) {
-      return;
-    } else {
-      lastNotifyTime = System.currentTimeMillis();
-    }
-    int icon = context.getApplicationInfo().icon;
-    Intent intent = new Intent(context, ChatActivity.class);
-    intent.putExtra(ChatActivity.CONVID, conv.getConversationId());
-
-    //why Random().nextInt()
-    //http://stackoverflow.com/questions/13838313/android-onnewintent-always-receives-same-intent
-    PendingIntent pend = PendingIntent.getActivity(context, new Random().nextInt(),
-        intent, 0);
-    Notification.Builder builder = new Notification.Builder(context);
-    CharSequence notifyContent = MessageHelper.outlineOfMsg(msg);
-    CharSequence username = "username";
-    UserInfo from = getUserInfoFactory().getUserInfoById(msg.getFrom());
-    if (from != null) {
-      username = from.getUsername();
-    }
-    builder.setContentIntent(pend)
-        .setSmallIcon(icon)
-        .setWhen(System.currentTimeMillis())
-        .setTicker(username + "\n" + notifyContent)
-        .setContentTitle(username)
-        .setContentText(notifyContent)
-        .setAutoCancel(true);
-    NotificationManager man = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-    Notification notification = builder.getNotification();
-    getUserInfoFactory().configureNotification(notification);
-    man.notify(REPLY_NOTIFY_ID, notification);
-  }
 
   public void init(Context context) {
     this.context = context;
@@ -168,11 +130,6 @@ public class ChatManager extends AVIMClientEventHandler {
 
   public void setConnectionListener(ConnectionListener connectionListener) {
     this.connectionListener = connectionListener;
-  }
-
-  public void cancelNotification() {
-    NotificationManager nMgr = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-    nMgr.cancel(REPLY_NOTIFY_ID);
   }
 
   public AVIMClient getImClient() {
@@ -231,29 +188,12 @@ public class ChatManager extends AVIMClientEventHandler {
     roomsTable.increaseUnreadCount(message.getConversationId());
     MessageEvent messageEvent = new MessageEvent(message, MessageEvent.Type.Come);
     eventBus.post(messageEvent);
-    new AsyncTask<Void, Void, Void>() {
-      @Override
-      protected Void doInBackground(Void... voids) {
-        try {
-          getUserInfoFactory().cacheUserInfoByIdsInBackground(Arrays.asList(message.getFrom()));
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-        return null;
-      }
-
-
-      @Override
-      protected void onPostExecute(Void aVoid) {
-        if (selfId != null && ChatActivity.getCurrentChattingConvid() == null || !ChatActivity.getCurrentChattingConvid().equals(message
-            .getConversationId())) {
-          if (getUserInfoFactory().showNotificationWhenNewMessageCome(selfId)) {
-            showMessageNotification(getContext(), conversation, message);
-          }
-        }
-      }
-    }.execute();
+    if (selfId != null && ChatActivity.getCurrentChattingConvid() == null || !ChatActivity.getCurrentChattingConvid().equals(message
+        .getConversationId())) {
+      chatManagerAdapter.shouldShowNotification(context, selfId, conversation, message);
+    }
   }
+
 
   public void closeWithCallback(final AVIMClientCallback callback) {
     imClient.close(new AVIMClientCallback() {
@@ -303,12 +243,12 @@ public class ChatManager extends AVIMClientEventHandler {
     return cachedConversations.get(conversationId);
   }
 
-  public UserInfoFactory getUserInfoFactory() {
-    return userInfoFactory;
+  public ChatManagerAdapter getChatManagerAdapter() {
+    return chatManagerAdapter;
   }
 
-  public void setUserInfoFactory(UserInfoFactory userInfoFactory) {
-    this.userInfoFactory = userInfoFactory;
+  public void setChatManagerAdapter(ChatManagerAdapter chatManagerAdapter) {
+    this.chatManagerAdapter = chatManagerAdapter;
   }
 
   //ChatUser
