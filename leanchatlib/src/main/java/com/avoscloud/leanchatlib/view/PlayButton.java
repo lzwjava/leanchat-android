@@ -13,15 +13,13 @@ import com.avoscloud.leanchatlib.controller.AudioHelper;
  * Created by lzw on 14-9-22.
  */
 public class PlayButton extends ImageView implements View.OnClickListener {
-  String path;
-  Context ctx;
-  boolean leftSide;
-  AnimationDrawable anim;
-  AudioHelper audioHelper;
+  private String path;
+  private boolean leftSide;
+  private AnimationDrawable anim;
+  private AudioHelper audioHelper;
 
   public PlayButton(Context context, AttributeSet attrs) {
     super(context, attrs);
-    ctx = context;
     leftSide = getLeftFromAttrs(context, attrs);
     setLeftSide(leftSide);
     setOnClickListener(this);

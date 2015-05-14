@@ -19,7 +19,7 @@ import com.avoscloud.chat.service.AddRequestService;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.view.BaseListView;
 import com.avoscloud.chat.ui.base_activity.BaseActivity;
-import com.avoscloud.leanchatlib.adapter.BaseListAdapter;
+import com.avoscloud.chat.ui.view.BaseListAdapter;
 import com.avoscloud.leanchatlib.view.ViewHolder;
 
 import java.util.ArrayList;

@@ -36,6 +36,7 @@ public class ChatManagerAdapterImpl implements ChatManagerAdapter {
   @Override
   public UserInfo getUserInfoById(String userId) {
     AVUser user = CacheService.lookupUser(userId);
+//    AVUser user=AVUser.getCurrentUser();
     UserInfo userInfo = new UserInfo();
     userInfo.setUsername(user.getUsername());
     userInfo.setAvatarUrl(User.getAvatarUrl(user));

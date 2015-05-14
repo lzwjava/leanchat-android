@@ -1,4 +1,4 @@
-package com.avoscloud.leanchatlib.adapter;
+package com.avoscloud.chat.ui.view;
 
 import android.content.Context;
 import android.view.LayoutInflater;

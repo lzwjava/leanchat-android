@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,17 +27,29 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import org.ocpsoft.prettytime.PrettyTime;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-public class ChatMessageAdapter extends BaseListAdapter<AVIMTypedMessage> {
+public class ChatMessageAdapter extends BaseAdapter {
   private static PrettyTime prettyTime = new PrettyTime();
   private ConversationType conversationType;
   private int msgViewTypes = 8;
   private ClickListener clickListener;
+  private Context context;
+  private List<AVIMTypedMessage> datas = new ArrayList<>();
 
   public ChatMessageAdapter(Context context, ConversationType conversationType) {
-    super(context);
+    this.context = context;
     this.conversationType = conversationType;
+  }
+
+  public List<AVIMTypedMessage> getDatas() {
+    return datas;
+  }
+
+  public void setDatas(List<AVIMTypedMessage> datas) {
+    this.datas = datas;
   }
 
   // time
@@ -94,6 +107,21 @@ public class ChatMessageAdapter extends BaseListAdapter<AVIMTypedMessage> {
 
   boolean isComeMsg(AVIMTypedMessage msg) {
     return !MessageHelper.fromMe(msg);
+  }
+
+  @Override
+  public int getCount() {
+    return datas.size();
+  }
+
+  @Override
+  public Object getItem(int i) {
+    return datas.get(i);
+  }
+
+  @Override
+  public long getItemId(int i) {
+    return i;
   }
 
   public View getView(int position, View conView, ViewGroup parent) {
@@ -237,9 +265,9 @@ public class ChatMessageAdapter extends BaseListAdapter<AVIMTypedMessage> {
   public View createViewByType(AVIMReservedMessageType type, boolean comeMsg) {
     View baseView;
     if (comeMsg) {
-      baseView = inflater.inflate(R.layout.chat_item_base_left, null);
+      baseView = View.inflate(context, R.layout.chat_item_base_left, null);
     } else {
-      baseView = inflater.inflate(R.layout.chat_item_base_right, null);
+      baseView = View.inflate(context, R.layout.chat_item_base_right, null);
     }
     LinearLayout contentView = (LinearLayout) baseView.findViewById(R.id.contentLayout);
     int contentId;
@@ -260,7 +288,7 @@ public class ChatMessageAdapter extends BaseListAdapter<AVIMTypedMessage> {
         throw new IllegalStateException();
     }
     contentView.removeAllViews();
-    View content = inflater.inflate(contentId, null, false);
+    View content = View.inflate(context, contentId, null);
     if (type == AVIMReservedMessageType.AudioMessageType) {
       PlayButton btn = (PlayButton) content;
       btn.setLeftSide(comeMsg);
@@ -274,6 +302,11 @@ public class ChatMessageAdapter extends BaseListAdapter<AVIMTypedMessage> {
     }
     contentView.addView(content);
     return baseView;
+  }
+
+  public void add(AVIMTypedMessage message) {
+    datas.add(message);
+    notifyDataSetChanged();
   }
 
   private enum MsgViewType {

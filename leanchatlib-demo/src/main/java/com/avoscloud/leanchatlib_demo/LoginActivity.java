@@ -37,12 +37,11 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         @Override
         public void done(AVIMClient avimClient, AVException e) {
           if (e != null) {
-            Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-          } else {
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
+            e.printStackTrace();
           }
+          Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+          startActivity(intent);
+          finish();
         }
       });
     }

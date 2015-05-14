@@ -7,7 +7,6 @@ import android.widget.AdapterView;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.util.SimpleNetTask;
 import com.avoscloud.chat.util.Utils;
-import com.avoscloud.leanchatlib.adapter.BaseListAdapter;
 import com.avoscloud.chat.ui.view.xlist.XListView;
 
 import java.util.ArrayList;

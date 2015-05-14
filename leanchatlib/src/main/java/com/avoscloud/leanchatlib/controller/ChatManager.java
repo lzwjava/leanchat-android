@@ -265,13 +265,21 @@ public class ChatManager extends AVIMClientEventHandler {
     @Override
     public void onMessage(AVIMTypedMessage message, AVIMConversation conversation,
                           AVIMClient client) {
-      chatManager.onMessage(message, conversation);
+      if (client.getClientId().equals(chatManager.getSelfId())) {
+        chatManager.onMessage(message, conversation);
+      } else {
+        client.close(null);
+      }
     }
 
     @Override
     public void onMessageReceipt(AVIMTypedMessage message, AVIMConversation conversation,
                                  AVIMClient client) {
-      chatManager.onMessageReceipt(message, conversation);
+      if (client.getClientId().equals(chatManager.getSelfId())) {
+        chatManager.onMessageReceipt(message, conversation);
+      } else {
+        client.close(null);
+      }
     }
   }
 

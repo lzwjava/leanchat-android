@@ -32,7 +32,7 @@ import com.avoscloud.chat.ui.view.ExpandGridView;
 import com.avoscloud.chat.util.SimpleNetTask;
 import com.avoscloud.chat.util.Utils;
 import com.avoscloud.leanchatlib.activity.ChatActivity;
-import com.avoscloud.leanchatlib.adapter.BaseListAdapter;
+import com.avoscloud.chat.ui.view.BaseListAdapter;
 import com.avoscloud.leanchatlib.controller.ConversationHelper;
 import com.avoscloud.leanchatlib.db.RoomsTable;
 import com.avoscloud.leanchatlib.model.ConversationType;

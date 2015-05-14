@@ -18,7 +18,7 @@ import com.avoscloud.chat.service.ConversationManager;
 import com.avoscloud.chat.service.event.FinishEvent;
 import com.avoscloud.chat.ui.chat.ChatRoomActivity;
 import com.avoscloud.chat.ui.view.BaseListView;
-import com.avoscloud.leanchatlib.adapter.BaseListAdapter;
+import com.avoscloud.chat.ui.view.BaseListAdapter;
 import com.avoscloud.leanchatlib.controller.ConversationHelper;
 import com.avoscloud.leanchatlib.view.ViewHolder;
 
