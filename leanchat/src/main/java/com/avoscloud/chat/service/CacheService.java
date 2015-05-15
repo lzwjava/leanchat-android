@@ -96,7 +96,7 @@ public class CacheService {
     if (userIds.size() <= 0) {
       return new ArrayList<AVUser>();
     }
-    AVQuery<AVUser> q = AVUser.getQuery(AVUser.class);
+    AVQuery<AVUser> q = AVUser.getQuery();
     q.whereContainedIn(C.OBJECT_ID, userIds);
     q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
     return q.find();

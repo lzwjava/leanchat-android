@@ -562,7 +562,7 @@ public class ChatActivity extends Activity implements OnClickListener {
     private List<AVIMTypedMessage> messages;
     private Exception e;
 
-    public CacheMessagesTask(Context ctx, List<AVIMTypedMessage> messages) {
+    public CacheMessagesTask(Context context, List<AVIMTypedMessage> messages) {
       this.messages = messages;
     }
 
@@ -617,16 +617,21 @@ public class ChatActivity extends Activity implements OnClickListener {
       public void done(List<AVIMTypedMessage> typedMessages, AVException e) {
         refreshableView.finishRefreshing();
         if (filterException(e)) {
-          List<AVIMTypedMessage> newMessages = new ArrayList<>();
-          newMessages.addAll(typedMessages);
-          newMessages.addAll(adapter.getDatas());
-          adapter.setDatas(newMessages);
-          adapter.notifyDataSetChanged();
-          if (typedMessages.size() > 0) {
-            messageListView.setSelection(typedMessages.size() - 1);
-          } else {
-            toast(R.string.chat_activity_loadMessagesFinish);
-          }
+          new CacheMessagesTask(ChatActivity.this, typedMessages) {
+            @Override
+            void onSucceed(List<AVIMTypedMessage> typedMessages) {
+              List<AVIMTypedMessage> newMessages = new ArrayList<>();
+              newMessages.addAll(typedMessages);
+              newMessages.addAll(adapter.getDatas());
+              adapter.setDatas(newMessages);
+              adapter.notifyDataSetChanged();
+              if (typedMessages.size() > 0) {
+                messageListView.setSelection(typedMessages.size() - 1);
+              } else {
+                toast(R.string.chat_activity_loadMessagesFinish);
+              }
+            }
+          }.execute();
         }
       }
     });

@@ -36,11 +36,14 @@ public class ChatManagerAdapterImpl implements ChatManagerAdapter {
   @Override
   public UserInfo getUserInfoById(String userId) {
     AVUser user = CacheService.lookupUser(userId);
-//    AVUser user=AVUser.getCurrentUser();
-    UserInfo userInfo = new UserInfo();
-    userInfo.setUsername(user.getUsername());
-    userInfo.setAvatarUrl(User.getAvatarUrl(user));
-    return userInfo;
+    if (user==null){
+      return null;
+    }else{
+      UserInfo userInfo = new UserInfo();
+      userInfo.setUsername(user.getUsername());
+      userInfo.setAvatarUrl(User.getAvatarUrl(user));
+      return userInfo;
+    }
   }
 
   @Override
@@ -55,9 +58,7 @@ public class ChatManagerAdapterImpl implements ChatManagerAdapter {
         @Override
         protected Void doInBackground(Void... voids) {
           try {
-            if (getUserInfoById(message.getFrom()) == null) {
-              cacheUserInfoByIdsInBackground(Arrays.asList(message.getFrom()));
-            }
+            CacheService.cacheUserIfNone(message.getFrom());
           } catch (Exception e) {
             e.printStackTrace();
           }
