@@ -1,13 +1,12 @@
 package com.avoscloud.chat.service;
 
-import android.text.TextUtils;
 import android.widget.ImageView;
 import com.avos.avoscloud.*;
 import com.avoscloud.chat.base.App;
-import com.avoscloud.chat.base.C;
+import com.avoscloud.chat.base.Constant;
 import com.avoscloud.chat.entity.avobject.User;
-import com.avoscloud.chat.util.Utils;
 import com.avoscloud.chat.util.Logger;
+import com.avoscloud.chat.util.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.IOException;
@@ -65,15 +64,13 @@ public class UserService {
     }
   }
 
-  public static void displayAvatar(String imageUrl, ImageView avatarView) {
-    ImageLoader.getInstance().displayImage(imageUrl, avatarView, com.avoscloud.leanchatlib.utils.PhotoUtils.avatarImageOptions);
-  }
-
   public static void displayAvatar(AVUser user, ImageView avatarView) {
     if (user != null) {
       String avatarUrl = User.getAvatarUrl(user);
-      if (TextUtils.isEmpty(avatarUrl) == false) {
-        displayAvatar(avatarUrl, avatarView);
+      if (avatarUrl != null) {
+        ImageLoader.getInstance().displayImage(avatarUrl, avatarView, com.avoscloud.leanchatlib.utils.PhotoUtils.avatarImageOptions);
+      } else {
+        avatarView.setImageBitmap(ColoredBitmapProvider.getInstance().createColoredBitmapByHashString(user.getObjectId()));
       }
     }
   }
@@ -81,13 +78,13 @@ public class UserService {
   public static List<AVUser> searchUser(String searchName, int skip) throws AVException {
     AVQuery<AVUser> q = AVUser.getQuery(AVUser.class);
     q.whereContains(User.USERNAME, searchName);
-    q.limit(C.PAGE_SIZE);
+    q.limit(Constant.PAGE_SIZE);
     q.skip(skip);
     AVUser user = AVUser.getCurrentUser();
     List<String> friendIds = new ArrayList<String>(CacheService.getFriendIds());
     friendIds.add(user.getObjectId());
-    q.whereNotContainedIn(C.OBJECT_ID, friendIds);
-    q.orderByDescending(C.UPDATED_AT);
+    q.whereNotContainedIn(Constant.OBJECT_ID, friendIds);
+    q.orderByDescending(Constant.UPDATED_AT);
     q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
     List<AVUser> users = q.find();
     CacheService.registerUsers(users);
@@ -100,15 +97,15 @@ public class UserService {
     AVGeoPoint geoPoint = preferenceMap.getLocation();
     if (geoPoint == null) {
       Logger.i("geo point is null");
-      return new ArrayList<AVUser>();
+      return new ArrayList<>();
     }
     AVQuery<AVUser> q = AVObject.getQuery(AVUser.class);
     AVUser user = AVUser.getCurrentUser();
-    q.whereNotEqualTo(C.OBJECT_ID, user.getObjectId());
+    q.whereNotEqualTo(Constant.OBJECT_ID, user.getObjectId());
     if (orderType == ORDER_DISTANCE) {
       q.whereNear(User.LOCATION, geoPoint);
     } else {
-      q.orderByDescending(C.UPDATED_AT);
+      q.orderByDescending(Constant.UPDATED_AT);
     }
     q.skip(skip);
     q.limit(limit);

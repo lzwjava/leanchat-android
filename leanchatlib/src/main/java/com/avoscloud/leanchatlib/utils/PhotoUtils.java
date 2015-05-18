@@ -7,6 +7,7 @@ import com.avoscloud.leanchatlib.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -30,6 +31,7 @@ public class PhotoUtils {
           //.displayer(new RoundedBitmapDisplayer(20))
           //.displayer(new FadeInBitmapDisplayer(100))// 淡入
       .build();
+
   private static DisplayImageOptions normalImageOptions = new DisplayImageOptions.Builder()
       .showImageOnLoading(R.drawable.chat_common_empty_photo)
       .showImageForEmptyUri(R.drawable.chat_common_empty_photo)
@@ -37,11 +39,11 @@ public class PhotoUtils {
       .cacheInMemory(true)
       .cacheOnDisc(true)
       .considerExifParams(true)
-      .imageScaleType(ImageScaleType.EXACTLY)
+      .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
       .bitmapConfig(Bitmap.Config.RGB_565)
       .resetViewBeforeLoading(true)// 设置图片在下载前是否重置，复位
           //.displayer(new RoundedBitmapDisplayer(20))
-          //.displayer(new FadeInBitmapDisplayer(100))// 淡入
+      .displayer(new FadeInBitmapDisplayer(100))// 淡入
       .build();
 
   public static void displayImageCacheElseNetwork(ImageView imageView,
@@ -63,13 +65,11 @@ public class PhotoUtils {
     BitmapFactory.decodeFile(path, options);
     int inSampleSize = 1;
     int maxSize = 3000;
-    Utils.log("outWidth=" + options.outWidth + " outHeight=" + options.outHeight);
     if (options.outWidth > maxSize || options.outHeight > maxSize) {
       int widthScale = (int) Math.ceil(options.outWidth * 1.0 / maxSize);
       int heightScale = (int) Math.ceil(options.outHeight * 1.0 / maxSize);
       inSampleSize = Math.max(widthScale, heightScale);
     }
-    Utils.log("inSampleSize=" + inSampleSize);
     options.inJustDecodeBounds = false;
     options.inSampleSize = inSampleSize;
     Bitmap bitmap = BitmapFactory.decodeFile(path, options);
@@ -87,9 +87,6 @@ public class PhotoUtils {
       }
     }
     Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, newW, newH, false);
-    recycle(bitmap);
-    Utils.log("bitmap width=" + newBitmap.getWidth() + " h=" + newBitmap.getHeight());
-
     FileOutputStream outputStream = null;
     try {
       outputStream = new FileOutputStream(newPath);

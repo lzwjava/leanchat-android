@@ -78,9 +78,8 @@ public class DiscoverFragmentUserAdapter extends BaseListAdapter<AVUser> {
     TextView distanceView = ViewHolder.findViewById(convertView, R.id.distance_text);
     TextView loginTimeView = ViewHolder.findViewById(convertView, R.id.login_time_text);
     ImageView avatarView = ViewHolder.findViewById(convertView, R.id.avatar_view);
-    String avatarUrl = User.getAvatarUrl(user);
 
-    UserService.displayAvatar(avatarUrl, avatarView);
+    UserService.displayAvatar(user, avatarView);
 
     AVGeoPoint geoPoint = user.getAVGeoPoint(User.LOCATION);
     String currentLat = String.valueOf(location.getLatitude());

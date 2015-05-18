@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Random;
 
 public class PhotoUtils {
 
@@ -274,8 +275,15 @@ public class PhotoUtils {
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }
-    com.avoscloud.leanchatlib.utils.PhotoUtils.recycle(bitmap);
+    recycle(bitmap);
     return newPath;
+  }
+
+  public static void recycle(Bitmap bitmap) {
+    if (bitmap != null && !bitmap.isRecycled()) {
+      bitmap.recycle();
+    }
+    System.gc();
   }
 
 }

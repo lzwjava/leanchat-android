@@ -103,7 +103,7 @@
             android:theme="@style/ChatMainTheme" />
 
         <activity
-            android:name=".ui.conversation.ConversationListActivity"
+            android:name=".ui.conversation.ConversationGroupListActivity"
             android:label="@string/conversation_group"
             android:theme="@style/ChatMainTheme" />
 

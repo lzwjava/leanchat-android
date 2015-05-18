@@ -6,7 +6,7 @@ import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
-import com.avoscloud.chat.base.C;
+import com.avoscloud.chat.base.Constant;
 
 import java.util.*;
 
@@ -97,7 +97,7 @@ public class CacheService {
       return new ArrayList<AVUser>();
     }
     AVQuery<AVUser> q = AVUser.getQuery();
-    q.whereContainedIn(C.OBJECT_ID, userIds);
+    q.whereContainedIn(Constant.OBJECT_ID, userIds);
     q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
     return q.find();
   }

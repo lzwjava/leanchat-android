@@ -16,13 +16,13 @@ import com.avoscloud.chat.service.PreferenceMap;
 import com.avoscloud.chat.service.UpdateService;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.service.event.LoginFinishEvent;
+import com.avoscloud.chat.ui.base_activity.BaseActivity;
 import com.avoscloud.chat.ui.contact.ContactFragment;
 import com.avoscloud.chat.ui.conversation.ConversationRecentFragment;
 import com.avoscloud.chat.ui.discover.DiscoverFragment;
 import com.avoscloud.chat.ui.profile.ProfileFragment;
-import com.avoscloud.chat.ui.base_activity.BaseActivity;
-import com.avoscloud.leanchatlib.controller.ChatManager;
 import com.avoscloud.chat.util.Logger;
+import com.avoscloud.leanchatlib.controller.ChatManager;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -39,6 +39,13 @@ public class MainActivity extends BaseActivity {
   public static final int[] tabsActiveBackIds = new int[]{R.drawable.tabbar_chat_active,
       R.drawable.tabbar_contacts_active, R.drawable.tabbar_discover_active,
       R.drawable.tabbar_me_active};
+  private static final String FRAGMENT_TAG_CONVERSATION = "conversation";
+  private static final String FRAGMENT_TAG_CONTACT = "contact";
+  private static final String FRAGMENT_TAG_DISCOVER = "discover";
+  private static final String FRAGMENT_TAG_PROFILE = "profile";
+  private static final String[] fragmentTags = new String[]{FRAGMENT_TAG_CONVERSATION, FRAGMENT_TAG_CONTACT,
+      FRAGMENT_TAG_DISCOVER, FRAGMENT_TAG_PROFILE};
+
   public LocationClient locClient;
   public MyLocationListener locationListener;
   Button conversationBtn, contactBtn, discoverBtn, mySpaceBtn;
@@ -113,30 +120,30 @@ public class MainActivity extends BaseActivity {
     int id = v.getId();
     FragmentManager manager = getFragmentManager();
     FragmentTransaction transaction = manager.beginTransaction();
-    hideFragments(transaction);
+    hideFragments(manager, transaction);
     setNormalBackgrounds();
     if (id == R.id.btn_message) {
       if (conversationRecentFragment == null) {
         conversationRecentFragment = new ConversationRecentFragment();
-        transaction.add(R.id.fragment_container, conversationRecentFragment);
+        transaction.add(R.id.fragment_container, conversationRecentFragment, FRAGMENT_TAG_CONVERSATION);
       }
       transaction.show(conversationRecentFragment);
     } else if (id == R.id.btn_contact) {
       if (contactFragment == null) {
         contactFragment = new ContactFragment();
-        transaction.add(R.id.fragment_container, contactFragment);
+        transaction.add(R.id.fragment_container, contactFragment, FRAGMENT_TAG_CONTACT);
       }
       transaction.show(contactFragment);
     } else if (id == R.id.btn_discover) {
       if (discoverFragment == null) {
         discoverFragment = new DiscoverFragment();
-        transaction.add(R.id.fragment_container, discoverFragment);
+        transaction.add(R.id.fragment_container, discoverFragment, FRAGMENT_TAG_DISCOVER);
       }
       transaction.show(discoverFragment);
     } else if (id == R.id.btn_my_space) {
       if (profileFragment == null) {
         profileFragment = new ProfileFragment();
-        transaction.add(R.id.fragment_container, profileFragment);
+        transaction.add(R.id.fragment_container, profileFragment, FRAGMENT_TAG_PROFILE);
       }
       transaction.show(profileFragment);
     }
@@ -161,14 +168,11 @@ public class MainActivity extends BaseActivity {
     v.setCompoundDrawablesWithIntrinsicBounds(null, ctx.getResources().getDrawable(resId), null, null);
   }
 
-  private void hideFragments(FragmentTransaction transaction) {
-    Fragment[] fragments = new Fragment[]{
-        conversationRecentFragment, contactFragment,
-        discoverFragment, profileFragment
-    };
-    for (Fragment f : fragments) {
-      if (f != null) {
-        transaction.hide(f);
+  private void hideFragments(FragmentManager fragmentManager, FragmentTransaction transaction) {
+    for (int i = 0; i < fragmentTags.length; i++) {
+      Fragment fragment = fragmentManager.findFragmentByTag(fragmentTags[i]);
+      if (fragment != null && fragment.isVisible()) {
+        transaction.hide(fragment);
       }
     }
   }

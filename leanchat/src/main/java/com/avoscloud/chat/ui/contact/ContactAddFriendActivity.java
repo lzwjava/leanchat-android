@@ -89,8 +89,7 @@ public class ContactAddFriendActivity extends BaseActivity {
       TextView nameView = ViewHolder.findViewById(conView, R.id.name);
       ImageView avatarView = ViewHolder.findViewById(conView, R.id.avatar);
       Button addBtn = ViewHolder.findViewById(conView, R.id.add);
-      String avatarUrl = User.getAvatarUrl(contact);
-      UserService.displayAvatar(avatarUrl, avatarView);
+      UserService.displayAvatar(contact, avatarView);
       nameView.setText(contact.getUsername());
       addBtn.setText(R.string.contact_add);
       addBtn.setOnClickListener(new View.OnClickListener() {

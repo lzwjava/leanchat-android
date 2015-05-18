@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -17,8 +18,8 @@ import com.avoscloud.chat.service.ConversationChangeEvent;
 import com.avoscloud.chat.service.ConversationManager;
 import com.avoscloud.chat.service.event.FinishEvent;
 import com.avoscloud.chat.ui.chat.ChatRoomActivity;
-import com.avoscloud.chat.ui.view.BaseListView;
 import com.avoscloud.chat.ui.view.BaseListAdapter;
+import com.avoscloud.chat.ui.view.BaseListView;
 import com.avoscloud.leanchatlib.controller.ConversationHelper;
 import com.avoscloud.leanchatlib.view.ViewHolder;
 
@@ -29,12 +30,12 @@ import java.util.concurrent.CountDownLatch;
 /**
  * Created by lzw on 14-10-7.
  */
-public class ConversationListActivity extends ConversationEventBaseActivity {
+public class ConversationGroupListActivity extends ConversationEventBaseActivity {
   @InjectView(R.id.groupList)
   BaseListView<AVIMConversation> groupListView;
 
   private List<AVIMConversation> convs = new ArrayList<AVIMConversation>();
-  private ConversationListAdapter conversationListAdapter;
+  private ConversationGroupListAdapter conversationGroupListAdapter;
   private ConversationManager conversationManager;
 
   @Override
@@ -59,7 +60,7 @@ public class ConversationListActivity extends ConversationEventBaseActivity {
   }
 
   private void initList() {
-    conversationListAdapter = new ConversationListAdapter(ctx, convs);
+    conversationGroupListAdapter = new ConversationGroupListAdapter(ctx, convs);
     groupListView.init(new BaseListView.DataFactory<AVIMConversation>() {
       AVException exception;
       List<AVIMConversation> convs;
@@ -82,12 +83,12 @@ public class ConversationListActivity extends ConversationEventBaseActivity {
         CacheService.registerConvs(convs);
         return convs;
       }
-    }, conversationListAdapter);
+    }, conversationGroupListAdapter);
     groupListView.setPullLoadEnable(false);
     groupListView.setItemListener(new BaseListView.ItemListener<AVIMConversation>() {
       @Override
       public void onItemSelected(AVIMConversation item) {
-        ChatRoomActivity.chatByConversation(ConversationListActivity.this, item);
+        ChatRoomActivity.chatByConversation(ConversationGroupListActivity.this, item);
       }
     });
   }
@@ -95,8 +96,8 @@ public class ConversationListActivity extends ConversationEventBaseActivity {
   /**
    * Created by lzw on 14-10-8.
    */
-  public static class ConversationListAdapter extends BaseListAdapter<AVIMConversation> {
-    public ConversationListAdapter(Context ctx, List<AVIMConversation> datas) {
+  public static class ConversationGroupListAdapter extends BaseListAdapter<AVIMConversation> {
+    public ConversationGroupListAdapter(Context ctx, List<AVIMConversation> datas) {
       super(ctx, datas);
     }
 
@@ -107,8 +108,10 @@ public class ConversationListActivity extends ConversationEventBaseActivity {
         conView = inflater.inflate(R.layout.conversation_list_item, null);
       }
       TextView nameView = ViewHolder.findViewById(conView, R.id.name);
+      ImageView iconView = ViewHolder.findViewById(conView, R.id.contact_group_icon);
       AVIMConversation conv = datas.get(position);
       nameView.setText(ConversationHelper.titleOfConversation(conv));
+      iconView.setImageBitmap(ConversationManager.getConversationIcon(conv));
       return conView;
     }
   }

@@ -71,7 +71,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     AVUser curUser = AVUser.getCurrentUser();
     usernameView.setText(curUser.getUsername());
     genderView.setText(User.getGenderDesc(curUser));
-    UserService.displayAvatar(User.getAvatarUrl(curUser), avatarView);
+    UserService.displayAvatar(curUser, avatarView);
   }
 
   private void findView() {

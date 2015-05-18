@@ -34,9 +34,8 @@ public class ContactFragmentAdapter extends BaseListAdapter<SortUser> implements
 
     SortUser friend = datas.get(position);
     final String name = friend.getInnerUser().getUsername();
-    final String avatarUrl = User.getAvatarUrl(friend.getInnerUser());
 
-    UserService.displayAvatar(avatarUrl, avatarView);
+    UserService.displayAvatar(friend.getInnerUser(), avatarView);
     nameView.setText(name);
 
     int section = getSectionForPosition(position);

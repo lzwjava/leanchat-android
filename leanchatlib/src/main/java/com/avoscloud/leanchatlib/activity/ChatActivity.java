@@ -603,38 +603,38 @@ public class ChatActivity extends Activity implements OnClickListener {
   }
 
   public void loadOldMessages() {
-    String msgId;
-    long time;
     if (adapter.getDatas().size() == 0) {
+      refreshableView.finishRefreshing();
       return;
     } else {
-      msgId = adapter.getDatas().get(0).getMessageId();
       AVIMTypedMessage firstMsg = adapter.getDatas().get(0);
-      time = firstMsg.getTimestamp();
-    }
-    ChatManager.getInstance().queryMessages(conversation, msgId, time, PAGE_SIZE, new AVIMTypedMessagesArrayCallback() {
-      @Override
-      public void done(List<AVIMTypedMessage> typedMessages, AVException e) {
-        refreshableView.finishRefreshing();
-        if (filterException(e)) {
-          new CacheMessagesTask(ChatActivity.this, typedMessages) {
-            @Override
-            void onSucceed(List<AVIMTypedMessage> typedMessages) {
-              List<AVIMTypedMessage> newMessages = new ArrayList<>();
-              newMessages.addAll(typedMessages);
-              newMessages.addAll(adapter.getDatas());
-              adapter.setDatas(newMessages);
-              adapter.notifyDataSetChanged();
-              if (typedMessages.size() > 0) {
-                messageListView.setSelection(typedMessages.size() - 1);
-              } else {
-                toast(R.string.chat_activity_loadMessagesFinish);
+      String msgId = adapter.getDatas().get(0).getMessageId();
+      long time = firstMsg.getTimestamp();
+      ChatManager.getInstance().queryMessages(conversation, msgId, time, PAGE_SIZE, new AVIMTypedMessagesArrayCallback() {
+        @Override
+        public void done(List<AVIMTypedMessage> typedMessages, AVException e) {
+          refreshableView.finishRefreshing();
+          if (filterException(e)) {
+            new CacheMessagesTask(ChatActivity.this, typedMessages) {
+              @Override
+              void onSucceed(List<AVIMTypedMessage> typedMessages) {
+                List<AVIMTypedMessage> newMessages = new ArrayList<>();
+                newMessages.addAll(typedMessages);
+                newMessages.addAll(adapter.getDatas());
+                adapter.setDatas(newMessages);
+                adapter.notifyDataSetChanged();
+                if (typedMessages.size() > 0) {
+                  messageListView.setSelection(typedMessages.size() - 1);
+                } else {
+                  toast(R.string.chat_activity_loadMessagesFinish);
+                }
               }
-            }
-          }.execute();
+            }.execute();
+          }
         }
-      }
-    });
+      });
+    }
+
   }
 
   class DefaultSendCallback implements MessageAgent.SendCallback {

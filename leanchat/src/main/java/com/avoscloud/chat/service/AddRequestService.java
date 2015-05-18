@@ -4,7 +4,7 @@ import android.content.Context;
 import com.avos.avoscloud.*;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
-import com.avoscloud.chat.base.C;
+import com.avoscloud.chat.base.Constant;
 import com.avoscloud.chat.entity.avobject.AddRequest;
 import com.avoscloud.chat.util.SimpleNetTask;
 import com.avoscloud.chat.util.Utils;
@@ -35,7 +35,7 @@ public class AddRequestService {
     AVQuery<AddRequest> q = AVObject.getQuery(AddRequest.class);
     q.include(AddRequest.FROM_USER);
     q.whereEqualTo(AddRequest.TO_USER, user);
-    q.orderByDescending(C.CREATED_AT);
+    q.orderByDescending(Constant.CREATED_AT);
     q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
     return q.find();
   }

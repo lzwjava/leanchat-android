@@ -16,9 +16,9 @@ import com.avoscloud.chat.service.ConversationManager;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.base_activity.BaseFragment;
 import com.avoscloud.chat.ui.chat.ChatRoomActivity;
+import com.avoscloud.chat.ui.view.BaseListAdapter;
 import com.avoscloud.chat.ui.view.BaseListView;
 import com.avoscloud.chat.util.TimeUtils;
-import com.avoscloud.chat.ui.view.BaseListAdapter;
 import com.avoscloud.leanchatlib.controller.ChatManager;
 import com.avoscloud.leanchatlib.controller.ConversationHelper;
 import com.avoscloud.leanchatlib.controller.MessageHelper;
@@ -143,9 +143,8 @@ public class ConversationRecentFragment extends BaseFragment implements ChatMana
         AVUser user = CacheService.lookupUser(ConversationHelper.otherIdOfConversation(room.getConversation()));
         UserService.displayAvatar(user, recentAvatarView);
       } else {
-        recentAvatarView.setImageResource(R.drawable.contact_group_icon);
+        recentAvatarView.setImageBitmap(ConversationManager.getConversationIcon(room.getConversation()));
       }
-
       recentNameView.setText(ConversationHelper.nameOfConversation(room.getConversation()));
 
       int num = room.getUnreadCount();

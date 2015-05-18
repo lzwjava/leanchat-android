@@ -27,17 +27,17 @@ import com.avoscloud.chat.service.AddRequestService;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.base_activity.BaseFragment;
 import com.avoscloud.chat.ui.chat.ChatRoomActivity;
-import com.avoscloud.chat.ui.conversation.ConversationListActivity;
+import com.avoscloud.chat.ui.conversation.ConversationGroupListActivity;
 import com.avoscloud.chat.ui.view.BaseListView;
 import com.avoscloud.chat.ui.view.ClearEditText;
 import com.avoscloud.chat.ui.view.EnLetterView;
 import com.avoscloud.chat.util.CharacterParser;
-import com.avoscloud.chat.util.PinyinComparator;
 import com.avoscloud.chat.util.Utils;
 import com.avoscloud.chat.util.NetAsyncTask;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class ContactFragment extends BaseFragment {
@@ -259,7 +259,7 @@ public class ContactFragment extends BaseFragment {
 
     @OnClick(R.id.layout_group)
     void goGroupConvList() {
-      Utils.goActivity(ctx, ConversationListActivity.class);
+      Utils.goActivity(ctx, ConversationGroupListActivity.class);
     }
 
     public ImageView getMsgTipsView() {
@@ -277,5 +277,20 @@ public class ContactFragment extends BaseFragment {
         friendsList.setSelection(position);
       }
     }
+  }
+
+  public static class PinyinComparator implements Comparator<SortUser> {
+    public int compare(SortUser o1, SortUser o2) {
+      if (o1.getSortLetters().equals("@")
+          || o2.getSortLetters().equals("#")) {
+        return -1;
+      } else if (o1.getSortLetters().equals("#")
+          || o2.getSortLetters().equals("@")) {
+        return 1;
+      } else {
+        return o1.getSortLetters().compareTo(o2.getSortLetters());
+      }
+    }
+
   }
 }

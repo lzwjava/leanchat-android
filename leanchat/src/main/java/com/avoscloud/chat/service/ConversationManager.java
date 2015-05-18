@@ -1,12 +1,14 @@
 package com.avoscloud.chat.service;
 
+import android.graphics.Bitmap;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.*;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMMessagesQueryCallback;
-import com.avoscloud.chat.base.C;
+import com.avoscloud.chat.base.Constant;
+import com.avoscloud.chat.util.Logger;
 import com.avoscloud.chat.util.Utils;
 import com.avoscloud.leanchatlib.controller.ChatManager;
 import com.avoscloud.leanchatlib.controller.ConversationHelper;
@@ -63,7 +65,7 @@ public class ConversationManager {
     return conversationHandler;
   }
 
-  public static AVIMTypedMessage getLastMessage(AVIMConversation conversation) throws AVException, InterruptedException {
+  public static AVIMTypedMessage getLastMessage(final AVIMConversation conversation) throws AVException, InterruptedException {
     final CountDownLatch latch = new CountDownLatch(1);
     final AVException[] es = new AVException[1];
     final List<AVIMTypedMessage> foundMessages = new ArrayList<>();
@@ -72,6 +74,9 @@ public class ConversationManager {
       public void done(List<AVIMMessage> messages, AVException e) {
         es[0] = e;
         if (e == null) {
+          if (messages == null) {
+            Logger.d("null conversationId=" + conversation.getConversationId());
+          }
           for (AVIMMessage message : messages) {
             if (message instanceof AVIMTypedMessage) {
               foundMessages.add((AVIMTypedMessage) message);
@@ -165,14 +170,14 @@ public class ConversationManager {
     AVIMConversationQuery q = chatManager.getQuery();
     q.containsMembers(Arrays.asList(chatManager.getSelfId()));
     q.whereEqualTo(ConversationType.ATTR_TYPE_KEY, ConversationType.Group.getValue());
-    q.orderByDescending(C.UPDATED_AT);
+    q.orderByDescending(Constant.UPDATED_AT);
     q.findInBackground(callback);
   }
 
   public void findConversationsByConversationIds(List<String> ids, AVIMConversationQueryCallback callback) {
     if (ids.size() > 0) {
       AVIMConversationQuery q = chatManager.getQuery();
-      q.whereContainsIn(C.OBJECT_ID, ids);
+      q.whereContainsIn(Constant.OBJECT_ID, ids);
       q.findInBackground(callback);
     } else {
       callback.done(new ArrayList<AVIMConversation>(), null);
@@ -185,5 +190,9 @@ public class ConversationManager {
     final String name = MessageHelper.nameByUserIds(members);
     map.put(ConversationType.NAME_KEY, name);
     chatManager.getImClient().createConversation(members, map, callback);
+  }
+
+  public static Bitmap getConversationIcon(AVIMConversation conversation) {
+    return ColoredBitmapProvider.getInstance().createColoredBitmapByHashString(conversation.getConversationId());
   }
 }

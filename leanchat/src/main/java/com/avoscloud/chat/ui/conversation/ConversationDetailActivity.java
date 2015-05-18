@@ -229,7 +229,7 @@ public class ConversationDetailActivity extends ConversationBaseActivity impleme
       AVUser user = datas.get(position);
       ImageView avatarView = ViewHolder.findViewById(conView, R.id.avatar);
       TextView nameView = ViewHolder.findViewById(conView, R.id.username);
-      UserService.displayAvatar(User.getAvatarUrl(user), avatarView);
+      UserService.displayAvatar(user, avatarView);
       nameView.setText(user.getUsername());
       return conView;
     }

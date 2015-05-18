@@ -33,8 +33,8 @@ dependencies {
 //    compile project(':avoscloud-push')
 //    compile project(':avoscloud-sdk')
 
-    //compile 'cn.leancloud.android:avoscloud-sdk:v3.0+'
-    //compile 'cn.leancloud.android:avoscloud-push:v3.0+@aar'
+//    compile 'cn.leancloud.android:avoscloud-sdk:v3.0+'
+//    compile 'cn.leancloud.android:avoscloud-push:v3.0+@aar'
     //compile 'cn.leancloud.android:avoscloud-statistics:v2.6.+@aar'
 
     compile project(':leanchatlib')
@@ -44,6 +44,7 @@ dependencies {
 //    compile files('libs/avoscloud-statistics-v3.1.4.jar')
 
     compile 'cn.leancloud.android:avoscloud-statistics:v3.1+@aar'
+    compile 'com.jakewharton:butterknife:6.1.0'
 
 //    compile files('libs/support-v4-19.1.0.jar')
 //    compile files('libs/android-async-http-1.4.6.jar')
@@ -56,6 +57,7 @@ dependencies {
 //    compile files('libs/universal-image-loader-1.9.3.jar')
     compile files('libs/baidumapapi_v3_0_0.jar')
     compile files('libs/locSDK_4.2.jar')
+
 
 
 //    compile files('libs/prettytime-3.2.5.Final.jar')

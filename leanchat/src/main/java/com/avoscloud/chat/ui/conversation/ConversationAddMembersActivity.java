@@ -151,7 +151,7 @@ public class ConversationAddMembersActivity extends ConversationBaseActivity {
       AVUser user = CacheService.lookupUser(userId);
       ImageView avatarView = ViewHolder.findViewById(conView, R.id.avatar);
       TextView nameView = ViewHolder.findViewById(conView, R.id.username);
-      UserService.displayAvatar(User.getAvatarUrl(user), avatarView);
+      UserService.displayAvatar(user, avatarView);
       nameView.setText(user.getUsername());
       CheckBox checkBox = ViewHolder.findViewById(conView, R.id.checkbox);
       setCheckBox(checkBox, position);
