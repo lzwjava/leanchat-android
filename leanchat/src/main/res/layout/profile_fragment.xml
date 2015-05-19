@@ -23,63 +23,31 @@
                 android:background="@drawable/btn_selector"
                 android:padding="10dp">
 
-                <TextView
-                    style="@style/profile_fragment_left_text"
-                    android:text="@string/chat_common_avatar" />
-
-                <ImageView
-                    android:id="@+id/avatar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <LinearLayout
                     android:layout_centerInParent="true"
-                    android:src="@drawable/chat_default_user_avatar" />
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/avatar"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:src="@drawable/chat_default_user_avatar" />
+
+                    <TextView
+                        android:id="@+id/username"
+                        android:layout_marginLeft="30dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="username" />
+
+                </LinearLayout>
+
 
                 <include layout="@layout/common_view_right_arrow" />
             </RelativeLayout>
 
-
-            <RelativeLayout
-                android:id="@+id/usernameLayout"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:background="@drawable/btn_selector"
-                android:padding="10dp">
-
-                <TextView
-                    style="@style/profile_fragment_left_text"
-                    android:text="@string/chat_common_username" />
-
-                <TextView
-                    android:id="@+id/username"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="username" />
-
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/sexLayout"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:background="@drawable/btn_selector"
-                android:padding="10dp">
-
-                <TextView
-                    style="@style/profile_fragment_left_text"
-                    android:text="@string/profile_sex" />
-
-                <TextView
-                    android:id="@+id/sex"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="sex" />
-
-                <include layout="@layout/common_view_right_arrow" />
-
-            </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/notifyLayout"

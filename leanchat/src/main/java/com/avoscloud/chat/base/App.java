@@ -21,7 +21,7 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
  * Created by lzw on 14-5-29.
  */
 public class App extends Application {
-  public static boolean debug = true;
+  public static boolean debug = false;
   public static App ctx;
 
   public static App getInstance() {

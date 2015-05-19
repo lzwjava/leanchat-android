@@ -96,9 +96,7 @@
     <orderEntry type="library" exported="" name="locSDK_4.2" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="baidumapapi_v3_0_0" level="project" />
-    <orderEntry type="library" exported="" name="avoscloud-sdk-v3.0.4" level="project" />
     <orderEntry type="library" exported="" name="avoscloud-statistics-v3.1.5" level="project" />
-    <orderEntry type="library" exported="" name="avoscloud-push-v3.0.4" level="project" />
     <orderEntry type="library" exported="" name="universal-image-loader-1.9.3" level="project" />
     <orderEntry type="library" exported="" name="httpmime-4.2.4" level="project" />
     <orderEntry type="module" module-name="leanchatlib" exported="" />

@@ -99,7 +99,6 @@ public class ContactPersonInfoActivity extends BaseActivity implements OnClickLi
   private void updateView(AVUser user) {
     UserService.displayAvatar(user, avatarView);
     usernameView.setText(user.getUsername());
-    genderView.setText(User.getGenderDesc(user));
   }
 
   @Override

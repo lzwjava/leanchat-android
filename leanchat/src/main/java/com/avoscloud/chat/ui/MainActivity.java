@@ -81,9 +81,14 @@ public class MainActivity extends BaseActivity {
     //discoverBtn.performClick();
     initBaiduLocClient();
 
+    CacheService.registerUser(AVUser.getCurrentUser());
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
     UpdateService updateService = UpdateService.getInstance(this);
     updateService.checkUpdate();
-    CacheService.registerUser(AVUser.getCurrentUser());
   }
 
   private void initBaiduLocClient() {

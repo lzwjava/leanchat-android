@@ -16,7 +16,6 @@
     <string name="update_service_failedToGetData">获取数据失败</string>
     <string name="entry_register_activity_password">密码</string>
     <string name="login">登录</string>
-    <string name="profile_sex">性别</string>
     <string name="conversation_messages">会话</string>
     <string name="contact">联系人</string>
     <string name="profile_settings">Settings</string>

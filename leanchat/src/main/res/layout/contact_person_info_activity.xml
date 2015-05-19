@@ -12,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/contact_person_info_about_top_bg"
-        android:minHeight="80dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp">
 
@@ -34,7 +33,7 @@
                 style="@style/My.ImageView"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:padding="5dp"
+                android:padding="10dp"
                 android:src="@drawable/chat_default_user_avatar" />
 
             <ImageView
@@ -74,12 +73,6 @@
         android:layout_height="wrap_content"
         android:background="@drawable/contact_person_info_mid_bg"
         android:padding="10dp">
-
-        <TextView
-            style="@style/My.TextView._Black"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:text="@string/profile_sex" />
 
         <LinearLayout
             android:layout_width="wrap_content"

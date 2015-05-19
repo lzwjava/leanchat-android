@@ -1,8 +1,6 @@
 package com.avoscloud.chat.ui.profile;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -15,21 +13,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.entity.avobject.User;
 import com.avoscloud.chat.service.UpdateService;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.base_activity.BaseFragment;
-import com.avoscloud.chat.util.PathUtils;
-import com.avoscloud.chat.util.PhotoUtils;
-import com.avoscloud.chat.util.SimpleNetTask;
-import com.avoscloud.chat.util.Utils;
+import com.avoscloud.chat.ui.entry.EntryLoginActivity;
+import com.avoscloud.chat.util.*;
 import com.avoscloud.leanchatlib.controller.ChatManager;
 import com.avoscloud.leanchatlib.db.DBHelper;
-import com.avoscloud.chat.util.Logger;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -41,17 +34,11 @@ import java.util.Date;
 public class ProfileFragment extends BaseFragment implements View.OnClickListener {
   private static final int IMAGE_PICK_REQUEST = 1;
   private static final int CROP_REQUEST = 2;
-  TextView usernameView, genderView;
+  TextView usernameView;
   ImageView avatarView;
-  View usernameLayout, avatarLayout, logoutLayout,
-      genderLayout, notifyLayout, updateLayout;
+  View avatarLayout, logoutLayout,
+      notifyLayout, updateLayout;
   ChatManager chatManager;
-  SaveCallback saveCallback = new SaveCallback() {
-    @Override
-    public void done(AVException e) {
-      refresh();
-    }
-  };
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -70,7 +57,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
   private void refresh() {
     AVUser curUser = AVUser.getCurrentUser();
     usernameView.setText(curUser.getUsername());
-    genderView.setText(User.getGenderDesc(curUser));
     UserService.displayAvatar(curUser, avatarView);
   }
 
@@ -78,17 +64,13 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     View fragmentView = getView();
     usernameView = (TextView) fragmentView.findViewById(R.id.username);
     avatarView = (ImageView) fragmentView.findViewById(R.id.avatar);
-    usernameLayout = fragmentView.findViewById(R.id.usernameLayout);
     avatarLayout = fragmentView.findViewById(R.id.avatarLayout);
     logoutLayout = fragmentView.findViewById(R.id.logoutLayout);
-    genderLayout = fragmentView.findViewById(R.id.sexLayout);
     notifyLayout = fragmentView.findViewById(R.id.notifyLayout);
-    genderView = (TextView) fragmentView.findViewById(R.id.sex);
     updateLayout = fragmentView.findViewById(R.id.updateLayout);
 
     avatarLayout.setOnClickListener(this);
     logoutLayout.setOnClickListener(this);
-    genderLayout.setOnClickListener(this);
     notifyLayout.setOnClickListener(this);
     updateLayout.setOnClickListener(this);
   }
@@ -109,8 +91,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
       });
       AVUser.logOut();
       getActivity().finish();
-    } else if (id == R.id.sexLayout) {
-      showSexChooseDialog();
+      Utils.goActivity(ctx, EntryLoginActivity.class);
     } else if (id == R.id.notifyLayout) {
       Utils.goActivity(ctx, ProfileNotifySettingActivity.class);
     } else if (id == R.id.updateLayout) {
@@ -119,28 +100,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
   }
 
-  private void showSexChooseDialog() {
-    AVUser user = AVUser.getCurrentUser();
-    int checkItem = User.getGender(user) == User.Gender.Male ? 0 : 1;
-    new AlertDialog.Builder(ctx).setTitle(R.string.profile_sex)
-        .setSingleChoiceItems(User.genderStrings, checkItem, new DialogInterface.OnClickListener() {
-          @Override
-          public void onClick(DialogInterface dialog, int which) {
-            User.Gender gender;
-            if (which == 0) {
-              gender = User.Gender.Male;
-            } else {
-              gender = User.Gender.Female;
-            }
-            UserService.saveSex(gender, saveCallback);
-            dialog.dismiss();
-          }
-        }).setNegativeButton(R.string.chat_common_cancel, null).show();
-  }
-
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    Logger.d("on Activity result " + requestCode + " " + resultCode);
     super.onActivityResult(requestCode, resultCode, data);
     if (resultCode == Activity.RESULT_OK) {
       if (requestCode == IMAGE_PICK_REQUEST) {
@@ -199,7 +160,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         PhotoUtils.saveBitmap(PathUtils.getAvatarDir(), filename,
             bitmap, true);
         if (bitmap != null && bitmap.isRecycled() == false) {
-          //bitmap.recycle();
+          bitmap.recycle();
         }
       }
     }

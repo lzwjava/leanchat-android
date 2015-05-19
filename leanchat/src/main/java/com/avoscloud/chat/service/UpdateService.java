@@ -158,7 +158,7 @@ public class UpdateService {
       public void done(final UpdateInfo info, Exception e) {
         if (e == null) {
           if (info.getVersion() > getVersionCode(ctx)) {
-            AlertDialog.Builder builder = Utils.getBaseDialogBuilder((Activity) ctx);
+            AlertDialog.Builder builder = Utils.getBaseDialogBuilder(activity);
             builder.setTitle(R.string.update_service_sureToUpdate)
                 .setMessage(info.getDesc())
                 .setPositiveButton(R.string.chat_utils_right, new DialogInterface.OnClickListener() {

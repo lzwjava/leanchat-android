@@ -115,12 +115,6 @@ public class UserService {
     return users;
   }
 
-  public static void saveSex(User.Gender gender, SaveCallback saveCallback) {
-    AVUser user = AVUser.getCurrentUser();
-    User.setGender(user, gender);
-    user.saveInBackground(saveCallback);
-  }
-
   public static AVUser signUp(String name, String password) throws AVException {
     AVUser user = new AVUser();
     user.setUsername(name);
