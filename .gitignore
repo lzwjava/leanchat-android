@@ -8,3 +8,4 @@ local.properties
 .idea
 .DS_Store
 manifest-merger-release-report.txt
+gradle.properties

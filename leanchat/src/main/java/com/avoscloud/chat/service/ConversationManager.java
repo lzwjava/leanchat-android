@@ -29,12 +29,14 @@ public class ConversationManager {
     @Override
     public void onMemberLeft(AVIMClient client, AVIMConversation conversation, List<String> members, String kickedBy) {
       Utils.toast(MessageHelper.nameByUserIds(members) + " left, kicked by " + MessageHelper.nameByUserId(kickedBy));
+      CacheService.registerConv(conversation);
       getInstance().postConvChanged(conversation);
     }
 
     @Override
     public void onMemberJoined(AVIMClient client, AVIMConversation conversation, List<String> members, String invitedBy) {
       Utils.toast(MessageHelper.nameByUserIds(members) + " joined , invited by " + MessageHelper.nameByUserId(invitedBy));
+      CacheService.registerConv(conversation);
       getInstance().postConvChanged(conversation);
     }
 
