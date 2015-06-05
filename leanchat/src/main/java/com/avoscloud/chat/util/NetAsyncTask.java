@@ -36,7 +36,7 @@ public abstract class NetAsyncTask extends AsyncTask<Void, Void, Void> {
   protected void onPreExecute() {
     super.onPreExecute();
     if (openDialog) {
-      dialog = com.avoscloud.leanchatlib.utils.Utils.showSpinnerDialog((Activity) ctx);
+      dialog = Utils.showSpinnerDialog((Activity) ctx);
     }
   }
 

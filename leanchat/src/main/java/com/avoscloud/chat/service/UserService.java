@@ -7,6 +7,7 @@ import com.avoscloud.chat.base.Constant;
 import com.avoscloud.chat.entity.avobject.User;
 import com.avoscloud.chat.util.Logger;
 import com.avoscloud.chat.util.Utils;
+import com.avoscloud.leanchatlib.utils.PhotoUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.IOException;
@@ -68,7 +69,7 @@ public class UserService {
     if (user != null) {
       String avatarUrl = User.getAvatarUrl(user);
       if (avatarUrl != null) {
-        ImageLoader.getInstance().displayImage(avatarUrl, avatarView, com.avoscloud.leanchatlib.utils.PhotoUtils.avatarImageOptions);
+        ImageLoader.getInstance().displayImage(avatarUrl, avatarView, PhotoUtils.avatarImageOptions);
       } else {
         avatarView.setImageBitmap(ColoredBitmapProvider.getInstance().createColoredBitmapByHashString(user.getObjectId()));
       }
