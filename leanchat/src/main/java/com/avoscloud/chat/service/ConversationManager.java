@@ -210,7 +210,7 @@ public class ConversationManager {
     return ColoredBitmapProvider.getInstance().createColoredBitmapByHashString(conversation.getConversationId());
   }
 
-  public void sendFirstMessage(String toUserId) {
+  public void sendWelcomeMessage(String toUserId) {
     ChatManager.getInstance().fetchConversationWithUserId(toUserId,
         new AVIMConversationCreatedCallback() {
           @Override

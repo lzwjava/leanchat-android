@@ -65,7 +65,7 @@ public class ContactNewFriendActivity extends BaseActivity implements
             dialog.dismiss();
             if (filterException(e)) {
               if (addRequest.getFromUser() != null) {
-                ConversationManager.getInstance().sendFirstMessage(addRequest.getFromUser().getObjectId());
+                ConversationManager.getInstance().sendWelcomeMessage(addRequest.getFromUser().getObjectId());
               }
               refresh();
             }
