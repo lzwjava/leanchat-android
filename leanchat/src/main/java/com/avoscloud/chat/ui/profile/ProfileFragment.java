@@ -22,7 +22,7 @@ import com.avoscloud.chat.ui.base_activity.BaseFragment;
 import com.avoscloud.chat.ui.entry.EntryLoginActivity;
 import com.avoscloud.chat.util.*;
 import com.avoscloud.leanchatlib.controller.ChatManager;
-import com.avoscloud.leanchatlib.db.DBHelper;
+import com.avoscloud.leanchatlib.db.RoomsTable;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -83,7 +83,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
       intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
       startActivityForResult(intent, IMAGE_PICK_REQUEST);
     } else if (id == R.id.logoutLayout) {
-      DBHelper.getCurrentUserInstance().closeHelper();
+      RoomsTable.DBHelper.getCurrentUserInstance().closeHelper();
       chatManager.closeWithCallback(new AVIMClientCallback() {
         @Override
         public void done(AVIMClient avimClient, AVException e) {

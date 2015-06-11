@@ -103,7 +103,7 @@ public class ConversationManager {
     List<Room> rooms = chatManager.findRecentRooms();
     List<String> convids = new ArrayList<>();
     for (Room room : rooms) {
-      convids.add(room.getConvid());
+      convids.add(room.getConversationId());
     }
     final CountDownLatch latch = new CountDownLatch(1);
     final AVException[] es = new AVException[1];
@@ -120,7 +120,7 @@ public class ConversationManager {
     }
     List<String> userIds = new ArrayList<>();
     for (Room room : rooms) {
-      AVIMConversation conversation = CacheService.lookupConv(room.getConvid());
+      AVIMConversation conversation = CacheService.lookupConv(room.getConversationId());
       room.setConversation(conversation);
       room.setLastMessage(getLastMessage(conversation));
       if (ConversationHelper.typeOfConversation(conversation) == ConversationType.Single) {
