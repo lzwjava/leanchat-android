@@ -11,7 +11,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.view.ViewPager;
-import android.text.*;
+import android.text.Editable;
+import android.text.Selection;
+import android.text.Spannable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,7 +37,12 @@ import com.avoscloud.leanchatlib.R;
 import com.avoscloud.leanchatlib.adapter.ChatEmotionGridAdapter;
 import com.avoscloud.leanchatlib.adapter.ChatEmotionPagerAdapter;
 import com.avoscloud.leanchatlib.adapter.ChatMessageAdapter;
-import com.avoscloud.leanchatlib.controller.*;
+import com.avoscloud.leanchatlib.controller.AVIMTypedMessagesArrayCallback;
+import com.avoscloud.leanchatlib.controller.ChatManager;
+import com.avoscloud.leanchatlib.controller.ConversationHelper;
+import com.avoscloud.leanchatlib.controller.EmotionHelper;
+import com.avoscloud.leanchatlib.controller.MessageAgent;
+import com.avoscloud.leanchatlib.controller.MessageHelper;
 import com.avoscloud.leanchatlib.db.RoomsTable;
 import com.avoscloud.leanchatlib.model.ConversationType;
 import com.avoscloud.leanchatlib.model.MessageEvent;
@@ -48,7 +57,11 @@ import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 import de.greenrobot.event.EventBus;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class ChatActivity extends Activity implements OnClickListener {
   public static final String CONVID = "convid";
@@ -486,7 +499,6 @@ public class ChatActivity extends Activity implements OnClickListener {
 
   @Override
   protected void onDestroy() {
-    roomsTable.clearUnread(conversation.getConversationId());
     chatInstance = null;
     eventBus.unregister(this);
     super.onDestroy();
@@ -536,6 +548,7 @@ public class ChatActivity extends Activity implements OnClickListener {
   @Override
   protected void onPause() {
     super.onPause();
+    roomsTable.clearUnread(conversation.getConversationId());
     setCurrentChattingConvid(null);
   }
 

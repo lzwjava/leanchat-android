@@ -23,7 +23,7 @@ import com.avos.avoscloud.SaveCallback;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.entity.SortUser;
-import com.avoscloud.chat.service.AddRequestService;
+import com.avoscloud.chat.service.AddRequestManager;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.base_activity.BaseFragment;
 import com.avoscloud.chat.ui.chat.ChatRoomActivity;
@@ -212,7 +212,7 @@ public class ContactFragment extends BaseFragment {
 
       @Override
       protected void doInBack() throws Exception {
-        haveAddRequest = AddRequestService.hasAddRequest();
+        haveAddRequest = AddRequestManager.getInstance().hasAddRequest();
       }
 
       @Override

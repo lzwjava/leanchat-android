@@ -14,8 +14,7 @@ import butterknife.OnClick;
 import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
-import com.avoscloud.chat.entity.avobject.User;
-import com.avoscloud.chat.service.AddRequestService;
+import com.avoscloud.chat.service.AddRequestManager;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.view.BaseListView;
 import com.avoscloud.chat.ui.base_activity.BaseActivity;
@@ -55,7 +54,7 @@ public class ContactAddFriendActivity extends BaseActivity {
     adapter.setClickListener(new AddFriendListAdapter.AddButtonClickListener() {
       @Override
       public void onAddButtonClick(AVUser user) {
-        AddRequestService.createAddRequestInBackground(ContactAddFriendActivity.this, user);
+        AddRequestManager.getInstance().createAddRequestInBackground(ContactAddFriendActivity.this, user);
       }
     });
     listView.onRefresh();

@@ -18,14 +18,15 @@ import com.avos.avoscloud.SaveCallback;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.entity.avobject.AddRequest;
 import com.avoscloud.chat.entity.avobject.User;
-import com.avoscloud.chat.service.AddRequestService;
+import com.avoscloud.chat.service.AddRequestManager;
+import com.avoscloud.chat.service.ConversationManager;
 import com.avoscloud.chat.service.PreferenceMap;
 import com.avoscloud.chat.service.UserService;
+import com.avoscloud.chat.ui.base_activity.BaseActivity;
+import com.avoscloud.chat.ui.view.BaseListAdapter;
 import com.avoscloud.chat.ui.view.BaseListView;
 import com.avoscloud.chat.util.RefreshTask;
 import com.avoscloud.chat.util.Refreshable;
-import com.avoscloud.chat.ui.base_activity.BaseActivity;
-import com.avoscloud.chat.ui.view.BaseListAdapter;
 import com.avoscloud.leanchatlib.view.ViewHolder;
 
 import java.util.ArrayList;
@@ -56,13 +57,16 @@ public class ContactNewFriendActivity extends BaseActivity implements
     adapter = new NewFriendListAdapter(this);
     adapter.setListener(new NewFriendListAdapter.Listener() {
       @Override
-      public void onAgreeAddRequest(AddRequest addRequest) {
+      public void onAgreeAddRequest(final AddRequest addRequest) {
         final ProgressDialog dialog = showSpinnerDialog();
-        AddRequestService.agreeAddRequest(addRequest, new SaveCallback() {
+        AddRequestManager.getInstance().agreeAddRequest(addRequest, new SaveCallback() {
           @Override
           public void done(AVException e) {
             dialog.dismiss();
             if (filterException(e)) {
+              if (addRequest.getFromUser() != null) {
+                ConversationManager.getInstance().sendFirstMessage(addRequest.getFromUser().getObjectId());
+              }
               refresh();
             }
           }
@@ -72,7 +76,7 @@ public class ContactNewFriendActivity extends BaseActivity implements
     listView.init(new BaseListView.DataFactory<AddRequest>() {
       @Override
       public List<AddRequest> getDatasInBackground(int skip, int limit, List<AddRequest> currentDatas) throws Exception {
-        List<AddRequest> addRequests = AddRequestService.findAddRequests();
+        List<AddRequest> addRequests = AddRequestManager.getInstance().findAddRequests();
         List<AddRequest> filters = new ArrayList<AddRequest>();
         for (AddRequest addRequest : addRequests) {
           if (addRequest.getFromUser() != null) {

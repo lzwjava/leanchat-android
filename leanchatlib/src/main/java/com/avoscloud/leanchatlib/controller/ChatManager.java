@@ -38,6 +38,7 @@ public class ChatManager extends AVIMClientEventHandler {
       }
     }
   };
+
   private ConnectionListener connectionListener = defaultConnectListener;
   private static boolean setupDatabase = false;
   private Map<String, AVIMConversation> cachedConversations = new HashMap<>();
@@ -109,7 +110,6 @@ public class ChatManager extends AVIMClientEventHandler {
 //    } catch (AVException e) {
 //      e.printStackTrace();
 //    }
-
     AVIMClient.setClientEventHandler(this);
     //签名
     //AVIMClient.setSignatureFactory(new SignatureFactory());
@@ -218,14 +218,12 @@ public class ChatManager extends AVIMClientEventHandler {
 
   @Override
   public void onConnectionPaused(AVIMClient client) {
-    Utils.log();
     connect = false;
     connectionListener.onConnectionChanged(connect);
   }
 
   @Override
   public void onConnectionResume(AVIMClient client) {
-    Utils.log();
     connect = true;
     connectionListener.onConnectionChanged(connect);
   }
@@ -268,6 +266,7 @@ public class ChatManager extends AVIMClientEventHandler {
       if (client.getClientId().equals(chatManager.getSelfId())) {
         chatManager.onMessage(message, conversation);
       } else {
+        // 收到其它的client的消息，可能是上一次别的client登录未正确关闭，这里关边掉。
         client.close(null);
       }
     }

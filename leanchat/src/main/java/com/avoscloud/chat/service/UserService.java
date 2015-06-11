@@ -1,7 +1,16 @@
 package com.avoscloud.chat.service;
 
 import android.widget.ImageView;
-import com.avos.avoscloud.*;
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVFile;
+import com.avos.avoscloud.AVGeoPoint;
+import com.avos.avoscloud.AVInstallation;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.FindCallback;
+import com.avos.avoscloud.FollowCallback;
+import com.avos.avoscloud.SaveCallback;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.base.Constant;
 import com.avoscloud.chat.entity.avobject.User;

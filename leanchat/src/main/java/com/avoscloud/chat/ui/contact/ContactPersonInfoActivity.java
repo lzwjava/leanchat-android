@@ -9,8 +9,7 @@ import android.view.View.OnClickListener;
 import android.widget.*;
 import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.entity.avobject.User;
-import com.avoscloud.chat.service.AddRequestService;
+import com.avoscloud.chat.service.AddRequestManager;
 import com.avoscloud.chat.service.CacheService;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.chat.ChatRoomActivity;
@@ -110,7 +109,7 @@ public class ContactPersonInfoActivity extends BaseActivity implements OnClickLi
         finish();
         break;
       case R.id.addFriendBtn:// 添加好友
-        AddRequestService.createAddRequestInBackground(this, user);
+        AddRequestManager.getInstance().createAddRequestInBackground(this, user);
         break;
     }
   }

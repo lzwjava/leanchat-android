@@ -1,7 +1,11 @@
 package com.avoscloud.chat.service;
 
 import android.content.Context;
-import com.avos.avoscloud.*;
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.SaveCallback;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.base.Constant;
@@ -14,8 +18,17 @@ import java.util.List;
 /**
  * Created by lzw on 14-9-27.
  */
-public class AddRequestService {
-  public static int countAddRequests() throws AVException {
+public class AddRequestManager {
+  private static AddRequestManager addRequestManager;
+
+  public static synchronized AddRequestManager getInstance() {
+    if (addRequestManager == null) {
+      addRequestManager = new AddRequestManager();
+    }
+    return addRequestManager;
+  }
+
+  public int countAddRequests() throws AVException {
     AVQuery<AddRequest> q = AVObject.getQuery(AddRequest.class);
     q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
     q.whereEqualTo(AddRequest.TO_USER, AVUser.getCurrentUser());
@@ -30,7 +43,7 @@ public class AddRequestService {
     }
   }
 
-  public static List<AddRequest> findAddRequests() throws AVException {
+  public List<AddRequest> findAddRequests() throws AVException {
     AVUser user = AVUser.getCurrentUser();
     AVQuery<AddRequest> q = AVObject.getQuery(AddRequest.class);
     q.include(AddRequest.FROM_USER);
@@ -40,7 +53,7 @@ public class AddRequestService {
     return q.find();
   }
 
-  public static boolean hasAddRequest() throws AVException {
+  public boolean hasAddRequest() throws AVException {
     PreferenceMap preferenceMap = PreferenceMap.getMyPrefDao(App.ctx);
     int addRequestN = preferenceMap.getAddRequestN();
     int requestN = countAddRequests();
@@ -51,7 +64,7 @@ public class AddRequestService {
     }
   }
 
-  public static void agreeAddRequest(final AddRequest addRequest, final SaveCallback saveCallback) {
+  public void agreeAddRequest(final AddRequest addRequest, final SaveCallback saveCallback) {
     UserService.addFriend(addRequest.getFromUser().getObjectId(), new SaveCallback() {
       @Override
       public void done(AVException e) {
@@ -70,7 +83,7 @@ public class AddRequestService {
     });
   }
 
-  public static void createAddRequest(AVUser toUser) throws Exception {
+  private void createAddRequest(AVUser toUser) throws Exception {
     AVUser curUser = AVUser.getCurrentUser();
     AVQuery<AddRequest> q = AVObject.getQuery(AddRequest.class);
     q.whereEqualTo(AddRequest.FROM_USER, curUser);
@@ -98,15 +111,16 @@ public class AddRequestService {
     }
   }
 
-  public static void createAddRequestInBackground(Context ctx, final AVUser user) {
+  public void createAddRequestInBackground(Context ctx, final AVUser user) {
     new SimpleNetTask(ctx) {
       @Override
       protected void doInBack() throws Exception {
-        AddRequestService.createAddRequest(user);
+        createAddRequest(user);
       }
 
       @Override
       protected void onSucceed() {
+        PushManager.getInstance().pushMessage(user.getObjectId(), ctx.getString(R.string.push_add_request));
         Utils.toast(R.string.contact_sendRequestSucceed);
       }
     }.execute();

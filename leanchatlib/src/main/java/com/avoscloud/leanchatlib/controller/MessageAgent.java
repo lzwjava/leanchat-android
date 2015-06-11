@@ -24,7 +24,17 @@ import java.util.logging.Logger;
 public class MessageAgent {
   private AVIMConversation conversation;
   private ChatManager chatManager;
-  private SendCallback sendCallback;
+  private SendCallback sendCallback = new SendCallback() {
+    @Override
+    public void onError(AVIMTypedMessage message, Exception e) {
+
+    }
+
+    @Override
+    public void onSuccess(AVIMTypedMessage message) {
+
+    }
+  };
 
   public MessageAgent(AVIMConversation conversation) {
     this.conversation = conversation;

@@ -2,22 +2,36 @@ package com.avoscloud.chat.service;
 
 import android.graphics.Bitmap;
 import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.im.v2.*;
+import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.AVIMConversationEventHandler;
+import com.avos.avoscloud.im.v2.AVIMConversationQuery;
+import com.avos.avoscloud.im.v2.AVIMMessage;
+import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMMessagesQueryCallback;
+import com.avoscloud.chat.R;
+import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.base.Constant;
 import com.avoscloud.chat.util.Logger;
 import com.avoscloud.chat.util.Utils;
 import com.avoscloud.leanchatlib.controller.ChatManager;
 import com.avoscloud.leanchatlib.controller.ConversationHelper;
+import com.avoscloud.leanchatlib.controller.MessageAgent;
 import com.avoscloud.leanchatlib.controller.MessageHelper;
 import com.avoscloud.leanchatlib.model.ConversationType;
 import com.avoscloud.leanchatlib.model.Room;
 import de.greenrobot.event.EventBus;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -25,7 +39,7 @@ import java.util.concurrent.CountDownLatch;
  */
 public class ConversationManager {
   private static ConversationManager conversationManager;
-  private static AVIMConversationEventHandler conversationHandler = new AVIMConversationEventHandler() {
+  private static AVIMConversationEventHandler eventHandler = new AVIMConversationEventHandler() {
     @Override
     public void onMemberLeft(AVIMClient client, AVIMConversation conversation, List<String> members, String kickedBy) {
       Utils.toast(MessageHelper.nameByUserIds(members) + " left, kicked by " + MessageHelper.nameByUserId(kickedBy));
@@ -50,10 +64,8 @@ public class ConversationManager {
       Utils.toast("you are invited by " + MessageHelper.nameByUserId(operator));
     }
   };
-  private ChatManager chatManager;
 
   public ConversationManager() {
-    chatManager = ChatManager.getInstance();
   }
 
   public static synchronized ConversationManager getInstance() {
@@ -63,8 +75,8 @@ public class ConversationManager {
     return conversationManager;
   }
 
-  public static AVIMConversationEventHandler getConversationHandler() {
-    return conversationHandler;
+  public static AVIMConversationEventHandler getEventHandler() {
+    return eventHandler;
   }
 
   public static AVIMTypedMessage getLastMessage(final AVIMConversation conversation) throws AVException, InterruptedException {
@@ -100,7 +112,7 @@ public class ConversationManager {
   }
 
   public List<Room> findAndCacheRooms() throws AVException, InterruptedException {
-    List<Room> rooms = chatManager.findRecentRooms();
+    List<Room> rooms = ChatManager.getInstance().findRecentRooms();
     List<String> convids = new ArrayList<>();
     for (Room room : rooms) {
       convids.add(room.getConversationId());
@@ -169,8 +181,8 @@ public class ConversationManager {
   }
 
   public void findGroupConversationsIncludeMe(AVIMConversationQueryCallback callback) {
-    AVIMConversationQuery q = chatManager.getQuery();
-    q.containsMembers(Arrays.asList(chatManager.getSelfId()));
+    AVIMConversationQuery q = ChatManager.getInstance().getQuery();
+    q.containsMembers(Arrays.asList(ChatManager.getInstance().getSelfId()));
     q.whereEqualTo(ConversationType.ATTR_TYPE_KEY, ConversationType.Group.getValue());
     q.orderByDescending(Constant.UPDATED_AT);
     q.findInBackground(callback);
@@ -178,7 +190,7 @@ public class ConversationManager {
 
   public void findConversationsByConversationIds(List<String> ids, AVIMConversationQueryCallback callback) {
     if (ids.size() > 0) {
-      AVIMConversationQuery q = chatManager.getQuery();
+      AVIMConversationQuery q = ChatManager.getInstance().getQuery();
       q.whereContainsIn(Constant.OBJECT_ID, ids);
       q.findInBackground(callback);
     } else {
@@ -191,10 +203,23 @@ public class ConversationManager {
     map.put(ConversationType.TYPE_KEY, ConversationType.Group.getValue());
     final String name = MessageHelper.nameByUserIds(members);
     map.put(ConversationType.NAME_KEY, name);
-    chatManager.getImClient().createConversation(members, map, callback);
+    ChatManager.getInstance().getImClient().createConversation(members, map, callback);
   }
 
   public static Bitmap getConversationIcon(AVIMConversation conversation) {
     return ColoredBitmapProvider.getInstance().createColoredBitmapByHashString(conversation.getConversationId());
+  }
+
+  public void sendFirstMessage(String toUserId) {
+    ChatManager.getInstance().fetchConversationWithUserId(toUserId,
+        new AVIMConversationCreatedCallback() {
+          @Override
+          public void done(AVIMConversation avimConversation, AVException e) {
+            if (e == null) {
+              MessageAgent agent = new MessageAgent(avimConversation);
+              agent.sendText(App.ctx.getString(R.string.message_when_agree_request));
+            }
+          }
+        });
   }
 }
