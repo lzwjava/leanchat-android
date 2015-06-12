@@ -31,6 +31,10 @@ LeanChat 是 [LeanCloud](http://leancloud.cn) [实时通信](https://leancloud.c
 1. 用到了 [ButterKnife](https://github.com/JakeWharton/butterknife) 开源库，Eclipse需要设置一下来支持 ButterKnife 的注解，具体如何设置见 http://jakewharton.github.io/butterknife/ide-eclipse.html 。否则会因为 view 没有绑定上，导致崩溃。
 1. 如果不装 Gradle 插件，非要转换成 Ant 格式，注意项目存在依赖关系，leanchat 依赖 leanchatlib，leanchatlib-demo 也依赖 leanchatlib，建议，先转换 leanchatlib 为 Ant 格式，再转换 leanchat 和 leanchatlib-demo，同时手工修复一下依赖和编译错误。
 
+## 如何集成 leanchatlib
+1. 请运行 leanchatlib-demo ，看[这段代码](https://github.com/leancloud/leanchat-android/blob/master/leanchatlib-demo/src/main/java/com/avoscloud/leanchatlib_demo/App.java#L40-L60)配置，提供一个UserInfo对象即可，完全不需要AVUser。
+
+
 ## 相关文档
 
 [实时通信服务开发指南](https://leancloud.cn/docs/realtime_v2.html)
