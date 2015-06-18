@@ -10,6 +10,11 @@ LeanChat 是 [LeanCloud](http://leancloud.cn) [实时通信](https://leancloud.c
 
 ![leanchat-android1](https://cloud.githubusercontent.com/assets/5022872/7362725/665a7f14-eda0-11e4-8fc5-e7ea5dea0618.gif)
 
+## 下载
+请直接点击 Github 上的`Download Zip`，如图所示，这样只下载最新版本，而不含杂提交历史。如果是 `git clone`，则可能非常慢，因为含杂很大的提交历史，而且未经 zip 压缩。某次测试两者是1.5M:40M。
+
+![qq20150618-2 2x](https://cloud.githubusercontent.com/assets/5022872/8223520/4c25415a-15ab-11e5-912d-b5dab916ce86.png)
+
 ## LeanChat Android 项目构成
 
 * leanchatlib，核心的聊天逻辑和聊天界面库。有了它，可以快速集成聊天功能，支持文字、音频、图片、表情消息，消息通知。同时也有相应的 [iOS版本](https://github.com/leancloud/leanchat-ios/tree/master/LeanChatLib) 。
@@ -23,7 +28,6 @@ LeanChat 是 [LeanCloud](http://leancloud.cn) [实时通信](https://leancloud.c
 * [Leanchat-ios](https://github.com/leancloud/leanchat-ios)：iOS 客户端
 * [Leanchat-cloud-code](https://github.com/leancloud/leanchat-cloudcode)：可选服务端，使用 LeanCloud [云代码](https://leancloud.cn/docs/cloud_code_guide.html) 实现，实现了聊天的签名，更安全。
 * 
-
 
 ## Eclipse 或 Intellij IDEA 运行需知
 1. 请装相应的 Gradle 插件
