@@ -88,16 +88,16 @@
     <orderEntry type="jdk" jdkName="Android API 22 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="Java-WebSocket-1.2.0-leancloud" level="project" />
+    <orderEntry type="library" exported="" name="avoscloud-push-v3.3.5" level="project" />
+    <orderEntry type="library" exported="" name="avoscloud-sdk-v3.3.5" level="project" />
     <orderEntry type="library" exported="" name="prettytime-3.2.5.Final" level="project" />
     <orderEntry type="library" exported="" name="support-v4-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="eventbus-2.4.0" level="project" />
     <orderEntry type="library" exported="" name="httpcore-4.2.4" level="project" />
-    <orderEntry type="library" exported="" name="avoscloud-sdk-v3.1.5" level="project" />
     <orderEntry type="library" exported="" name="multidex-1.0.0" level="project" />
     <orderEntry type="library" exported="" name="android-async-http-1.4.6" level="project" />
-    <orderEntry type="library" exported="" name="fastjson-1.1.37-leancloud" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-21.0.3" level="project" />
-    <orderEntry type="library" exported="" name="avoscloud-push-v3.1.5" level="project" />
+    <orderEntry type="library" exported="" name="fastjson-1.1.38-leancloud" level="project" />
     <orderEntry type="library" exported="" name="universal-image-loader-1.9.3" level="project" />
     <orderEntry type="library" exported="" name="httpmime-4.2.4" level="project" />
   </component>
