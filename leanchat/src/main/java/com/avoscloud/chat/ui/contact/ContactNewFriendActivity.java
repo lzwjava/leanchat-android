@@ -22,12 +22,15 @@ import com.avoscloud.chat.service.AddRequestManager;
 import com.avoscloud.chat.service.ConversationManager;
 import com.avoscloud.chat.service.PreferenceMap;
 import com.avoscloud.chat.service.UserService;
+import com.avoscloud.chat.service.event.ContactRefreshEvent;
 import com.avoscloud.chat.ui.base_activity.BaseActivity;
 import com.avoscloud.chat.ui.view.BaseListAdapter;
 import com.avoscloud.chat.ui.view.BaseListView;
 import com.avoscloud.chat.util.RefreshTask;
 import com.avoscloud.chat.util.Refreshable;
+import com.avoscloud.leanchatlib.controller.RoomsTable;
 import com.avoscloud.leanchatlib.view.ViewHolder;
+import de.greenrobot.event.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +39,7 @@ public class ContactNewFriendActivity extends BaseActivity implements
     Refreshable {
   @InjectView(R.id.newfriendList)
   BaseListView<AddRequest> listView;
-  NewFriendListAdapter adapter;
+  private NewFriendListAdapter adapter;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -68,15 +71,18 @@ public class ContactNewFriendActivity extends BaseActivity implements
                 ConversationManager.getInstance().sendWelcomeMessage(addRequest.getFromUser().getObjectId());
               }
               refresh();
+              ContactRefreshEvent event = new ContactRefreshEvent();
+              EventBus.getDefault().post(event);
             }
           }
         });
       }
     });
+
     listView.init(new BaseListView.DataFactory<AddRequest>() {
       @Override
       public List<AddRequest> getDatasInBackground(int skip, int limit, List<AddRequest> currentDatas) throws Exception {
-        List<AddRequest> addRequests = AddRequestManager.getInstance().findAddRequests();
+        List<AddRequest> addRequests = AddRequestManager.getInstance().findAddRequests(skip, limit);
         List<AddRequest> filters = new ArrayList<AddRequest>();
         for (AddRequest addRequest : addRequests) {
           if (addRequest.getFromUser() != null) {
@@ -89,7 +95,6 @@ public class ContactNewFriendActivity extends BaseActivity implements
         return addRequests;
       }
     }, adapter);
-    listView.setPullLoadEnable(false);
 
     listView.setItemListener(new BaseListView.ItemListener<AddRequest>() {
       @Override
@@ -110,6 +115,7 @@ public class ContactNewFriendActivity extends BaseActivity implements
       @Override
       protected void doInBack() throws Exception {
         addRequest.delete();
+        refresh();
       }
     }.execute();
   }

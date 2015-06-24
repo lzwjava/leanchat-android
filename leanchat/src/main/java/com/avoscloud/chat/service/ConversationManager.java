@@ -16,11 +16,13 @@ import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.base.Constant;
 import com.avoscloud.chat.util.Logger;
+import com.avoscloud.chat.util.SimpleLock;
 import com.avoscloud.chat.util.Utils;
 import com.avoscloud.leanchatlib.controller.ChatManager;
 import com.avoscloud.leanchatlib.controller.ConversationHelper;
 import com.avoscloud.leanchatlib.controller.MessageAgent;
 import com.avoscloud.leanchatlib.controller.MessageHelper;
+import com.avoscloud.leanchatlib.controller.RoomsTable;
 import com.avoscloud.leanchatlib.model.ConversationType;
 import com.avoscloud.leanchatlib.model.Room;
 import de.greenrobot.event.EventBus;
@@ -39,6 +41,7 @@ import java.util.concurrent.CountDownLatch;
  */
 public class ConversationManager {
   private static ConversationManager conversationManager;
+
   private static AVIMConversationEventHandler eventHandler = new AVIMConversationEventHandler() {
     @Override
     public void onMemberLeft(AVIMClient client, AVIMConversation conversation, List<String> members, String kickedBy) {
@@ -117,24 +120,27 @@ public class ConversationManager {
     for (Room room : rooms) {
       convids.add(room.getConversationId());
     }
-    final CountDownLatch latch = new CountDownLatch(1);
     final AVException[] es = new AVException[1];
     CacheService.cacheConvs(convids, new AVIMConversationCallback() {
       @Override
       public void done(AVException e) {
         es[0] = e;
-        latch.countDown();
+        SimpleLock.go();
       }
     });
-    latch.await();
+    SimpleLock.lock();
     if (es[0] != null) {
       throw es[0];
     }
     List<String> userIds = new ArrayList<>();
     for (Room room : rooms) {
       AVIMConversation conversation = CacheService.lookupConv(room.getConversationId());
+      if (conversation == null) {
+        Logger.d("conversation id : " + room.getConversationId());
+        throw new NullPointerException("conversation is null " + room.getConversationId());
+      }
       room.setConversation(conversation);
-      room.setLastMessage(getLastMessage(conversation));
+      room.setLastMessage(ChatManager.getInstance().getOrQueryLatestMessage(conversation.getConversationId()));
       if (ConversationHelper.typeOfConversation(conversation) == ConversationType.Single) {
         userIds.add(ConversationHelper.otherIdOfConversation(conversation));
       }
@@ -192,6 +198,7 @@ public class ConversationManager {
     if (ids.size() > 0) {
       AVIMConversationQuery q = ChatManager.getInstance().getQuery();
       q.whereContainsIn(Constant.OBJECT_ID, ids);
+      q.setLimit(1000);
       q.findInBackground(callback);
     } else {
       callback.done(new ArrayList<AVIMConversation>(), null);

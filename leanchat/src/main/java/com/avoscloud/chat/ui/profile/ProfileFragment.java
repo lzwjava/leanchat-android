@@ -22,7 +22,7 @@ import com.avoscloud.chat.ui.base_activity.BaseFragment;
 import com.avoscloud.chat.ui.entry.EntryLoginActivity;
 import com.avoscloud.chat.util.*;
 import com.avoscloud.leanchatlib.controller.ChatManager;
-import com.avoscloud.leanchatlib.db.RoomsTable;
+import com.avoscloud.leanchatlib.controller.RoomsTable;
 
 import java.io.File;
 import java.text.SimpleDateFormat;

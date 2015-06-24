@@ -42,7 +42,6 @@ public class ConversationRecentFragment extends BaseFragment implements ChatMana
   private boolean hidden;
   private EventBus eventBus;
   private ConversationManager conversationManager;
-  private ChatManager chatManager;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,11 +55,9 @@ public class ConversationRecentFragment extends BaseFragment implements ChatMana
     super.onActivityCreated(savedInstanceState);
     eventBus = EventBus.getDefault();
     conversationManager = ConversationManager.getInstance();
-    chatManager = ChatManager.getInstance();
-    chatManager.setConnectionListener(this);
+    ChatManager.getInstance().setConnectionListener(this);
     initView();
-    onRefresh();
-    onConnectionChanged(chatManager.isConnect());
+    onConnectionChanged(ChatManager.getInstance().isConnect());
   }
 
   private void onRefresh() {
@@ -91,7 +88,7 @@ public class ConversationRecentFragment extends BaseFragment implements ChatMana
     super.onHiddenChanged(hidden);
     this.hidden = hidden;
     if (!hidden) {
-      listView.refreshWithoutAnim();
+      listView.onRefresh();
     }
   }
 
@@ -100,7 +97,7 @@ public class ConversationRecentFragment extends BaseFragment implements ChatMana
   public void onResume() {
     super.onResume();
     if (!hidden) {
-      listView.refreshWithoutAnim();
+      listView.onRefresh();
     }
     eventBus.register(this);
   }
@@ -112,7 +109,7 @@ public class ConversationRecentFragment extends BaseFragment implements ChatMana
   }
 
   public void onEvent(MessageEvent event) {
-    listView.refreshWithoutAnim();
+    listView.onRefresh();
   }
 
   @Override

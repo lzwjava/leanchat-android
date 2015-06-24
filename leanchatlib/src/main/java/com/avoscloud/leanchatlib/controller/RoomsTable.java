@@ -1,4 +1,4 @@
-package com.avoscloud.leanchatlib.db;
+package com.avoscloud.leanchatlib.controller;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
-import com.avoscloud.leanchatlib.controller.ChatManager;
 import com.avoscloud.leanchatlib.model.Room;
 
 import java.util.ArrayList;

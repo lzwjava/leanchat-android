@@ -51,7 +51,7 @@ public class ConversationGroupListActivity extends ConversationEventBaseActivity
 
   @Override
   public void onEvent(ConversationChangeEvent conversationChangeEvent) {
-    groupListView.refreshWithoutAnim();
+    groupListView.onRefresh();
   }
 
   @Override

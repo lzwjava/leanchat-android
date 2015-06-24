@@ -43,7 +43,7 @@ import com.avoscloud.leanchatlib.controller.ConversationHelper;
 import com.avoscloud.leanchatlib.controller.EmotionHelper;
 import com.avoscloud.leanchatlib.controller.MessageAgent;
 import com.avoscloud.leanchatlib.controller.MessageHelper;
-import com.avoscloud.leanchatlib.db.RoomsTable;
+import com.avoscloud.leanchatlib.controller.RoomsTable;
 import com.avoscloud.leanchatlib.model.ConversationType;
 import com.avoscloud.leanchatlib.model.MessageEvent;
 import com.avoscloud.leanchatlib.utils.PathUtils;

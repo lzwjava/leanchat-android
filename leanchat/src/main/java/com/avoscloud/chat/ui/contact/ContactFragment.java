@@ -5,12 +5,13 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,6 +19,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.SaveCallback;
 import com.avoscloud.chat.R;
@@ -25,15 +27,16 @@ import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.entity.SortUser;
 import com.avoscloud.chat.service.AddRequestManager;
 import com.avoscloud.chat.service.UserService;
+import com.avoscloud.chat.service.event.ContactRefreshEvent;
 import com.avoscloud.chat.ui.base_activity.BaseFragment;
 import com.avoscloud.chat.ui.chat.ChatRoomActivity;
 import com.avoscloud.chat.ui.conversation.ConversationGroupListActivity;
 import com.avoscloud.chat.ui.view.BaseListView;
-import com.avoscloud.chat.ui.view.ClearEditText;
 import com.avoscloud.chat.ui.view.EnLetterView;
 import com.avoscloud.chat.util.CharacterParser;
-import com.avoscloud.chat.util.Utils;
 import com.avoscloud.chat.util.NetAsyncTask;
+import com.avoscloud.chat.util.Utils;
+import de.greenrobot.event.EventBus;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,8 +46,6 @@ import java.util.List;
 public class ContactFragment extends BaseFragment {
   private static CharacterParser characterParser;
   private static PinyinComparator pinyinComparator;
-  @InjectView(R.id.et_msg_search)
-  ClearEditText clearEditText;
   @InjectView(R.id.dialog)
   TextView dialogTextView;
   @InjectView(R.id.list_friends)
@@ -78,28 +79,18 @@ public class ContactFragment extends BaseFragment {
     initListView();
     initRightLetterViewAndSearchEdit();
     refresh();
+    EventBus.getDefault().register(this);
+  }
+
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    EventBus.getDefault().unregister(this);
   }
 
   private void initRightLetterViewAndSearchEdit() {
     rightLetter.setTextView(dialogTextView);
     rightLetter.setOnTouchingLetterChangedListener(new LetterListViewListener());
-    clearEditText = (ClearEditText) getView().findViewById(R.id.et_msg_search);
-    clearEditText.addTextChangedListener(new TextWatcher() {
-      @Override
-      public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-      }
-
-      @Override
-      public void onTextChanged(CharSequence s, int start, int before, int count) {
-        filterData(s.toString());
-      }
-
-      @Override
-      public void afterTextChanged(Editable s) {
-
-      }
-    });
   }
 
   private void initHeader() {
@@ -110,26 +101,6 @@ public class ContactFragment extends BaseFragment {
         Utils.goActivity(ctx, ContactAddFriendActivity.class);
       }
     });
-  }
-
-  private void filterData(String filterStr) {
-    List<SortUser> friends = userAdapter.getDatas();
-    if (TextUtils.isEmpty(filterStr)) {
-      userAdapter.setDatas(friends);
-    } else {
-      List<SortUser> filterDateList = new ArrayList<SortUser>();
-      filterDateList.clear();
-      for (SortUser sortModel : friends) {
-        String name = sortModel.getInnerUser().getUsername();
-        if (name != null && (name.contains(filterStr)
-            || characterParser.getSelling(name).startsWith(
-            filterStr))) {
-          filterDateList.add(sortModel);
-        }
-      }
-      Collections.sort(filterDateList, pinyinComparator);
-      userAdapter.setDatas(filterDateList);
-    }
   }
 
   private List<SortUser> convertAVUser(List<AVUser> datas) {
@@ -167,6 +138,7 @@ public class ContactFragment extends BaseFragment {
     }, userAdapter);
 
     friendsList.addHeaderView(listHeaderView, null, false);
+    friendsList.setPullLoadEnable(false);
     friendsList.setOnTouchListener(new OnTouchListener() {
 
       @Override
@@ -194,7 +166,6 @@ public class ContactFragment extends BaseFragment {
         showDeleteDialog(item);
       }
     });
-    friendsList.setPullLoadEnable(false);
   }
 
   @Override
@@ -240,7 +211,7 @@ public class ContactFragment extends BaseFragment {
               public void done(AVException e) {
                 dialog1.dismiss();
                 if (filterException(e)) {
-                  refresh();
+                  forceRefresh();
                 }
               }
             });
@@ -291,6 +262,15 @@ public class ContactFragment extends BaseFragment {
         return o1.getSortLetters().compareTo(o2.getSortLetters());
       }
     }
+  }
 
+  public void forceRefresh() {
+    AVQuery<AVUser> q = UserService.getFriendQuery();
+    q.clearCachedResult();
+    friendsList.onRefresh();
+  }
+
+  public void onEvent(ContactRefreshEvent event) {
+    forceRefresh();
   }
 }

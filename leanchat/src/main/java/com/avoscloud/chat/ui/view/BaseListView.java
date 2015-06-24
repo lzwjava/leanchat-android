@@ -44,57 +44,66 @@ public class BaseListView<T> extends XListView implements XListView.IXListViewLi
 
   @Override
   public void onRefresh() {
-    loadDatas(false, true);
+    loadWhenInit();
   }
 
-  public void refreshWithoutAnim() {
-    loadDatas(false, false);
-  }
-
-  public void loadDatas(final boolean loadMore, boolean animate) {
-    final int skip;
-    if (loadMore) {
-      skip = adapter.getCount();
-    } else {
-      if (animate && !getPullRefreshing()) {
-        pullRefreshing();
-      }
-      skip = 0;
-    }
-    new SimpleNetTask(getContext(), false) {
-      List<T> datas;
-
+  public void loadWhenInit() {
+    final int skip = 0;
+    new GetDataTask(getContext(), skip) {
       @Override
-      protected void doInBack() throws Exception {
-        if (dataFactory != null) {
-          datas = dataFactory.getDatasInBackground(skip, ONE_PAGE_SIZE, adapter.getDatas());
+      void onDataReady(List<T> datas) {
+        stopRefresh();
+        adapter.setDatas(datas);
+        adapter.notifyDataSetChanged();
+        if (datas.size() < ONE_PAGE_SIZE) {
+          if (isToastIfEmpty()) {
+            if (datas.size() == 0) {
+              Utils.toast(getContext(), R.string.chat_base_list_view_listEmptyHint);
+            }
+          }
+          //setPullLoadEnable(false);
         } else {
-          datas = new ArrayList<T>();
+          //setPullLoadEnable(true);
         }
       }
+    }.execute();
+  }
 
+  abstract class GetDataTask extends SimpleNetTask {
+    int skip;
+    List<T> datas;
+
+    public GetDataTask(Context cxt, int skip) {
+      super(cxt, false);
+      this.skip = skip;
+    }
+
+    @Override
+    protected void doInBack() throws Exception {
+      if (dataFactory != null) {
+        datas = dataFactory.getDatasInBackground(skip, ONE_PAGE_SIZE, adapter.getDatas());
+      } else {
+        datas = new ArrayList<T>();
+      }
+    }
+
+    @Override
+    protected void onSucceed() {
+      onDataReady(datas);
+    }
+
+    abstract void onDataReady(List<T> datas);
+  }
+
+  private void loadMoreData() {
+    final int skip = adapter.getCount();
+    new GetDataTask(getContext(), skip) {
       @Override
-      protected void onSucceed() {
-        if (loadMore == false) {
-          stopRefresh();
-          adapter.setDatas(datas);
-          adapter.notifyDataSetChanged();
-          if (datas.size() < ONE_PAGE_SIZE) {
-            if (isToastIfEmpty()) {
-              if (datas.size() == 0) {
-                Utils.toast(getContext(), R.string.chat_base_list_view_listEmptyHint);
-              }
-            }
-            //setPullLoadEnable(false);
-          } else {
-            //setPullLoadEnable(true);
-          }
-        } else {
-          stopLoadMore();
-          adapter.addAll(datas);
-          if (datas.size() == 0) {
-            Utils.toast(getContext(), R.string.chat_base_list_view_noMore);
-          }
+      void onDataReady(List<T> datas) {
+        stopLoadMore();
+        adapter.addAll(datas);
+        if (datas.size() == 0) {
+          Utils.toast(getContext(), R.string.chat_base_list_view_noMore);
         }
       }
     }.execute();
@@ -102,7 +111,7 @@ public class BaseListView<T> extends XListView implements XListView.IXListViewLi
 
   @Override
   public void onLoadMore() {
-    loadDatas(true, false);
+    loadMoreData();
   }
 
   @Override

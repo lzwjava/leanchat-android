@@ -2,13 +2,20 @@ package com.avoscloud.leanchatlib.controller;
 
 import android.content.Context;
 import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.im.v2.*;
+import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.AVIMClientEventHandler;
+import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.AVIMConversationEventHandler;
+import com.avos.avoscloud.im.v2.AVIMConversationQuery;
+import com.avos.avoscloud.im.v2.AVIMMessage;
+import com.avos.avoscloud.im.v2.AVIMMessageManager;
+import com.avos.avoscloud.im.v2.AVIMTypedMessage;
+import com.avos.avoscloud.im.v2.AVIMTypedMessageHandler;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMMessagesQueryCallback;
 import com.avoscloud.leanchatlib.activity.ChatActivity;
-import com.avoscloud.leanchatlib.db.RoomsTable;
 import com.avoscloud.leanchatlib.model.ConversationType;
 import com.avoscloud.leanchatlib.model.MessageEvent;
 import com.avoscloud.leanchatlib.model.Room;
@@ -19,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Created by lzw on 15/2/10.
@@ -50,6 +58,7 @@ public class ChatManager extends AVIMClientEventHandler {
   private EventBus eventBus = EventBus.getDefault();
   private ChatManagerAdapter chatManagerAdapter;
   private static boolean debugEnabled;
+  private Map<String, AVIMTypedMessage> latestMessages = new HashMap<>();
 
   private ChatManager() {
   }
@@ -186,6 +195,7 @@ public class ChatManager extends AVIMClientEventHandler {
     }
     roomsTable.insertRoom(message.getConversationId());
     roomsTable.increaseUnreadCount(message.getConversationId());
+    insertLatestMessage(message);
     MessageEvent messageEvent = new MessageEvent(message, MessageEvent.Type.Come);
     eventBus.post(messageEvent);
     if (selfId != null && ChatActivity.getCurrentChattingConvid() == null || !ChatActivity.getCurrentChattingConvid().equals(message
@@ -304,4 +314,38 @@ public class ChatManager extends AVIMClientEventHandler {
       }
     });
   }
+
+  public void insertLatestMessage(AVIMTypedMessage message) {
+    latestMessages.put(message.getConversationId(), message);
+  }
+
+  private AVIMTypedMessage getLatestMessage(String conversationId) {
+    return latestMessages.get(conversationId);
+  }
+
+  public AVIMTypedMessage getOrQueryLatestMessage(String conversationId) throws InterruptedException {
+    AVIMTypedMessage message = getLatestMessage(conversationId);
+    if (message != null) {
+      return message;
+    }
+    final CountDownLatch latch = new CountDownLatch(1);
+    final List<AVIMTypedMessage> foundMessages = new ArrayList<>();
+    queryMessages(imClient.getConversation(conversationId), null, System.currentTimeMillis(), 1, new AVIMTypedMessagesArrayCallback() {
+      @Override
+      public void done(List<AVIMTypedMessage> typedMessages, AVException e) {
+        if (e == null) {
+          foundMessages.addAll(typedMessages);
+        }
+        latch.countDown();
+      }
+    });
+    latch.await();
+    if (foundMessages.size() > 0) {
+      insertLatestMessage(foundMessages.get(0));
+      return foundMessages.get(0);
+    } else {
+      return null;
+    }
+  }
+
 }

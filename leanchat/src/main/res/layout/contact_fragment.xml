@@ -10,12 +10,12 @@
         android:id="@+id/layout_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
+<!--
         <com.avoscloud.chat.ui.view.ClearEditText
             android:id="@+id/et_msg_search"
             android:layout_width="match_parent"
             android:layout_height="@dimen/base_action_bar_height"
-            android:layout_alignParentTop="true"
+
             android:layout_margin="10dp"
             android:layout_toLeftOf="@+id/right_letter"
             android:background="@drawable/base_edit_input"
@@ -23,12 +23,12 @@
             android:drawablePadding="10dp"
             android:hint="@string/contact_search"
             android:padding="5dp"
-            android:singleLine="true" />
+            android:singleLine="true" />-->
 
         <RelativeLayout
             android:layout_width="match_parent"
+            android:layout_alignParentTop="true"
             android:layout_height="match_parent"
-            android:layout_below="@id/et_msg_search"
             android:layout_gravity="top"
             android:layout_toLeftOf="@+id/right_letter"
             android:orientation="horizontal">

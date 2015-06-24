@@ -15,6 +15,7 @@ import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.base.Constant;
 import com.avoscloud.chat.entity.avobject.User;
 import com.avoscloud.chat.util.Logger;
+import com.avoscloud.chat.util.SimpleLock;
 import com.avoscloud.chat.util.Utils;
 import com.avoscloud.leanchatlib.utils.PhotoUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -23,6 +24,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by lzw on 14-9-15.
@@ -37,7 +39,7 @@ public class UserService {
     return q.get(id);
   }
 
-  public static void findFriendsWithCachePolicy(AVQuery.CachePolicy cachePolicy, FindCallback<AVUser> findCallback) {
+  public static AVQuery<AVUser> getFriendQuery() {
     AVUser curUser = AVUser.getCurrentUser();
     AVQuery<AVUser> q = null;
     try {
@@ -45,32 +47,45 @@ public class UserService {
     } catch (Exception e) {
       throw new NullPointerException();
     }
+    return q;
+  }
+
+  public static void findFriendsWithCachePolicy(AVQuery.CachePolicy cachePolicy, FindCallback<AVUser>
+      findCallback) {
+    AVQuery<AVUser> q = getFriendQuery();
     q.setCachePolicy(cachePolicy);
-    q.include("followee");
+    q.setMaxCacheAge(TimeUnit.MINUTES.toMillis(1));
     q.findInBackground(findCallback);
   }
 
   public static List<AVUser> findFriends() throws Exception {
-    final CountDownLatch latch = new CountDownLatch(1);
     final List<AVUser> friends = new ArrayList<AVUser>();
     final AVException[] es = new AVException[1];
-    findFriendsWithCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE, new FindCallback<AVUser>() {
+    findFriendsWithCachePolicy(AVQuery.CachePolicy.CACHE_ELSE_NETWORK, new FindCallback<AVUser>() {
       @Override
       public void done(List<AVUser> avUsers, AVException e) {
         if (e != null) {
           es[0] = e;
         } else {
           friends.addAll(avUsers);
-          CacheService.registerUsers(avUsers);
         }
-        latch.countDown();
+        SimpleLock.go();
       }
     });
-    latch.await();
+    SimpleLock.lock();
     if (es[0] != null) {
       throw es[0];
     } else {
-      return friends;
+      List<String> userIds = new ArrayList<String>();
+      for (AVUser user : friends) {
+        userIds.add(user.getObjectId());
+      }
+      CacheService.cacheUsers(userIds);
+      List<AVUser> newFriends = new ArrayList<>();
+      for (AVUser user : friends) {
+        newFriends.add(CacheService.lookupUser(user.getObjectId()));
+      }
+      return newFriends;
     }
   }
 

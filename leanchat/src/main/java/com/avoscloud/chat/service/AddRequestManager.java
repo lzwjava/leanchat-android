@@ -43,10 +43,12 @@ public class AddRequestManager {
     }
   }
 
-  public List<AddRequest> findAddRequests() throws AVException {
+  public List<AddRequest> findAddRequests(int skip, int limit) throws AVException {
     AVUser user = AVUser.getCurrentUser();
     AVQuery<AddRequest> q = AVObject.getQuery(AddRequest.class);
     q.include(AddRequest.FROM_USER);
+    q.skip(skip);
+    q.limit(limit);
     q.whereEqualTo(AddRequest.TO_USER, user);
     q.orderByDescending(Constant.CREATED_AT);
     q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);

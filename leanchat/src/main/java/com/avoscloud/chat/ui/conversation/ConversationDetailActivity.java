@@ -22,7 +22,6 @@ import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
-import com.avoscloud.chat.entity.avobject.User;
 import com.avoscloud.chat.service.CacheService;
 import com.avoscloud.chat.service.ConversationManager;
 import com.avoscloud.chat.service.UserService;
@@ -34,7 +33,7 @@ import com.avoscloud.chat.util.Utils;
 import com.avoscloud.leanchatlib.activity.ChatActivity;
 import com.avoscloud.chat.ui.view.BaseListAdapter;
 import com.avoscloud.leanchatlib.controller.ConversationHelper;
-import com.avoscloud.leanchatlib.db.RoomsTable;
+import com.avoscloud.leanchatlib.controller.RoomsTable;
 import com.avoscloud.leanchatlib.model.ConversationType;
 import com.avoscloud.leanchatlib.view.ViewHolder;
 

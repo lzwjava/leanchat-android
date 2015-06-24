@@ -9,14 +9,12 @@ import com.avos.avoscloud.im.v2.messages.AVIMAudioMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMLocationMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
-import com.avoscloud.leanchatlib.db.RoomsTable;
 import com.avoscloud.leanchatlib.utils.PathUtils;
 import com.avoscloud.leanchatlib.utils.PhotoUtils;
 import com.avoscloud.leanchatlib.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Logger;
 
 /**
  * Created by lzw on 14/11/23.
@@ -65,6 +63,7 @@ public class MessageAgent {
             callback.onError(msg, e);
           } else {
             RoomsTable.getCurrentUserInstance().insertRoom(conversation.getConversationId());
+            ChatManager.getInstance().insertLatestMessage(msg);
             callback.onSuccess(msg);
           }
         }
