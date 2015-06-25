@@ -5,12 +5,14 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
 import com.avoscloud.chat.R;
+import com.avoscloud.chat.util.Logger;
 import com.avoscloud.chat.util.SimpleNetTask;
 import com.avoscloud.chat.util.Utils;
 import com.avoscloud.chat.ui.view.xlist.XListView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 /**
@@ -22,6 +24,7 @@ public class BaseListView<T> extends XListView implements XListView.IXListViewLi
   private DataFactory<T> dataFactory = new DataFactory<T>();
   private boolean toastIfEmpty = true;
   private ItemListener<T> itemListener = new ItemListener<T>();
+  private AtomicBoolean isLoading = new AtomicBoolean(false);
 
   public BaseListView(Context context, AttributeSet attrs) {
     super(context, attrs);
@@ -48,6 +51,11 @@ public class BaseListView<T> extends XListView implements XListView.IXListViewLi
   }
 
   public void loadWhenInit() {
+    if (isLoading.get()) {
+      Logger.d("directly return in refresh");
+      return;
+    }
+    isLoading.set(true);
     final int skip = 0;
     new GetDataTask(getContext(), skip) {
       @Override
@@ -65,6 +73,12 @@ public class BaseListView<T> extends XListView implements XListView.IXListViewLi
         } else {
           //setPullLoadEnable(true);
         }
+      }
+
+      @Override
+      protected void onPost(Exception e) {
+        super.onPost(e);
+        isLoading.set(false);
       }
     }.execute();
   }
@@ -106,11 +120,22 @@ public class BaseListView<T> extends XListView implements XListView.IXListViewLi
           Utils.toast(getContext(), R.string.chat_base_list_view_noMore);
         }
       }
+
+      @Override
+      protected void onPost(Exception e) {
+        super.onPost(e);
+        isLoading.set(false);
+      }
     }.execute();
   }
 
   @Override
   public void onLoadMore() {
+    if (isLoading.get()) {
+      Logger.d("directly return in loadMore");
+      return;
+    }
+    isLoading.set(true);
     loadMoreData();
   }
 
