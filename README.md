@@ -43,6 +43,7 @@ LeanChat 是 [LeanCloud](http://leancloud.cn) [实时通信](https://leancloud.c
 
 [实时通信服务开发指南](https://leancloud.cn/docs/realtime_v2.html)
 
+
 ## 依赖组件
 
 LeanChat Android 客户端依赖 LeanCloud Android SDK 如下组件：
@@ -55,5 +56,5 @@ LeanChat Android 客户端依赖 LeanCloud Android SDK 如下组件：
 
 ## 其他文档
 
-* [wiki](https://github.com/leancloud/leanchat-android/wiki)
+
 
