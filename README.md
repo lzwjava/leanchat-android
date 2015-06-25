@@ -41,8 +41,8 @@ LeanChat 是 [LeanCloud](http://leancloud.cn) [实时通信](https://leancloud.c
 
 ## 相关文档
 
-[实时通信服务开发指南](https://leancloud.cn/docs/realtime_v2.html)
-
+* [实时通信服务开发指南](https://leancloud.cn/docs/realtime_v2.html)
+* [wiki](https://github.com/leancloud/leanchat-android/wiki)
 
 ## 依赖组件
 
@@ -52,9 +52,12 @@ LeanChat Android 客户端依赖 LeanCloud Android SDK 如下组件：
 * 实时通信模块
 * 统计模块
 
-如果需要这些模块 SDK，可以到 [这里](https://cn.avoscloud.com/docs/sdk_down.html) 下载。
+如果需要这些模块 SDK，可以到 [这里](https://cn.avoscloud.com/docs/sdk_down.html) 下载或者像项目里用 Gradle 方式引入。
 
-## 其他文档
+## 技术支持
+
+关于此项目遇到的问题可提 [issue](https://github.com/leancloud/leanchat-android/issues)。
+
 
 
 
