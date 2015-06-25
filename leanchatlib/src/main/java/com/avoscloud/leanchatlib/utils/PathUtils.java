@@ -1,6 +1,6 @@
 package com.avoscloud.leanchatlib.utils;
 
-import com.avoscloud.leanchatlib.controller.ChatManager;
+import android.os.Environment;
 
 import java.io.File;
 
@@ -8,34 +8,33 @@ import java.io.File;
  * Created by lzw on 15/4/26.
  */
 public class PathUtils {
-  public static String checkAndMkdirs(String dir) {
-    File file = new File(dir);
+  private static File checkAndMkdirs(File file) {
     if (!file.exists()) {
       file.mkdirs();
     }
-    return dir;
+    return file;
   }
 
-  public static String getCacheDir() {
-    return ChatManager.getContext().getCacheDir().getAbsolutePath() + "/";
+  private static File getCacheDir() {
+    File sdcard = Environment.getExternalStorageDirectory();
+    File leanchatDir = new File(sdcard, "leanchat");
+    return leanchatDir;
   }
 
-  public static String getChatFileDir() {
-    String dir = getCacheDir() + "files/";
-    return checkAndMkdirs(dir);
+  private static File getChatFileDir() {
+    File filesDir = new File(getCacheDir(), "files");
+    return checkAndMkdirs(filesDir);
   }
 
   public static String getChatFilePath(String id) {
-    String dir = getChatFileDir();
-    String path = dir + id;
-    return path;
+    return new File(getChatFileDir(), id).getAbsolutePath();
   }
 
   public static String getRecordTmpPath() {
-    return getChatFileDir() + "record_tmp";
+    return new File(getChatFileDir(), "record_tmp").getAbsolutePath();
   }
 
-  public static String getTmpPath() {
-    return getCacheDir() + "com.avoscloud.chat.tmp";
+  public static String getPicturePath() {
+    return new File(getChatFileDir(), "picture_tmp").getAbsolutePath();
   }
 }

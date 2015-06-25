@@ -128,14 +128,14 @@ public class ChatRoomActivity extends ChatActivity {
   }
 
   @Override
-  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
+  protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+    super.onActivityResult(requestCode, resultCode, intent);
     if (resultCode == RESULT_OK) {
       switch (requestCode) {
         case LOCATION_REQUEST:
-          final double latitude = data.getDoubleExtra(LocationActivity.LATITUDE, 0);
-          final double longitude = data.getDoubleExtra(LocationActivity.LONGITUDE, 0);
-          final String address = data.getStringExtra(LocationActivity.ADDRESS);
+          final double latitude = intent.getDoubleExtra(LocationActivity.LATITUDE, 0);
+          final double longitude = intent.getDoubleExtra(LocationActivity.LONGITUDE, 0);
+          final String address = intent.getStringExtra(LocationActivity.ADDRESS);
           if (!TextUtils.isEmpty(address)) {
             messageAgent.sendLocation(latitude, longitude, address);
           } else {

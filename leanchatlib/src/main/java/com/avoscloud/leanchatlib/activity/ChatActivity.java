@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.Selection;
@@ -88,7 +87,7 @@ public class ChatActivity extends Activity implements OnClickListener {
   protected RefreshableView refreshableView;
   protected ListView messageListView;
   protected RecordButton recordBtn;
-  protected String localCameraPath = PathUtils.getTmpPath();
+  protected String localCameraPath = PathUtils.getPicturePath();
   protected View addCameraBtn;
 
   public static ChatActivity getChatInstance() {
@@ -429,11 +428,12 @@ public class ChatActivity extends Activity implements OnClickListener {
   }
 
   public void selectImageFromCamera() {
-    Intent openCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    Intent takePictureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
     Uri imageUri = Uri.fromFile(new File(localCameraPath));
-    openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-    startActivityForResult(openCameraIntent,
-        TAKE_CAMERA_REQUEST);
+    takePictureIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, imageUri);
+    if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+      startActivityForResult(takePictureIntent, TAKE_CAMERA_REQUEST);
+    }
   }
 
   private void sendText() {
@@ -456,23 +456,23 @@ public class ChatActivity extends Activity implements OnClickListener {
 
   @TargetApi(Build.VERSION_CODES.KITKAT)
   @Override
-  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
+  protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+    super.onActivityResult(requestCode, resultCode, intent);
     if (resultCode == RESULT_OK) {
       switch (requestCode) {
         case GALLERY_REQUEST:
         case GALLERY_KITKAT_REQUEST:
-          if (data == null) {
-            toast("return data is null");
+          if (intent == null) {
+            toast("return intent is null");
             return;
           }
           Uri uri;
           if (requestCode == GALLERY_REQUEST) {
-            uri = data.getData();
+            uri = intent.getData();
           } else {
             //for Android 4.4
-            uri = data.getData();
-            final int takeFlags = data.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+            uri = intent.getData();
+            final int takeFlags = intent.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION
                 | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             getContentResolver().takePersistableUriPermission(uri, takeFlags);
           }
