@@ -28,21 +28,30 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
+
 /**
  * Created by lzw on 14-9-17.
  */
-public class ProfileFragment extends BaseFragment implements View.OnClickListener {
+public class ProfileFragment extends BaseFragment {
   private static final int IMAGE_PICK_REQUEST = 1;
   private static final int CROP_REQUEST = 2;
-  TextView usernameView;
+
+  @InjectView(R.id.profile_avatar_view)
   ImageView avatarView;
-  View avatarLayout, logoutLayout,
-      notifyLayout, updateLayout;
+
+  @InjectView(R.id.profile_username_view)
+  TextView userNameView;
+
   ChatManager chatManager;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.profile_fragment, container, false);
+    View view = inflater.inflate(R.layout.profile_fragment, container, false);
+    ButterKnife.inject(this, view);
+    return view;
   }
 
   @Override
@@ -50,54 +59,49 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     super.onActivityCreated(savedInstanceState);
     headerLayout.showTitle(R.string.profile_title);
     chatManager = ChatManager.getInstance();
-    findView();
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
     refresh();
   }
 
   private void refresh() {
     AVUser curUser = AVUser.getCurrentUser();
-    usernameView.setText(curUser.getUsername());
+    userNameView.setText(curUser.getUsername());
     UserService.displayAvatar(curUser, avatarView);
   }
 
-  private void findView() {
-    View fragmentView = getView();
-    usernameView = (TextView) fragmentView.findViewById(R.id.username);
-    avatarView = (ImageView) fragmentView.findViewById(R.id.avatar);
-    avatarLayout = fragmentView.findViewById(R.id.avatarLayout);
-    logoutLayout = fragmentView.findViewById(R.id.logoutLayout);
-    notifyLayout = fragmentView.findViewById(R.id.notifyLayout);
-    updateLayout = fragmentView.findViewById(R.id.updateLayout);
-
-    avatarLayout.setOnClickListener(this);
-    logoutLayout.setOnClickListener(this);
-    notifyLayout.setOnClickListener(this);
-    updateLayout.setOnClickListener(this);
+  @OnClick(R.id.profile_checkupdate_view)
+  public void onCheckUpdateClick() {
+    UpdateService updateService = UpdateService.getInstance(getActivity());
+    updateService.showSureUpdateDialog();
   }
 
-  @Override
-  public void onClick(View v) {
-    int id = v.getId();
-    if (id == R.id.avatarLayout) {
-      Intent intent = new Intent(Intent.ACTION_PICK, null);
-      intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-      startActivityForResult(intent, IMAGE_PICK_REQUEST);
-    } else if (id == R.id.logoutLayout) {
-      RoomsTable.DBHelper.getCurrentUserInstance().closeHelper();
-      chatManager.closeWithCallback(new AVIMClientCallback() {
-        @Override
-        public void done(AVIMClient avimClient, AVException e) {
-        }
-      });
-      AVUser.logOut();
-      getActivity().finish();
-      Utils.goActivity(ctx, EntryLoginActivity.class);
-    } else if (id == R.id.notifyLayout) {
-      Utils.goActivity(ctx, ProfileNotifySettingActivity.class);
-    } else if (id == R.id.updateLayout) {
-      UpdateService updateService = UpdateService.getInstance(getActivity());
-      updateService.showSureUpdateDialog();
-    }
+  @OnClick(R.id.profile_notifysetting_view)
+  public void onNotifySettingClick() {
+    Utils.goActivity(ctx, ProfileNotifySettingActivity.class);
+  }
+
+  @OnClick(R.id.profile_logout_btn)
+  public void onLogoutClick() {
+    RoomsTable.DBHelper.getCurrentUserInstance().closeHelper();
+    chatManager.closeWithCallback(new AVIMClientCallback() {
+      @Override
+      public void done(AVIMClient avimClient, AVException e) {
+      }
+    });
+    AVUser.logOut();
+    getActivity().finish();
+    Utils.goActivity(ctx, EntryLoginActivity.class);
+  }
+
+  @OnClick(R.id.profile_avatar_layout)
+  public void onAvatarClick() {
+    Intent intent = new Intent(Intent.ACTION_PICK, null);
+    intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+    startActivityForResult(intent, IMAGE_PICK_REQUEST);
   }
 
   @Override

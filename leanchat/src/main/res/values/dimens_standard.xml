@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="common_horizontal_margin">15dp</dimen>
+    <dimen name="common_vertical_margin">10dp</dimen>
+    <dimen name="common_left_margin">@dimen/common_horizontal_margin</dimen>
+    <dimen name="common_right_margin">@dimen/common_horizontal_margin</dimen>
+
+
+    <dimen name="setting_item_height">60dp</dimen>
+    <dimen name="activity_top_margin">@dimen/common_vertical_margin</dimen>
+
+    <dimen name="divider_line_height">1px</dimen>
+</resources>

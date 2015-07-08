@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="activity_default_color">#00000000</color>
+    <color name="divider_line_color">#cccccc</color>
+
+</resources>
