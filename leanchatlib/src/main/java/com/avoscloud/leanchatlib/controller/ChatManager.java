@@ -59,7 +59,6 @@ public class ChatManager extends AVIMClientEventHandler {
   private RoomsTable roomsTable;
   private EventBus eventBus = EventBus.getDefault();
   private ChatManagerAdapter chatManagerAdapter;
-  private static boolean debugEnabled;
   private Map<String, AVIMTypedMessage> latestMessages = new ConcurrentHashMap<String, AVIMTypedMessage>();
 
   private ChatManager() {
@@ -81,10 +80,6 @@ public class ChatManager extends AVIMClientEventHandler {
     return context;
   }
 
-  public static boolean isDebugEnabled() {
-    return debugEnabled;
-  }
-
   /**
    * 设置是否打印 leanchatlib 的日志，发布应用的时候要关闭
    * 日志 TAG 为 leanchatlib，可以获得一些异常日志
@@ -92,7 +87,7 @@ public class ChatManager extends AVIMClientEventHandler {
    * @param debugEnabled
    */
   public static void setDebugEnabled(boolean debugEnabled) {
-    ChatManager.debugEnabled = debugEnabled;
+    LogUtils.debugEnabled = debugEnabled;
   }
 
   /**
@@ -404,7 +399,7 @@ public class ChatManager extends AVIMClientEventHandler {
    * @return 当向服务器查找失败时或无历史消息时，返回 null
    */
 
-  public synchronized AVIMTypedMessage getOrQueryLatestMessage(String conversationId) {
+  public synchronized AVIMTypedMessage queryLatestMessage(String conversationId) {
     AVIMTypedMessage message = getLatestMessage(conversationId);
     if (message != null) {
       return message;

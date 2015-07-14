@@ -202,7 +202,9 @@ public class MainActivity extends BaseActivity {
         } else {
           AVGeoPoint newGeoPoint = new AVGeoPoint(location.getLatitude(),
               location.getLongitude());
-          preferenceMap.setLocation(newGeoPoint);
+          if (newGeoPoint != null) {
+            preferenceMap.setLocation(newGeoPoint);
+          }
         }
       }
     }

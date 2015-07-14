@@ -14,9 +14,9 @@ import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.entity.avobject.UpdateInfo;
-import com.avoscloud.chat.util.Utils;
 import com.avoscloud.chat.util.Logger;
 import com.avoscloud.chat.util.NetAsyncTask;
+import com.avoscloud.chat.util.Utils;
 
 import java.util.List;
 
@@ -171,14 +171,13 @@ public class UpdateService {
             Utils.toast(ctx, R.string.update_service_versionIsAlreadyNew);
           }
         } else {
-          e.printStackTrace();
-          Utils.toast(ctx, R.string.update_service_failedToGetData);
+          Utils.toast(e.getMessage());
         }
       }
     }.execute();
   }
 
-  public abstract static class UpdateTask extends NetAsyncTask {
+  abstract static class UpdateTask extends NetAsyncTask {
     UpdateInfo info;
     AVQuery.CachePolicy policy;
 
@@ -190,9 +189,6 @@ public class UpdateService {
     @Override
     protected void doInBack() throws Exception {
       info = getNewestUpdateInfo();
-      if (info == null) {
-        throw new NullPointerException("not found any update info");
-      }
     }
 
     private UpdateInfo getNewestUpdateInfo() throws AVException {
@@ -214,7 +210,11 @@ public class UpdateService {
       if (e != null) {
         done(null, e);
       } else {
-        done(info, null);
+        if (info != null) {
+          done(info, null);
+        } else {
+          done(null, new Exception("info is null"));
+        }
       }
     }
 

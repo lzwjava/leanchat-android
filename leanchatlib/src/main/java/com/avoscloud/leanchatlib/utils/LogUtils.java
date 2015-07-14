@@ -1,13 +1,16 @@
 package com.avoscloud.leanchatlib.utils;
 
 import android.util.Log;
-import com.avoscloud.leanchatlib.controller.ChatManager;
 
 /**
  * Created by lzw on 15/7/14.
  */
 public class LogUtils {
-  public static final String LOGTAG = "leanchatlib";
+  public static final String LOGTAG = "leanchat";
+  public static boolean debugEnabled;
+
+  public LogUtils() {
+  }
 
   private static String getDebugInfo() {
     Throwable stack = new Throwable().fillInStackTrace();
@@ -26,37 +29,37 @@ public class LogUtils {
   }
 
   public static void i(String... s) {
-    if (ChatManager.isDebugEnabled()) {
+    if (debugEnabled) {
       Log.i(LOGTAG, getDebugInfo() + getLogInfoByArray(s));
     }
   }
 
   public static void e(String... s) {
-    if (ChatManager.isDebugEnabled()) {
+    if (debugEnabled) {
       Log.e(LOGTAG, getDebugInfo() + getLogInfoByArray(s));
     }
   }
 
   public static void d(String... s) {
-    if (ChatManager.isDebugEnabled()) {
+    if (debugEnabled) {
       Log.d(LOGTAG, getDebugInfo() + getLogInfoByArray(s));
     }
   }
 
   public static void v(String... s) {
-    if (ChatManager.isDebugEnabled()) {
+    if (debugEnabled) {
       Log.v(LOGTAG, getDebugInfo() + getLogInfoByArray(s));
     }
   }
 
   public static void w(String... s) {
-    if (ChatManager.isDebugEnabled()) {
+    if (debugEnabled) {
       Log.w(LOGTAG, getDebugInfo() + getLogInfoByArray(s));
     }
   }
 
   public static void logThrowable(Throwable tr) {
-    if (ChatManager.isDebugEnabled()) {
+    if (debugEnabled) {
       Log.v(LOGTAG, getDebugInfo(), tr);
     }
   }

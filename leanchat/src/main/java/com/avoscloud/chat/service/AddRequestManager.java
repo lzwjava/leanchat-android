@@ -103,6 +103,7 @@ public class AddRequestManager {
       }
     }
     if (count > 0) {
+      // 抛出异常，然后提示用户
       throw new Exception(App.ctx.getString(R.string.contact_alreadyCreateAddRequest));
     } else {
       AddRequest add = new AddRequest();

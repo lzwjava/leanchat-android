@@ -45,7 +45,8 @@ public class UserService {
     try {
       q = curUser.followeeQuery(AVUser.class);
     } catch (Exception e) {
-      throw new NullPointerException();
+      //在 currentUser.objectId 为 null 的时候抛出的，不做处理
+      Logger.e(e.getMessage());
     }
     return q;
   }

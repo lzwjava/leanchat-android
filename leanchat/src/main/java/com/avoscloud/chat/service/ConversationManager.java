@@ -24,6 +24,7 @@ import com.avoscloud.leanchatlib.controller.MessageAgent;
 import com.avoscloud.leanchatlib.controller.MessageHelper;
 import com.avoscloud.leanchatlib.model.ConversationType;
 import com.avoscloud.leanchatlib.model.Room;
+import com.avoscloud.leanchatlib.utils.LogUtils;
 import de.greenrobot.event.EventBus;
 
 import java.util.ArrayList;
@@ -131,20 +132,26 @@ public class ConversationManager {
     if (es[0] != null) {
       throw es[0];
     }
-    List<String> userIds = new ArrayList<>();
+    List<Room> validRooms = new ArrayList<>();
     for (Room room : rooms) {
       AVIMConversation conversation = CacheService.lookupConv(room.getConversationId());
-      if (conversation == null) {
-        Logger.d("conversation id : " + room.getConversationId());
-        throw new NullPointerException("conversation is null " + room.getConversationId());
+      if (ConversationHelper.isValidConversation(conversation)) {
+        validRooms.add(room);
+      } else {
+        LogUtils.e("conversation is invalid, please check");
       }
+    }
+
+    List<String> userIds = new ArrayList<>();
+    for (Room room : validRooms) {
+      AVIMConversation conversation = CacheService.lookupConv(room.getConversationId());
       room.setConversation(conversation);
-      room.setLastMessage(ChatManager.getInstance().getOrQueryLatestMessage(conversation.getConversationId()));
+      room.setLastMessage(ChatManager.getInstance().queryLatestMessage(conversation.getConversationId()));
       if (ConversationHelper.typeOfConversation(conversation) == ConversationType.Single) {
         userIds.add(ConversationHelper.otherIdOfConversation(conversation));
       }
     }
-    Collections.sort(rooms, new Comparator<Room>() {
+    Collections.sort(validRooms, new Comparator<Room>() {
       @Override
       public int compare(Room lhs, Room rhs) {
         if (lhs.getLastMessage() != null && rhs.getLastMessage() != null) {
@@ -159,7 +166,7 @@ public class ConversationManager {
       }
     });
     CacheService.cacheUsers(new ArrayList<>(userIds));
-    return rooms;
+    return validRooms;
   }
 
   public void updateName(final AVIMConversation conv, String newName, final AVIMConversationCallback callback) {

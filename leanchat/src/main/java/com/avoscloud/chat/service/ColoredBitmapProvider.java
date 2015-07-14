@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.util.LruCache;
 import com.avoscloud.chat.util.PhotoUtils;
+import com.avoscloud.leanchatlib.utils.LogUtils;
 
 import java.util.Random;
 
@@ -34,7 +35,8 @@ public class ColoredBitmapProvider {
 
   public Bitmap createColoredBitmapByHashString(String hashString) {
     if (hashString.length() % 3 != 0) {
-      throw new IllegalArgumentException("should be fully divided by 3");
+      LogUtils.d("should be fully divided by 3");
+      hashString = "abc";
     }
     if (memoryCache.get(hashString) != null) {
       return memoryCache.get(hashString);

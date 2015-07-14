@@ -23,7 +23,11 @@ public enum ConversationType {
   }
 
   public static ConversationType fromInt(int i) {
-    return values()[i];
+    if (i < 2) {
+      return values()[i];
+    } else {
+      return Group;
+    }
   }
 
   public int getValue() {
