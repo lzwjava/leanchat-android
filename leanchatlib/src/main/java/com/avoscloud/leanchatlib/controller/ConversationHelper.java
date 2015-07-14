@@ -34,7 +34,7 @@ public class ConversationHelper {
       Object typeObject = conversation.getAttribute(ConversationType.TYPE_KEY);
       int typeInt = (Integer) typeObject;
       return ConversationType.fromInt(typeInt);
-    } catch (NullPointerException e) {
+    } catch (Exception e) {
       e.printStackTrace();
       return ConversationType.Group;
     }
@@ -43,7 +43,7 @@ public class ConversationHelper {
   public static String otherIdOfConversation(AVIMConversation conversation) {
     List<String> members = conversation.getMembers();
     if (typeOfConversation(conversation) != ConversationType.Single || members.size() != 2) {
-      throw new IllegalStateException("can't get other id, members=" + conversation.getMembers());
+      return null;
     }
     String selfId = ChatManager.getInstance().getSelfId();
     if (members.get(0).equals(selfId)) {
@@ -55,7 +55,7 @@ public class ConversationHelper {
 
   public static String nameOfConversation(AVIMConversation conversation) {
     if (conversation == null) {
-      throw new NullPointerException("conversation is null");
+      return "";
     }
     if (typeOfConversation(conversation) == ConversationType.Single) {
       String otherId = otherIdOfConversation(conversation);

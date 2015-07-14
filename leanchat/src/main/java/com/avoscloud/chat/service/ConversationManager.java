@@ -22,7 +22,6 @@ import com.avoscloud.leanchatlib.controller.ChatManager;
 import com.avoscloud.leanchatlib.controller.ConversationHelper;
 import com.avoscloud.leanchatlib.controller.MessageAgent;
 import com.avoscloud.leanchatlib.controller.MessageHelper;
-import com.avoscloud.leanchatlib.controller.RoomsTable;
 import com.avoscloud.leanchatlib.model.ConversationType;
 import com.avoscloud.leanchatlib.model.Room;
 import de.greenrobot.event.EventBus;
@@ -187,7 +186,7 @@ public class ConversationManager {
   }
 
   public void findGroupConversationsIncludeMe(AVIMConversationQueryCallback callback) {
-    AVIMConversationQuery q = ChatManager.getInstance().getQuery();
+    AVIMConversationQuery q = ChatManager.getInstance().getConversationQuery();
     q.containsMembers(Arrays.asList(ChatManager.getInstance().getSelfId()));
     q.whereEqualTo(ConversationType.ATTR_TYPE_KEY, ConversationType.Group.getValue());
     q.orderByDescending(Constant.UPDATED_AT);
@@ -196,7 +195,7 @@ public class ConversationManager {
 
   public void findConversationsByConversationIds(List<String> ids, AVIMConversationQueryCallback callback) {
     if (ids.size() > 0) {
-      AVIMConversationQuery q = ChatManager.getInstance().getQuery();
+      AVIMConversationQuery q = ChatManager.getInstance().getConversationQuery();
       q.whereContainsIn(Constant.OBJECT_ID, ids);
       q.setLimit(1000);
       q.findInBackground(callback);
@@ -209,8 +208,8 @@ public class ConversationManager {
     Map<String, Object> map = new HashMap<String, Object>();
     map.put(ConversationType.TYPE_KEY, ConversationType.Group.getValue());
     final String name = MessageHelper.nameByUserIds(members);
-    map.put(ConversationType.NAME_KEY, name);
-    ChatManager.getInstance().getImClient().createConversation(members, map, callback);
+    map.put("name", name);
+    ChatManager.getInstance().createConversation(members, map, callback);
   }
 
   public static Bitmap getConversationIcon(AVIMConversation conversation) {

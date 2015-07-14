@@ -9,6 +9,7 @@ import com.avos.avoscloud.im.v2.messages.AVIMAudioMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMLocationMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
+import com.avoscloud.leanchatlib.utils.LogUtils;
 import com.avoscloud.leanchatlib.utils.PathUtils;
 import com.avoscloud.leanchatlib.utils.PhotoUtils;
 import com.avoscloud.leanchatlib.utils.Utils;
@@ -45,7 +46,7 @@ public class MessageAgent {
 
   private void sendMsg(final AVIMTypedMessage msg, final String originPath, final SendCallback callback) {
     if (!chatManager.isConnect()) {
-      Utils.log("im not connect");
+      LogUtils.i("im not connect");
     }
     conversation.sendMessage(msg, AVIMConversation.RECEIPT_MESSAGE_FLAG, new AVIMConversationCallback() {
       @Override
@@ -55,15 +56,15 @@ public class MessageAgent {
           File newFile = new File(PathUtils.getChatFilePath(msg.getMessageId()));
           boolean result = tmpFile.renameTo(newFile);
           if (!result) {
-            throw new IllegalStateException("move file failed, can't use local cache");
+            LogUtils.i("move file failed, can't use local cache");
           }
         }
         if (callback != null) {
           if (e != null) {
             callback.onError(msg, e);
           } else {
-            RoomsTable.getCurrentUserInstance().insertRoom(conversation.getConversationId());
-            ChatManager.getInstance().insertLatestMessage(msg);
+            ChatManager.getInstance().getRoomsTable().insertRoom(conversation.getConversationId());
+            ChatManager.getInstance().putLatestMessage(msg);
             callback.onSuccess(msg);
           }
         }
@@ -75,10 +76,12 @@ public class MessageAgent {
     conversation.sendMessage(msg, AVIMConversation.RECEIPT_MESSAGE_FLAG, new AVIMConversationCallback() {
       @Override
       public void done(AVException e) {
-        if (e != null) {
-          sendCallback.onError(msg, e);
-        } else {
-          sendCallback.onSuccess(msg);
+        if (sendCallback != null) {
+          if (e != null) {
+            sendCallback.onError(msg, e);
+          } else {
+            sendCallback.onSuccess(msg);
+          }
         }
       }
     });
@@ -97,7 +100,7 @@ public class MessageAgent {
       AVIMImageMessage imageMsg = new AVIMImageMessage(newPath);
       sendMsg(imageMsg, newPath, sendCallback);
     } catch (IOException e) {
-      e.printStackTrace();
+      LogUtils.logThrowable(e);
     }
   }
 
@@ -114,7 +117,7 @@ public class MessageAgent {
       AVIMAudioMessage audioMsg = new AVIMAudioMessage(audioPath);
       sendMsg(audioMsg, audioPath, sendCallback);
     } catch (IOException e) {
-      e.printStackTrace();
+      LogUtils.logThrowable(e);
     }
   }
 

@@ -62,8 +62,8 @@ public class MainActivity extends BaseActivity {
     eventBus.post(new LoginFinishEvent());
 
     ChatManager chatManager = ChatManager.getInstance();
-    chatManager.setupDatabaseWithSelfId(AVUser.getCurrentUser().getObjectId());
-    chatManager.openClientWithSelfId(AVUser.getCurrentUser().getObjectId(), null);
+    chatManager.setupManagerWithUserId(AVUser.getCurrentUser().getObjectId());
+    chatManager.openClientWithUserId(null);
     Intent intent = new Intent(fromActivity, MainActivity.class);
     fromActivity.startActivity(intent);
   }

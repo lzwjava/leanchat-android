@@ -32,6 +32,7 @@ import com.avoscloud.chat.util.SimpleNetTask;
 import com.avoscloud.chat.util.Utils;
 import com.avoscloud.leanchatlib.activity.ChatActivity;
 import com.avoscloud.chat.ui.view.BaseListAdapter;
+import com.avoscloud.leanchatlib.controller.ChatManager;
 import com.avoscloud.leanchatlib.controller.ConversationHelper;
 import com.avoscloud.leanchatlib.controller.RoomsTable;
 import com.avoscloud.leanchatlib.model.ConversationType;
@@ -184,8 +185,7 @@ public class ConversationDetailActivity extends ConversationBaseActivity impleme
       @Override
       public void done(AVException e) {
         if (filterException(e)) {
-          RoomsTable roomsTable = RoomsTable.getCurrentUserInstance();
-          roomsTable.deleteRoom(convid);
+          ChatManager.getInstance().getRoomsTable().deleteRoom(convid);
           Utils.toast(R.string.conversation_alreadyQuitConv);
           ConversationDetailActivity.this.finish();
 

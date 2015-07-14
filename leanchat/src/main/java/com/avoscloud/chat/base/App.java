@@ -77,7 +77,7 @@ public class App extends Application {
     final ChatManager chatManager = ChatManager.getInstance();
     chatManager.init(this);
     if (AVUser.getCurrentUser() != null) {
-      chatManager.setupDatabaseWithSelfId(AVUser.getCurrentUser().getObjectId());
+      chatManager.setupManagerWithUserId(AVUser.getCurrentUser().getObjectId());
     }
     chatManager.setConversationEventHandler(ConversationManager.getEventHandler());
     ChatManagerAdapterImpl chatManagerAdapter = new ChatManagerAdapterImpl(App.ctx);
