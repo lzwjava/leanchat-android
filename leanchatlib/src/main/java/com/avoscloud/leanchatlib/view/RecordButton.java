@@ -140,12 +140,19 @@ public class RecordButton extends Button {
     imageView = (ImageView) view.findViewById(R.id.imageView);
     textView = (TextView) view.findViewById(R.id.textView);
     recordIndicator.setContentView(view, new LayoutParams(
-        ViewGroup.LayoutParams.WRAP_CONTENT,
-        ViewGroup.LayoutParams.WRAP_CONTENT));
+      ViewGroup.LayoutParams.WRAP_CONTENT,
+      ViewGroup.LayoutParams.WRAP_CONTENT));
     recordIndicator.setOnDismissListener(onDismiss);
 
     LayoutParams lp = recordIndicator.getWindow().getAttributes();
     lp.gravity = Gravity.CENTER;
+  }
+
+  private void removeFile() {
+    File file = new File(outputPath);
+    if (file.exists()) {
+      file.delete();
+    }
   }
 
   private void finishRecord() {
@@ -156,8 +163,7 @@ public class RecordButton extends Button {
     long intervalTime = System.currentTimeMillis() - startTime;
     if (intervalTime < MIN_INTERVAL_TIME) {
       Toast.makeText(getContext(), getContext().getString(R.string.chat_record_button_pleaseSayMore), Toast.LENGTH_SHORT).show();
-      File file = new File(outputPath);
-      file.delete();
+      removeFile();
       return;
     }
 
@@ -173,32 +179,29 @@ public class RecordButton extends Button {
     recordIndicator.dismiss();
     Toast.makeText(getContext(), getContext().getString(R.string.chat_cancelRecord),
         Toast.LENGTH_SHORT).show();
-    File file = new File(outputPath);
-    if (file.exists()) {
-      file.delete();
-    }
+    removeFile();
   }
 
   private void startRecording() {
-    if (recorder == null) {
-      recorder = new MediaRecorder();
-      recorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
-      recorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
-      recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-      recorder.setOutputFile(outputPath);
-      try {
+    try {
+      if (recorder == null) {
+        recorder = new MediaRecorder();
+        recorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
+        recorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
+        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        recorder.setOutputFile(outputPath);
         recorder.prepare();
-      } catch (IOException e) {
-        e.printStackTrace();
+      } else {
+        recorder.reset();
+        recorder.setOutputFile(outputPath);
       }
-    } else {
-      recorder.reset();
-      recorder.setOutputFile(outputPath);
+      recorder.start();
+      thread = new ObtainDecibelThread();
+      thread.start();
+      recordEventListener.onStartRecord();
+    } catch (IOException e) {
+      e.printStackTrace();
     }
-    recorder.start();
-    thread = new ObtainDecibelThread();
-    thread.start();
-    recordEventListener.onStartRecord();
   }
 
   private void stopRecording() {
@@ -207,9 +210,13 @@ public class RecordButton extends Button {
       thread = null;
     }
     if (recorder != null) {
-      recorder.stop();
-      recorder.release();
-      recorder = null;
+      try {
+        recorder.stop();
+      } catch (Exception e) {
+      } finally {
+        recorder.release();
+        recorder = null;
+      }
     }
   }
 
