@@ -1,6 +1,7 @@
 package com.avoscloud.chat.util;
 
 import android.os.Environment;
+import com.avoscloud.chat.base.App;
 
 import java.io.File;
 
@@ -8,8 +9,18 @@ import java.io.File;
  * Created by lzw on 14-9-19.
  */
 public class PathUtils {
-  public static String getSDcardDir() {
-    return Environment.getExternalStorageDirectory().getPath() + "/";
+
+  private static boolean isExternalStorageWritable() {
+    String state = Environment.getExternalStorageState();
+    return Environment.MEDIA_MOUNTED.equals(state);
+  }
+
+  private static File getAvailableCacheDir() {
+    if (isExternalStorageWritable()) {
+      return App.ctx.getExternalCacheDir();
+    } else {
+      return App.ctx.getCacheDir();
+    }
   }
 
   public static String checkAndMkdirs(String dir) {
@@ -20,22 +31,12 @@ public class PathUtils {
     return dir;
   }
 
-  private static String getAppPath() {
-    String dir = getSDcardDir() + "leanchat/";
-    return checkAndMkdirs(dir);
-  }
-
-  private static String getAvatarDir() {
-    String dir = getAppPath() + "avatar/";
-    return checkAndMkdirs(dir);
-  }
-
   public static String getAvatarCropPath() {
-    return getAvatarDir() + "avatar_crop";
+    return new File(getAvailableCacheDir(), "avatar_crop").getAbsolutePath();
   }
 
   public static String getAvatarTmpPath() {
-    return getAvatarDir() + "tmp";
+    return new File(getAvailableCacheDir(), "avatar_tmp").getAbsolutePath();
   }
 
 }
