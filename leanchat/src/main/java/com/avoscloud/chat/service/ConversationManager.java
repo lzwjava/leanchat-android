@@ -13,7 +13,6 @@ import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.base.Constant;
 import com.avoscloud.chat.util.Logger;
-import com.avoscloud.chat.util.SimpleLock;
 import com.avoscloud.leanchatlib.controller.ChatManager;
 import com.avoscloud.leanchatlib.controller.ConversationHelper;
 import com.avoscloud.leanchatlib.controller.MessageAgent;
@@ -30,6 +29,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Created by lzw on 15/2/11.
@@ -94,14 +94,15 @@ public class ConversationManager {
       convids.add(room.getConversationId());
     }
     final AVException[] es = new AVException[1];
+    final CountDownLatch latch = new CountDownLatch(1);
     CacheService.cacheConvs(convids, new AVIMConversationCallback() {
       @Override
       public void done(AVException e) {
         es[0] = e;
-        SimpleLock.go();
+        latch.countDown();
       }
     });
-    SimpleLock.lock();
+    latch.await();
     if (es[0] != null) {
       throw es[0];
     }

@@ -15,7 +15,6 @@ import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.base.Constant;
 import com.avoscloud.chat.entity.avobject.User;
 import com.avoscloud.chat.util.Logger;
-import com.avoscloud.chat.util.SimpleLock;
 import com.avoscloud.chat.util.Utils;
 import com.avoscloud.leanchatlib.utils.PhotoUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -23,6 +22,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -61,6 +61,7 @@ public class UserService {
   public static List<AVUser> findFriends() throws Exception {
     final List<AVUser> friends = new ArrayList<AVUser>();
     final AVException[] es = new AVException[1];
+    final CountDownLatch latch = new CountDownLatch(1);
     findFriendsWithCachePolicy(AVQuery.CachePolicy.CACHE_ELSE_NETWORK, new FindCallback<AVUser>() {
       @Override
       public void done(List<AVUser> avUsers, AVException e) {
@@ -69,10 +70,10 @@ public class UserService {
         } else {
           friends.addAll(avUsers);
         }
-        SimpleLock.go();
+        latch.countDown();
       }
     });
-    SimpleLock.lock();
+    latch.await();
     if (es[0] != null) {
       throw es[0];
     } else {
