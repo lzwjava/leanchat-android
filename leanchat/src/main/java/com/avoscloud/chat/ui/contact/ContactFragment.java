@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -36,7 +37,6 @@ import com.avoscloud.chat.ui.conversation.ConversationGroupListActivity;
 import com.avoscloud.chat.ui.view.BaseListView;
 import com.avoscloud.chat.ui.view.EnLetterView;
 import com.avoscloud.chat.util.CharacterParser;
-import com.avoscloud.chat.util.StringUtils;
 import com.avoscloud.chat.util.Utils;
 import de.greenrobot.event.EventBus;
 
@@ -122,7 +122,7 @@ public class ContactFragment extends BaseFragment {
       SortUser sortUser = new SortUser();
       sortUser.setInnerUser(avUser);
       String username = avUser.getUsername();
-      if (!StringUtils.isEmpty(username)) {
+      if (!TextUtils.isEmpty(username)) {
         String pinyin = characterParser.getSelling(username);
         String sortString = pinyin.substring(0, 1).toUpperCase();
         if (sortString.matches("[A-Z]")) {
@@ -190,7 +190,7 @@ public class ContactFragment extends BaseFragment {
 
   private void updateNewRequestBadge() {
     listHeaderViewHolder.getMsgTipsView().setVisibility(
-      AddRequestManager.getInstance().hasUnreadRequests() ? View.VISIBLE : View.GONE);
+        AddRequestManager.getInstance().hasUnreadRequests() ? View.VISIBLE : View.GONE);
   }
 
   private void refresh() {
