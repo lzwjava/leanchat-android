@@ -93,14 +93,6 @@ public class ChatActivity extends Activity implements OnClickListener {
     return chatInstance;
   }
 
-  public static String getCurrentChattingConvid() {
-    return ChatManager.currentChattingConvid;
-  }
-
-  public static void setCurrentChattingConvid(String currentChattingConvid) {
-    ChatManager.currentChattingConvid = currentChattingConvid;
-  }
-
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.chat_layout);
@@ -554,14 +546,14 @@ public class ChatActivity extends Activity implements OnClickListener {
     if (isConversationEmpty(conversation)) {
       return;
     }
-    setCurrentChattingConvid(conversation.getConversationId());
+    ChatManager.setCurrentChattingConvid(conversation.getConversationId());
   }
 
   @Override
   protected void onPause() {
     super.onPause();
     roomsTable.clearUnread(conversation.getConversationId());
-    setCurrentChattingConvid(null);
+    ChatManager.setCurrentChattingConvid(null);
   }
 
   public void loadMessagesWhenInit(int limit) {

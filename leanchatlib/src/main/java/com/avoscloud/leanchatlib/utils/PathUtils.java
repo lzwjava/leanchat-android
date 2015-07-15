@@ -18,8 +18,7 @@ public class PathUtils {
 
   private static boolean isExternalStorageWritable() {
     String state = Environment.getExternalStorageState();
-    //return Environment.MEDIA_MOUNTED.equals(state);
-    return false;
+    return Environment.MEDIA_MOUNTED.equals(state);
   }
 
   /**
@@ -45,7 +44,7 @@ public class PathUtils {
    */
   public static String getChatFilePath(String id) {
     String path = new File(getAvailableCacheDir(), id).getAbsolutePath();
-    LogUtils.d("path = ", path);
+//    LogUtils.d("path = ", path);
     return path;
   }
 

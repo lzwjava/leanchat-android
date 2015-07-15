@@ -32,7 +32,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     if (!TextUtils.isEmpty(selfId)) {
       ChatManager chatManager = ChatManager.getInstance();
       chatManager.setupManagerWithUserId(selfId);
-      chatManager.openClientWithUserId(new AVIMClientCallback() {
+      chatManager.openClient(new AVIMClientCallback() {
         @Override
         public void done(AVIMClient avimClient, AVException e) {
           if (e != null) {

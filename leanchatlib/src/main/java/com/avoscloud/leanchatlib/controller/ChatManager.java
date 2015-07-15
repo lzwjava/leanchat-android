@@ -15,7 +15,6 @@ import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMMessagesQueryCallback;
-import com.avoscloud.leanchatlib.activity.ChatActivity;
 import com.avoscloud.leanchatlib.model.ConversationType;
 import com.avoscloud.leanchatlib.model.MessageEvent;
 import com.avoscloud.leanchatlib.model.Room;
@@ -90,6 +89,14 @@ public class ChatManager extends AVIMClientEventHandler {
     LogUtils.debugEnabled = debugEnabled;
   }
 
+  public static String getCurrentChattingConvid() {
+    return currentChattingConvid;
+  }
+
+  public static void setCurrentChattingConvid(String currentChattingConvid) {
+    ChatManager.currentChattingConvid = currentChattingConvid;
+  }
+
   /**
    * 请在应用一启动(Application onCreate)的时候就调用，因为 SDK 一启动，就会去连接聊天服务器
    * 如果没有调用此函数设置 messageHandler ，就可能丢失一些消息
@@ -152,7 +159,7 @@ public class ChatManager extends AVIMClientEventHandler {
    *
    * @param callback AVException 常发生于网络错误、签名错误
    */
-  public void openClientWithUserId(final AVIMClientCallback callback) {
+  public void openClient(final AVIMClientCallback callback) {
     if (this.selfId == null) {
       throw new IllegalStateException("please call setupManagerWithUserId() first");
     }
@@ -177,7 +184,7 @@ public class ChatManager extends AVIMClientEventHandler {
     eventBus.post(messageEvent);
   }
 
-  private void onMessage(final AVIMTypedMessage message, final AVIMConversation conversation) {
+  private void onMessage(final AVIMTypedMessage message, final AVIMConversation conversation, AVIMClient imClient) {
     if (message == null || message.getMessageId() == null) {
       LogUtils.d("may be SDK Bug, message or message id is null");
       return;
@@ -188,13 +195,14 @@ public class ChatManager extends AVIMClientEventHandler {
     if (lookUpConversationById(conversation.getConversationId()) == null) {
       registerConversation(conversation);
     }
+    LogUtils.d("receive message, content :", message.getContent());
     roomsTable.insertRoom(message.getConversationId());
     roomsTable.increaseUnreadCount(message.getConversationId());
     putLatestMessage(message);
     MessageEvent messageEvent = new MessageEvent(message, MessageEvent.Type.Come);
     eventBus.post(messageEvent);
-    if (selfId != null && (ChatActivity.getCurrentChattingConvid() == null
-        || !ChatActivity.getCurrentChattingConvid().equals(message.getConversationId()))) {
+    if (currentChattingConvid == null
+        || !currentChattingConvid.equals(message.getConversationId())) {
       chatManagerAdapter.shouldShowNotification(context, selfId, conversation, message);
     }
   }
@@ -340,8 +348,11 @@ public class ChatManager extends AVIMClientEventHandler {
     @Override
     public void onMessage(AVIMTypedMessage message, AVIMConversation conversation,
                           AVIMClient client) {
+      if (chatManager.getSelfId() == null) {
+        LogUtils.d("selfId is null, please call setupManagerWithUserId ");
+      }
       if (client.getClientId().equals(chatManager.getSelfId())) {
-        chatManager.onMessage(message, conversation);
+        chatManager.onMessage(message, conversation, client);
       } else {
         // 收到其它的client的消息，可能是上一次别的client登录未正确关闭，这里关边掉。
         client.close(null);
@@ -395,6 +406,7 @@ public class ChatManager extends AVIMClientEventHandler {
 
   /**
    * 查找对话的最后一条消息，如果已查找过，则立即返回
+   *
    * @param conversationId
    * @return 当向服务器查找失败时或无历史消息时，返回 null
    */

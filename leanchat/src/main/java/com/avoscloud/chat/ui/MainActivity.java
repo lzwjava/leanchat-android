@@ -63,7 +63,7 @@ public class MainActivity extends BaseActivity {
 
     ChatManager chatManager = ChatManager.getInstance();
     chatManager.setupManagerWithUserId(AVUser.getCurrentUser().getObjectId());
-    chatManager.openClientWithUserId(null);
+    chatManager.openClient(null);
     Intent intent = new Intent(fromActivity, MainActivity.class);
     fromActivity.startActivity(intent);
   }

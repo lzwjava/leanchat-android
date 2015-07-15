@@ -16,7 +16,8 @@ public class LogUtils {
     Throwable stack = new Throwable().fillInStackTrace();
     StackTraceElement[] trace = stack.getStackTrace();
     int n = 2;
-    return trace[n].getClassName() + " " + trace[n].getMethodName() + "()" + ":" + trace[n].getLineNumber() + " ";
+    return trace[n].getClassName() + " " + trace[n].getMethodName() + "()" + ":" + trace[n].getLineNumber() +
+        " ";
   }
 
   private static String getLogInfoByArray(String[] infos) {
