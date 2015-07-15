@@ -74,13 +74,7 @@ public class PhotoUtils {
     } catch (IOException e) {
       e.printStackTrace();
     } finally {
-      if (out != null) {
-        try {
-          out.close();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
+      Utils.closeQuietly(out);
     }
   }
 

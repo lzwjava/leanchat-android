@@ -42,19 +42,10 @@ public class PushManager {
     }
   }
 
-  public void unsubscripbeCurrentUserChannel() {
+  public void unsubscribeCurrentUserChannel() {
     if (AVUser.getCurrentUser() != null) {
       PushService.unsubscribe(context, AVUser.getCurrentUser().getObjectId());
     }
-  }
-
-  public void pushMessage(String userId, String message) {
-    AVQuery query = AVInstallation.getQuery();
-    query.whereEqualTo(INSTALLATION_USER_ID, userId);
-    AVPush push = new AVPush();
-    push.setQuery(query);
-    push.setMessage(message);
-    push.sendInBackground();
   }
 
   public void pushMessage(String userId, String message, String action) {

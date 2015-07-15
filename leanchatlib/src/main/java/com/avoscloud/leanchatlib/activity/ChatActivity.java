@@ -65,7 +65,7 @@ import java.util.Set;
 
 public class ChatActivity extends Activity implements OnClickListener {
   public static final String CONVID = "convid";
-  private static final int PAGE_SIZE = 20;
+  private static final int PAGE_SIZE = 8;
   private static final int TAKE_CAMERA_REQUEST = 2;
   private static final int GALLERY_REQUEST = 0;
   private static final int GALLERY_KITKAT_REQUEST = 3;
@@ -332,6 +332,8 @@ public class ChatActivity extends Activity implements OnClickListener {
 
   @Override
   public void onClick(View v) {
+    //之所以不用 switch 是因为在Library中 R.id.btn 不是常量，不能用在switch case中。
+    // 如果主项目有重名，Library 的会被重命名。，所以不能是常量。
     if (v.getId() == R.id.sendBtn) {
       sendText();
     } else if (v.getId() == R.id.addImageBtn) {

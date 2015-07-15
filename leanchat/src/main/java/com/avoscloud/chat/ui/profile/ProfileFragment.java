@@ -91,7 +91,7 @@ public class ProfileFragment extends BaseFragment {
       public void done(AVIMClient avimClient, AVException e) {
       }
     });
-    PushManager.getInstance().unsubscripbeCurrentUserChannel();
+    PushManager.getInstance().unsubscribeCurrentUserChannel();
     AVUser.logOut();
     getActivity().finish();
     Intent intent = new Intent(ctx, EntryLoginActivity.class);
