@@ -4,7 +4,7 @@
         <item name="android:background">@color/divider_line_color</item>
     </style>
 
-    <style name="DividerLine.Horizontal" parent="DividerLine">
+    <style name="DividerLine.Horizontal">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/divider_line_height</item>
     </style>
@@ -13,4 +13,26 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_width">@dimen/divider_line_height</item>
     </style>
+
+    <style name="EditText"></style>
+
+    <style name="EditText.UserName">
+        <item name="android:singleLine">true</item>
+        <item name="android:maxLength">30</item>
+    </style>
+
+    <style name="EditText.Password">
+        <item name="android:singleLine">true</item>
+        <item name="android:inputType">textPassword</item>
+    </style>
+
+    <style name="Button"></style>
+
+    <style name="Button.Normal"/>
+
+    <style name="Button.Larger"></style>
+
+    <style name="TextAppearance.Large"></style>
+    <style name="TextAppearance.Normal"></style>
+    <style name="TextAppearance.small"></style>
 </resources>
