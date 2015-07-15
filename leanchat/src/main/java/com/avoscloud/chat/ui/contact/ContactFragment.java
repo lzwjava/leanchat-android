@@ -1,10 +1,12 @@
 package com.avoscloud.chat.ui.contact;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,10 +23,12 @@ import butterknife.OnClick;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.CountCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.entity.SortUser;
+import com.avoscloud.chat.entity.avobject.AddRequest;
 import com.avoscloud.chat.service.AddRequestManager;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.service.event.ContactRefreshEvent;
@@ -35,7 +39,6 @@ import com.avoscloud.chat.ui.conversation.ConversationGroupListActivity;
 import com.avoscloud.chat.ui.view.BaseListView;
 import com.avoscloud.chat.ui.view.EnLetterView;
 import com.avoscloud.chat.util.CharacterParser;
-import com.avoscloud.chat.util.NetAsyncTask;
 import com.avoscloud.chat.util.StringUtils;
 import com.avoscloud.chat.util.Utils;
 import de.greenrobot.event.EventBus;
@@ -88,6 +91,12 @@ public class ContactFragment extends BaseFragment {
   public void onDestroy() {
     super.onDestroy();
     EventBus.getDefault().unregister(this);
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    updateNewRequestBadge();
   }
 
   private void initRightLetterViewAndSearchEdit() {
@@ -179,27 +188,19 @@ public class ContactFragment extends BaseFragment {
     super.setUserVisibleHint(isVisibleToUser);
   }
 
-  void findAddRequest() {
-    new NetAsyncTask(ctx, false) {
-      boolean haveAddRequest;
-
-      @Override
-      protected void doInBack() throws Exception {
-        haveAddRequest = AddRequestManager.getInstance().hasAddRequest();
-      }
-
-      @Override
-      protected void onPost(Exception e) {
-        if (filterException(e)) {
-          listHeaderViewHolder.getMsgTipsView().setVisibility(haveAddRequest ? View.VISIBLE : View.GONE);
-        }
-      }
-    }.execute();
+  private void updateNewRequestBadge() {
+    listHeaderViewHolder.getMsgTipsView().setVisibility(
+      AddRequestManager.getInstance().hasUnreadRequests() ? View.VISIBLE : View.GONE);
   }
 
   private void refresh() {
     friendsList.onRefresh();
-    findAddRequest();
+    AddRequestManager.getInstance().countUnreadRequests(new CountCallback() {
+      @Override
+      public void done(int i, AVException e) {
+        updateNewRequestBadge();
+      }
+    });
   }
 
   public void showDeleteDialog(final SortUser user) {
@@ -277,6 +278,7 @@ public class ContactFragment extends BaseFragment {
   }
 
   public void onEvent(InvitationEvent event) {
-    forceRefresh();
+    AddRequestManager.getInstance().unreadRequestsIncrement();
+    updateNewRequestBadge();
   }
 }

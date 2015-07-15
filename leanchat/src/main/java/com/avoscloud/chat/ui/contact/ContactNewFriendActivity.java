@@ -35,8 +35,7 @@ import de.greenrobot.event.EventBus;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContactNewFriendActivity extends BaseActivity implements
-    Refreshable {
+public class ContactNewFriendActivity extends BaseActivity implements Refreshable {
   @InjectView(R.id.newfriendList)
   BaseListView<AddRequest> listView;
   private NewFriendListAdapter adapter;
@@ -83,6 +82,7 @@ public class ContactNewFriendActivity extends BaseActivity implements
       @Override
       public List<AddRequest> getDatasInBackground(int skip, int limit, List<AddRequest> currentDatas) throws Exception {
         List<AddRequest> addRequests = AddRequestManager.getInstance().findAddRequests(skip, limit);
+        AddRequestManager.getInstance().markAddRequestsRead(addRequests);
         List<AddRequest> filters = new ArrayList<AddRequest>();
         for (AddRequest addRequest : addRequests) {
           if (addRequest.getFromUser() != null) {

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="invitation_action">com.avoscloud.chat.INVITATION_ACTION</string>
+
+
     <string name="app_name">LeanChat</string>
 
 

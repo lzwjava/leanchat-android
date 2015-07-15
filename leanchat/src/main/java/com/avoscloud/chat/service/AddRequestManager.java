@@ -5,6 +5,7 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.CountCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
@@ -21,6 +22,11 @@ import java.util.List;
 public class AddRequestManager {
   private static AddRequestManager addRequestManager;
 
+  /**
+   * 用户端未读的邀请消息的数量
+   */
+  private int unreadAddRequestsCount = 0;
+
   public static synchronized AddRequestManager getInstance() {
     if (addRequestManager == null) {
       addRequestManager = new AddRequestManager();
@@ -28,18 +34,57 @@ public class AddRequestManager {
     return addRequestManager;
   }
 
-  public int countAddRequests() throws AVException {
-    AVQuery<AddRequest> q = AVObject.getQuery(AddRequest.class);
-    q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
-    q.whereEqualTo(AddRequest.TO_USER, AVUser.getCurrentUser());
-    try {
-      return q.count();
-    } catch (AVException e) {
-      if (e.getCode() == AVException.CACHE_MISS) {
-        return 0;
-      } else {
-        throw e;
+  public AddRequestManager() {}
+
+  /**
+   * 是否有未读的消息
+   */
+  public boolean hasUnreadRequests() {
+    return unreadAddRequestsCount > 0;
+  }
+
+  /**
+   * 推送过来时自增
+   */
+  public void unreadRequestsIncrement() {
+    ++ unreadAddRequestsCount;
+  }
+
+  /**
+   * 从 server 获取未读消息的数量
+   */
+  public void countUnreadRequests(final CountCallback countCallback) {
+    AVQuery<AddRequest> addRequestAVQuery = AVObject.getQuery(AddRequest.class);
+    addRequestAVQuery.setCachePolicy(AVQuery.CachePolicy.NETWORK_ONLY);
+    addRequestAVQuery.whereEqualTo(AddRequest.TO_USER, AVUser.getCurrentUser());
+    addRequestAVQuery.whereEqualTo(AddRequest.IS_READ, false);
+    addRequestAVQuery.countInBackground(new CountCallback() {
+      @Override
+      public void done(int i, AVException e) {
+        if (null != countCallback) {
+          unreadAddRequestsCount = i;
+          countCallback.done(i, e);
+        }
       }
+    });
+  }
+
+  /**
+   * 标记消息为已读，标记完后会刷新未读消息数量
+   */
+  public void markAddRequestsRead(List<AddRequest> addRequestList) {
+    if (addRequestList != null) {
+      for (AddRequest request : addRequestList) {
+        request.put(AddRequest.IS_READ, true);
+      }
+      AVObject.saveAllInBackground(addRequestList, new SaveCallback() {
+        @Override
+        public void done(AVException e) {
+          if (e == null) {
+            countUnreadRequests(null);
+          }
+        }
+      });
     }
   }
 
@@ -53,17 +98,6 @@ public class AddRequestManager {
     q.orderByDescending(Constant.CREATED_AT);
     q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
     return q.find();
-  }
-
-  public boolean hasAddRequest() throws AVException {
-    PreferenceMap preferenceMap = PreferenceMap.getMyPrefDao(App.ctx);
-    int addRequestN = preferenceMap.getAddRequestN();
-    int requestN = countAddRequests();
-    if (requestN > addRequestN) {
-      return true;
-    } else {
-      return false;
-    }
   }
 
   public void agreeAddRequest(final AddRequest addRequest, final SaveCallback saveCallback) {
@@ -109,6 +143,7 @@ public class AddRequestManager {
       add.setFromUser(curUser);
       add.setToUser(toUser);
       add.setStatus(AddRequest.STATUS_WAIT);
+      add.setIsRead(false);
       add.save();
     }
   }
@@ -122,7 +157,8 @@ public class AddRequestManager {
 
       @Override
       protected void onSucceed() {
-        PushManager.getInstance().pushMessage(user.getObjectId(), ctx.getString(R.string.push_add_request));
+        PushManager.getInstance().pushMessage(user.getObjectId(), ctx.getString(R.string.push_add_request),
+          ctx.getString(R.string.invitation_action));
         Utils.toast(R.string.contact_sendRequestSucceed);
       }
     }.execute();

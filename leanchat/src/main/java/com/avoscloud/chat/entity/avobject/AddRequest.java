@@ -16,6 +16,11 @@ public class AddRequest extends AVObject {
   public static final String TO_USER = "toUser";
   public static final String STATUS = "status";
 
+  /**
+   * 标记接收方是否已读该消息
+   */
+  public static final String IS_READ = "isRead";
+
   AVUser toUser;
   //int status;
   AVUser fromUser;
@@ -51,5 +56,13 @@ public class AddRequest extends AVObject {
 
   public void setStatus(int status) {
     put(STATUS, status);
+  }
+
+  public boolean isRead() {
+    return getBoolean(IS_READ);
+  }
+
+  public void setIsRead(boolean isRead) {
+    put(IS_READ, isRead);
   }
 }
