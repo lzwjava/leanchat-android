@@ -185,8 +185,8 @@ public class ConversationManager {
   }
 
   public void postConvChanged(AVIMConversation conv) {
-    if (CacheService.getCurConv() != null && CacheService.getCurConv().getConversationId().equals(conv.getConversationId())) {
-      CacheService.setCurConv(conv);
+    if (CacheService.getCurrentConversationId() != null && CacheService.getCurrentConversationId().getConversationId().equals(conv.getConversationId())) {
+      CacheService.setCurrentConversationId(conv.getConversationId());
     }
     ConversationChangeEvent conversationChangeEvent = new ConversationChangeEvent(conv);
     EventBus.getDefault().post(conversationChangeEvent);

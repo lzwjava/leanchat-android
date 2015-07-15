@@ -25,8 +25,6 @@ public interface ChatManagerAdapter {
    */
   void cacheUserInfoByIdsInBackground(List<String> userIds) throws Exception;
 
-  //某一对话来了一条消息，却并未正在此对话聊着天
-
   /**
    * 当来了消息后发现是以下情况将触发此函数：
    * 应用在后台时、应用在前台但不在聊天页面时、在聊天页面但不是目标对话时

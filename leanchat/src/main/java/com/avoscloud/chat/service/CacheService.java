@@ -8,16 +8,22 @@ import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
 import com.avoscloud.chat.base.Constant;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by lzw on 14/12/19.
  */
 public class CacheService {
-  private static Map<String, AVIMConversation> cachedConvs = new HashMap<String, AVIMConversation>();
+  private static Map<String, AVIMConversation> cachedConvs = new ConcurrentHashMap<>();
   private static Map<String, AVUser> cachedUsers = new HashMap<String, AVUser>();
   private static List<String> friendIds = new ArrayList<String>();
-  private static AVIMConversation curConv;
+  private static String currentConversationId;
 
   public static AVUser lookupUser(String userId) {
     return cachedUsers.get(userId);
@@ -47,38 +53,17 @@ public class CacheService {
     cachedConvs.put(conv.getConversationId(), conv);
   }
 
-  public static void registerConvIfNone(AVIMConversation conv) {
-    if (lookupConv(conv.getConversationId()) == null) {
-      registerConv(conv);
-    }
-  }
 
   public static List<String> getFriendIds() {
     return friendIds;
   }
 
-  public static void setFriendIds(List<String> friendIds) {
-    CacheService.friendIds = Collections.unmodifiableList(friendIds);
+  public static AVIMConversation getCurrentConversationId() {
+    return lookupConv(currentConversationId);
   }
 
-  public static AVIMConversation getCurConv() {
-    return curConv;
-  }
-
-  public static void setCurConv(AVIMConversation curConv) {
-    CacheService.curConv = curConv;
-  }
-
-  public static boolean isCurConvid(String convid) {
-    return curConv != null && curConv.getConversationId().equals(convid);
-  }
-
-  public static boolean isCurConv(AVIMConversation conv) {
-    if (getCurConv() != null && getCurConv().getConversationId().equals(conv.getConversationId())) {
-      return true;
-    } else {
-      return false;
-    }
+  public static void setCurrentConversationId(String currentConversationId) {
+    CacheService.currentConversationId = currentConversationId;
   }
 
   public static void cacheUsers(List<String> ids) throws AVException {

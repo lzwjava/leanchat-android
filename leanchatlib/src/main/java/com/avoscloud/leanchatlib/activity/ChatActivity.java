@@ -86,7 +86,7 @@ public class ChatActivity extends Activity implements OnClickListener {
   protected RefreshableView refreshableView;
   protected ListView messageListView;
   protected RecordButton recordBtn;
-  protected String localCameraPath = PathUtils.getPicturePath();
+  protected String localCameraPath = PathUtils.getPicturePathByCurrentTime();
   protected View addCameraBtn;
 
   public static ChatActivity getChatInstance() {
@@ -207,10 +207,11 @@ public class ChatActivity extends Activity implements OnClickListener {
   }
 
   public void initRecordBtn() {
-    recordBtn.setSavePath(PathUtils.getRecordTmpPath());
+    recordBtn.setSavePath(PathUtils.getRecordPathByCurrentTime());
     recordBtn.setRecordEventListener(new RecordButton.RecordEventListener() {
       @Override
       public void onFinishedRecord(final String audioPath, int secs) {
+//        LogUtils.d("audioPath = ", audioPath);
         messageAgent.sendAudio(audioPath);
       }
 
@@ -308,13 +309,15 @@ public class ChatActivity extends Activity implements OnClickListener {
         messageAgent.resendMessage(msg, new MessageAgent.SendCallback() {
           @Override
           public void onError(AVIMTypedMessage message, Exception e) {
-            LogUtils.i();
+            LogUtils.d("resend message error");
+            // 应该只重新加载一条, Todo
             loadMessagesWhenInit(adapter.getCount());
           }
 
           @Override
           public void onSuccess(AVIMTypedMessage message) {
-            LogUtils.i();
+            LogUtils.d("resend message success");
+            // 应该只重新加载一条, Todo
             loadMessagesWhenInit(adapter.getCount());
           }
         });
