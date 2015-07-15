@@ -28,6 +28,7 @@ import com.avoscloud.chat.entity.SortUser;
 import com.avoscloud.chat.service.AddRequestManager;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.service.event.ContactRefreshEvent;
+import com.avoscloud.chat.service.event.InvitationEvent;
 import com.avoscloud.chat.ui.base_activity.BaseFragment;
 import com.avoscloud.chat.ui.chat.ChatRoomActivity;
 import com.avoscloud.chat.ui.conversation.ConversationGroupListActivity;
@@ -35,6 +36,7 @@ import com.avoscloud.chat.ui.view.BaseListView;
 import com.avoscloud.chat.ui.view.EnLetterView;
 import com.avoscloud.chat.util.CharacterParser;
 import com.avoscloud.chat.util.NetAsyncTask;
+import com.avoscloud.chat.util.StringUtils;
 import com.avoscloud.chat.util.Utils;
 import de.greenrobot.event.EventBus;
 
@@ -111,7 +113,7 @@ public class ContactFragment extends BaseFragment {
       SortUser sortUser = new SortUser();
       sortUser.setInnerUser(avUser);
       String username = avUser.getUsername();
-      if (username != null) {
+      if (!StringUtils.isEmpty(username)) {
         String pinyin = characterParser.getSelling(username);
         String sortString = pinyin.substring(0, 1).toUpperCase();
         if (sortString.matches("[A-Z]")) {
@@ -271,6 +273,10 @@ public class ContactFragment extends BaseFragment {
   }
 
   public void onEvent(ContactRefreshEvent event) {
+    forceRefresh();
+  }
+
+  public void onEvent(InvitationEvent event) {
     forceRefresh();
   }
 }
