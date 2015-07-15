@@ -63,13 +63,15 @@ public class ConversationAddMembersActivity extends ConversationBaseActivity {
     UserService.findFriendsWithCachePolicy(AVQuery.CachePolicy.CACHE_ELSE_NETWORK, new FindCallback<AVUser>() {
       @Override
       public void done(List<AVUser> users, AVException e) {
-        List<String> userIds = new ArrayList<String>();
-        for (AVUser user : users) {
-          userIds.add(user.getObjectId());
+        if (filterException(e)) {
+          List<String> userIds = new ArrayList<String>();
+          for (AVUser user : users) {
+            userIds.add(user.getObjectId());
+          }
+          userIds.removeAll(conv().getMembers());
+          adapter.setDatas(userIds);
+          adapter.notifyDataSetChanged();
         }
-        userIds.removeAll(conv().getMembers());
-        adapter.setDatas(userIds);
-        adapter.notifyDataSetChanged();
       }
     });
   }
