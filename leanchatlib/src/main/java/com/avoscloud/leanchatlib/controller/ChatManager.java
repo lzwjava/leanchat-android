@@ -1,6 +1,7 @@
 package com.avoscloud.leanchatlib.controller;
 
 import android.content.Context;
+
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMClientEventHandler;
@@ -20,6 +21,7 @@ import com.avoscloud.leanchatlib.model.ConversationType;
 import com.avoscloud.leanchatlib.model.MessageEvent;
 import com.avoscloud.leanchatlib.model.Room;
 import com.avoscloud.leanchatlib.utils.Utils;
+
 import de.greenrobot.event.EventBus;
 
 import java.util.ArrayList;
@@ -199,7 +201,7 @@ public class ChatManager extends AVIMClientEventHandler {
     MessageEvent messageEvent = new MessageEvent(message, MessageEvent.Type.Come);
     eventBus.post(messageEvent);
     if (selfId != null && ChatActivity.getCurrentChattingConvid() == null || !ChatActivity.getCurrentChattingConvid().equals(message
-        .getConversationId())) {
+      .getConversationId())) {
       chatManagerAdapter.shouldShowNotification(context, selfId, conversation, message);
     }
   }
@@ -223,7 +225,10 @@ public class ChatManager extends AVIMClientEventHandler {
   }
 
   public AVIMConversationQuery getQuery() {
-    return imClient.getQuery();
+    if (null != imClient) {
+      return imClient.getQuery();
+    }
+    return null;
   }
 
   @Override

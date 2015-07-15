@@ -187,20 +187,24 @@ public class ConversationManager {
   }
 
   public void findGroupConversationsIncludeMe(AVIMConversationQueryCallback callback) {
-    AVIMConversationQuery q = ChatManager.getInstance().getQuery();
-    q.containsMembers(Arrays.asList(ChatManager.getInstance().getSelfId()));
-    q.whereEqualTo(ConversationType.ATTR_TYPE_KEY, ConversationType.Group.getValue());
-    q.orderByDescending(Constant.UPDATED_AT);
-    q.findInBackground(callback);
+    AVIMConversationQuery conversationQuery = ChatManager.getInstance().getQuery();
+    if (null != conversationQuery) {
+      conversationQuery.containsMembers(Arrays.asList(ChatManager.getInstance().getSelfId()));
+      conversationQuery.whereEqualTo(ConversationType.ATTR_TYPE_KEY, ConversationType.Group.getValue());
+      conversationQuery.orderByDescending(Constant.UPDATED_AT);
+      conversationQuery.findInBackground(callback);
+    } else if (null != callback) {
+      callback.done(new ArrayList<AVIMConversation>(), null);
+    }
   }
 
   public void findConversationsByConversationIds(List<String> ids, AVIMConversationQueryCallback callback) {
-    if (ids.size() > 0) {
-      AVIMConversationQuery q = ChatManager.getInstance().getQuery();
-      q.whereContainsIn(Constant.OBJECT_ID, ids);
-      q.setLimit(1000);
-      q.findInBackground(callback);
-    } else {
+    AVIMConversationQuery conversationQuery = ChatManager.getInstance().getQuery();
+    if (ids.size() > 0 && null != conversationQuery) {
+      conversationQuery.whereContainsIn(Constant.OBJECT_ID, ids);
+      conversationQuery.setLimit(1000);
+      conversationQuery.findInBackground(callback);
+    } else if (null != callback) {
       callback.done(new ArrayList<AVIMConversation>(), null);
     }
   }
