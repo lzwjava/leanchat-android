@@ -20,6 +20,7 @@ public class RoomsTable {
   private static final String ROOM_CONVID = "convid";
   private static final String ROOM_UNREAD_COUNT = "unread_count";
   private static final String ROOM_ID = "id";
+  public static final String ROOM_CONVID_INDEX = "convid_index";
 
   private static class SQL {
     private static final String CREATE_ROOMS_TABLE =
@@ -27,6 +28,9 @@ public class RoomsTable {
             ROOM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             ROOM_CONVID + " VARCHAR(63) UNIQUE NOT NULL, " +
             ROOM_UNREAD_COUNT + " INTEGER DEFAULT 0)";
+    private static final String CREATE_ROOM_CONVID_INDEX =
+        "CREATE UNIQUE INDEX IF NOT EXISTS " + ROOM_CONVID_INDEX +
+            " on " + ROOMS_TABLE + " ( " + ROOM_CONVID + " ) ";
     private static final String UPDATE_ROOMS_INCREASE_UNREAD_COUNT_WHERE_CONVID =
         "UPDATE " + ROOMS_TABLE + " SET " + ROOM_UNREAD_COUNT + " = "
             + ROOM_UNREAD_COUNT + " + 1 WHERE " + ROOM_CONVID + " =?";
@@ -48,11 +52,12 @@ public class RoomsTable {
     return roomsTable;
   }
 
-  void createTable(SQLiteDatabase db) {
+  static void createTableAndIndex(SQLiteDatabase db) {
     db.execSQL(SQL.CREATE_ROOMS_TABLE);
+    db.execSQL(SQL.CREATE_ROOM_CONVID_INDEX);
   }
 
-  void dropTable(SQLiteDatabase db) {
+  static void dropTable(SQLiteDatabase db) {
     db.execSQL(SQL.DROP_TABLE);
   }
 
