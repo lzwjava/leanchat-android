@@ -28,7 +28,6 @@ public class PreferenceMap {
   Context cxt;
   SharedPreferences pref;
   SharedPreferences.Editor editor;
-  int nearbyOrder;
 
   public PreferenceMap(Context cxt) {
     this.cxt = cxt;

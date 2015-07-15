@@ -9,7 +9,7 @@ import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
 import com.avoscloud.chat.base.Constant;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -21,9 +21,9 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class CacheService {
   private static Map<String, AVIMConversation> cachedConvs = new ConcurrentHashMap<>();
-  private static Map<String, AVUser> cachedUsers = new HashMap<String, AVUser>();
-  private static List<String> friendIds = new ArrayList<String>();
-  private static String currentConversationId;
+  private static Map<String, AVUser> cachedUsers = new ConcurrentHashMap<>();
+  private static volatile List<String> friendIds = new ArrayList<String>();
+  private static volatile String currentConversationId;
 
   public static AVUser lookupUser(String userId) {
     return cachedUsers.get(userId);
@@ -88,10 +88,11 @@ public class CacheService {
 
   public static List<AVUser> findUsers(List<String> userIds) throws AVException {
     if (userIds.size() <= 0) {
-      return new ArrayList<>();
+      return Collections.EMPTY_LIST;
     }
     AVQuery<AVUser> q = AVUser.getQuery();
     q.whereContainedIn(Constant.OBJECT_ID, userIds);
+    q.setLimit(1000);
     q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
     return q.find();
   }

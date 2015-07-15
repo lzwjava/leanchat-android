@@ -186,7 +186,7 @@ public class ContactFragment extends BaseFragment {
 
       @Override
       protected void doInBack() throws Exception {
-        haveAddRequest = AddRequestManager.getInstance().hasAddRequest();
+        haveAddRequest = AddRequestManager.getInstance().hasNewAddRequest();
       }
 
       @Override

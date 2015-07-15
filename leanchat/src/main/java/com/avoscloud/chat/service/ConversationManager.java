@@ -6,12 +6,9 @@ import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMConversationEventHandler;
 import com.avos.avoscloud.im.v2.AVIMConversationQuery;
-import com.avos.avoscloud.im.v2.AVIMMessage;
-import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
-import com.avos.avoscloud.im.v2.callback.AVIMMessagesQueryCallback;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.base.Constant;
@@ -33,7 +30,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CountDownLatch;
 
 /**
  * Created by lzw on 15/2/11.
@@ -45,25 +41,30 @@ public class ConversationManager {
     @Override
     public void onMemberLeft(AVIMClient client, AVIMConversation conversation, List<String> members, String kickedBy) {
       Logger.i(MessageHelper.nameByUserIds(members) + " left, kicked by " + MessageHelper.nameByUserId(kickedBy));
-      CacheService.registerConv(conversation);
-      getInstance().postConvChanged(conversation);
+      refreshCacheAndNotify(conversation);
     }
 
     @Override
     public void onMemberJoined(AVIMClient client, AVIMConversation conversation, List<String> members, String invitedBy) {
       Logger.i(MessageHelper.nameByUserIds(members) + " joined , invited by " + MessageHelper.nameByUserId(invitedBy));
+      refreshCacheAndNotify(conversation);
+    }
+
+    private void refreshCacheAndNotify(AVIMConversation conversation) {
       CacheService.registerConv(conversation);
       getInstance().postConvChanged(conversation);
     }
 
     @Override
     public void onKicked(AVIMClient client, AVIMConversation conversation, String kickedBy) {
+      refreshCacheAndNotify(conversation);
       Logger.i("you are kicked by " + MessageHelper.nameByUserId(kickedBy));
     }
 
     @Override
     public void onInvited(AVIMClient client, AVIMConversation conversation, String operator) {
       Logger.i("you are invited by " + MessageHelper.nameByUserId(operator));
+      refreshCacheAndNotify(conversation);
     }
   };
 
@@ -79,38 +80,6 @@ public class ConversationManager {
 
   public static AVIMConversationEventHandler getEventHandler() {
     return eventHandler;
-  }
-
-  public static AVIMTypedMessage getLastMessage(final AVIMConversation conversation) throws AVException, InterruptedException {
-    final CountDownLatch latch = new CountDownLatch(1);
-    final AVException[] es = new AVException[1];
-    final List<AVIMTypedMessage> foundMessages = new ArrayList<>();
-    conversation.queryMessages(1, new AVIMMessagesQueryCallback() {
-      @Override
-      public void done(List<AVIMMessage> messages, AVException e) {
-        es[0] = e;
-        if (e == null) {
-          if (messages == null) {
-            Logger.d("null conversationId=" + conversation.getConversationId());
-          }
-          for (AVIMMessage message : messages) {
-            if (message instanceof AVIMTypedMessage) {
-              foundMessages.add((AVIMTypedMessage) message);
-            }
-          }
-        }
-        latch.countDown();
-      }
-    });
-    latch.await();
-    if (es[0] != null) {
-      throw es[0];
-    }
-    if (foundMessages.size() > 0) {
-      return foundMessages.get(0);
-    } else {
-      return null;
-    }
   }
 
   private String getConversationInfo(AVIMConversation conversation) {
@@ -179,10 +148,14 @@ public class ConversationManager {
       @Override
       public void done(AVException e) {
         if (e != null) {
-          callback.done(e);
+          if (callback != null) {
+            callback.done(e);
+          }
         } else {
           postConvChanged(conv);
-          callback.done(null);
+          if (callback != null) {
+            callback.done(null);
+          }
         }
       }
     });
@@ -199,6 +172,7 @@ public class ConversationManager {
   public void findGroupConversationsIncludeMe(AVIMConversationQueryCallback callback) {
     AVIMConversationQuery q = ChatManager.getInstance().getConversationQuery();
     q.containsMembers(Arrays.asList(ChatManager.getInstance().getSelfId()));
+    q.limit(1000);
     q.whereEqualTo(ConversationType.ATTR_TYPE_KEY, ConversationType.Group.getValue());
     q.orderByDescending(Constant.UPDATED_AT);
     q.findInBackground(callback);

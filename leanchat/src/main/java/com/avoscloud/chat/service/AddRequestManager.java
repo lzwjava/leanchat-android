@@ -55,7 +55,7 @@ public class AddRequestManager {
     return q.find();
   }
 
-  public boolean hasAddRequest() throws AVException {
+  public boolean hasNewAddRequest() throws AVException {
     PreferenceMap preferenceMap = PreferenceMap.getMyPrefDao(App.ctx);
     int addRequestN = preferenceMap.getAddRequestN();
     int requestN = countAddRequests();
@@ -104,7 +104,7 @@ public class AddRequestManager {
     }
     if (count > 0) {
       // 抛出异常，然后提示用户
-      throw new Exception(App.ctx.getString(R.string.contact_alreadyCreateAddRequest));
+      throw new IllegalStateException(App.ctx.getString(R.string.contact_alreadyCreateAddRequest));
     } else {
       AddRequest add = new AddRequest();
       add.setFromUser(curUser);

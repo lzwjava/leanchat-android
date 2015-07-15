@@ -203,7 +203,9 @@ public class UserService {
     user.followInBackground(friendId, new FollowCallback() {
       @Override
       public void done(AVObject object, AVException e) {
-        saveCallback.done(e);
+        if (saveCallback != null) {
+          saveCallback.done(e);
+        }
       }
     });
   }
@@ -213,7 +215,9 @@ public class UserService {
     user.unfollowInBackground(friendId, new FollowCallback() {
       @Override
       public void done(AVObject object, AVException e) {
-        saveCallback.done(e);
+        if (saveCallback != null) {
+          saveCallback.done(e);
+        }
       }
     });
   }
