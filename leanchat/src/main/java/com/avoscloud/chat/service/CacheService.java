@@ -8,16 +8,22 @@ import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
 import com.avoscloud.chat.base.Constant;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by lzw on 14/12/19.
  */
 public class CacheService {
-  private static Map<String, AVIMConversation> cachedConvs = new HashMap<String, AVIMConversation>();
-  private static Map<String, AVUser> cachedUsers = new HashMap<String, AVUser>();
-  private static List<String> friendIds = new ArrayList<String>();
-  private static AVIMConversation curConv;
+  private static Map<String, AVIMConversation> cachedConvs = new ConcurrentHashMap<>();
+  private static Map<String, AVUser> cachedUsers = new ConcurrentHashMap<>();
+  private static volatile List<String> friendIds = new ArrayList<String>();
+  private static volatile String currentConversationId;
 
   public static AVUser lookupUser(String userId) {
     return cachedUsers.get(userId);
@@ -47,37 +53,25 @@ public class CacheService {
     cachedConvs.put(conv.getConversationId(), conv);
   }
 
-  public static void registerConvIfNone(AVIMConversation conv) {
-    if (lookupConv(conv.getConversationId()) == null) {
-      registerConv(conv);
-    }
-  }
 
   public static List<String> getFriendIds() {
     return friendIds;
   }
 
-  public static void setFriendIds(List<String> friendIds) {
-    CacheService.friendIds = Collections.unmodifiableList(friendIds);
-  }
-
-  public static AVIMConversation getCurConv() {
-    return curConv;
-  }
-
-  public static void setCurConv(AVIMConversation curConv) {
-    CacheService.curConv = curConv;
-  }
-
-  public static boolean isCurConvid(String convid) {
-    return curConv != null && curConv.getConversationId().equals(convid);
-  }
-
-  public static boolean isCurConv(AVIMConversation conv) {
-    if (getCurConv() != null && getCurConv().getConversationId().equals(conv.getConversationId())) {
-      return true;
+  public static AVIMConversation getCurrentConversation() {
+    if (currentConversationId == null) {
+      return null;
     } else {
-      return false;
+      return lookupConv(currentConversationId);
+    }
+  }
+
+  public static void setCurrentConversation(AVIMConversation currentConversation) {
+    if (currentConversation != null) {
+      registerConv(currentConversation);
+      CacheService.currentConversationId = currentConversation.getConversationId();
+    } else {
+      CacheService.currentConversationId = null;
     }
   }
 
@@ -94,10 +88,11 @@ public class CacheService {
 
   public static List<AVUser> findUsers(List<String> userIds) throws AVException {
     if (userIds.size() <= 0) {
-      return new ArrayList<AVUser>();
+      return Collections.EMPTY_LIST;
     }
     AVQuery<AVUser> q = AVUser.getQuery();
     q.whereContainedIn(Constant.OBJECT_ID, userIds);
+    q.setLimit(1000);
     q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
     return q.find();
   }

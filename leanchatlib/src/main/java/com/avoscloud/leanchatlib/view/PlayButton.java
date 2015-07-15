@@ -16,17 +16,12 @@ public class PlayButton extends ImageView implements View.OnClickListener {
   private String path;
   private boolean leftSide;
   private AnimationDrawable anim;
-  private AudioHelper audioHelper;
 
   public PlayButton(Context context, AttributeSet attrs) {
     super(context, attrs);
     leftSide = getLeftFromAttrs(context, attrs);
     setLeftSide(leftSide);
     setOnClickListener(this);
-  }
-
-  public void setAudioHelper(AudioHelper audioHelper) {
-    this.audioHelper = audioHelper;
   }
 
   public void setLeftSide(boolean leftSide) {
@@ -52,15 +47,12 @@ public class PlayButton extends ImageView implements View.OnClickListener {
 
   @Override
   public void onClick(View v) {
-    if (audioHelper == null) {
-      throw new NullPointerException();
-    }
-    if (audioHelper.isPlaying() == true && audioHelper.getAudioPath().equals(path)) {
-      audioHelper.pausePlayer();
+    if (AudioHelper.getInstance().isPlaying() == true && AudioHelper.getInstance().getAudioPath().equals(path)) {
+      AudioHelper.getInstance().pausePlayer();
       stopRecordAnimation();
     } else {
       startRecordAnimation();
-      audioHelper.playAudio(path, new Runnable() {
+      AudioHelper.getInstance().playAudio(path, new Runnable() {
         @Override
         public void run() {
           stopRecordAnimation();

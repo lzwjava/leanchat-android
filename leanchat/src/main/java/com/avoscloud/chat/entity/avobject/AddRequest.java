@@ -21,29 +21,19 @@ public class AddRequest extends AVObject {
    */
   public static final String IS_READ = "isRead";
 
-  AVUser toUser;
-  //int status;
-  AVUser fromUser;
-
   public AddRequest() {
   }
 
-  public synchronized AVUser getFromUser() {
-    if (fromUser == null) {
-      fromUser = getAVUser(FROM_USER, AVUser.class);
-    }
-    return fromUser;
+  public AVUser getFromUser() {
+    return getAVUser(FROM_USER);
   }
 
   public void setFromUser(AVUser fromUser) {
     put(FROM_USER, fromUser);
   }
 
-  public synchronized AVUser getToUser() {
-    if (toUser == null) {
-      toUser = getAVUser(TO_USER, AVUser.class);
-    }
-    return toUser;
+  public AVUser getToUser() {
+    return getAVUser(TO_USER);
   }
 
   public void setToUser(AVUser toUser) {

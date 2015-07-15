@@ -96,7 +96,8 @@ public class ChatMessageAdapter extends BaseAdapter {
         viewType = comeMsg ? MsgViewType.ComeLocation : MsgViewType.ToLocation;
         break;
       default:
-        throw new IllegalStateException();
+        viewType = comeMsg ? MsgViewType.ComeText : MsgViewType.ToText;
+        break;
     }
     return viewType.getValue();
   }
@@ -155,11 +156,11 @@ public class ChatMessageAdapter extends BaseAdapter {
 
     UserInfo user = ChatManager.getInstance().getChatManagerAdapter().getUserInfoById(msg.getFrom());
     if (user == null) {
-      throw new NullPointerException("user is null");
+      throw new IllegalStateException("user is null, please implement ChatManagetAdapter.cacheUserInfoById()");
     }
     if (isComMsg) {
       if (conversationType == null) {
-        throw new NullPointerException("conv type is null");
+        return conView;
       }
       if (conversationType == ConversationType.Single) {
         usernameView.setVisibility(View.GONE);
@@ -190,6 +191,8 @@ public class ChatMessageAdapter extends BaseAdapter {
         setLocationView(msg, locationView);
         break;
       default:
+        contentView.setText("未知消息");
+        contentLayout.requestLayout();
         break;
     }
     if (isComMsg == false) {
@@ -247,8 +250,6 @@ public class ChatMessageAdapter extends BaseAdapter {
 
   private void initPlayBtn(AVIMTypedMessage msg, PlayButton playBtn) {
     playBtn.setLeftSide(isComeMsg(msg));
-    AudioHelper audioHelper = AudioHelper.getInstance();
-    playBtn.setAudioHelper(audioHelper);
     playBtn.setPath(MessageHelper.getFilePath(msg));
   }
 
@@ -286,7 +287,8 @@ public class ChatMessageAdapter extends BaseAdapter {
         contentId = R.layout.chat_item_location;
         break;
       default:
-        throw new IllegalStateException();
+        contentId = R.layout.chat_item_text;
+        break;
     }
     contentView.removeAllViews();
     View content = View.inflate(context, contentId, null);

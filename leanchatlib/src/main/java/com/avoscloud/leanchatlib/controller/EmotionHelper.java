@@ -7,7 +7,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.ImageSpan;
-import com.avoscloud.leanchatlib.utils.Utils;
+import com.avoscloud.leanchatlib.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -135,7 +135,7 @@ public class EmotionHelper {
       String code = emojiCode.substring(1, emojiCode.length() - 1);
       Bitmap bitmap = getDrawableByName(ChatManager.getContext(), code);
       if (bitmap == null) {
-        Utils.log("not available test " + code);
+        LogUtils.i("not available test " + code);
       }
     }
   }

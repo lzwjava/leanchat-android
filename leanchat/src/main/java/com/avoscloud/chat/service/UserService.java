@@ -23,7 +23,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -45,7 +44,8 @@ public class UserService {
     try {
       q = curUser.followeeQuery(AVUser.class);
     } catch (Exception e) {
-      throw new NullPointerException();
+      //在 currentUser.objectId 为 null 的时候抛出的，不做处理
+      Logger.e(e.getMessage());
     }
     return q;
   }
@@ -184,7 +184,13 @@ public class UserService {
             if (e != null) {
               e.printStackTrace();
             } else {
-              Logger.v("lastLocation save " + user.getAVGeoPoint(User.LOCATION));
+              AVGeoPoint avGeoPoint = user.getAVGeoPoint(User.LOCATION);
+              if (avGeoPoint == null) {
+                Logger.e("avGeopoint is null");
+              } else {
+                Logger.v("save location succeed latitude " + avGeoPoint.getLatitude()
+                    + " longitude " + avGeoPoint.getLongitude());
+              }
             }
           }
         });
@@ -197,7 +203,9 @@ public class UserService {
     user.followInBackground(friendId, new FollowCallback() {
       @Override
       public void done(AVObject object, AVException e) {
-        saveCallback.done(e);
+        if (saveCallback != null) {
+          saveCallback.done(e);
+        }
       }
     });
   }
@@ -207,7 +215,9 @@ public class UserService {
     user.unfollowInBackground(friendId, new FollowCallback() {
       @Override
       public void done(AVObject object, AVException e) {
-        saveCallback.done(e);
+        if (saveCallback != null) {
+          saveCallback.done(e);
+        }
       }
     });
   }

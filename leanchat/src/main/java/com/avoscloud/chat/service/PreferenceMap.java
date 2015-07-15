@@ -28,7 +28,6 @@ public class PreferenceMap {
   Context cxt;
   SharedPreferences pref;
   SharedPreferences.Editor editor;
-  int nearbyOrder;
 
   public PreferenceMap(Context cxt) {
     this.cxt = cxt;
@@ -53,7 +52,7 @@ public class PreferenceMap {
   public static PreferenceMap getMyPrefDao(Context ctx) {
     AVUser user = AVUser.getCurrentUser();
     if (user == null) {
-      throw new RuntimeException("user is null");
+      return new PreferenceMap(ctx, "default_pref");
     }
     return new PreferenceMap(ctx, user.getObjectId());
   }
@@ -94,9 +93,6 @@ public class PreferenceMap {
   }
 
   public void setLocation(AVGeoPoint location) {
-    if (location == null) {
-      throw new NullPointerException("location is null");
-    }
     setLatitude(location.getLatitude() + "");
     setLongitude(location.getLongitude() + "");
   }

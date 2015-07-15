@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.widget.ImageView;
 import com.avoscloud.leanchatlib.R;
+import com.avoscloud.leanchatlib.controller.ChatManager;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
@@ -94,14 +95,7 @@ public class PhotoUtils {
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     } finally {
-      try {
-        if (outputStream != null) {
-          outputStream.close();
-        }
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-
+      Utils.closeQuietly(outputStream);
     }
     recycle(newBitmap);
     recycle(bitmap);

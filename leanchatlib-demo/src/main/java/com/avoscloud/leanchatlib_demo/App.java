@@ -37,9 +37,8 @@ public class App extends Application {
         "m9fzwse7od89gvcnk1dmdq4huprjvghjtiug1u2zu073zn99");
     ChatManager.setDebugEnabled(true);// tag leanchatlib
     AVOSCloud.setDebugLogEnabled(true);  // set false when release
-    final ChatManager chatManager = ChatManager.getInstance();
-    chatManager.init(this);
-    chatManager.setChatManagerAdapter(new ChatManagerAdapter() {
+    ChatManager.getInstance().init(this);
+    ChatManager.getInstance().setChatManagerAdapter(new ChatManagerAdapter() {
       @Override
       public UserInfo getUserInfoById(String userId) {
         UserInfo userInfo = new UserInfo();

@@ -1,17 +1,18 @@
 package com.avoscloud.leanchatlib.controller;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
 import com.avoscloud.leanchatlib.model.Room;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * 最近对话的列表，这里称之为 Rooms
  * Created by lzw on 15/2/12.
  */
 public class RoomsTable {
@@ -32,16 +33,17 @@ public class RoomsTable {
     private static final String DROP_TABLE = "DROP TABLE IF EXISTS " + ROOMS_TABLE;
   }
 
-  private static RoomsTable roomsTable;
   private DBHelper dbHelper;
+  private static Map<String, RoomsTable> roomsTableInstances = new ConcurrentHashMap<>();
 
   private RoomsTable(DBHelper dbHelper) {
     this.dbHelper = dbHelper;
   }
 
-  public synchronized static RoomsTable getCurrentUserInstance() {
+  public synchronized static RoomsTable getInstanceByUserId(String userId) {
+    RoomsTable roomsTable = roomsTableInstances.get(userId);
     if (roomsTable == null) {
-      roomsTable = new RoomsTable(DBHelper.getCurrentUserInstance());
+      roomsTable = new RoomsTable(new DBHelper(ChatManager.getContext(), userId));
     }
     return roomsTable;
   }
@@ -56,7 +58,7 @@ public class RoomsTable {
 
   private static String getWhereClause(String... columns) {
     List<String> conditions = new ArrayList<String>();
-    for (String column : columns){
+    for (String column : columns) {
       conditions.add(column + " = ? ");
     }
     return TextUtils.join(" and ", conditions);
@@ -104,61 +106,5 @@ public class RoomsTable {
     cv.put(ROOM_UNREAD_COUNT, 0);
     db.update(ROOMS_TABLE, cv, getWhereClause(ROOM_CONVID),
         new String[]{convid});
-  }
-
-  void close() {
-    roomsTable = null;
-  }
-
-  public static class DBHelper extends SQLiteOpenHelper {
-    private static final int DB_VER = 6;
-    private static DBHelper currentUserDBHelper;
-
-    private DBHelper(Context context, String name, int version) {
-      super(context, name, null, version);
-    }
-
-    private DBHelper(Context context, String userId) {
-      this(context, "chat_" + userId + ".db3", DB_VER);
-    }
-
-    public synchronized static DBHelper getCurrentUserInstance() {
-      String selfId = ChatManager.getInstance().getSelfId();
-      if (selfId == null) {
-        throw new NullPointerException("selfId is null");
-      }
-      if (currentUserDBHelper == null) {
-        currentUserDBHelper = new DBHelper(ChatManager.getContext(), selfId);
-      }
-      return currentUserDBHelper;
-    }
-
-    @Override
-    public void onCreate(SQLiteDatabase db) {
-      RoomsTable.getCurrentUserInstance().createTable(db);
-    }
-
-    @Override
-    public void onOpen(SQLiteDatabase db) {
-      super.onOpen(db);
-    }
-
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-      switch (newVersion) {
-        case 6:
-          RoomsTable roomsTable = RoomsTable.getCurrentUserInstance();
-          roomsTable.dropTable(db);
-          roomsTable.createTable(db);
-        case 2:
-        case 1:
-          break;
-      }
-    }
-
-    public synchronized void closeHelper() {
-      RoomsTable.getCurrentUserInstance().close();
-      currentUserDBHelper = null;
-    }
   }
 }

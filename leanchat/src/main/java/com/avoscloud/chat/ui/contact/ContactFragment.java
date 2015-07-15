@@ -1,12 +1,10 @@
 package com.avoscloud.chat.ui.contact;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -28,7 +26,6 @@ import com.avos.avoscloud.SaveCallback;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.entity.SortUser;
-import com.avoscloud.chat.entity.avobject.AddRequest;
 import com.avoscloud.chat.service.AddRequestManager;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.service.event.ContactRefreshEvent;
@@ -48,6 +45,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * 联系人列表
+ */
 public class ContactFragment extends BaseFragment {
   private static CharacterParser characterParser;
   private static PinyinComparator pinyinComparator;

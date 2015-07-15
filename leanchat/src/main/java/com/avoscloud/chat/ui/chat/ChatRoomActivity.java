@@ -71,7 +71,7 @@ public class ChatRoomActivity extends ChatActivity {
 
   @Override
   protected void onResume() {
-    CacheService.setCurConv(conversation);
+    CacheService.setCurrentConversation(conversation);
     ChatManagerAdapterImpl chatManagerAdapter = (ChatManagerAdapterImpl) ChatManager.getInstance().getChatManagerAdapter();
     chatManagerAdapter.cancelNotification();
     super.onResume();
@@ -79,7 +79,7 @@ public class ChatRoomActivity extends ChatActivity {
 
   @Override
   protected void onDestroy() {
-    CacheService.setCurConv(null);
+    CacheService.setCurrentConversation(null);
     super.onDestroy();
   }
 

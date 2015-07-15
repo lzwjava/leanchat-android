@@ -85,7 +85,7 @@ public class CharacterParser {
         asc = (256 * highByte + lowByte) - 256 * 256;
       }
     } catch (Exception e) {
-      System.out.println("ERROR:ChineseSpelling.class-getChsAscii(String chs)" + e);
+      Logger.e("ERROR:ChineseSpelling.class-getChsAscii(String chs) " + e);
     }
     return asc;
   }

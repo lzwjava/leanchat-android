@@ -45,6 +45,7 @@ import com.avoscloud.leanchatlib.controller.MessageHelper;
 import com.avoscloud.leanchatlib.controller.RoomsTable;
 import com.avoscloud.leanchatlib.model.ConversationType;
 import com.avoscloud.leanchatlib.model.MessageEvent;
+import com.avoscloud.leanchatlib.utils.LogUtils;
 import com.avoscloud.leanchatlib.utils.PathUtils;
 import com.avoscloud.leanchatlib.utils.ProviderPathUtils;
 import com.avoscloud.leanchatlib.utils.Utils;
@@ -69,9 +70,7 @@ public class ChatActivity extends Activity implements OnClickListener {
   private static final int GALLERY_REQUEST = 0;
   private static final int GALLERY_KITKAT_REQUEST = 3;
 
-  private static ChatActivity chatInstance;
-  //用来判断是否弹出通知
-  private static String currentChattingConvid;
+  private volatile static ChatActivity chatInstance;
   protected ConversationType conversationType;
   protected AVIMConversation conversation;
   protected MessageAgent messageAgent;
@@ -87,19 +86,11 @@ public class ChatActivity extends Activity implements OnClickListener {
   protected RefreshableView refreshableView;
   protected ListView messageListView;
   protected RecordButton recordBtn;
-  protected String localCameraPath = PathUtils.getPicturePath();
+  protected String localCameraPath = PathUtils.getPicturePathByCurrentTime();
   protected View addCameraBtn;
 
   public static ChatActivity getChatInstance() {
     return chatInstance;
-  }
-
-  public static String getCurrentChattingConvid() {
-    return currentChattingConvid;
-  }
-
-  public static void setCurrentChattingConvid(String currentChattingConvid) {
-    ChatActivity.currentChattingConvid = currentChattingConvid;
   }
 
   public void onCreate(Bundle savedInstanceState) {
@@ -208,10 +199,11 @@ public class ChatActivity extends Activity implements OnClickListener {
   }
 
   public void initRecordBtn() {
-    recordBtn.setSavePath(com.avoscloud.leanchatlib.utils.PathUtils.getRecordTmpPath());
+    recordBtn.setSavePath(PathUtils.getRecordPathByCurrentTime());
     recordBtn.setRecordEventListener(new RecordButton.RecordEventListener() {
       @Override
       public void onFinishedRecord(final String audioPath, int secs) {
+//        LogUtils.d("audioPath = ", audioPath);
         messageAgent.sendAudio(audioPath);
       }
 
@@ -259,17 +251,26 @@ public class ChatActivity extends Activity implements OnClickListener {
 
   void commonInit() {
     chatInstance = this;
-    roomsTable = RoomsTable.getCurrentUserInstance();
+    roomsTable = ChatManager.getInstance().getRoomsTable();
     eventBus = EventBus.getDefault();
     eventBus.register(this);
     getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
   }
 
+  private boolean isConversationEmpty(AVIMConversation conversation) {
+    if (conversation == null) {
+      toast("未找到对话，请退出重试。请检查是否调用了 ChatManager.registerConversation()");
+      this.finish();
+      return true;
+    }
+    return false;
+  }
+
   public void initData(Intent intent) {
     String convid = intent.getStringExtra(CONVID);
     conversation = chatManager.lookUpConversationById(convid);
-    if (conversation == null) {
-      throw new NullPointerException("conv is null");
+    if (isConversationEmpty(conversation)) {
+      return;
     }
     initActionBar(ConversationHelper.titleOfConversation(conversation));
     messageAgent = new MessageAgent(conversation);
@@ -281,14 +282,15 @@ public class ChatActivity extends Activity implements OnClickListener {
 
   protected void initActionBar(String title) {
     ActionBar actionBar = getActionBar();
-    if (actionBar == null) {
-      throw new NullPointerException("action bar is null");
+    if (actionBar != null) {
+      if (title != null) {
+        actionBar.setTitle(title);
+      }
+      actionBar.setDisplayUseLogoEnabled(false);
+      actionBar.setDisplayHomeAsUpEnabled(true);
+    } else {
+      LogUtils.i("action bar is null, so no title, please set an ActionBar style for activity");
     }
-    if (title != null) {
-      actionBar.setTitle(title);
-    }
-    actionBar.setDisplayUseLogoEnabled(false);
-    actionBar.setDisplayHomeAsUpEnabled(true);
   }
 
   private void bindAdapterToListView(ConversationType conversationType) {
@@ -299,13 +301,15 @@ public class ChatActivity extends Activity implements OnClickListener {
         messageAgent.resendMessage(msg, new MessageAgent.SendCallback() {
           @Override
           public void onError(AVIMTypedMessage message, Exception e) {
-            Utils.log();
+            LogUtils.d("resend message error");
+            // 应该只重新加载一条, Todo
             loadMessagesWhenInit(adapter.getCount());
           }
 
           @Override
           public void onSuccess(AVIMTypedMessage message) {
-            Utils.log();
+            LogUtils.d("resend message success");
+            // 应该只重新加载一条, Todo
             loadMessagesWhenInit(adapter.getCount());
           }
         });
@@ -516,7 +520,7 @@ public class ChatActivity extends Activity implements OnClickListener {
           }
         }.execute();
       } else if (messageEvent.getType() == MessageEvent.Type.Receipt) {
-        Utils.log("receipt");
+        //Utils.i("receipt");
         AVIMTypedMessage originMessage = findMessage(message.getMessageId());
         if (originMessage != null) {
           originMessage.setMessageStatus(message.getMessageStatus());
@@ -539,17 +543,17 @@ public class ChatActivity extends Activity implements OnClickListener {
   @Override
   protected void onResume() {
     super.onResume();
-    if (conversation == null) {
-      throw new IllegalStateException("conv is null");
+    if (isConversationEmpty(conversation)) {
+      return;
     }
-    setCurrentChattingConvid(conversation.getConversationId());
+    ChatManager.setCurrentChattingConvid(conversation.getConversationId());
   }
 
   @Override
   protected void onPause() {
     super.onPause();
     roomsTable.clearUnread(conversation.getConversationId());
-    setCurrentChattingConvid(null);
+    ChatManager.setCurrentChattingConvid(null);
   }
 
   public void loadMessagesWhenInit(int limit) {
@@ -573,7 +577,7 @@ public class ChatActivity extends Activity implements OnClickListener {
 
   public abstract class CacheMessagesTask extends AsyncTask<Void, Void, Void> {
     private List<AVIMTypedMessage> messages;
-    private Exception e;
+    private volatile Exception e;
 
     public CacheMessagesTask(Context context, List<AVIMTypedMessage> messages) {
       this.messages = messages;
@@ -596,7 +600,7 @@ public class ChatActivity extends Activity implements OnClickListener {
           userIds.add(msg.getFrom());
         }
         if (chatManager.getChatManagerAdapter() == null) {
-          throw new NullPointerException("chat user factory is null");
+          throw new IllegalStateException("please set ChatManagerAdapter in ChatManager to provide userInfo");
         }
         chatManager.getChatManagerAdapter().cacheUserInfoByIdsInBackground(new ArrayList<String>(userIds));
       } catch (Exception e) {
@@ -621,7 +625,7 @@ public class ChatActivity extends Activity implements OnClickListener {
       return;
     } else {
       AVIMTypedMessage firstMsg = adapter.getDatas().get(0);
-      String msgId = adapter.getDatas().get(0).getMessageId();
+      String msgId = firstMsg.getMessageId();
       long time = firstMsg.getTimestamp();
       ChatManager.getInstance().queryMessages(conversation, msgId, time, PAGE_SIZE, new AVIMTypedMessagesArrayCallback() {
         @Override
@@ -631,7 +635,7 @@ public class ChatActivity extends Activity implements OnClickListener {
             new CacheMessagesTask(ChatActivity.this, typedMessages) {
               @Override
               void onSucceed(List<AVIMTypedMessage> typedMessages) {
-                List<AVIMTypedMessage> newMessages = new ArrayList<>();
+                List<AVIMTypedMessage> newMessages = new ArrayList<>(PAGE_SIZE);
                 newMessages.addAll(typedMessages);
                 newMessages.addAll(adapter.getDatas());
                 adapter.setDatas(newMessages);
@@ -654,13 +658,13 @@ public class ChatActivity extends Activity implements OnClickListener {
 
     @Override
     public void onError(AVIMTypedMessage message, Exception e) {
-      Utils.log();
+      LogUtils.i();
       addMessageAndScroll(message);
     }
 
     @Override
     public void onSuccess(AVIMTypedMessage message) {
-      Utils.log();
+//      Utils.i();
       addMessageAndScroll(message);
     }
   }
@@ -689,7 +693,7 @@ public class ChatActivity extends Activity implements OnClickListener {
 
   protected void toast(Exception e) {
     if (e != null) {
-      toast(e.getMessage());
+      toast("发生错误：" + e.getMessage());
     }
   }
 
@@ -697,10 +701,20 @@ public class ChatActivity extends Activity implements OnClickListener {
     Toast.makeText(this, id, Toast.LENGTH_SHORT).show();
   }
 
+  /**
+   * 当发送地理位置按钮被点击时
+   *
+   * @param v
+   */
   protected void onAddLocationButtonClicked(View v) {
 
   }
 
+  /**
+   * 当地图消息view被点击时
+   *
+   * @param locationMessage
+   */
   protected void onLocationMessageViewClicked(AVIMLocationMessage locationMessage) {
 
   }

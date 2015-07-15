@@ -20,9 +20,12 @@ import com.avoscloud.chat.service.UpdateService;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.base_activity.BaseFragment;
 import com.avoscloud.chat.ui.entry.EntryLoginActivity;
-import com.avoscloud.chat.util.*;
+import com.avoscloud.chat.util.Logger;
+import com.avoscloud.chat.util.PathUtils;
+import com.avoscloud.chat.util.PhotoUtils;
+import com.avoscloud.chat.util.SimpleNetTask;
+import com.avoscloud.chat.util.Utils;
 import com.avoscloud.leanchatlib.controller.ChatManager;
-import com.avoscloud.leanchatlib.controller.RoomsTable;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -86,7 +89,6 @@ public class ProfileFragment extends BaseFragment {
 
   @OnClick(R.id.profile_logout_btn)
   public void onLogoutClick() {
-    RoomsTable.DBHelper.getCurrentUserInstance().closeHelper();
     chatManager.closeWithCallback(new AVIMClientCallback() {
       @Override
       public void done(AVIMClient avimClient, AVException e) {

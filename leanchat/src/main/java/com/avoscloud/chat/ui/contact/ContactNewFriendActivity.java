@@ -28,14 +28,17 @@ import com.avoscloud.chat.ui.view.BaseListAdapter;
 import com.avoscloud.chat.ui.view.BaseListView;
 import com.avoscloud.chat.util.RefreshTask;
 import com.avoscloud.chat.util.Refreshable;
-import com.avoscloud.leanchatlib.controller.RoomsTable;
 import com.avoscloud.leanchatlib.view.ViewHolder;
 import de.greenrobot.event.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContactNewFriendActivity extends BaseActivity implements Refreshable {
+/**
+ * 新的好友
+ */
+public class ContactNewFriendActivity extends BaseActivity implements
+    Refreshable {
   @InjectView(R.id.newfriendList)
   BaseListView<AddRequest> listView;
   private NewFriendListAdapter adapter;

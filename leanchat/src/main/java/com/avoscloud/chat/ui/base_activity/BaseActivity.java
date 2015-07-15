@@ -75,14 +75,13 @@ public class BaseActivity extends FragmentActivity {
 
   protected void initActionBar(String title) {
     ActionBar actionBar = getActionBar();
-    if (actionBar == null) {
-      throw new NullPointerException("action bar is null");
+    if (actionBar != null) {
+      if (title != null) {
+        actionBar.setTitle(title);
+      }
+      actionBar.setDisplayUseLogoEnabled(false);
+      actionBar.setDisplayHomeAsUpEnabled(true);
     }
-    if (title != null) {
-      actionBar.setTitle(title);
-    }
-    actionBar.setDisplayUseLogoEnabled(false);
-    actionBar.setDisplayHomeAsUpEnabled(true);
   }
 
   protected void initActionBar(int id) {
