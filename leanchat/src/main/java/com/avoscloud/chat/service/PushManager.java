@@ -7,6 +7,7 @@ import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.PushService;
 import com.avoscloud.chat.ui.entry.EntrySplashActivity;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,18 +32,19 @@ public class PushManager {
   public void init(Context context) {
     this.context = context;
     PushService.setDefaultPushCallback(context, EntrySplashActivity.class);
-    updateInstallation();
+    subscribeCurrentUserChannel();
   }
 
-  private void updateInstallation() {
-    AVInstallation installation = AVInstallation.getCurrentInstallation();
-    AVUser user = AVUser.getCurrentUser();
-    if (user != null) {
-      String userId = user.getObjectId();
-      if (userId.equals(installation.getString(INSTALLATION_USER_ID)) == false) {
-        installation.put(INSTALLATION_USER_ID, user.getObjectId());
-        installation.saveInBackground();
-      }
+  private void subscribeCurrentUserChannel() {
+    if (AVUser.getCurrentUser() != null) {
+      PushService.subscribe(context, AVUser.getCurrentUser().getObjectId(),
+          EntrySplashActivity.class);
+    }
+  }
+
+  public void unsubscripbeCurrentUserChannel() {
+    if (AVUser.getCurrentUser() != null) {
+      PushService.unsubscribe(context, AVUser.getCurrentUser().getObjectId());
     }
   }
 
@@ -57,7 +59,7 @@ public class PushManager {
 
   public void pushMessage(String userId, String message, String action) {
     AVQuery query = AVInstallation.getQuery();
-    query.whereEqualTo(INSTALLATION_USER_ID, userId);
+    query.whereContains(INSTALLATION_USER_ID, userId);
     AVPush push = new AVPush();
     push.setQuery(query);
 

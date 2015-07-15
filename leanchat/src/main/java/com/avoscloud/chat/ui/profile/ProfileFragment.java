@@ -19,6 +19,7 @@ import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avoscloud.chat.R;
+import com.avoscloud.chat.service.PushManager;
 import com.avoscloud.chat.service.UpdateService;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.base_activity.BaseFragment;
@@ -90,6 +91,7 @@ public class ProfileFragment extends BaseFragment {
       public void done(AVIMClient avimClient, AVException e) {
       }
     });
+    PushManager.getInstance().unsubscripbeCurrentUserChannel();
     AVUser.logOut();
     getActivity().finish();
     Intent intent = new Intent(ctx, EntryLoginActivity.class);
