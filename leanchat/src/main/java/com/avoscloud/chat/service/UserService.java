@@ -23,7 +23,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -185,7 +184,13 @@ public class UserService {
             if (e != null) {
               e.printStackTrace();
             } else {
-              Logger.v("lastLocation save " + user.getAVGeoPoint(User.LOCATION));
+              AVGeoPoint avGeoPoint = user.getAVGeoPoint(User.LOCATION);
+              if (avGeoPoint == null) {
+                Logger.e("avGeopoint is null");
+              } else {
+                Logger.v("save location succeed latitude " + avGeoPoint.getLatitude()
+                    + " longitude " + avGeoPoint.getLongitude());
+              }
             }
           }
         });

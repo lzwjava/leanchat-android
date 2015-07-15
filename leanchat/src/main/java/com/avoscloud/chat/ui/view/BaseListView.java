@@ -109,7 +109,13 @@ public class BaseListView<T> extends XListView implements XListView.IXListViewLi
     abstract void onDataReady(List<T> datas);
   }
 
-  private void loadMoreData() {
+  @Override
+  public void onLoadMore() {
+    if (isLoading.get()) {
+      Logger.d("directly return in loadMore");
+      return;
+    }
+    isLoading.set(true);
     final int skip = adapter.getCount();
     new GetDataTask(getContext(), skip) {
       @Override
@@ -127,16 +133,6 @@ public class BaseListView<T> extends XListView implements XListView.IXListViewLi
         isLoading.set(false);
       }
     }.execute();
-  }
-
-  @Override
-  public void onLoadMore() {
-    if (isLoading.get()) {
-      Logger.d("directly return in loadMore");
-      return;
-    }
-    isLoading.set(true);
-    loadMoreData();
   }
 
   @Override

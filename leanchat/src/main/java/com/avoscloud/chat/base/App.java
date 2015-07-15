@@ -27,10 +27,6 @@ public class App extends Application {
   public static boolean debug = true;
   public static App ctx;
 
-  public static App getInstance() {
-    return ctx;
-  }
-
   @Override
   public void onCreate() {
     super.onCreate();

@@ -17,6 +17,9 @@ import com.avoscloud.chat.ui.base_activity.BaseActivity;
 
 import java.util.List;
 
+/**
+ * 用户详情页，从对话详情页面和发现页面跳转过来
+ */
 public class ContactPersonInfoActivity extends BaseActivity implements OnClickListener {
   public static final String USER_ID = "userId";
   TextView usernameView, genderView;

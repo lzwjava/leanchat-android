@@ -14,13 +14,16 @@ public class ConversationHelper {
 
   public static boolean isValidConversation(AVIMConversation conversation) {
     if (conversation == null) {
+      LogUtils.d("invalid reason : conversation is null");
       return false;
     }
     if (conversation.getMembers() == null || conversation.getMembers().size() == 0) {
+      LogUtils.d("invalid reason : conversation members null or empty");
       return false;
     }
     Object type = conversation.getAttribute(ConversationType.TYPE_KEY);
     if (type == null) {
+      LogUtils.d("invalid reason : type is null");
       return false;
     }
 
@@ -28,11 +31,13 @@ public class ConversationHelper {
     if (typeInt == ConversationType.Single.getValue()) {
       if (conversation.getMembers().size() != 2 ||
           conversation.getMembers().contains(ChatManager.getInstance().getSelfId()) == false) {
+        LogUtils.d("invalid reason : oneToOne conversation not correct");
         return false;
       }
     } else if (typeInt == ConversationType.Group.getValue()) {
 
     } else {
+      LogUtils.d("invalid reason : typeInt wrong");
       return false;
     }
     return true;

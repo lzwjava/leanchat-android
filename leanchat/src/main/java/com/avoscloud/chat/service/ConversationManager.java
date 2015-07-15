@@ -17,7 +17,6 @@ import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.base.Constant;
 import com.avoscloud.chat.util.Logger;
 import com.avoscloud.chat.util.SimpleLock;
-import com.avoscloud.chat.util.Utils;
 import com.avoscloud.leanchatlib.controller.ChatManager;
 import com.avoscloud.leanchatlib.controller.ConversationHelper;
 import com.avoscloud.leanchatlib.controller.MessageAgent;
@@ -45,26 +44,26 @@ public class ConversationManager {
   private static AVIMConversationEventHandler eventHandler = new AVIMConversationEventHandler() {
     @Override
     public void onMemberLeft(AVIMClient client, AVIMConversation conversation, List<String> members, String kickedBy) {
-      Utils.toast(MessageHelper.nameByUserIds(members) + " left, kicked by " + MessageHelper.nameByUserId(kickedBy));
+      Logger.i(MessageHelper.nameByUserIds(members) + " left, kicked by " + MessageHelper.nameByUserId(kickedBy));
       CacheService.registerConv(conversation);
       getInstance().postConvChanged(conversation);
     }
 
     @Override
     public void onMemberJoined(AVIMClient client, AVIMConversation conversation, List<String> members, String invitedBy) {
-      Utils.toast(MessageHelper.nameByUserIds(members) + " joined , invited by " + MessageHelper.nameByUserId(invitedBy));
+      Logger.i(MessageHelper.nameByUserIds(members) + " joined , invited by " + MessageHelper.nameByUserId(invitedBy));
       CacheService.registerConv(conversation);
       getInstance().postConvChanged(conversation);
     }
 
     @Override
     public void onKicked(AVIMClient client, AVIMConversation conversation, String kickedBy) {
-      Utils.toast("you are kicked by " + MessageHelper.nameByUserId(kickedBy));
+      Logger.i("you are kicked by " + MessageHelper.nameByUserId(kickedBy));
     }
 
     @Override
     public void onInvited(AVIMClient client, AVIMConversation conversation, String operator) {
-      Utils.toast("you are invited by " + MessageHelper.nameByUserId(operator));
+      Logger.i("you are invited by " + MessageHelper.nameByUserId(operator));
     }
   };
 
@@ -114,6 +113,11 @@ public class ConversationManager {
     }
   }
 
+  private String getConversationInfo(AVIMConversation conversation) {
+    return "members: " + conversation.getMembers() + " name: " + conversation.getName()
+        + " type: " + conversation.getAttribute(ConversationType.TYPE_KEY);
+  }
+
   public List<Room> findAndCacheRooms() throws AVException, InterruptedException {
     List<Room> rooms = ChatManager.getInstance().findRecentRooms();
     List<String> convids = new ArrayList<>();
@@ -138,7 +142,7 @@ public class ConversationManager {
       if (ConversationHelper.isValidConversation(conversation)) {
         validRooms.add(room);
       } else {
-        LogUtils.e("conversation is invalid, please check");
+        LogUtils.e("conversation is invalid, please check", getConversationInfo(conversation));
       }
     }
 
@@ -185,8 +189,8 @@ public class ConversationManager {
   }
 
   public void postConvChanged(AVIMConversation conv) {
-    if (CacheService.getCurrentConversationId() != null && CacheService.getCurrentConversationId().getConversationId().equals(conv.getConversationId())) {
-      CacheService.setCurrentConversationId(conv.getConversationId());
+    if (CacheService.getCurrentConversation() != null && CacheService.getCurrentConversation().getConversationId().equals(conv.getConversationId())) {
+      CacheService.setCurrentConversation(conv);
     }
     ConversationChangeEvent conversationChangeEvent = new ConversationChangeEvent(conv);
     EventBus.getDefault().post(conversationChangeEvent);

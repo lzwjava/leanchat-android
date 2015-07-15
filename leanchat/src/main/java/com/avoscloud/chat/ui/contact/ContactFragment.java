@@ -43,6 +43,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * 联系人列表
+ */
 public class ContactFragment extends BaseFragment {
   private static CharacterParser characterParser;
   private static PinyinComparator pinyinComparator;

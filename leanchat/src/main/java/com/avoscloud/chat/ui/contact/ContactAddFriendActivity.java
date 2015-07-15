@@ -24,6 +24,9 @@ import com.avoscloud.leanchatlib.view.ViewHolder;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 查找好友页面
+ */
 public class ContactAddFriendActivity extends BaseActivity {
   @InjectView(R.id.searchNameEdit)
   EditText searchNameEdit;

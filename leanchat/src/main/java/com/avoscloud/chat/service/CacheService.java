@@ -58,12 +58,21 @@ public class CacheService {
     return friendIds;
   }
 
-  public static AVIMConversation getCurrentConversationId() {
-    return lookupConv(currentConversationId);
+  public static AVIMConversation getCurrentConversation() {
+    if (currentConversationId == null) {
+      return null;
+    } else {
+      return lookupConv(currentConversationId);
+    }
   }
 
-  public static void setCurrentConversationId(String currentConversationId) {
-    CacheService.currentConversationId = currentConversationId;
+  public static void setCurrentConversation(AVIMConversation currentConversation) {
+    if (currentConversation != null) {
+      registerConv(currentConversation);
+      CacheService.currentConversationId = currentConversation.getConversationId();
+    } else {
+      CacheService.currentConversationId = null;
+    }
   }
 
   public static void cacheUsers(List<String> ids) throws AVException {
@@ -79,7 +88,7 @@ public class CacheService {
 
   public static List<AVUser> findUsers(List<String> userIds) throws AVException {
     if (userIds.size() <= 0) {
-      return new ArrayList<AVUser>();
+      return new ArrayList<>();
     }
     AVQuery<AVUser> q = AVUser.getQuery();
     q.whereContainedIn(Constant.OBJECT_ID, userIds);
