@@ -32,7 +32,7 @@ android {
 
 dependencies {
     compile project(':leanchatlib')
-    compile 'cn.leancloud.android:avoscloud-statistics:v3.4.4@aar'
+    compile 'cn.leancloud.android:avoscloud-statistics:v3.4.5@aar'
     compile 'com.jakewharton:butterknife:6.1.0'
     compile files('libs/baidumapapi_v3_0_0.jar')
     compile files('libs/locSDK_4.2.jar')

@@ -20,14 +20,18 @@ public class PathUtils {
     return dir;
   }
 
-  public static String getAppPath() {
+  private static String getAppPath() {
     String dir = getSDcardDir() + "leanchat/";
     return checkAndMkdirs(dir);
   }
 
-  public static String getAvatarDir() {
+  private static String getAvatarDir() {
     String dir = getAppPath() + "avatar/";
     return checkAndMkdirs(dir);
+  }
+
+  public static String getAvatarCropPath() {
+    return getAvatarDir() + "avatar_crop";
   }
 
   public static String getAvatarTmpPath() {

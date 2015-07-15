@@ -11,6 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.im.v2.AVIMClient;
@@ -20,7 +23,6 @@ import com.avoscloud.chat.service.UpdateService;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.base_activity.BaseFragment;
 import com.avoscloud.chat.ui.entry.EntryLoginActivity;
-import com.avoscloud.chat.util.Logger;
 import com.avoscloud.chat.util.PathUtils;
 import com.avoscloud.chat.util.PhotoUtils;
 import com.avoscloud.chat.util.SimpleNetTask;
@@ -30,10 +32,6 @@ import com.avoscloud.leanchatlib.controller.ChatManager;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-import butterknife.OnClick;
 
 /**
  * Created by lzw on 14-9-17.
@@ -159,12 +157,8 @@ public class ProfileFragment extends BaseFragment {
       Bitmap bitmap = extras.getParcelable("data");
       if (bitmap != null) {
         bitmap = PhotoUtils.toRoundCorner(bitmap, 10);
-        String filename = new SimpleDateFormat("yyMMddHHmmss")
-            .format(new Date());
-        path = PathUtils.getAvatarDir() + filename;
-        Logger.d("save bitmap to " + path);
-        PhotoUtils.saveBitmap(PathUtils.getAvatarDir(), filename,
-            bitmap, true);
+        path = PathUtils.getAvatarCropPath();
+        PhotoUtils.saveBitmap(path, bitmap);
         if (bitmap != null && bitmap.isRecycled() == false) {
           bitmap.recycle();
         }

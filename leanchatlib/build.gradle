@@ -29,8 +29,8 @@ dependencies {
 
     compile 'com.android.support:support-v4:21.0.3'
 
-    compile 'cn.leancloud.android:avoscloud-sdk:v3.4.4'
-    compile 'cn.leancloud.android:avoscloud-push:v3.4.4@aar'
+    compile 'cn.leancloud.android:avoscloud-sdk:v3.4.5'
+    compile 'cn.leancloud.android:avoscloud-push:v3.4.5@aar'
 
     compile files('libs/prettytime-3.2.5.Final.jar')
     compile 'cn.leancloud.android:Java-WebSocket:1.2.0-leancloud'

@@ -51,27 +51,11 @@ public class PhotoUtils {
     return bitmap;
   }
 
-  public static void saveBitmap(String dirpath, String filename,
-                                Bitmap bitmap, boolean isDelete) {
-    File dir = new File(dirpath);
-    if (!dir.exists()) {
-      dir.mkdirs();
-    }
-
-    File file = new File(dirpath, filename);
-    if (isDelete) {
-      if (file.exists()) {
-        file.delete();
-      }
-    }
-
-    if (!file.exists()) {
-      try {
-        file.createNewFile();
-      } catch (IOException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
+  public static void saveBitmap(String filePath,
+                                Bitmap bitmap) {
+    File file = new File(filePath);
+    if (!file.getParentFile().exists()) {
+      file.getParentFile().mkdirs();
     }
     FileOutputStream out = null;
     try {
