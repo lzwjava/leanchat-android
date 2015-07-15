@@ -34,7 +34,6 @@ import com.avoscloud.leanchatlib.activity.ChatActivity;
 import com.avoscloud.chat.ui.view.BaseListAdapter;
 import com.avoscloud.leanchatlib.controller.ChatManager;
 import com.avoscloud.leanchatlib.controller.ConversationHelper;
-import com.avoscloud.leanchatlib.controller.RoomsTable;
 import com.avoscloud.leanchatlib.model.ConversationType;
 import com.avoscloud.leanchatlib.view.ViewHolder;
 
@@ -102,7 +101,8 @@ public class ConversationDetailActivity extends ConversationBaseActivity impleme
   public boolean onMenuItemSelected(int featureId, MenuItem item) {
     int menuId = item.getItemId();
     if (menuId == ADD_MEMBERS) {
-      Utils.goActivity(ctx, ConversationAddMembersActivity.class);
+      Intent intent = new Intent(ctx, ConversationAddMembersActivity.class);
+      ctx.startActivity(intent);
     }
     return super.onMenuItemSelected(featureId, item);
   }

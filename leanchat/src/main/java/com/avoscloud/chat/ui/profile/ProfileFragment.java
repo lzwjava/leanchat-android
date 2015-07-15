@@ -26,12 +26,9 @@ import com.avoscloud.chat.ui.entry.EntryLoginActivity;
 import com.avoscloud.chat.util.PathUtils;
 import com.avoscloud.chat.util.PhotoUtils;
 import com.avoscloud.chat.util.SimpleNetTask;
-import com.avoscloud.chat.util.Utils;
 import com.avoscloud.leanchatlib.controller.ChatManager;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Created by lzw on 14-9-17.
@@ -82,7 +79,8 @@ public class ProfileFragment extends BaseFragment {
 
   @OnClick(R.id.profile_notifysetting_view)
   public void onNotifySettingClick() {
-    Utils.goActivity(ctx, ProfileNotifySettingActivity.class);
+    Intent intent = new Intent(ctx, ProfileNotifySettingActivity.class);
+    ctx.startActivity(intent);
   }
 
   @OnClick(R.id.profile_logout_btn)
@@ -94,7 +92,8 @@ public class ProfileFragment extends BaseFragment {
     });
     AVUser.logOut();
     getActivity().finish();
-    Utils.goActivity(ctx, EntryLoginActivity.class);
+    Intent intent = new Intent(ctx, EntryLoginActivity.class);
+    ctx.startActivity(intent);
   }
 
   @OnClick(R.id.profile_avatar_layout)

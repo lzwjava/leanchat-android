@@ -1,8 +1,15 @@
 package com.avoscloud.chat.util;
 
-import android.graphics.*;
+import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.PorterDuff.Mode;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.media.ExifInterface;
 import android.media.ThumbnailUtils;
 
@@ -10,7 +17,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Random;
 
 public class PhotoUtils {
 
@@ -258,6 +264,8 @@ public class PhotoUtils {
       bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream);
     } catch (FileNotFoundException e) {
       e.printStackTrace();
+    } finally {
+      Utils.closeQuietly(outputStream);
     }
     recycle(bitmap);
     return newPath;

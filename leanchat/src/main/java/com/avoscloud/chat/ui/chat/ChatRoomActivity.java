@@ -122,7 +122,8 @@ public class ChatRoomActivity extends ChatActivity {
   public boolean onMenuItemSelected(int featureId, MenuItem item) {
     int menuId = item.getItemId();
     if (menuId == R.id.people) {
-      Utils.goActivity(this, ConversationDetailActivity.class);
+      Intent intent = new Intent(this, ConversationDetailActivity.class);
+      startActivity(intent);
     }
     return super.onMenuItemSelected(featureId, item);
   }

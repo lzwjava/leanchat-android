@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -37,7 +38,6 @@ import com.avoscloud.chat.ui.conversation.ConversationGroupListActivity;
 import com.avoscloud.chat.ui.view.BaseListView;
 import com.avoscloud.chat.ui.view.EnLetterView;
 import com.avoscloud.chat.util.CharacterParser;
-import com.avoscloud.chat.util.Utils;
 import de.greenrobot.event.EventBus;
 
 import java.util.ArrayList;
@@ -109,7 +109,8 @@ public class ContactFragment extends BaseFragment {
     headerLayout.showRightImageButton(R.drawable.base_action_bar_add_bg_selector, new OnClickListener() {
       @Override
       public void onClick(View v) {
-        Utils.goActivity(ctx, ContactAddFriendActivity.class);
+        Intent intent = new Intent(ctx, ContactAddFriendActivity.class);
+        ctx.startActivity(intent);
       }
     });
   }
@@ -228,12 +229,14 @@ public class ContactFragment extends BaseFragment {
 
     @OnClick(R.id.layout_new)
     void goNewFriend() {
-      Utils.goActivity(ctx, ContactNewFriendActivity.class);
+      Intent intent = new Intent(ctx, ContactNewFriendActivity.class);
+      ctx.startActivity(intent);
     }
 
     @OnClick(R.id.layout_group)
     void goGroupConvList() {
-      Utils.goActivity(ctx, ConversationGroupListActivity.class);
+      Intent intent = new Intent(ctx, ConversationGroupListActivity.class);
+      ctx.startActivity(intent);
     }
 
     public ImageView getMsgTipsView() {

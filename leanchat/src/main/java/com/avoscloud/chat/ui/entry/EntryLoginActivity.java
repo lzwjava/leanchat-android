@@ -5,21 +5,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogInCallback;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.MainActivity;
 import com.avoscloud.chat.util.Utils;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -49,7 +42,8 @@ public class EntryLoginActivity extends EntryBaseActivity {
 
   @OnClick(R.id.activity_login_btn_register)
   public void onRegisterClick(View v) {
-    Utils.goActivity(ctx, EntryRegisterActivity.class);
+    Intent intent = new Intent(ctx, EntryRegisterActivity.class);
+    ctx.startActivity(intent);
   }
 
   private void login() {
