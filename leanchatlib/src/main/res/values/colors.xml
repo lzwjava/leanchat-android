@@ -9,4 +9,7 @@
     <color name="chat_common_white">#fff</color>
     <color name="chat_common_guide_color">#898989</color>
     <color name="chat_base_color_text_white">#fff</color>
+    
+    
+    <color name="contact_num_sort_bg">#66ffffff</color>
 </resources>
