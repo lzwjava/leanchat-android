@@ -65,7 +65,7 @@ public class Utils {
 
   /**
    * 下载文件，若失败会将文件删除，以便下次重新下载
-   * 暂时不校验 size，因为 size 可能跟实际文件的大小不一样
+   * 暂时不校验 size，万一 size 跟实际文件的大小不一样，会导致每次重新下载
    *
    * @param url
    * @param toFile
