@@ -2,9 +2,7 @@ package com.avoscloud.leanchatlib.utils;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.util.Log;
 import com.avoscloud.leanchatlib.R;
-import com.avoscloud.leanchatlib.controller.ChatManager;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -65,6 +63,13 @@ public class Utils {
     return httpClient;
   }
 
+  /**
+   * 下载文件，若失败会将文件删除，以便下次重新下载
+   * 暂时不校验 size，因为 size 可能跟实际文件的大小不一样
+   *
+   * @param url
+   * @param toFile
+   */
   public static void downloadFileIfNotExists(String url, File toFile) {
     if (!toFile.exists()) {
       FileOutputStream outputStream = null;
@@ -80,7 +85,6 @@ public class Utils {
         while ((len = inputStream.read(buffer)) != -1) {
           outputStream.write(buffer, 0, len);
         }
-        inputStream.close();
       } catch (IOException e) {
         if (toFile.exists()) {
           toFile.delete();

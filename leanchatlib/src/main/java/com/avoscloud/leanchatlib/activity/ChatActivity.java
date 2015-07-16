@@ -587,26 +587,30 @@ public class ChatActivity extends Activity implements OnClickListener {
 
     @Override
     protected Void doInBackground(Void... voids) {
-      try {
-        Set<String> userIds = new HashSet<String>();
-        for (AVIMTypedMessage msg : messages) {
-          AVIMReservedMessageType type = AVIMReservedMessageType.getAVIMReservedMessageType(msg.getMessageType());
-          if (type == AVIMReservedMessageType.AudioMessageType) {
-            File file = new File(MessageHelper.getFilePath(msg));
-            if (!file.exists()) {
-              AVIMAudioMessage audioMsg = (AVIMAudioMessage) msg;
-              String url = audioMsg.getFileUrl();
-              Utils.downloadFileIfNotExists(url, file);
-            }
+      Set<String> userIds = new HashSet<>();
+      for (AVIMTypedMessage msg : messages) {
+        AVIMReservedMessageType type = AVIMReservedMessageType.getAVIMReservedMessageType(msg.getMessageType());
+        if (type == AVIMReservedMessageType.AudioMessageType) {
+          File file = new File(MessageHelper.getFilePath(msg));
+          if (!file.exists()) {
+            AVIMAudioMessage audioMsg = (AVIMAudioMessage) msg;
+            String url = audioMsg.getFileUrl();
+//            if (audioMsg.getFileMetaData() != null) {
+//              int size = (Integer) audioMsg.getFileMetaData().get("size");
+//              LogUtils.d("metaData size", size + "");
+//            }
+            Utils.downloadFileIfNotExists(url, file);
           }
-          userIds.add(msg.getFrom());
         }
-        if (chatManager.getChatManagerAdapter() == null) {
-          throw new IllegalStateException("please set ChatManagerAdapter in ChatManager to provide userInfo");
-        }
+        userIds.add(msg.getFrom());
+      }
+      if (chatManager.getChatManagerAdapter() == null) {
+        throw new IllegalStateException("please set ChatManagerAdapter in ChatManager to provide userInfo");
+      }
+      try {
         chatManager.getChatManagerAdapter().cacheUserInfoByIdsInBackground(new ArrayList<String>(userIds));
-      } catch (Exception e) {
-        this.e = e;
+      } catch (Exception e1) {
+        e1.printStackTrace();
       }
       return null;
     }
