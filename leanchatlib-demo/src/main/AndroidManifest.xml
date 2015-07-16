@@ -45,6 +45,6 @@
 
         <service android:name="com.avos.avoscloud.PushService" />
 
-        <activity android:name="com.avoscloud.leanchatlib.activity.ImageBrowserActivity" />
+        <activity android:name="com.avoscloud.chat.ui.chat.ImageBrowserActivity" />
     </application>
 </manifest>

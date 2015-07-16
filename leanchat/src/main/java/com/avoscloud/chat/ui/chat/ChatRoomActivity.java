@@ -15,6 +15,7 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
+import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMLocationMessage;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.entity.AVIMUserInfoMessage;
@@ -26,8 +27,10 @@ import com.avoscloud.chat.ui.conversation.ConversationDetailActivity;
 import com.avoscloud.chat.util.Logger;
 import com.avoscloud.chat.util.Utils;
 import com.avoscloud.leanchatlib.activity.ChatActivity;
+import com.avoscloud.leanchatlib.activity.ChatActivityEventListener;
 import com.avoscloud.leanchatlib.controller.ChatManager;
 import com.avoscloud.leanchatlib.controller.ConversationHelper;
+import com.avoscloud.leanchatlib.controller.MessageHelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +38,7 @@ import java.util.Map;
 /**
  * Created by lzw on 15/4/24.
  */
-public class ChatRoomActivity extends ChatActivity {
+public class ChatRoomActivity extends ChatActivity implements ChatActivityEventListener {
   public static final int LOCATION_REQUEST = 100;
 
   public static void chatByConversation(Context from, AVIMConversation conv) {
@@ -149,13 +152,20 @@ public class ChatRoomActivity extends ChatActivity {
   }
 
   @Override
-  protected void onAddLocationButtonClicked(View v) {
+  public void onAddLocationButtonClicked(View v) {
     LocationActivity.startToSelectLocationForResult(this, LOCATION_REQUEST);
   }
 
   @Override
-  protected void onLocationMessageViewClicked(AVIMLocationMessage locationMessage) {
+  public void onLocationMessageViewClicked(AVIMLocationMessage locationMessage) {
     LocationActivity.startToSeeLocationDetail(this, locationMessage.getLocation().getLatitude(),
         locationMessage.getLocation().getLongitude());
+  }
+
+
+  @Override
+  public void onImageMessageViewClicked(AVIMImageMessage imageMessage, String localImagePath) {
+    ImageBrowserActivity.go(ChatRoomActivity.this, MessageHelper.getFilePath(imageMessage),
+        imageMessage.getFileUrl());
   }
 }

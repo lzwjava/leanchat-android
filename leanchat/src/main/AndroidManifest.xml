@@ -88,7 +88,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.avoscloud.leanchatlib.activity.ImageBrowserActivity" />
+        <activity android:name=".ui.chat.ImageBrowserActivity" />
 
         <activity
             android:name=".ui.chat.LocationActivity"

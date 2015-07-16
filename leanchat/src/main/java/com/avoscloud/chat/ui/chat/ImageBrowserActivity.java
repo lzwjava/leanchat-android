@@ -1,4 +1,4 @@
-package com.avoscloud.leanchatlib.activity;
+package com.avoscloud.chat.ui.chat;
 
 import android.app.Activity;
 import android.content.Context;

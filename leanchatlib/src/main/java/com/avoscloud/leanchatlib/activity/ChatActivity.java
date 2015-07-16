@@ -63,7 +63,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class ChatActivity extends Activity implements OnClickListener {
+public class ChatActivity extends Activity implements OnClickListener, ChatActivityEventListener {
   public static final String CONVID = "convid";
   private static final int PAGE_SIZE = 8;
   private static final int TAKE_CAMERA_REQUEST = 2;
@@ -322,9 +322,7 @@ public class ChatActivity extends Activity implements OnClickListener {
 
       @Override
       public void onImageViewClick(AVIMImageMessage imageMsg) {
-        ImageBrowserActivity.go(ChatActivity.this,
-            MessageHelper.getFilePath(imageMsg),
-            imageMsg.getFileUrl());
+        onImageMessageViewClicked(imageMsg, MessageHelper.getFilePath(imageMsg));
       }
     });
     messageListView.setAdapter(adapter);
@@ -707,21 +705,19 @@ public class ChatActivity extends Activity implements OnClickListener {
     Toast.makeText(this, id, Toast.LENGTH_SHORT).show();
   }
 
-  /**
-   * 当发送地理位置按钮被点击时
-   *
-   * @param v
-   */
-  protected void onAddLocationButtonClicked(View v) {
+
+  @Override
+  public void onAddLocationButtonClicked(View v) {
 
   }
 
-  /**
-   * 当地图消息view被点击时
-   *
-   * @param locationMessage
-   */
-  protected void onLocationMessageViewClicked(AVIMLocationMessage locationMessage) {
+  @Override
+  public void onLocationMessageViewClicked(AVIMLocationMessage locationMessage) {
+
+  }
+
+  @Override
+  public void onImageMessageViewClicked(AVIMImageMessage imageMessage, String localImagePath) {
 
   }
 }
