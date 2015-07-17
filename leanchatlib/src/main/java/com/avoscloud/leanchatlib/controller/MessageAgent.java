@@ -100,7 +100,7 @@ public class MessageAgent {
       AVIMImageMessage imageMsg = new AVIMImageMessage(newPath);
       sendMsg(imageMsg, newPath, sendCallback);
     } catch (IOException e) {
-      LogUtils.logThrowable(e);
+      LogUtils.logException(e);
     }
   }
 
@@ -117,7 +117,7 @@ public class MessageAgent {
       AVIMAudioMessage audioMsg = new AVIMAudioMessage(audioPath);
       sendMsg(audioMsg, audioPath, sendCallback);
     } catch (IOException e) {
-      LogUtils.logThrowable(e);
+      LogUtils.logException(e);
     }
   }
 

@@ -9,6 +9,7 @@ import android.view.ViewConfiguration;
 import android.view.animation.RotateAnimation;
 import android.widget.*;
 import com.avoscloud.chat.R;
+import com.avoscloud.leanchatlib.utils.LogUtils;
 
 /**
  * Created by lzw on 14-4-23.
@@ -119,7 +120,7 @@ public class RefreshableView extends LinearLayout implements View.OnTouchListene
     try {
       Thread.sleep(time);
     } catch (InterruptedException e) {
-      e.printStackTrace();
+      LogUtils.logException(e);
     }
   }
 

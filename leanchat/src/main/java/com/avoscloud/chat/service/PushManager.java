@@ -18,7 +18,7 @@ public class PushManager {
   public final static String AVOS_ALERT = "alert";
 
   private final static String AVOS_PUSH_ACTION = "action";
-  private static final String INSTALLATION_USER_ID = "userId";
+  public static final String INSTALLATION_CHANNELS = "channels";
   private static PushManager pushManager;
   private Context context;
 
@@ -50,7 +50,7 @@ public class PushManager {
 
   public void pushMessage(String userId, String message, String action) {
     AVQuery query = AVInstallation.getQuery();
-    query.whereContains(INSTALLATION_USER_ID, userId);
+    query.whereContains(INSTALLATION_CHANNELS, userId);
     AVPush push = new AVPush();
     push.setQuery(query);
 

@@ -12,6 +12,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.media.ExifInterface;
 import android.media.ThumbnailUtils;
+import com.avoscloud.leanchatlib.utils.LogUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -89,7 +90,7 @@ public class PhotoUtils {
 
     } catch (Exception e) {
       // TODO Auto-generated catch block
-      e.printStackTrace();
+      LogUtils.logException(e);
     }
     return file;
   }

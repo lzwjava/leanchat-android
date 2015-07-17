@@ -13,6 +13,7 @@ import com.avoscloud.chat.base.Constant;
 import com.avoscloud.chat.entity.avobject.AddRequest;
 import com.avoscloud.chat.util.SimpleNetTask;
 import com.avoscloud.chat.util.Utils;
+import com.avoscloud.leanchatlib.utils.LogUtils;
 
 import java.util.List;
 
@@ -129,7 +130,7 @@ public class AddRequestManager {
     try {
       count = q.count();
     } catch (AVException e) {
-      e.printStackTrace();
+      LogUtils.logException(e);
       if (e.getCode() == AVException.OBJECT_NOT_FOUND) {
         count = 0;
       } else {

@@ -91,7 +91,7 @@ public class PhotoUtils {
       outputStream = new FileOutputStream(newPath);
       newBitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream);
     } catch (FileNotFoundException e) {
-      e.printStackTrace();
+      LogUtils.logException(e);
     } finally {
       Utils.closeQuietly(outputStream);
     }

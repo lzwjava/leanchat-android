@@ -608,7 +608,7 @@ public class ChatActivity extends Activity implements OnClickListener, ChatActiv
       try {
         chatManager.getChatManagerAdapter().cacheUserInfoByIdsInBackground(new ArrayList<String>(userIds));
       } catch (Exception e1) {
-        e1.printStackTrace();
+        LogUtils.logException(e1);
       }
       return null;
     }
@@ -683,7 +683,7 @@ public class ChatActivity extends Activity implements OnClickListener, ChatActiv
 
   protected boolean filterException(Exception e) {
     if (e != null) {
-      e.printStackTrace();
+      LogUtils.logException(e);
       toast(e.getMessage());
       return false;
     } else {

@@ -59,9 +59,9 @@ public class LogUtils {
     }
   }
 
-  public static void logThrowable(Throwable tr) {
+  public static void logException(Throwable tr) {
     if (debugEnabled) {
-      Log.v(LOGTAG, getDebugInfo(), tr);
+      Log.e(LOGTAG, getDebugInfo(), tr);
     }
   }
 }

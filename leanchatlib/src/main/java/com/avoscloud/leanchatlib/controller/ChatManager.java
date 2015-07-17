@@ -16,11 +16,9 @@ import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMMessagesQueryCallback;
-import com.avoscloud.leanchatlib.activity.ChatActivity;
 import com.avoscloud.leanchatlib.model.ConversationType;
 import com.avoscloud.leanchatlib.model.MessageEvent;
 import com.avoscloud.leanchatlib.model.Room;
-import com.avoscloud.leanchatlib.utils.Utils;
 import com.avoscloud.leanchatlib.utils.LogUtils;
 
 import de.greenrobot.event.EventBus;
@@ -222,7 +220,7 @@ public class ChatManager extends AVIMClientEventHandler {
       @Override
       public void done(AVIMClient client, AVException e) {
         if (e != null) {
-          LogUtils.logThrowable(e);
+          LogUtils.logException(e);
         }
         if (callback != null) {
           callback.done(client, e);
@@ -434,7 +432,7 @@ public class ChatManager extends AVIMClientEventHandler {
     try {
       latch.await();
     } catch (InterruptedException e) {
-      e.printStackTrace();
+      LogUtils.logException(e);
     }
     if (foundMessages.size() > 0) {
       putLatestMessage(foundMessages.get(0));

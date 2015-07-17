@@ -11,6 +11,7 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avoscloud.leanchatlib.controller.ChatManager;
+import com.avoscloud.leanchatlib.utils.LogUtils;
 
 
 public class LoginActivity extends Activity implements View.OnClickListener {
@@ -36,7 +37,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         @Override
         public void done(AVIMClient avimClient, AVException e) {
           if (e != null) {
-            e.printStackTrace();
+            LogUtils.logException(e);
           }
           Intent intent = new Intent(LoginActivity.this, MainActivity.class);
           startActivity(intent);

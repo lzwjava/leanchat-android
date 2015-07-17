@@ -16,6 +16,7 @@ import com.avoscloud.chat.base.Constant;
 import com.avoscloud.chat.entity.avobject.User;
 import com.avoscloud.chat.util.Logger;
 import com.avoscloud.chat.util.Utils;
+import com.avoscloud.leanchatlib.utils.LogUtils;
 import com.avoscloud.leanchatlib.utils.PhotoUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -183,7 +184,7 @@ public class UserService {
           @Override
           public void done(AVException e) {
             if (e != null) {
-              e.printStackTrace();
+              LogUtils.logException(e);
             } else {
               AVGeoPoint avGeoPoint = user.getAVGeoPoint(User.LOCATION);
               if (avGeoPoint == null) {

@@ -9,6 +9,7 @@ import com.avoscloud.chat.service.event.InvitationEvent;
 import com.avoscloud.chat.ui.entry.EntrySplashActivity;
 import com.avoscloud.chat.util.NotificationUtil;
 
+import com.avoscloud.leanchatlib.utils.LogUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -35,7 +36,7 @@ public class LeanchatReceiver extends BroadcastReceiver {
               NotificationUtil.showNotification(context, "LeanChat", alertStr, EntrySplashActivity.class);
             }
           } catch (JSONException e) {
-            e.printStackTrace();
+            LogUtils.logException(e);
           }
         }
       }
