@@ -21,7 +21,7 @@ public class MessageHelper {
   public static boolean fromMe(AVIMTypedMessage msg) {
     ChatManager chatManager = ChatManager.getInstance();
     String selfId = chatManager.getSelfId();
-    return msg.getFrom().equals(selfId);
+    return msg.getFrom() != null && msg.getFrom().equals(selfId);
   }
 
   private static String bracket(String s) {

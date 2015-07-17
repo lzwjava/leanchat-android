@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="invitation_action">com.avoscloud.chat.INVITATION_ACTION</string>
+
+
     <string name="app_name">LeanChat</string>
 
 
@@ -77,7 +80,7 @@
     <string name="discover_fragment_sort">排序</string>
     <string name="discover_fragment_loginTime">登录时间</string>
     <string name="discover_fragment_distance">距离</string>
-    <string name="contact_alreadyCreateAddRequest">已经请求过了</string>
+    <string name="contact_alreadyCreateAddRequest">请求已发送</string>
     <string name="conversation_alreadyQuitConv">已退出群</string>
     <string name="conversation_detail_kickSucceed">已踢走该成员</string>
     <string name="conversation_detail_title">详情</string>

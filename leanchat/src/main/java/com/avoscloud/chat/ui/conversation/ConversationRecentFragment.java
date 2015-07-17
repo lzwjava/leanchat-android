@@ -18,7 +18,6 @@ import com.avoscloud.chat.ui.base_activity.BaseFragment;
 import com.avoscloud.chat.ui.chat.ChatRoomActivity;
 import com.avoscloud.chat.ui.view.BaseListAdapter;
 import com.avoscloud.chat.ui.view.BaseListView;
-import com.avoscloud.chat.util.TimeUtils;
 import com.avoscloud.leanchatlib.controller.ChatManager;
 import com.avoscloud.leanchatlib.controller.ConversationHelper;
 import com.avoscloud.leanchatlib.controller.MessageHelper;
@@ -28,6 +27,7 @@ import com.avoscloud.leanchatlib.model.Room;
 import com.avoscloud.leanchatlib.view.ViewHolder;
 import de.greenrobot.event.EventBus;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -154,7 +154,8 @@ public class ConversationRecentFragment extends BaseFragment implements ChatMana
 
       if (room.getLastMessage() != null) {
         Date date = new Date(room.getLastMessage().getTimestamp());
-        recentTimeView.setText(TimeUtils.getDate(date));
+        SimpleDateFormat format = new SimpleDateFormat("MM-dd HH:mm");
+        recentTimeView.setText(format.format(date));
         recentMsgView.setText(MessageHelper.outlineOfMsg(room.getLastMessage()));
       }
       return convertView;

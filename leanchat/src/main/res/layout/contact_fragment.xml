@@ -30,7 +30,6 @@
             android:layout_alignParentTop="true"
             android:layout_height="match_parent"
             android:layout_gravity="top"
-            android:layout_toLeftOf="@+id/right_letter"
             android:orientation="horizontal">
 
             <com.avoscloud.chat.ui.view.BaseListView
@@ -59,7 +58,7 @@
             android:layout_width="25dip"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:background="@color/chat_transparent" />
+            android:background="@color/contact_num_sort_bg" />
     </RelativeLayout>
 
 </LinearLayout>

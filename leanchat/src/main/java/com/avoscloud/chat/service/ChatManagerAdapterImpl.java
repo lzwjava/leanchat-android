@@ -15,8 +15,8 @@ import com.avoscloud.leanchatlib.activity.ChatActivity;
 import com.avoscloud.leanchatlib.controller.ChatManagerAdapter;
 import com.avoscloud.leanchatlib.controller.MessageHelper;
 import com.avoscloud.leanchatlib.model.UserInfo;
+import com.avoscloud.leanchatlib.utils.LogUtils;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -60,7 +60,7 @@ public class ChatManagerAdapterImpl implements ChatManagerAdapter {
           try {
             CacheService.cacheUserIfNone(message.getFrom());
           } catch (Exception e) {
-            e.printStackTrace();
+            LogUtils.logException(e);
           }
           return null;
         }

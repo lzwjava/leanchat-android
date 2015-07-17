@@ -18,6 +18,10 @@ android {
         }
     }
 
+    lintOptions {
+        abortOnError false
+    }
+
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
@@ -26,5 +30,5 @@ android {
 
 dependencies {
     compile project(':leanchatlib')
-
+    compile 'com.jakewharton:butterknife:6.1.0'
 }

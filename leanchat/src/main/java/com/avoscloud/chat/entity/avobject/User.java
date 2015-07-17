@@ -3,8 +3,7 @@ package com.avoscloud.chat.entity.avobject;
 import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVInstallation;
 import com.avos.avoscloud.AVUser;
-import com.avoscloud.chat.R;
-import com.avoscloud.chat.base.App;
+import com.avoscloud.leanchatlib.utils.LogUtils;
 
 public class User {
   public static final String USERNAME = "username";
@@ -29,15 +28,6 @@ public class User {
     if (avatar != null) {
       return avatar.getUrl();
     } else {
-      return null;
-    }
-  }
-
-  public static AVInstallation getInstallation(AVUser user) {
-    try {
-      return user.getAVObject(INSTALLATION, AVInstallation.class);
-    } catch (Exception e) {
-      e.printStackTrace();
       return null;
     }
   }

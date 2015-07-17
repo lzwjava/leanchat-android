@@ -1,16 +1,23 @@
 package com.avoscloud.chat.util;
 
-import android.graphics.*;
+import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.PorterDuff.Mode;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.media.ExifInterface;
 import android.media.ThumbnailUtils;
+import com.avoscloud.leanchatlib.utils.LogUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Random;
 
 public class PhotoUtils {
 
@@ -51,27 +58,11 @@ public class PhotoUtils {
     return bitmap;
   }
 
-  public static void saveBitmap(String dirpath, String filename,
-                                Bitmap bitmap, boolean isDelete) {
-    File dir = new File(dirpath);
-    if (!dir.exists()) {
-      dir.mkdirs();
-    }
-
-    File file = new File(dirpath, filename);
-    if (isDelete) {
-      if (file.exists()) {
-        file.delete();
-      }
-    }
-
-    if (!file.exists()) {
-      try {
-        file.createNewFile();
-      } catch (IOException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
+  public static void saveBitmap(String filePath,
+                                Bitmap bitmap) {
+    File file = new File(filePath);
+    if (!file.getParentFile().exists()) {
+      file.getParentFile().mkdirs();
     }
     FileOutputStream out = null;
     try {
@@ -84,13 +75,7 @@ public class PhotoUtils {
     } catch (IOException e) {
       e.printStackTrace();
     } finally {
-      if (out != null) {
-        try {
-          out.close();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
+      Utils.closeQuietly(out);
     }
   }
 
@@ -105,7 +90,7 @@ public class PhotoUtils {
 
     } catch (Exception e) {
       // TODO Auto-generated catch block
-      e.printStackTrace();
+      LogUtils.logException(e);
     }
     return file;
   }
@@ -274,6 +259,8 @@ public class PhotoUtils {
       bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream);
     } catch (FileNotFoundException e) {
       e.printStackTrace();
+    } finally {
+      Utils.closeQuietly(outputStream);
     }
     recycle(bitmap);
     return newPath;

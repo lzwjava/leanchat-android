@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -14,92 +14,79 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/activity_top_margin">
 
-            <RelativeLayout
-                android:id="@+id/avatarLayout"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:background="@drawable/btn_selector"
-                android:padding="10dp">
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:orientation="vertical">
+                <View style="@style/DividerLine.Horizontal"/>
 
                 <LinearLayout
-                    android:layout_centerInParent="true"
-                    android:gravity="center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
+                    android:id="@+id/profile_avatar_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/setting_item_height"
+                    android:background="@drawable/btn_selector"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/common_horizontal_margin"
+                    android:paddingRight="@dimen/common_horizontal_margin">
                     <ImageView
-                        android:id="@+id/avatar"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
+                        android:id="@+id/profile_avatar_view"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
                         android:src="@drawable/chat_default_user_avatar" />
 
                     <TextView
-                        android:id="@+id/username"
+                        android:id="@+id/profile_username_view"
                         android:layout_marginLeft="30dp"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="username" />
-
+                        android:text="username"
+                        android:drawableRight="@drawable/common_view_right_arrow_pic"/>
                 </LinearLayout>
 
-
-                <include layout="@layout/common_view_right_arrow" />
-            </RelativeLayout>
-
-
-            <RelativeLayout
-                android:id="@+id/notifyLayout"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:background="@drawable/btn_selector"
-                android:padding="10dp">
+                <View style="@style/DividerLine.Horizontal"/>
 
                 <TextView
-                    android:id="@+id/notifySetting"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="@string/profile_notifySetting" />
-
-                <include layout="@layout/common_view_right_arrow" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/updateLayout"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:background="@drawable/btn_selector"
-                android:padding="10dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="@string/profile_fragment_checkUpdate" />
-
-            </RelativeLayout>
-
-
-            <RelativeLayout
-                android:id="@+id/logoutLayout"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:padding="10dp">
-
-                <TextView
-                    android:id="@+id/logout"
-                    style="@style/My.Button.logout"
+                    android:id="@+id/profile_notifysetting_view"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_centerInParent="true"
-                    android:gravity="center"
-                    android:text="注销" />
+                    android:gravity="center_vertical"
+                    android:layout_height="@dimen/setting_item_height"
+                    android:text="@string/profile_notifySetting"
+                    android:background="@drawable/btn_selector"
+                    android:paddingLeft="@dimen/common_horizontal_margin"
+                    android:paddingRight="@dimen/common_horizontal_margin"
+                    android:drawableRight="@drawable/common_view_right_arrow_pic"/>
 
-            </RelativeLayout>
+                <View style="@style/DividerLine.Horizontal"/>
+
+                <TextView
+                    android:id="@+id/profile_checkupdate_view"
+                    android:layout_width="match_parent"
+                    android:gravity="center_vertical"
+                    android:layout_height="@dimen/setting_item_height"
+                    android:text="@string/profile_fragment_checkUpdate"
+                    android:background="@drawable/btn_selector"
+                    android:paddingLeft="@dimen/common_horizontal_margin"
+                    android:paddingRight="@dimen/common_horizontal_margin"
+                    android:drawableRight="@drawable/common_view_right_arrow_pic"/>
+
+                <View style="@style/DividerLine.Horizontal"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/profile_logout_btn"
+                style="@style/My.Button.logout"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="@dimen/activity_top_margin"
+                android:layout_marginLeft="@dimen/common_horizontal_margin"
+                android:layout_marginRight="@dimen/common_horizontal_margin"
+                android:gravity="center"
+                android:text="注销" />
         </LinearLayout>
     </ScrollView>
-
-
 </LinearLayout>

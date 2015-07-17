@@ -10,7 +10,7 @@ public class Logger {
   public static final int WARN = 3;
   public static final int ERROR = 4;
   public static final int NONE = 5;
-  public static String tag = "lzw";
+  public static String tag = "leanchat";
 
   private static String getDebugInfo() {
     Throwable stack = new Throwable().fillInStackTrace();

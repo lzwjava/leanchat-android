@@ -28,13 +28,15 @@ import com.avoscloud.chat.ui.view.BaseListAdapter;
 import com.avoscloud.chat.ui.view.BaseListView;
 import com.avoscloud.chat.util.RefreshTask;
 import com.avoscloud.chat.util.Refreshable;
-import com.avoscloud.leanchatlib.controller.RoomsTable;
 import com.avoscloud.leanchatlib.view.ViewHolder;
 import de.greenrobot.event.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 新的好友
+ */
 public class ContactNewFriendActivity extends BaseActivity implements
     Refreshable {
   @InjectView(R.id.newfriendList)
@@ -83,6 +85,7 @@ public class ContactNewFriendActivity extends BaseActivity implements
       @Override
       public List<AddRequest> getDatasInBackground(int skip, int limit, List<AddRequest> currentDatas) throws Exception {
         List<AddRequest> addRequests = AddRequestManager.getInstance().findAddRequests(skip, limit);
+        AddRequestManager.getInstance().markAddRequestsRead(addRequests);
         List<AddRequest> filters = new ArrayList<AddRequest>();
         for (AddRequest addRequest : addRequests) {
           if (addRequest.getFromUser() != null) {

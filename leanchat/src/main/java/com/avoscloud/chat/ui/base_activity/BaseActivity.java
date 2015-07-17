@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 import com.avoscloud.leanchatlib.R;
+import com.avoscloud.leanchatlib.utils.LogUtils;
 
 /**
  * Created by lzw on 14-9-17.
@@ -75,14 +76,13 @@ public class BaseActivity extends FragmentActivity {
 
   protected void initActionBar(String title) {
     ActionBar actionBar = getActionBar();
-    if (actionBar == null) {
-      throw new NullPointerException("action bar is null");
+    if (actionBar != null) {
+      if (title != null) {
+        actionBar.setTitle(title);
+      }
+      actionBar.setDisplayUseLogoEnabled(false);
+      actionBar.setDisplayHomeAsUpEnabled(true);
     }
-    if (title != null) {
-      actionBar.setTitle(title);
-    }
-    actionBar.setDisplayUseLogoEnabled(false);
-    actionBar.setDisplayHomeAsUpEnabled(true);
   }
 
   protected void initActionBar(int id) {
@@ -105,7 +105,7 @@ public class BaseActivity extends FragmentActivity {
 
   protected boolean filterException(Exception e) {
     if (e != null) {
-      e.printStackTrace();
+      LogUtils.logException(e);
       toast(e.getMessage());
       return false;
     } else {

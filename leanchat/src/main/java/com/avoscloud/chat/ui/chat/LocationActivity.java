@@ -21,6 +21,9 @@ import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.core.SearchResult;
 import com.baidu.mapapi.search.geocode.*;
 
+/**
+ * 选取地理位置、展现地理位置
+ */
 public class LocationActivity extends BaseActivity implements
     OnGetGeoCoderResultListener {
   public static final int SEND = 0;

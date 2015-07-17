@@ -10,7 +10,7 @@ import com.avoscloud.chat.service.ConversationChangeEvent;
 public abstract class ConversationBaseActivity extends ConversationEventBaseActivity {
 
   public static AVIMConversation conv() {
-    return CacheService.getCurConv();
+    return CacheService.getCurrentConversation();
   }
 
 

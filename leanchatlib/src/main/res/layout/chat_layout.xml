@@ -19,8 +19,7 @@
             android:cacheColorHint="#0000"
             android:divider="@null"
             android:dividerHeight="5dp"
-            android:scrollbarStyle="outsideOverlay"
-            android:stackFromBottom="true"></ListView>
+            android:scrollbarStyle="outsideOverlay"/>
 
     </com.avoscloud.leanchatlib.view.RefreshableView>
 

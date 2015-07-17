@@ -2,14 +2,13 @@ package com.avoscloud.leanchatlib.utils;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.util.Log;
 import com.avoscloud.leanchatlib.R;
-import com.avoscloud.leanchatlib.controller.ChatManager;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -32,11 +31,6 @@ public class Utils {
   }
 
   public static String uuid() {
-    //return UUID.randomUUID().toString().substring(0, 24);
-    return myUUID();
-  }
-
-  public static String myUUID() {
     StringBuilder sb = new StringBuilder();
     int start = 48, end = 58;
     appendChar(sb, start, end);
@@ -44,9 +38,10 @@ public class Utils {
     appendChar(sb, 97, 123);
     String charSet = sb.toString();
     StringBuilder sb1 = new StringBuilder();
+    Random random = new Random();
     for (int i = 0; i < 24; i++) {
       int len = charSet.length();
-      int pos = new Random().nextInt(len);
+      int pos = random.nextInt(len);
       sb1.append(charSet.charAt(pos));
     }
     return sb1.toString();
@@ -59,46 +54,52 @@ public class Utils {
     }
   }
 
-  private static String getDebugInfo() {
-    Throwable stack = new Throwable().fillInStackTrace();
-    StackTraceElement[] trace = stack.getStackTrace();
-    int n = 2;
-    return trace[n].getClassName() + " " + trace[n].getMethodName() + "()" + ":" + trace[n].getLineNumber() + " ";
-  }
+  private static DefaultHttpClient httpClient;
 
-  public static void log(String... s) {
-    if (ChatManager.isDebugEnabled()) {
-      String info = "";
-      if (s.length > 0) {
-        info = s[0];
-      }
-      Log.i(ChatManager.LOGTAG, getDebugInfo() + info);
+  private synchronized static DefaultHttpClient getDefaultHttpClient() {
+    if (httpClient == null) {
+      httpClient = new DefaultHttpClient();
     }
+    return httpClient;
   }
 
-  public static void logThrowable(Throwable tr) {
-    if (ChatManager.isDebugEnabled()) {
-      Log.i(ChatManager.LOGTAG, getDebugInfo(), tr);
-    }
-  }
-
-  public static void downloadFileIfNotExists(String url, File toFile) throws IOException {
+  /**
+   * 下载文件，若失败会将文件删除，以便下次重新下载
+   * 暂时不校验 size，万一 size 跟实际文件的大小不一样，会导致每次重新下载
+   *
+   * @param url
+   * @param toFile
+   */
+  public static void downloadFileIfNotExists(String url, File toFile) {
     if (!toFile.exists()) {
-      toFile.createNewFile();
-      FileOutputStream outputStream = new FileOutputStream(toFile);
-      DefaultHttpClient client = new DefaultHttpClient();
-      HttpGet get = new HttpGet(url);
-      HttpResponse response = client.execute(get);
-      HttpEntity entity = response.getEntity();
-      InputStream stream = entity.getContent();
-      InputStream inputStream = stream;
-      byte[] buffer = new byte[1024];
-      int len;
-      while ((len = inputStream.read(buffer)) != -1) {
-        outputStream.write(buffer, 0, len);
+      FileOutputStream outputStream = null;
+      InputStream inputStream = null;
+      try {
+        outputStream = new FileOutputStream(toFile);
+        HttpGet get = new HttpGet(url);
+        HttpResponse response = getDefaultHttpClient().execute(get);
+        HttpEntity entity = response.getEntity();
+        inputStream = entity.getContent();
+        byte[] buffer = new byte[4096];
+        int len;
+        while ((len = inputStream.read(buffer)) != -1) {
+          outputStream.write(buffer, 0, len);
+        }
+      } catch (IOException e) {
+        if (toFile.exists()) {
+          toFile.delete();
+        }
+      } finally {
+        closeQuietly(inputStream);
+        closeQuietly(outputStream);
       }
-      outputStream.close();
-      inputStream.close();
+    }
+  }
+
+  public static void closeQuietly(Closeable closeable) {
+    try {
+      closeable.close();
+    } catch (Exception e) {
     }
   }
 }

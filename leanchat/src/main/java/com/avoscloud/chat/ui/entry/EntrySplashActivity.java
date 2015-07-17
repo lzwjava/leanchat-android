@@ -1,5 +1,6 @@
 package com.avoscloud.chat.ui.entry;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -7,7 +8,6 @@ import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.MainActivity;
-import com.avoscloud.chat.util.Utils;
 import com.avoscloud.chat.ui.base_activity.BaseActivity;
 
 public class EntrySplashActivity extends BaseActivity {
@@ -24,7 +24,8 @@ public class EntrySplashActivity extends BaseActivity {
           finish();
           break;
         case GO_LOGIN_MSG:
-          Utils.goActivity(ctx, EntryLoginActivity.class);
+          Intent intent = new Intent(ctx, EntryLoginActivity.class);
+          ctx.startActivity(intent);
           finish();
           break;
       }

@@ -11,38 +11,46 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avoscloud.chat.R;
+import com.avoscloud.chat.service.PushManager;
 import com.avoscloud.chat.service.UpdateService;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.ui.base_activity.BaseFragment;
 import com.avoscloud.chat.ui.entry.EntryLoginActivity;
-import com.avoscloud.chat.util.*;
+import com.avoscloud.chat.util.PathUtils;
+import com.avoscloud.chat.util.PhotoUtils;
+import com.avoscloud.chat.util.SimpleNetTask;
 import com.avoscloud.leanchatlib.controller.ChatManager;
-import com.avoscloud.leanchatlib.controller.RoomsTable;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Created by lzw on 14-9-17.
  */
-public class ProfileFragment extends BaseFragment implements View.OnClickListener {
+public class ProfileFragment extends BaseFragment {
   private static final int IMAGE_PICK_REQUEST = 1;
   private static final int CROP_REQUEST = 2;
-  TextView usernameView;
+
+  @InjectView(R.id.profile_avatar_view)
   ImageView avatarView;
-  View avatarLayout, logoutLayout,
-      notifyLayout, updateLayout;
+
+  @InjectView(R.id.profile_username_view)
+  TextView userNameView;
+
   ChatManager chatManager;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.profile_fragment, container, false);
+    View view = inflater.inflate(R.layout.profile_fragment, container, false);
+    ButterKnife.inject(this, view);
+    return view;
   }
 
   @Override
@@ -50,54 +58,51 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     super.onActivityCreated(savedInstanceState);
     headerLayout.showTitle(R.string.profile_title);
     chatManager = ChatManager.getInstance();
-    findView();
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
     refresh();
   }
 
   private void refresh() {
     AVUser curUser = AVUser.getCurrentUser();
-    usernameView.setText(curUser.getUsername());
+    userNameView.setText(curUser.getUsername());
     UserService.displayAvatar(curUser, avatarView);
   }
 
-  private void findView() {
-    View fragmentView = getView();
-    usernameView = (TextView) fragmentView.findViewById(R.id.username);
-    avatarView = (ImageView) fragmentView.findViewById(R.id.avatar);
-    avatarLayout = fragmentView.findViewById(R.id.avatarLayout);
-    logoutLayout = fragmentView.findViewById(R.id.logoutLayout);
-    notifyLayout = fragmentView.findViewById(R.id.notifyLayout);
-    updateLayout = fragmentView.findViewById(R.id.updateLayout);
-
-    avatarLayout.setOnClickListener(this);
-    logoutLayout.setOnClickListener(this);
-    notifyLayout.setOnClickListener(this);
-    updateLayout.setOnClickListener(this);
+  @OnClick(R.id.profile_checkupdate_view)
+  public void onCheckUpdateClick() {
+    UpdateService updateService = UpdateService.getInstance(getActivity());
+    updateService.showSureUpdateDialog();
   }
 
-  @Override
-  public void onClick(View v) {
-    int id = v.getId();
-    if (id == R.id.avatarLayout) {
-      Intent intent = new Intent(Intent.ACTION_PICK, null);
-      intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-      startActivityForResult(intent, IMAGE_PICK_REQUEST);
-    } else if (id == R.id.logoutLayout) {
-      RoomsTable.DBHelper.getCurrentUserInstance().closeHelper();
-      chatManager.closeWithCallback(new AVIMClientCallback() {
-        @Override
-        public void done(AVIMClient avimClient, AVException e) {
-        }
-      });
-      AVUser.logOut();
-      getActivity().finish();
-      Utils.goActivity(ctx, EntryLoginActivity.class);
-    } else if (id == R.id.notifyLayout) {
-      Utils.goActivity(ctx, ProfileNotifySettingActivity.class);
-    } else if (id == R.id.updateLayout) {
-      UpdateService updateService = UpdateService.getInstance(getActivity());
-      updateService.showSureUpdateDialog();
-    }
+  @OnClick(R.id.profile_notifysetting_view)
+  public void onNotifySettingClick() {
+    Intent intent = new Intent(ctx, ProfileNotifySettingActivity.class);
+    ctx.startActivity(intent);
+  }
+
+  @OnClick(R.id.profile_logout_btn)
+  public void onLogoutClick() {
+    chatManager.closeWithCallback(new AVIMClientCallback() {
+      @Override
+      public void done(AVIMClient avimClient, AVException e) {
+      }
+    });
+    PushManager.getInstance().unsubscribeCurrentUserChannel();
+    AVUser.logOut();
+    getActivity().finish();
+    Intent intent = new Intent(ctx, EntryLoginActivity.class);
+    ctx.startActivity(intent);
+  }
+
+  @OnClick(R.id.profile_avatar_layout)
+  public void onAvatarClick() {
+    Intent intent = new Intent(Intent.ACTION_PICK, null);
+    intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+    startActivityForResult(intent, IMAGE_PICK_REQUEST);
   }
 
   @Override
@@ -153,12 +158,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
       Bitmap bitmap = extras.getParcelable("data");
       if (bitmap != null) {
         bitmap = PhotoUtils.toRoundCorner(bitmap, 10);
-        String filename = new SimpleDateFormat("yyMMddHHmmss")
-            .format(new Date());
-        path = PathUtils.getAvatarDir() + filename;
-        Logger.d("save bitmap to " + path);
-        PhotoUtils.saveBitmap(PathUtils.getAvatarDir(), filename,
-            bitmap, true);
+        path = PathUtils.getAvatarCropPath();
+        PhotoUtils.saveBitmap(path, bitmap);
         if (bitmap != null && bitmap.isRecycled() == false) {
           bitmap.recycle();
         }

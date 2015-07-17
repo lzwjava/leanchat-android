@@ -1,6 +1,7 @@
 package com.avoscloud.leanchatlib.controller;
 
 import android.media.MediaPlayer;
+import com.avoscloud.leanchatlib.utils.LogUtils;
 
 import java.io.IOException;
 
@@ -72,7 +73,7 @@ public class AudioHelper {
       mediaPlayer.start();
       onceStart = true;
     } catch (IOException e) {
-      e.printStackTrace();
+      LogUtils.logException(e);
     }
   }
 

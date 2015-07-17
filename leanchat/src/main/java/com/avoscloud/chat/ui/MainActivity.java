@@ -62,8 +62,8 @@ public class MainActivity extends BaseActivity {
     eventBus.post(new LoginFinishEvent());
 
     ChatManager chatManager = ChatManager.getInstance();
-    chatManager.setupDatabaseWithSelfId(AVUser.getCurrentUser().getObjectId());
-    chatManager.openClientWithSelfId(AVUser.getCurrentUser().getObjectId(), null);
+    chatManager.setupManagerWithUserId(AVUser.getCurrentUser().getObjectId());
+    chatManager.openClient(null);
     Intent intent = new Intent(fromActivity, MainActivity.class);
     fromActivity.startActivity(intent);
   }
@@ -202,7 +202,9 @@ public class MainActivity extends BaseActivity {
         } else {
           AVGeoPoint newGeoPoint = new AVGeoPoint(location.getLatitude(),
               location.getLongitude());
-          preferenceMap.setLocation(newGeoPoint);
+          if (newGeoPoint != null) {
+            preferenceMap.setLocation(newGeoPoint);
+          }
         }
       }
     }

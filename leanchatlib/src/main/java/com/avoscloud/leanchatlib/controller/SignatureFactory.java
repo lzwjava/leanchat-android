@@ -5,7 +5,7 @@ import com.avos.avoscloud.AVCloud;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.Signature;
 import com.avoscloud.leanchatlib.R;
-import com.avoscloud.leanchatlib.utils.Utils;
+import com.avoscloud.leanchatlib.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,26 +23,19 @@ public class SignatureFactory implements com.avos.avoscloud.SignatureFactory {
    */
   @Override
   public Signature createSignature(String peerId, List<String> watchIds) throws SignatureException {
-    Utils.log("selfId=" + peerId + " targetIds=" + watchIds);
+    LogUtils.i("selfId=" + peerId + " targetIds=" + watchIds);
     HashMap<String, Object> result;
-    Map<String, Object> map1 = new HashMap<String, Object>();
-    map1.put("self_id", peerId);
-    if (null != null) {
-      map1.put("convid", null);
-    }
+    Map<String, Object> map = new HashMap<String, Object>();
+    map.put("self_id", peerId);
     if (watchIds != null) {
-      map1.put("targetIds", watchIds);
-    }
-    if (null != null) {
-      map1.put("action", null);
+      map.put("targetIds", watchIds);
     }
     try {
-      result = AVCloud.callFunction("conv_sign", map1);
+      result = AVCloud.callFunction("conv_sign", map);
     } catch (AVException e) {
       throw new SignatureException(e.getCode(), e.getMessage());
     }
-    HashMap<String, Object> map = result;
-    return createSignatureByResult(map, watchIds);
+    return createSignatureByResult(result, watchIds);
   }
 
   private Signature createSignatureByResult(HashMap<String, Object> params, List<String> peerIds) {
@@ -59,33 +52,33 @@ public class SignatureFactory implements com.avos.avoscloud.SignatureFactory {
   @Override
   public Signature createGroupSignature(String groupId, String peerId, List<String> targetPeerIds,
                                         String action) {
+    // v1 版本，忽略
     return null;
   }
 
   @Override
   public Signature createConversationSignature(String conversationId, String clientId, List<String> targetIds, String action) throws SignatureException {
-    Utils.log("convid=" + conversationId + " clientid=" + clientId + " targetIds=" + targetIds + " action=" + action);
+    LogUtils.i("convid=" + conversationId + " clientid=" + clientId + " targetIds=" + targetIds + " action=" + action);
     HashMap<String, Object> result;
-    Map<String, Object> map1 = new HashMap<String, Object>();
-    map1.put("self_id", clientId);
+    Map<String, Object> map = new HashMap<String, Object>();
+    map.put("self_id", clientId);
     if (conversationId != null) {
-      map1.put("convid", conversationId);
+      map.put("convid", conversationId);
     }
     if (targetIds != null) {
-      map1.put("targetIds", targetIds);
+      map.put("targetIds", targetIds);
     }
     if (action != null) {
-      map1.put("action", action);
+      map.put("action", action);
     }
     try {
-      result = AVCloud.callFunction("conv_sign", map1);
+      result = AVCloud.callFunction("conv_sign", map);
     } catch (AVException e) {
       if (e.getCode() == AVException.INVALID_JSON) {
         Toast.makeText(ChatManager.getContext(), R.string.chat_cloudCodeNotDeployTips, Toast.LENGTH_SHORT).show();
       }
       throw new SignatureException(e.getCode(), e.getMessage());
     }
-    HashMap<String, Object> map = result;
-    return createSignatureByResult(map, targetIds);
+    return createSignatureByResult(result, targetIds);
   }
 }

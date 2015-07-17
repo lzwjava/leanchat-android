@@ -1,239 +1,46 @@
 package com.avoscloud.chat.util;
 
-import android.app.*;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-import com.avos.avoscloud.AVUser;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.*;
-import java.net.URLEncoder;
+import java.io.BufferedReader;
+import java.io.Closeable;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class Utils {
-  public static BufferedReader bufferedReader(String url) throws IOException,
-      ClientProtocolException, UnsupportedEncodingException {
-    HttpGet get = new HttpGet(url);
-    DefaultHttpClient client = new DefaultHttpClient();
-    HttpResponse response = client.execute(get);
-    HttpEntity entity = response.getEntity();
-    InputStream stream = entity.getContent();
-    BufferedReader reader = new BufferedReader(new InputStreamReader(stream,
-        "GBK"));
-    return reader;
-  }
-
-  public static String readFile(String path) throws FileNotFoundException,
-      IOException {
-    InputStream input = new FileInputStream(new File(path));
-    DataInputStream dataInput = new DataInputStream(input);
-    byte[] bytes = new byte[input.available()];
-    dataInput.readFully(bytes);
-    String text = new String(bytes);
-    input.close();
-    dataInput.close();
-    return text;
-  }
-
-  public static Bitmap urlToBitmap(String url) throws ClientProtocolException,
-      IOException {
-    return BitmapFactory.decodeStream(inputStreamFromUrl(url));
-  }
-
-  public static Bitmap bitmapFromFile(File file) throws FileNotFoundException {
-    return BitmapFactory.decodeStream(new BufferedInputStream(
-        new FileInputStream(file)));
-  }
-
-  public static byte[] readStream(InputStream inStream) throws Exception {
-    ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-    byte[] buffer = new byte[1024];
-    int len = 0;
-    while ((len = inStream.read(buffer)) != -1) {
-      outStream.write(buffer, 0, len);
-    }
-    outStream.close();
-    inStream.close();
-    return outStream.toByteArray();
-  }
-
-  public static InputStream inputStreamFromUrl(String url) throws IOException {
-    DefaultHttpClient client = new DefaultHttpClient();
-    HttpGet get = new HttpGet(url);
-    HttpResponse response = client.execute(get);
-    HttpEntity entity = response.getEntity();
-    InputStream stream = entity.getContent();
-    return stream;
-  }
-
-  public static void downloadFileIfNotExists(String url, File toFile) throws IOException {
-    if (!toFile.exists()) {
-      downloadFile(url, toFile);
-    }
-  }
-
-  public static void downloadFile(String url, File toFile) throws IOException {
-    toFile.createNewFile();
-    FileOutputStream outputStream = new FileOutputStream(toFile);
-    InputStream inputStream = inputStreamFromUrl(url);
-    byte[] buffer = new byte[1024];
-    int len;
-    while ((len = inputStream.read(buffer)) != -1) {
-      outputStream.write(buffer, 0, len);
-    }
-    outputStream.close();
-    inputStream.close();
-  }
-
-  public static byte[] getBytesFromUrl(String url) throws Exception {
-    InputStream in = inputStreamFromUrl(url);
-    return readStream(in);
-  }
-
-  public static Bitmap saveBitmapLocal(String bitmapUrl, File bitmapFile)
-      throws IOException, FileNotFoundException, ClientProtocolException {
-    Bitmap resultBitmap;
-    downloadFileIfNotExists(bitmapUrl, bitmapFile);
-    resultBitmap = Utils.bitmapFromFile(bitmapFile);
-    return resultBitmap;
-  }
-
-  public static Bitmap getBitmapFromUrl(String logoUrl, String filmEnName,
-                                        String appPath) throws IOException, FileNotFoundException,
-      ClientProtocolException {
-    Bitmap resultBitmap;
-    String logoPath = appPath + "logo/";
-    File dir = new File(logoPath);
-    if (dir.exists() == false) {
-      dir.mkdirs();
-    }
-    File logoLocalFile = new File(logoPath + filmEnName + ".jpg");
-    resultBitmap = Utils.saveBitmapLocal(logoUrl, logoLocalFile);
-    return resultBitmap;
-  }
-
-  public static void bytesToFile(final File file, byte[] bytes)
-      throws FileNotFoundException, IOException {
-    FileOutputStream output = new FileOutputStream(file);
-    output.write(bytes);
-    output.close();
-  }
-
-  public static void toastCheckNetwork(Context context) {
-    toastIt(context, R.string.chat_pleaseCheckNetwork, false);
-  }
-
 
   public static void toast(Context context, String str) {
     Toast.makeText(context, str, Toast.LENGTH_SHORT).show();
   }
-
-  private static void toastIt(Context context, int strId, boolean isLong) {
-    int ti;
-    if (isLong) ti = Toast.LENGTH_LONG;
-    else ti = Toast.LENGTH_SHORT;
-    Toast.makeText(context, context.getString(strId), ti).show();
-  }
-
-  public static void toastException(Exception e) {
-    toast(e.getMessage());
-  }
-
-  public static boolean hasSDcard() {
-    // TODO Auto-generated method stub
-    return Environment.MEDIA_MOUNTED.equals(Environment
-        .getExternalStorageState());
-  }
-
-  public static int dip2px(Context context, float dipValue) {
-    final float scale = context.getResources().getDisplayMetrics().density;
-    return (int) (dipValue * scale + 0.5f);
-  }
-
-
-  public static String format(int curPos) {
-    int sec1 = curPos / 1000;
-    int min = sec1 / 60;
-    int sec = sec1 % 60;
-    int tm = min / 10, mm = min % 10;
-    int ts = sec / 10, ms = sec % 10;
-    String str = String.format("%d%d:%d%d", tm, mm, ts, ms);
-    return str;
-  }
-
-  public static void clearDir(String dir) {
-    File file = new File(dir);
-    File[] fs = file.listFiles();
-    for (File f : fs) {
-      f.delete();
-    }
-  }
-
-  public static String prettyFormat(Date date) {
-    String dateStr;
-    String am_pm = "am";
-    SimpleDateFormat format = new SimpleDateFormat("M-d h");
-    SimpleDateFormat format1 = new SimpleDateFormat("aa", Locale.ENGLISH);
-    if (format1.format(date).equals("PM")) {
-      am_pm = "pm";
-    }
-    dateStr = format.format(date) + am_pm;
-    return dateStr;
-  }
-
-  public static void alertDialog(Activity activity, String s) {
-    new AlertDialog.Builder(activity).setMessage(s).show();
-  }
-
-  public static void alertDialog(Activity activity, int msgId) {
-    new AlertDialog.Builder(activity).
-        setMessage(activity.getString(msgId)).show();
-  }
-
-  public static void alertIconDialog(Activity activity, String s, int iconId) {
-    getBaseDialogBuilder(activity, s).show();
-  }
-
-  public static void alertIconDialog(Activity activity, int sId) {
-    getBaseDialogBuilder(activity, activity.getString(sId)).show();
-  }
-
 
   public static AlertDialog.Builder getBaseDialogBuilder(Activity activity, String s) {
     return getBaseDialogBuilder(activity).setMessage(s);
@@ -253,10 +60,6 @@ public class Utils {
     return parse.getTime() - format.parse(origin).getTime();
   }
 
-  public static long getPassTime(long st) {
-    return System.currentTimeMillis() - st;
-  }
-
   public static String getEquation(int finalNum, int delta) {
     String equation;
     int abs = Math.abs(delta);
@@ -274,93 +77,12 @@ public class Utils {
     return uri;
   }
 
-  public static void notify(Context context, String msg, String title, Class<?> toClz, int notifyId) {
-    PendingIntent pend = PendingIntent.getActivity(context, 0,
-        new Intent(context, toClz), 0);
-    Notification.Builder builder = new Notification.Builder(context);
-    int icon = context.getApplicationInfo().icon;
-    builder.setContentIntent(pend)
-        .setSmallIcon(icon)
-        .setWhen(System.currentTimeMillis())
-        .setTicker(msg)
-        .setContentTitle(title)
-        .setContentText(msg)
-        .setAutoCancel(true);
-
-    NotificationManager man = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-    man.notify(notifyId, builder.getNotification());
-  }
-
-  public static String getStringByFile(File f) throws IOException {
-    StringBuilder builder = new StringBuilder();
-    BufferedReader br = new BufferedReader(new FileReader(f));
-    String line;
-    while ((line = br.readLine()) != null) {
-      builder.append(line);
-    }
-    br.close();
-    return builder.toString();
-  }
-
-  public static String getShortUrl(String longUrl) throws IOException, JSONException {
-    if (longUrl.startsWith("http") == false) {
-      throw new IllegalArgumentException("longUrl must start with http");
-    }
-    String url = "https://api.weibo.com/2/short_url/shorten.json";
-    HttpPost post = new HttpPost(url);
-    List<NameValuePair> params = new ArrayList<NameValuePair>();
-    params.add(new BasicNameValuePair("access_token", "2.00_hkjqBR1dbuCc632289355qerfeD"));
-    params.add(new BasicNameValuePair("url_long", longUrl));
-    post.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
-    HttpResponse res = new DefaultHttpClient().execute(post);
-    if (res.getStatusLine().getStatusCode() == 200) {
-      String str = EntityUtils.toString(res.getEntity());
-      JSONObject json = new JSONObject(str);
-      JSONArray arr = json.getJSONArray("urls");
-      JSONObject urls = arr.getJSONObject(0);
-      if (urls.getBoolean("result")) {
-        return urls.getString("url_short");
-      } else {
-        return null;
-      }
-    }
-    return null;
-  }
-
-  public static String getGb2312Encode(String s) throws UnsupportedEncodingException {
-    return URLEncoder.encode(s, "gb2312");
-  }
-
-  public static void goActivity(Context cxt, Class<?> clz) {
-    Intent intent = new Intent(cxt, clz);
-    cxt.startActivity(intent);
-  }
-
-  public static void installApk(Context context, String path) {
-    Intent intent1 = new Intent();
-    intent1.setAction(Intent.ACTION_VIEW);
-    File file = new File(path);
-    Log.i("lzw", file.getAbsolutePath());
-    intent1.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
-    intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    context.startActivity(intent1);
-  }
-
   public static void showInfoDialog(Activity cxt, String msg, String title) {
     AlertDialog.Builder builder = getBaseDialogBuilder(cxt);
     builder.setMessage(msg)
         .setPositiveButton(cxt.getString(R.string.chat_utils_right), null)
         .setTitle(title)
         .show();
-  }
-
-  public static Activity modifyDialogContext(Activity cxt) {
-    Activity parent = cxt.getParent();
-    if (parent != null) {
-      return parent;
-    } else {
-      return cxt;
-    }
   }
 
   public static AlertDialog.Builder getBaseDialogBuilder(Activity ctx) {
@@ -480,37 +202,6 @@ public class Utils {
     }.execute();
   }
 
-  public static String getPhoneNum(Context cxt) {
-    TelephonyManager tm = (TelephonyManager) cxt.getSystemService(Context.TELEPHONY_SERVICE);
-    String deviceid = tm.getDeviceId();
-    String tel = tm.getLine1Number();
-    String imei = tm.getSimSerialNumber();
-    String imsi = tm.getSubscriberId();
-    Logger.d("tel=" + tel + "  " + imei + " " + imei);
-    return tel;
-  }
-
-  public static void goActivityAndFinish(Activity cxt, Class<?> clz) {
-    Intent intent = new Intent(cxt, clz);
-    cxt.startActivity(intent);
-    cxt.finish();
-  }
-
-  public static String getRealPathFromURI(Context context, Uri contentUri) {
-    Cursor cursor = null;
-    try {
-      String[] proj = {MediaStore.Images.Media.DATA};
-      cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
-      int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-      cursor.moveToFirst();
-      return cursor.getString(column_index);
-    } finally {
-      if (cursor != null) {
-        cursor.close();
-      }
-    }
-  }
-
   public static void openUrl(Context context, String url) {
     Intent i = new Intent(Intent.ACTION_VIEW);
     i.setData(Uri.parse(url));
@@ -612,35 +303,6 @@ public class Utils {
     }
   }
 
-  public static boolean isListNotEmpty(Collection<?> collection) {
-    if (collection != null && collection.size() > 0) {
-      return true;
-    }
-    return false;
-  }
-
-  public static Map<String, AVUser> list2map(List<AVUser> users) {
-    Map<String, AVUser> friends = new HashMap<String, AVUser>();
-    for (AVUser user : users) {
-      friends.put(user.getUsername(), user);
-    }
-    return friends;
-  }
-
-  public static List<AVUser> map2list(Map<String, AVUser> maps) {
-    List<AVUser> users = new ArrayList<AVUser>();
-    Iterator<Map.Entry<String, AVUser>> iterator = maps.entrySet().iterator();
-    while (iterator.hasNext()) {
-      Map.Entry<String, AVUser> entry = iterator.next();
-      users.add(entry.getValue());
-    }
-    return users;
-  }
-
-  public static int getColor(int resId) {
-    return App.ctx.getResources().getColor(resId);
-  }
-
   public static boolean doubleEqual(double a, double b) {
     return Math.abs(a - b) < 1E-8;
   }
@@ -653,19 +315,6 @@ public class Utils {
       String num = String.format("%.1f", distance / 1000);
       return num + App.ctx.getString(R.string.utils_kilometres);
     }
-  }
-
-  public static void printException(Exception e) {
-    if (App.debug) {
-      e.printStackTrace();
-    }
-  }
-
-  public static byte[] getBytesFromBitmap(Bitmap bitmap) {
-    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-    byte[] byteArray = stream.toByteArray();
-    return byteArray;
   }
 
   public static ProgressDialog showSpinnerDialog(Activity activity) {
@@ -686,6 +335,13 @@ public class Utils {
       return false;
     } else {
       return true;
+    }
+  }
+
+  public static void closeQuietly(Closeable closeable) {
+    try {
+      closeable.close();
+    } catch (Exception e) {
     }
   }
 

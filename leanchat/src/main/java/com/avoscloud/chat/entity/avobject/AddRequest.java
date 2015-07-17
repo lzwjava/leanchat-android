@@ -16,29 +16,24 @@ public class AddRequest extends AVObject {
   public static final String TO_USER = "toUser";
   public static final String STATUS = "status";
 
-  AVUser toUser;
-  //int status;
-  AVUser fromUser;
+  /**
+   * 标记接收方是否已读该消息
+   */
+  public static final String IS_READ = "isRead";
 
   public AddRequest() {
   }
 
-  public synchronized AVUser getFromUser() {
-    if (fromUser == null) {
-      fromUser = getAVUser(FROM_USER, AVUser.class);
-    }
-    return fromUser;
+  public AVUser getFromUser() {
+    return getAVUser(FROM_USER);
   }
 
   public void setFromUser(AVUser fromUser) {
     put(FROM_USER, fromUser);
   }
 
-  public synchronized AVUser getToUser() {
-    if (toUser == null) {
-      toUser = getAVUser(TO_USER, AVUser.class);
-    }
-    return toUser;
+  public AVUser getToUser() {
+    return getAVUser(TO_USER);
   }
 
   public void setToUser(AVUser toUser) {
@@ -51,5 +46,13 @@ public class AddRequest extends AVObject {
 
   public void setStatus(int status) {
     put(STATUS, status);
+  }
+
+  public boolean isRead() {
+    return getBoolean(IS_READ);
+  }
+
+  public void setIsRead(boolean isRead) {
+    put(IS_READ, isRead);
   }
 }

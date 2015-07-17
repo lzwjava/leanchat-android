@@ -4,7 +4,9 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,6 +23,7 @@ import butterknife.OnClick;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.CountCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
@@ -28,14 +31,13 @@ import com.avoscloud.chat.entity.SortUser;
 import com.avoscloud.chat.service.AddRequestManager;
 import com.avoscloud.chat.service.UserService;
 import com.avoscloud.chat.service.event.ContactRefreshEvent;
+import com.avoscloud.chat.service.event.InvitationEvent;
 import com.avoscloud.chat.ui.base_activity.BaseFragment;
 import com.avoscloud.chat.ui.chat.ChatRoomActivity;
 import com.avoscloud.chat.ui.conversation.ConversationGroupListActivity;
 import com.avoscloud.chat.ui.view.BaseListView;
 import com.avoscloud.chat.ui.view.EnLetterView;
 import com.avoscloud.chat.util.CharacterParser;
-import com.avoscloud.chat.util.NetAsyncTask;
-import com.avoscloud.chat.util.Utils;
 import de.greenrobot.event.EventBus;
 
 import java.util.ArrayList;
@@ -43,6 +45,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * 联系人列表
+ */
 public class ContactFragment extends BaseFragment {
   private static CharacterParser characterParser;
   private static PinyinComparator pinyinComparator;
@@ -88,6 +93,12 @@ public class ContactFragment extends BaseFragment {
     EventBus.getDefault().unregister(this);
   }
 
+  @Override
+  public void onResume() {
+    super.onResume();
+    updateNewRequestBadge();
+  }
+
   private void initRightLetterViewAndSearchEdit() {
     rightLetter.setTextView(dialogTextView);
     rightLetter.setOnTouchingLetterChangedListener(new LetterListViewListener());
@@ -98,7 +109,8 @@ public class ContactFragment extends BaseFragment {
     headerLayout.showRightImageButton(R.drawable.base_action_bar_add_bg_selector, new OnClickListener() {
       @Override
       public void onClick(View v) {
-        Utils.goActivity(ctx, ContactAddFriendActivity.class);
+        Intent intent = new Intent(ctx, ContactAddFriendActivity.class);
+        ctx.startActivity(intent);
       }
     });
   }
@@ -111,7 +123,7 @@ public class ContactFragment extends BaseFragment {
       SortUser sortUser = new SortUser();
       sortUser.setInnerUser(avUser);
       String username = avUser.getUsername();
-      if (username != null) {
+      if (!TextUtils.isEmpty(username)) {
         String pinyin = characterParser.getSelling(username);
         String sortString = pinyin.substring(0, 1).toUpperCase();
         if (sortString.matches("[A-Z]")) {
@@ -177,27 +189,19 @@ public class ContactFragment extends BaseFragment {
     super.setUserVisibleHint(isVisibleToUser);
   }
 
-  void findAddRequest() {
-    new NetAsyncTask(ctx, false) {
-      boolean haveAddRequest;
-
-      @Override
-      protected void doInBack() throws Exception {
-        haveAddRequest = AddRequestManager.getInstance().hasAddRequest();
-      }
-
-      @Override
-      protected void onPost(Exception e) {
-        if (filterException(e)) {
-          listHeaderViewHolder.getMsgTipsView().setVisibility(haveAddRequest ? View.VISIBLE : View.GONE);
-        }
-      }
-    }.execute();
+  private void updateNewRequestBadge() {
+    listHeaderViewHolder.getMsgTipsView().setVisibility(
+        AddRequestManager.getInstance().hasUnreadRequests() ? View.VISIBLE : View.GONE);
   }
 
   private void refresh() {
     friendsList.onRefresh();
-    findAddRequest();
+    AddRequestManager.getInstance().countUnreadRequests(new CountCallback() {
+      @Override
+      public void done(int i, AVException e) {
+        updateNewRequestBadge();
+      }
+    });
   }
 
   public void showDeleteDialog(final SortUser user) {
@@ -225,12 +229,14 @@ public class ContactFragment extends BaseFragment {
 
     @OnClick(R.id.layout_new)
     void goNewFriend() {
-      Utils.goActivity(ctx, ContactNewFriendActivity.class);
+      Intent intent = new Intent(ctx, ContactNewFriendActivity.class);
+      ctx.startActivity(intent);
     }
 
     @OnClick(R.id.layout_group)
     void goGroupConvList() {
-      Utils.goActivity(ctx, ConversationGroupListActivity.class);
+      Intent intent = new Intent(ctx, ConversationGroupListActivity.class);
+      ctx.startActivity(intent);
     }
 
     public ImageView getMsgTipsView() {
@@ -272,5 +278,10 @@ public class ContactFragment extends BaseFragment {
 
   public void onEvent(ContactRefreshEvent event) {
     forceRefresh();
+  }
+
+  public void onEvent(InvitationEvent event) {
+    AddRequestManager.getInstance().unreadRequestsIncrement();
+    updateNewRequestBadge();
   }
 }

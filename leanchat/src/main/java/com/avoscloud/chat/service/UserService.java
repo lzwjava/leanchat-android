@@ -15,8 +15,8 @@ import com.avoscloud.chat.base.App;
 import com.avoscloud.chat.base.Constant;
 import com.avoscloud.chat.entity.avobject.User;
 import com.avoscloud.chat.util.Logger;
-import com.avoscloud.chat.util.SimpleLock;
 import com.avoscloud.chat.util.Utils;
+import com.avoscloud.leanchatlib.utils.LogUtils;
 import com.avoscloud.leanchatlib.utils.PhotoUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -45,7 +45,8 @@ public class UserService {
     try {
       q = curUser.followeeQuery(AVUser.class);
     } catch (Exception e) {
-      throw new NullPointerException();
+      //在 currentUser.objectId 为 null 的时候抛出的，不做处理
+      Logger.e(e.getMessage());
     }
     return q;
   }
@@ -61,6 +62,7 @@ public class UserService {
   public static List<AVUser> findFriends() throws Exception {
     final List<AVUser> friends = new ArrayList<AVUser>();
     final AVException[] es = new AVException[1];
+    final CountDownLatch latch = new CountDownLatch(1);
     findFriendsWithCachePolicy(AVQuery.CachePolicy.CACHE_ELSE_NETWORK, new FindCallback<AVUser>() {
       @Override
       public void done(List<AVUser> avUsers, AVException e) {
@@ -69,10 +71,10 @@ public class UserService {
         } else {
           friends.addAll(avUsers);
         }
-        SimpleLock.go();
+        latch.countDown();
       }
     });
-    SimpleLock.lock();
+    latch.await();
     if (es[0] != null) {
       throw es[0];
     } else {
@@ -182,9 +184,15 @@ public class UserService {
           @Override
           public void done(AVException e) {
             if (e != null) {
-              e.printStackTrace();
+              LogUtils.logException(e);
             } else {
-              Logger.v("lastLocation save " + user.getAVGeoPoint(User.LOCATION));
+              AVGeoPoint avGeoPoint = user.getAVGeoPoint(User.LOCATION);
+              if (avGeoPoint == null) {
+                Logger.e("avGeopoint is null");
+              } else {
+                Logger.v("save location succeed latitude " + avGeoPoint.getLatitude()
+                    + " longitude " + avGeoPoint.getLongitude());
+              }
             }
           }
         });
@@ -197,7 +205,9 @@ public class UserService {
     user.followInBackground(friendId, new FollowCallback() {
       @Override
       public void done(AVObject object, AVException e) {
-        saveCallback.done(e);
+        if (saveCallback != null) {
+          saveCallback.done(e);
+        }
       }
     });
   }
@@ -207,7 +217,9 @@ public class UserService {
     user.unfollowInBackground(friendId, new FollowCallback() {
       @Override
       public void done(AVObject object, AVException e) {
-        saveCallback.done(e);
+        if (saveCallback != null) {
+          saveCallback.done(e);
+        }
       }
     });
   }
