@@ -4,6 +4,7 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
 import com.avoscloud.chat.base.Constant;
@@ -106,11 +107,11 @@ public class CacheService {
     }
     ConversationManager.getInstance().findConversationsByConversationIds(new ArrayList<String>(uncachedIds), new AVIMConversationQueryCallback() {
       @Override
-      public void done(List<AVIMConversation> conversations, AVException e) {
+      public void done(List<AVIMConversation> list, AVIMException e) {
         if (e != null) {
           callback.done(e);
         } else {
-          registerConvs(conversations);
+          registerConvs(list);
           callback.done(null);
         }
       }

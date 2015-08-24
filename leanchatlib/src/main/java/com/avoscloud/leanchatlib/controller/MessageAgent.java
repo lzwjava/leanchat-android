@@ -3,6 +3,7 @@ package com.avoscloud.leanchatlib.controller;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.messages.AVIMAudioMessage;
@@ -50,7 +51,7 @@ public class MessageAgent {
     }
     conversation.sendMessage(msg, AVIMConversation.RECEIPT_MESSAGE_FLAG, new AVIMConversationCallback() {
       @Override
-      public void done(AVException e) {
+      public void done(AVIMException e) {
         if (e == null && originPath != null) {
           File tmpFile = new File(originPath);
           File newFile = new File(PathUtils.getChatFilePath(msg.getMessageId()));
@@ -64,7 +65,6 @@ public class MessageAgent {
             callback.onError(msg, e);
           } else {
             ChatManager.getInstance().getRoomsTable().insertRoom(conversation.getConversationId());
-            ChatManager.getInstance().putLatestMessage(msg);
             callback.onSuccess(msg);
           }
         }
@@ -75,7 +75,7 @@ public class MessageAgent {
   public void resendMessage(final AVIMTypedMessage msg, final SendCallback sendCallback) {
     conversation.sendMessage(msg, AVIMConversation.RECEIPT_MESSAGE_FLAG, new AVIMConversationCallback() {
       @Override
-      public void done(AVException e) {
+      public void done(AVIMException e) {
         if (sendCallback != null) {
           if (e != null) {
             sendCallback.onError(msg, e);

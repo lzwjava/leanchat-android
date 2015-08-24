@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
@@ -53,7 +54,7 @@ public class ChatRoomActivity extends ChatActivity implements ChatActivityEventL
     final ProgressDialog dialog = Utils.showSpinnerDialog(from);
     ChatManager.getInstance().fetchConversationWithUserId(userId, new AVIMConversationCreatedCallback() {
       @Override
-      public void done(AVIMConversation conversation, AVException e) {
+      public void done(AVIMConversation conversation, AVIMException e) {
         dialog.dismiss();
         if (Utils.filterException(e)) {
           chatByConversation(from, conversation);
@@ -93,7 +94,7 @@ public class ChatRoomActivity extends ChatActivity implements ChatActivityEventL
     userInfoMessage.setAttrs(map);
     conversation.sendMessage(userInfoMessage, new AVIMConversationCallback() {
       @Override
-      public void done(AVException e) {
+      public void done(AVIMException e) {
         if (e != null) {
           Logger.d(e.getMessage());
         }

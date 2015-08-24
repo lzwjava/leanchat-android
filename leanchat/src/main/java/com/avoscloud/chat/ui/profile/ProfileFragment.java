@@ -17,6 +17,7 @@ import butterknife.OnClick;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.service.PushManager;
@@ -88,7 +89,7 @@ public class ProfileFragment extends BaseFragment {
   public void onLogoutClick() {
     chatManager.closeWithCallback(new AVIMClientCallback() {
       @Override
-      public void done(AVIMClient avimClient, AVException e) {
+      public void done(AVIMClient avimClient, AVIMException e) {
       }
     });
     PushManager.getInstance().unsubscribeCurrentUserChannel();

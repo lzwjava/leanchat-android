@@ -10,6 +10,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.base.App;
@@ -70,7 +71,7 @@ public class ConversationGroupListActivity extends ConversationEventBaseActivity
         final CountDownLatch latch = new CountDownLatch(1);
         conversationManager.findGroupConversationsIncludeMe(new AVIMConversationQueryCallback() {
           @Override
-          public void done(List<AVIMConversation> conversations, AVException e) {
+          public void done(List<AVIMConversation> conversations, AVIMException e) {
             convs = conversations;
             exception = e;
             latch.countDown();

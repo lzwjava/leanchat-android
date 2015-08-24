@@ -6,6 +6,7 @@ import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMConversationEventHandler;
 import com.avos.avoscloud.im.v2.AVIMConversationQuery;
+import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
@@ -97,7 +98,7 @@ public class ConversationManager {
     final CountDownLatch latch = new CountDownLatch(1);
     CacheService.cacheConvs(convids, new AVIMConversationCallback() {
       @Override
-      public void done(AVException e) {
+      public void done(AVIMException e) {
         es[0] = e;
         latch.countDown();
       }
@@ -120,7 +121,7 @@ public class ConversationManager {
     for (Room room : validRooms) {
       AVIMConversation conversation = CacheService.lookupConv(room.getConversationId());
       room.setConversation(conversation);
-      room.setLastMessage(ChatManager.getInstance().queryLatestMessage(conversation.getConversationId()));
+      room.setLastMessage(ChatManager.getInstance().queryLatestMessage(conversation));
       if (ConversationHelper.typeOfConversation(conversation) == ConversationType.Single) {
         userIds.add(ConversationHelper.otherIdOfConversation(conversation));
       }
@@ -147,7 +148,7 @@ public class ConversationManager {
     conv.setName(newName);
     conv.updateInfoInBackground(new AVIMConversationCallback() {
       @Override
-      public void done(AVException e) {
+      public void done(AVIMException e) {
         if (e != null) {
           if (callback != null) {
             callback.done(e);
@@ -210,7 +211,7 @@ public class ConversationManager {
     ChatManager.getInstance().fetchConversationWithUserId(toUserId,
         new AVIMConversationCreatedCallback() {
           @Override
-          public void done(AVIMConversation avimConversation, AVException e) {
+          public void done(AVIMConversation avimConversation, AVIMException e) {
             if (e == null) {
               MessageAgent agent = new MessageAgent(avimConversation);
               agent.sendText(App.ctx.getString(R.string.message_when_agree_request));

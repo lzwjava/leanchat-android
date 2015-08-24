@@ -16,6 +16,7 @@ import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.avoscloud.chat.R;
@@ -105,7 +106,7 @@ public class ConversationAddMembersActivity extends ConversationBaseActivity {
         members.addAll(conv().getMembers());
         conversationManager.createGroupConversation(members, new AVIMConversationCreatedCallback() {
           @Override
-          public void done(final AVIMConversation conversation, AVException e) {
+          public void done(final AVIMConversation conversation, AVIMException e) {
             if (filterException(e)) {
               EventBus eventBus = EventBus.getDefault();
               FinishEvent finishEvent = new FinishEvent();
@@ -117,7 +118,7 @@ public class ConversationAddMembersActivity extends ConversationBaseActivity {
       } else {
         conv().addMembers(checkedUsers, new AVIMConversationCallback() {
           @Override
-          public void done(AVException e) {
+          public void done(AVIMException e) {
             dialog.dismiss();
             if (filterException(e)) {
               Utils.toast(R.string.conversation_inviteSucceed);

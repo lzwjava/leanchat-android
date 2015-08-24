@@ -1,13 +1,12 @@
 package com.avoscloud.leanchatlib.controller;
 
 import android.content.Context;
-
-import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMClientEventHandler;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMConversationEventHandler;
 import com.avos.avoscloud.im.v2.AVIMConversationQuery;
+import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.avos.avoscloud.im.v2.AVIMMessageManager;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
@@ -20,7 +19,6 @@ import com.avoscloud.leanchatlib.model.ConversationType;
 import com.avoscloud.leanchatlib.model.MessageEvent;
 import com.avoscloud.leanchatlib.model.Room;
 import com.avoscloud.leanchatlib.utils.LogUtils;
-
 import de.greenrobot.event.EventBus;
 
 import java.util.ArrayList;
@@ -60,7 +58,6 @@ public class ChatManager extends AVIMClientEventHandler {
   private RoomsTable roomsTable;
   private EventBus eventBus = EventBus.getDefault();
   private ChatManagerAdapter chatManagerAdapter;
-  private Map<String, AVIMTypedMessage> latestMessages = new ConcurrentHashMap<String, AVIMTypedMessage>();
 
   private ChatManager() {
   }
@@ -168,14 +165,14 @@ public class ChatManager extends AVIMClientEventHandler {
     imClient = AVIMClient.getInstance(this.selfId);
     imClient.open(new AVIMClientCallback() {
       @Override
-      public void done(AVIMClient client, AVException e) {
+      public void done(AVIMClient avimClient, AVIMException e) {
         if (e != null) {
           setConnectAndNotify(false);
         } else {
           setConnectAndNotify(true);
         }
         if (callback != null) {
-          callback.done(client, e);
+          callback.done(avimClient, e);
         }
       }
     });
@@ -200,7 +197,6 @@ public class ChatManager extends AVIMClientEventHandler {
     LogUtils.d("receive message, content :", message.getContent());
     roomsTable.insertRoom(message.getConversationId());
     roomsTable.increaseUnreadCount(message.getConversationId());
-    putLatestMessage(message);
     MessageEvent messageEvent = new MessageEvent(message, MessageEvent.Type.Come);
     eventBus.post(messageEvent);
     if (currentChattingConvid == null
@@ -218,12 +214,12 @@ public class ChatManager extends AVIMClientEventHandler {
     imClient.close(new AVIMClientCallback() {
 
       @Override
-      public void done(AVIMClient client, AVException e) {
+      public void done(AVIMClient avimClient, AVIMException e) {
         if (e != null) {
           LogUtils.logException(e);
         }
         if (callback != null) {
-          callback.done(client, e);
+          callback.done(avimClient, e);
         }
       }
     });
@@ -248,7 +244,7 @@ public class ChatManager extends AVIMClientEventHandler {
     query.limit(1);
     query.findInBackground(new AVIMConversationQueryCallback() {
       @Override
-      public void done(List<AVIMConversation> conversations, AVException e) {
+      public void done(List<AVIMConversation> conversations, AVIMException e) {
         if (e != null) {
           callback.done(null, e);
         } else {
@@ -377,66 +373,61 @@ public class ChatManager extends AVIMClientEventHandler {
    */
   public void queryMessages(AVIMConversation conversation, final String msgId, long time, final int limit,
                             final AVIMTypedMessagesArrayCallback callback) {
-    conversation.queryMessages(msgId, time, limit, new AVIMMessagesQueryCallback() {
+    final AVIMMessagesQueryCallback queryCallback = new AVIMMessagesQueryCallback() {
       @Override
-      public void done(List<AVIMMessage> imMessages, AVException e) {
+      public void done(List<AVIMMessage> list, AVIMException e) {
         if (e != null) {
           callback.done(Collections.EMPTY_LIST, e);
         } else {
-          List<AVIMTypedMessage> resultMessages = new ArrayList<>(limit);
-          for (AVIMMessage msg : imMessages) {
-            if (msg instanceof AVIMTypedMessage) {
-              resultMessages.add((AVIMTypedMessage) msg);
-            } else {
-              LogUtils.i("unexpected message " + msg.getContent());
-            }
-          }
-          callback.done(resultMessages, null);
+          callback.done(filterTypedMessages(list), null);
         }
       }
-    });
+    };
+
+    if (time == 0) {
+      // 第一次加载
+      conversation.queryMessages(limit, queryCallback);
+    } else {
+      // 上拉
+      conversation.queryMessages(msgId, time, limit, queryCallback);
+    }
   }
 
-  public void putLatestMessage(AVIMTypedMessage message) {
-    latestMessages.put(message.getConversationId(), message);
-  }
-
-  private AVIMTypedMessage getLatestMessage(String conversationId) {
-    return latestMessages.get(conversationId);
+  List<AVIMTypedMessage> filterTypedMessages(List<AVIMMessage> messages) {
+    List<AVIMTypedMessage> resultMessages = new ArrayList<>();
+    for (AVIMMessage msg : messages) {
+      if (msg instanceof AVIMTypedMessage) {
+        resultMessages.add((AVIMTypedMessage) msg);
+      } else {
+        LogUtils.i("unexpected message " + msg.getContent());
+      }
+    }
+    return resultMessages;
   }
 
 
   /**
    * 查找对话的最后一条消息，如果已查找过，则立即返回
    *
-   * @param conversationId
+   * @param conversation
    * @return 当向服务器查找失败时或无历史消息时，返回 null
    */
 
-  public synchronized AVIMTypedMessage queryLatestMessage(String conversationId) {
-    AVIMTypedMessage message = getLatestMessage(conversationId);
-    if (message != null) {
-      return message;
-    }
+  public synchronized AVIMTypedMessage queryLatestMessage(AVIMConversation conversation) throws InterruptedException {
     final CountDownLatch latch = new CountDownLatch(1);
-    final List<AVIMTypedMessage> foundMessages = new ArrayList<>(1);
-    queryMessages(imClient.getConversation(conversationId), null, System.currentTimeMillis(), 1, new AVIMTypedMessagesArrayCallback() {
+    final List<AVIMTypedMessage> typeMessages = new ArrayList<>();
+    conversation.queryMessages(null, 0, 1, new AVIMMessagesQueryCallback() {
       @Override
-      public void done(List<AVIMTypedMessage> typedMessages, AVException e) {
-        if (e == null && typedMessages != null) {
-          foundMessages.addAll(typedMessages);
+      public void done(List<AVIMMessage> list, AVIMException e) {
+        if (e == null) {
+          typeMessages.addAll(filterTypedMessages(list));
         }
         latch.countDown();
       }
     });
-    try {
-      latch.await();
-    } catch (InterruptedException e) {
-      LogUtils.logException(e);
-    }
-    if (foundMessages.size() > 0) {
-      putLatestMessage(foundMessages.get(0));
-      return foundMessages.get(0);
+    latch.await();
+    if (typeMessages.size() > 0) {
+      return typeMessages.get(0);
     } else {
       return null;
     }

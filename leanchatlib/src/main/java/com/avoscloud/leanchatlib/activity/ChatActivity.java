@@ -557,7 +557,7 @@ public class ChatActivity extends Activity implements OnClickListener, ChatActiv
   }
 
   public void loadMessagesWhenInit(int limit) {
-    ChatManager.getInstance().queryMessages(conversation, null, System.currentTimeMillis(), limit, new
+    ChatManager.getInstance().queryMessages(conversation, null, 0, limit, new
         AVIMTypedMessagesArrayCallback() {
           @Override
           public void done(final List<AVIMTypedMessage> typedMessages, AVException e) {
