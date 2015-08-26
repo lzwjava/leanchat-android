@@ -300,6 +300,11 @@ public class ChatActivity extends Activity implements OnClickListener, ChatActiv
       public void onFailButtonClick(AVIMTypedMessage msg) {
         messageAgent.resendMessage(msg, new MessageAgent.SendCallback() {
           @Override
+          public void onStart(AVIMTypedMessage message) {
+
+          }
+
+          @Override
           public void onError(AVIMTypedMessage message, Exception e) {
             LogUtils.d("resend message error");
             // 应该只重新加载一条, Todo
@@ -659,6 +664,11 @@ public class ChatActivity extends Activity implements OnClickListener, ChatActiv
   }
 
   class DefaultSendCallback implements MessageAgent.SendCallback {
+
+    @Override
+    public void onStart(AVIMTypedMessage message) {
+
+    }
 
     @Override
     public void onError(AVIMTypedMessage message, Exception e) {

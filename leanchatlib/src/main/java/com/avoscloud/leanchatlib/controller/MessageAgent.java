@@ -4,6 +4,7 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMException;
+import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.messages.AVIMAudioMessage;
@@ -26,13 +27,15 @@ public class MessageAgent {
   private ChatManager chatManager;
   private SendCallback sendCallback = new SendCallback() {
     @Override
-    public void onError(AVIMTypedMessage message, Exception e) {
+    public void onStart(AVIMTypedMessage message) {
+    }
 
+    @Override
+    public void onError(AVIMTypedMessage message, Exception e) {
     }
 
     @Override
     public void onSuccess(AVIMTypedMessage message) {
-
     }
   };
 
@@ -70,6 +73,9 @@ public class MessageAgent {
         }
       }
     });
+    if (sendCallback != null) {
+      callback.onStart(msg);
+    }
   }
 
   public void resendMessage(final AVIMTypedMessage msg, final SendCallback sendCallback) {
@@ -122,6 +128,7 @@ public class MessageAgent {
   }
 
   public interface SendCallback {
+    void onStart(AVIMTypedMessage message);
 
     void onError(AVIMTypedMessage message, Exception e);
 
