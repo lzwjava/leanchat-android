@@ -109,7 +109,9 @@ public class ConversationRecentFragment extends BaseFragment implements ChatMana
   }
 
   public void onEvent(MessageEvent event) {
-    listView.onRefresh();
+    if (!hidden) {
+      listView.onRefresh();
+    }
   }
 
   @Override

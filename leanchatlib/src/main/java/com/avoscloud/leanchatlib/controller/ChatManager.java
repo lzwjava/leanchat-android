@@ -412,7 +412,6 @@ public class ChatManager extends AVIMClientEventHandler {
    * @param conversation
    * @return 当向服务器查找失败时或无历史消息时，返回 null
    */
-
   public synchronized AVIMTypedMessage queryLatestMessage(AVIMConversation conversation) throws InterruptedException {
     final CountDownLatch latch = new CountDownLatch(1);
     final List<AVIMTypedMessage> typeMessages = new ArrayList<>();
