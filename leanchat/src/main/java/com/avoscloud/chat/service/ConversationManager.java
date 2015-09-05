@@ -7,6 +7,7 @@ import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMConversationEventHandler;
 import com.avos.avoscloud.im.v2.AVIMConversationQuery;
 import com.avos.avoscloud.im.v2.AVIMException;
+import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
@@ -107,7 +108,7 @@ public class ConversationManager {
     if (es[0] != null) {
       throw es[0];
     }
-    List<Room> validRooms = new ArrayList<>();
+    final List<Room> validRooms = new ArrayList<>();
     for (Room room : rooms) {
       AVIMConversation conversation = CacheService.lookupConv(room.getConversationId());
       if (ConversationHelper.isValidConversation(conversation)) {
@@ -127,17 +128,28 @@ public class ConversationManager {
       }
     }
     Collections.sort(validRooms, new Comparator<Room>() {
+      private long getCompareTimestamp(AVIMMessage msg) {
+        long ts;
+        if (msg != null) {
+          ts = msg.getTimestamp();
+        } else {
+          ts = 0;
+        }
+        return ts;
+      }
+
       @Override
       public int compare(Room lhs, Room rhs) {
-        if (lhs.getLastMessage() != null && rhs.getLastMessage() != null) {
-          long value = lhs.getLastMessage().getTimestamp() - rhs.getLastMessage().getTimestamp();
-          if (value > 0) {
-            return -1;
-          } else if (value < 0) {
-            return 1;
-          }
+        long leftTs = getCompareTimestamp(lhs.getLastMessage());
+        long rightTs = getCompareTimestamp(rhs.getLastMessage());
+        long value = leftTs - rightTs;
+        if (value > 0) {
+          return -1;
+        } else if (value < 0) {
+          return 1;
+        } else {
+          return 0;
         }
-        return 0;
       }
     });
     CacheService.cacheUsers(new ArrayList<>(userIds));
